@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Home on Tartine Interactive</title>
-    <link>http://localhost:1313/</link>
-    <description>Recent content in Home on Tartine Interactive</description>
+    <title>Pages on Tartine Interactive</title>
+    <link>http://localhost:1313/pages/</link>
+    <description>Recent content in Pages on Tartine Interactive</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>fr-fr</language><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <language>fr-fr</language><atom:link href="http://localhost:1313/pages/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>À propos</title>
       <link>http://localhost:1313/pages/about/</link>
@@ -13,7 +13,7 @@
       
       <guid>http://localhost:1313/pages/about/</guid>
       
-      <description>&lt;p&gt;TODO&lt;/p&gt;</description>
+      <description>&lt;TODO&gt;</description>
       
     </item>
     

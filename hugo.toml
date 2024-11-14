@@ -2,7 +2,7 @@ title = "Tartine Interactive"
 baseURL = 'https://exemple/'
 
 # This is what goes in <html lang="">
-languageCode = 'fr-fr'
+languageCode = 'en-en'
 
 # This defines how dates are formatted
 defaultContentLanguage = "fr-fr"
