@@ -2,9 +2,9 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Home on Tartine Interactive</title>
-    <link>http://localhost:1313/</link>
+    <link>https://exemple/</link>
     <description>Recent content in Home on Tartine Interactive</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>fr-fr</language><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <language>fr-fr</language><atom:link href="https://exemple/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
