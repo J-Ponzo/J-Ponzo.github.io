@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Home on Tartine Interactive</title>
-    <link>http://localhost:1313/</link>
-    <description>Recent content in Home on Tartine Interactive</description>
+    <title>Projets on Tartine Interactive</title>
+    <link>http://localhost:1313/projects/</link>
+    <description>Recent content in Projets on Tartine Interactive</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-fr</language>
-    <lastBuildDate>Fri, 15 Nov 2024 06:26:08 +0100</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 15 Nov 2024 06:26:08 +0100</lastBuildDate><atom:link href="http://localhost:1313/projects/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Stable Sight</title>
       <link>http://localhost:1313/projects/stable_sight/</link>
@@ -17,17 +17,6 @@
       <description>&lt;h2 id=&#34;stablesight--ou-lespoir-fou-de-voire-renaitre-les-caméra-fixes-et-les-contrôles-tank&#34;&gt;StableSight : Ou l&amp;rsquo;espoir fou de voire renaitre les caméra fixes et les contrôles tank&lt;/h2&gt;
 &lt;h3 id=&#34;introduction&#34;&gt;Introduction&lt;/h3&gt;
 &lt;p&gt;J&amp;rsquo;ai toujours été un grand fan de jeux en caméra fixe. Tout particulièrement des survival-horror old school qui constituent certainement le genre le plus représenté au sein de cette glorieuse famille vidéo-ludique. Resident Evil, Alone in the Dark et autre Silent Hill ont bercé l&amp;rsquo;enfant que j&amp;rsquo;étais vers la fin des années 90 et même un peu après&amp;hellip; beaucoup après&amp;hellip; bon ok j&amp;rsquo;ai reinstallé REmake pas plus tard que la semaine dernière.&lt;/p&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>À propos</title>
-      <link>http://localhost:1313/pages/about/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/pages/about/</guid>
-      
-      <description>&lt;p&gt;TODO&lt;/p&gt;</description>
       
     </item>
     

@@ -140,7 +140,7 @@ theme = "hugo-blog-awesome"
   [[Languages.fr-fr.menu.main]]
     pageRef="projects"
     name = 'Projets'
-    url = '/posts/'
+    url = '/projects/'
     weight = 20
   [[Languages.fr-fr.menu.main]]
     pageRef="posts"
@@ -210,5 +210,9 @@ url = "https://github.com/J-Ponzo"
 [[params.socialIcons]]
 name = "itchio"
 url = "https://jponzo.itch.io"
+
+[[params.socialIcons]]
+name = "Rss"
+url = "/index.xml"
 
 
