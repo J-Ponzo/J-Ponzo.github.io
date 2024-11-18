@@ -1,0 +1,6 @@
++++
+draft = true
+title = 'Reflection Captures'
+toc = false
++++
+Simuler des reflexion exactes en temps réèl est très coûteux mais les reflection captures permettent une approximation convainquante. Le principe dans les grandes lignes est de pré-calculer une photo 360° depuis un point de l'espace et de se sevire des cette photo pour appliquer les reflections aux différents éléments à proximité de ce point avec plus ou moins d'intensité en fonction des paramètres de leurs materiaux. Le lien avec le postulat est peut être moins evident ici mais je classe quand même cette technique dans cette cathégorie car si elle premet un resultat convainquant malgré le fait que les objets dynamiques ne figurent pas dans les reflexions et que ces dernières sont toujours un peu décalées par rapport à où elles devraient réelement se trouver, c'est parce que la surabondance de surfaces statiques dans une scene de jeu vidéo garanti une certaine stabilité dans "l'ambience reflexive" générale en un endroit donné.

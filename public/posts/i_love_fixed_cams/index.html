@@ -53,7 +53,7 @@
         },
         "datePublished": "2024-11-15",
         "description": "Article dans lequel je parles de caméra fixes",
-        "wordCount":  3848 ,
+        "wordCount":  3480 ,
         "mainEntityOfPage": "True",
         "dateModified": "2024-11-15",
         "image": {
@@ -68,7 +68,7 @@
     </script>
 
 
-<meta name="generator" content="Hugo 0.137.0">
+<meta name="generator" content="Hugo 0.137.1">
 
     
     <meta property="og:url" content="http://localhost:1313/posts/i_love_fixed_cams/">
@@ -230,10 +230,9 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Beaucoup de techniques d&rsquo;optimisations dans le jeu vidéo s&rsquo;appuient sur un postulat simple : &ldquo;La majeur partie de la géométrie à afficher est statique&rdquo;. On a biensure des personnages, des vehicules, des effets de particules etc&hellip; qui eux sont dynamiques (ils se déplacent dans l&rsquo;espace) mais en terme de nombre de triangles et de pixels à afficher, ça ne pèse pas bien lourd face à la quantité de géométrie nécessaire pour représenter l&rsquo;environnement de manière crédible. Et cette environnement, lui, il ne bouge pas (ou très peu). Cette observation est toujours vrai aujourd&rsquo;hui et un certain nombre de technologies actuelles s&rsquo;appuient toujours sur ce postulat.</p>
 <p>On peut citer :</p>
 <ul>
-<li><a href="./static_lighting/">L&rsquo;éclairage statique</a></li>
-<li>L&rsquo;éclairage statique : la contribution des lumière sur l&rsquo;environnement n&rsquo;a pas besoin d&rsquo;être calculée en temps réèl si les lumières sont elles aussi statiques. On peut les précalculer pendant le développement (les baker dans le jargon) et enregistrer le resultat directement dans une texture spéciale qu&rsquo;on appel une &ldquo;light map&rdquo;. Cette light map sera directement &ldquo;mélangé&rdquo; aux textures de l&rsquo;environnement par le jeu pour que ces dernières paraissent plus ou moins éclairées ou ombragées. En plus du gain de performence, cela permet d&rsquo;avoir des lumières beaucoup plus détaillées car on dispose de tout le temps qu&rsquo;on veut pour calculer cette lumière statique. Alors que si la lumière est calculée dynamiquement, on a que 16ms si ont veut avoir une chance d&rsquo;assure le 60fps si cher à nos yeux de joueurs.</li>
-<li>Les distance field : Puisque la géométrie ne bouge pas, on peut pré-calculer en tout point de l&rsquo;espace la distance qui le sépare de l&rsquo;objet le plus proche. On appel cette donnée un distance field et on l&rsquo;utilise comme structure acceleratrice dans plusieurs algorithmes (différentes techniques de ray tracing et d&rsquo;ombrage, simulation de fluides&hellip;). On peut anisi faire fonctionner en temps réèl des effets dont une implémentation naïve sans structure acceleratrice serait beaucoup trop coûteuse pour être utilisée en temps réèl dans un jeu même avec du hardware moderne.</li>
-<li>Les reflection captures : Simuler des reflexion exactes en temps réèl est très coûteux mais les reflection captures permettent une approximation convainquante. Le principe dans les grandes lignes est de pré-calculer une photo 360° depuis un point de l&rsquo;espace et de se sevire des cette photo pour appliquer les reflections aux différents éléments à proximité de ce point avec plus ou moins d&rsquo;intensité en fonction des paramètres de leurs materiaux. Le lien avec le postulat est peut être moins evident ici mais je classe quand même cette technique dans cette cathégorie car si elle premet un resultat convainquant malgré le fait que les objets dynamiques ne figurent pas dans les reflexions et que ces dernières sont toujours un peu décalées par rapport à où elles devraient réelement se trouver, c&rsquo;est parce que la surabondance de surfaces statiques dans une scene de jeu vidéo garanti une certaine stabilité dans &ldquo;l&rsquo;ambience reflexive&rdquo; générale en un endroit donné.</li>
+<li><a href="/misc/static_lighting/">L&rsquo;éclairage statique</a></li>
+<li><a href="/misc/distance_field/">Les distance fields</a></li>
+<li><a href="/misc/reflection_capture/">Les reflection captures</a></li>
 </ul>
 <p>Inventer la caméra fixe, c&rsquo;est avoir pleinement compris ce postulat et pousser son exploitation jusqu&rsquo;à son paroxisme non pas gràce à un algorithme révolutionnaire, mais grâce à un choix de design radical et assumé. Car en effet, s&rsquo;assoire sur la possiblite de bouger la caméra, c&rsquo;est un parti pris artistique sacrément engagé qui viens avec son lot de forces et de contraintes (on y reviendra aussi). Mais d&rsquo;un point de vue technique, si la caméra ne bouge pas, il n&rsquo;y à même plus besoin de gaspiller du temps de calcule pour redessiner tous les triangles qui composent l&rsquo;environnement. On peut prendre tout le temps qu&rsquo;on veut offline pour en faire une image 2d en CGI, et lors de l&rsquo;execution du jeu, on a plus qu&rsquo;à afficher cette image en trompe-l&rsquo;oeuil sur la totalité de l&rsquo;écran. De là il n&rsquo;y a plus qu&rsquo;à rendre par dessus la géometrie dynamique (personnages etc&hellip;) et le tour est joué. De cette manière, l&rsquo;environnement qui monopolise d&rsquo;habitude la majeur partie des resources graphiques, ne coute plus que 2 triangles et une texture à afficher, ce qui est gain stratospherique.</p>
 <p>Il s&rsquo;agit là d&rsquo;un des meilleurs exemple que l&rsquo;on puisse trouver de resolution par le design d&rsquo;une problématique technique en apparence insoluble. Embrasser la contrainte de n&rsquo;utiliser que des caméra fixe dans un jeu vidéo c&rsquo;est plutôt osé. Mais c&rsquo;est cette petite touche d&rsquo;ouverture d&rsquo;esprit et de pensée hors du cadre qui a permis de raconter des histoires et de donner vie a des mondes d&rsquo;une richesse et d&rsquo;un niveau de sophistication impensable pour une PS1. Et le plus beau dans tout ça, c&rsquo;est qu&rsquo;on ne doit pas cette idée à l&rsquo;esprit carthésien d&rsquo;un programmeur de génie, mais à la créativité d&rsquo;un designer inventif. Même si en l&rsquo;occurence, Frédérick Raynal, créateur de Alone in the Dark (et du même coup de cette technique), est sans conteste les deux à la fois.</p>

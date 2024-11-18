@@ -42,5 +42,38 @@
       
     </item>
     
+    <item>
+      <title>Distance Field</title>
+      <link>http://localhost:1313/misc/distance_field/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/misc/distance_field/</guid>
+      
+      <description>&lt;p&gt;Puisque la géométrie ne bouge pas, on peut pré-calculer en tout point de l’espace la distance qui le sépare de l’objet le plus proche. On appel cette donnée un distance field et on l’utilise comme structure acceleratrice dans plusieurs algorithmes (différentes techniques de ray tracing et d’ombrage, simulation de fluides…). On peut anisi faire fonctionner en temps réèl des effets dont une implémentation naïve sans structure acceleratrice serait beaucoup trop coûteuse pour être utilisée en temps réèl dans un jeu même avec du hardware moderne.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Reflection Captures</title>
+      <link>http://localhost:1313/misc/reflection_capture/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/misc/reflection_capture/</guid>
+      
+      <description>&lt;p&gt;Simuler des reflexion exactes en temps réèl est très coûteux mais les reflection captures permettent une approximation convainquante. Le principe dans les grandes lignes est de pré-calculer une photo 360° depuis un point de l&amp;rsquo;espace et de se sevire des cette photo pour appliquer les reflections aux différents éléments à proximité de ce point avec plus ou moins d&amp;rsquo;intensité en fonction des paramètres de leurs materiaux. Le lien avec le postulat est peut être moins evident ici mais je classe quand même cette technique dans cette cathégorie car si elle premet un resultat convainquant malgré le fait que les objets dynamiques ne figurent pas dans les reflexions et que ces dernières sont toujours un peu décalées par rapport à où elles devraient réelement se trouver, c&amp;rsquo;est parce que la surabondance de surfaces statiques dans une scene de jeu vidéo garanti une certaine stabilité dans &amp;ldquo;l&amp;rsquo;ambience reflexive&amp;rdquo; générale en un endroit donné.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Static Lighting</title>
+      <link>http://localhost:1313/misc/static_lighting/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/misc/static_lighting/</guid>
+      
+      <description>&lt;p&gt;la contribution des lumière sur l&amp;rsquo;environnement n&amp;rsquo;a pas besoin d&amp;rsquo;être calculée en temps réèl si les lumières sont elles aussi statiques. On peut les précalculer pendant le développement (les baker dans le jargon) et enregistrer le resultat directement dans une texture spéciale qu&amp;rsquo;on appel une &amp;ldquo;light map&amp;rdquo;. Cette light map sera directement &amp;ldquo;mélangé&amp;rdquo; aux textures de l&amp;rsquo;environnement par le jeu pour que ces dernières paraissent plus ou moins éclairées ou ombragées. En plus du gain de performence, cela permet d&amp;rsquo;avoir des lumières beaucoup plus détaillées car on dispose de tout le temps qu&amp;rsquo;on veut pour calculer cette lumière statique. Alors que si la lumière est calculée dynamiquement, on a que 16ms si ont veut avoir une chance d&amp;rsquo;assure le 60fps si cher à nos yeux de joueurs.&lt;/p&gt;</description>
+      
+    </item>
+    
   </channel>
 </rss>
