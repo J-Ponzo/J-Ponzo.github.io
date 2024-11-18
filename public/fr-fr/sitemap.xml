@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/</loc>
-    <lastmod>2024-11-18T12:56:22+01:00</lastmod>
+    <lastmod>2024-11-18T06:28:42+01:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en-us"
@@ -14,12 +14,6 @@
                 hreflang="fr-fr"
                 href="http://localhost:1313/"
                 />
-  </url><url>
-    <loc>http://localhost:1313/misc/</loc>
-    <lastmod>2024-11-18T12:56:22+01:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/misc/static_lighting/</loc>
-    <lastmod>2024-11-18T12:56:22+01:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/projects/open_re/</loc>
     <lastmod>2024-11-18T06:28:42+01:00</lastmod>
@@ -57,6 +51,10 @@
                 href="http://localhost:1313/categories/"
                 />
   </url><url>
+    <loc>http://localhost:1313/misc/distance_field/</loc>
+  </url><url>
+    <loc>http://localhost:1313/misc/</loc>
+  </url><url>
     <loc>http://localhost:1313/pages/</loc>
     <xhtml:link
                 rel="alternate"
@@ -68,6 +66,10 @@
                 hreflang="fr-fr"
                 href="http://localhost:1313/pages/"
                 />
+  </url><url>
+    <loc>http://localhost:1313/misc/reflection_capture/</loc>
+  </url><url>
+    <loc>http://localhost:1313/misc/static_lighting/</loc>
   </url><url>
     <loc>http://localhost:1313/tags/</loc>
     <xhtml:link
