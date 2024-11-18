@@ -65,7 +65,7 @@ theme = "hugo-blog-awesome"
   [[Languages.en-us.menu.main]]
     pageRef="projects"
     name = 'Projects'
-    url = '/posts/'
+    url = '/projects/'
     weight = 20
   [[Languages.en-us.menu.main]]
     pageRef="posts"
@@ -90,7 +90,7 @@ theme = "hugo-blog-awesome"
   # the default value is set to 'auto'.
   # You can take a look at layouts/index.html for more information.
   description = "Welcome to my blog! Here, you'll find articles, tutorials, and devlogs from my adventures as an independent developer."
-  mainSections = ['posts']
+  mainSections = ['projects', 'posts']
   toc = true # set to false to disable table of contents 'globally'
   tocOpen = false # set to true to open table of contents by default
   goToTop = true # set to false to disable 'go to top' button
@@ -165,7 +165,7 @@ theme = "hugo-blog-awesome"
   # the default value is set to 'auto'.
   # You can take a look at layouts/index.html for more information.
   description = "Bienvenu sur mon blog ! Vous y trouverez articles, tutoriels et devlogs, issus de mes peripties de développeur indépendant"
-  mainSections = ['posts']
+  mainSections = ['projects', 'posts']
   toc = true # set to false to disable table of contents 'globally'
   tocOpen = false # set to true to open table of contents by default
   goToTop = true # set to false to disable 'go to top' button

@@ -1,23 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Home on Tartine Interactive</title>
-    <link>http://localhost:1313/</link>
-    <description>Recent content in Home on Tartine Interactive</description>
+    <title>Articles on Tartine Interactive</title>
+    <link>http://localhost:1313/posts/</link>
+    <description>Recent content in Articles on Tartine Interactive</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-fr</language>
-    <lastBuildDate>Mon, 18 Nov 2024 06:28:42 +0100</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>OpenRE</title>
-      <link>http://localhost:1313/projects/open_re/</link>
-      <pubDate>Mon, 18 Nov 2024 06:28:42 +0100</pubDate>
-      
-      <guid>http://localhost:1313/projects/open_re/</guid>
-      
-      <description>&lt;p&gt;TODO&lt;/p&gt;</description>
-      
-    </item>
-    
+    <lastBuildDate>Fri, 15 Nov 2024 06:26:08 +0100</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Ode à la caméra fixe et aux tank-controls</title>
       <link>http://localhost:1313/posts/i_love_fixed_cams/</link>
@@ -28,17 +17,6 @@
       <description>&lt;h2 id=&#34;ode-à-la-caméra-fixe-et-aux-tank-controls&#34;&gt;Ode à la caméra fixe et aux tank-controls&lt;/h2&gt;
 &lt;h3 id=&#34;sweet-sweet-90s&#34;&gt;Sweet sweet 90&amp;rsquo;s&lt;/h3&gt;
 &lt;p&gt;J&amp;rsquo;ai toujours été un grand fan de jeux en caméra fixe. Tout particulièrement des survival-horror old school qui constituent certainement le genre le plus représenté au sein de cette glorieuse famille vidéo-ludique. Resident Evil, Alone in the Dark et autre Silent Hill ont bercé l&amp;rsquo;enfant que j&amp;rsquo;étais vers la fin des années 90 et même un peu après&amp;hellip; voire beaucoup après&amp;hellip; bon ok, j&amp;rsquo;ai reinstallé Resident Evil Rebirth pas plus tard que la semaine dernière alors que le remake de Sillent Hill 2 vient de sortir et que celui de Dead Space moisi dans ma TOPLAY-list depuis presque 1 an. J&amp;rsquo;avoue que je culpabilise un peu de la façon dont j&amp;rsquo;investie le peu de temps de jeu que ma vie d&amp;rsquo;adulte responsable (hehe ! pourquoi je rigole ?) m&amp;rsquo;autorise. Mes collegues me chambrent gentiment et disent que je suis un boomer, conservateur, hermétique au changement et bloqué dans le passé.&lt;/p&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>À propos</title>
-      <link>http://localhost:1313/pages/about/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/pages/about/</guid>
-      
-      <description>&lt;p&gt;TODO&lt;/p&gt;</description>
       
     </item>
     
