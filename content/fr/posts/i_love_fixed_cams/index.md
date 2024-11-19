@@ -38,8 +38,30 @@ Cet exemple illustre parfaitement comment une problématique technique en appare
 
 Là où je veux en venir, c’est qu’une petite dose d’ouverture d’esprit et de pensée hors du cadre a permis de créer des mondes et de raconter des histoires d’une richesse et d’une sophistication inimaginables pour une PS1. Et on ne le doit pas à un programmeur de génie, mais à la créativité d’un designer. Même si, en l'occurence Frédérick Raynal, créateur de *Alone in the Dark* et de cette technique, est sans conteste les deux à la fois.
 
-### Ouin ! Ouin ! Les tank-controls c'est dur !
-Si comme moi vous avez déjà eu entre les mains un jeux en caméra fixe, vous savez certainement ce que sont les tank-controls. Dans le cas contraire une petite explication s'impose. Etant donné que les caméra ne peuvent pas suivre le joueur, on est obligé de changer de caméra quand l'avatar sort du champs pour permetre au joueur derrière son écran de l'accompagner dans son aventure. Lorsqu'on joue à un jeu en caméra fixe, on a donc une transition vers une autre caméra toutes les 5 secondes et cette transition implique pour le joueur un changement de référenciel brusque et pas toujours facile à anticiper. Si toutes les caméra du jeu regardent dans la même direction ce n'est pas un (si gros) problème. Dans ce cas précis, le changement de réferenciel conserve les rotations et on peut implémenter facilement un schema de contrôle "intuitif". Par là j'entands un schéma dans lequel le mouvement de l'avatar à l'écran se fait dans le référenciel du joueur (comme dans 99.9% des jeux vidéos). Dit autrement, dans ce cas particulier, le joueur pourra toujour être surpris par un changement de caméra, mais ce changement ne nécessitera pas de lui qu'il réagisse pour adapter l'orientation du joystique afin que l'avatar garde le cap d'un plan à l'autre (le tout en une fraction de seconde sous-peine de se manger un mur ou de faire un calin à un zombie).
+### Le Tank aux chenilles d'argile
+Si vous avez déjà eu entre les mains un jeux en caméra fixe, vous savez certainement ce que sont les tank-controls. Dans le cas contraire une petite explication s'impose. Il s'agit d'une modalité d'inputs dans laquelle vous controlez l'avatar dans son référentiel plutôt que dans le votre. 
+
+C'est un schéma de contrôle impopulaire car il nécessite un petit temps d'adaptation. Il est fortement lié à la caméra fixe car c'est la seul à ce jour qui permet de s'abstraire des problématiques liées aux changement de référenciels soudains et répétés, inhérants au genre. Vous avez surement déjà une bonne intuition de pourquoi. Mais essayons de décortiquer un peu mieux le problème.
+
+#### Le problème sous tous les angles
+Si toutes les caméra du jeu regardent dans le même sens, le problème est moindre. Dans ce cas les changements de référentiels sont des translation et la translation conserve les directions. L'orientation de l'avatar est donc stable d'un écran à l'autre. Cela permet d'implémenter des contrôles "naïf" où les mouvements de l’avatar suivent directement ceux du joystick.
+
+<illustration>
+
+Mais en pratique, il sera difficile de respecter cette contrainte. Car on a vu que la spécialité des caméra fixes, c'est la possiblité d'afficher des environnement très détaillés. Si la compléxite d'agencement de l'espace ne reflète pas le niveau de détail, on intègre vite de la disonnance ("Il est bizare ton manoir ! Pourquoi les pièces sont toutes les unes à la suite des autres ?"). Quand bien même on s'accomoderait de cette dissonance, on passerait à côté du meilleur atout des caméra fixes (dont on parlera dans la partie suivante).
+
+On va donc devoir faire varier les angle, et c'est là que ça se complique. Si on fait ça, l'orientation de l'avatar est différente d'un écran à l'autre.
+
+<illustration>
+
+Si on ne fait rien, le joueur devra adapter sa trajectoire à chaque transition de caméra. A moins d'être un ninja, cela se traduira par une imprecision significative dans ses trajectoires. Pas pratique quand le jeu consiste à esquiver des zombis dans des couloirs. Sans compter que les changements de caméra sont très fréquents, et que même si vos reflexe sont hors norme, cela ruinera votre immersion.
+
+#### Le contrôles "modères", une fausse solution
+
+#### 
+
+
+Etant donné que les caméra ne peuvent pas suivre le joueur, on est obligé de changer de caméra quand l'avatar sort du champs pour permetre au joueur derrière son écran de l'accompagner dans son aventure. Lorsqu'on joue à un jeu en caméra fixe, on a donc une transition vers une autre caméra toutes les 5 secondes et cette transition implique pour le joueur un changement de référenciel brusque et pas toujours facile à anticiper. Si toutes les caméra du jeu regardent dans la même direction ce n'est pas un (si gros) problème. Dans ce cas précis, le changement de réferenciel conserve les rotations et on peut implémenter facilement un schema de contrôle "intuitif". Par là j'entands un schéma dans lequel le mouvement de l'avatar à l'écran se fait dans le référenciel du joueur (comme dans 99.9% des jeux vidéos). Dit autrement, dans ce cas particulier, le joueur pourra toujour être surpris par un changement de caméra, mais ce changement ne nécessitera pas de lui qu'il réagisse pour adapter l'orientation du joystique afin que l'avatar garde le cap d'un plan à l'autre (le tout en une fraction de seconde sous-peine de se manger un mur ou de faire un calin à un zombie).
 
 "Super on a qu'à faire ça !" me direz vous. Sauf que non. Parce que quand on a la possibilité de créer un monde 3D complexe et ultra credible, on a envie que son agencement, et par extention notre cheminement à travers lui soit d'un niveau de crédibilité equivalent. Sans ça on introduit une certaine disonance ("il est bizare ton manoir, pourquoi toutes les pièces sont à la queueleuleu comme ça ?"). Cette dissonance peut tout à fait être délibéré et servir un propos, mais on aura quand même du mal à considérer ça comme le cas nominal. Sans compter que si on fait ça, on se prive de toute la puissance artistique qui vient avec ce parti pris (que de teasing ! on y reviendra aussi !).
 

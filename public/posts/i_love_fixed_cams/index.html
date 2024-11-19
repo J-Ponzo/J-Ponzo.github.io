@@ -53,7 +53,7 @@
         },
         "datePublished": "2024-11-15",
         "description": "Article dans lequel je parles de caméra fixes",
-        "wordCount":  3436 ,
+        "wordCount":  3766 ,
         "mainEntityOfPage": "True",
         "dateModified": "2024-11-15",
         "image": {
@@ -68,7 +68,7 @@
     </script>
 
 
-<meta name="generator" content="Hugo 0.137.0">
+<meta name="generator" content="Hugo 0.137.1">
 
     
     <meta property="og:url" content="http://localhost:1313/posts/i_love_fixed_cams/">
@@ -216,7 +216,13 @@ stroke-linejoin="round" class="feather feather-home">
             <li><a href="#la-cuillère-nexiste-pas-">La cuillère n&rsquo;existe pas !</a></li>
           </ul>
         </li>
-        <li><a href="#ouin--ouin--les-tank-controls-cest-dur-">Ouin ! Ouin ! Les tank-controls c&rsquo;est dur !</a></li>
+        <li><a href="#le-tank-aux-chenilles-dargile">Le Tank aux chenilles d&rsquo;argile</a>
+          <ul>
+            <li><a href="#le-problème-sous-tous-les-angles">Le problème sous tous les angles</a></li>
+            <li><a href="#le-contrôles-modères-une-fausse-solution">Le contrôles &ldquo;modères&rdquo;, une fausse solution</a></li>
+            <li><a href="#heading"></a></li>
+          </ul>
+        </li>
         <li><a href="#oui-mais-les-caméra-fixes-cest-la-vie-">Oui mais les caméra fixes, c&rsquo;est la vie !</a></li>
         <li><a href="#ma-pierre-à-lédifice-écroulé">Ma pierre à l&rsquo;édifice écroulé</a></li>
       </ul>
@@ -244,8 +250,19 @@ stroke-linejoin="round" class="feather feather-home">
 <h4 id="la-cuillère-nexiste-pas-">La cuillère n&rsquo;existe pas !</h4>
 <p>Cet exemple illustre parfaitement comment une problématique technique en apparence insoluble peut être surmontée grâce à un choix de design audacieux. La logique fini toujours par atteindres ses limites, car elle est bâtie sur des normes (c&rsquo;est Morpheus qui le dit dans <em>Matrix</em>. Donc c&rsquo;est vrai !). La créativité, elle, n&rsquo;est pas bornée, ce qui lui permet parfois de réussir quand le &ldquo;gros cerveau&rdquo; echoue.</p>
 <p>Là où je veux en venir, c’est qu’une petite dose d’ouverture d’esprit et de pensée hors du cadre a permis de créer des mondes et de raconter des histoires d’une richesse et d’une sophistication inimaginables pour une PS1. Et on ne le doit pas à un programmeur de génie, mais à la créativité d’un designer. Même si, en l&rsquo;occurence Frédérick Raynal, créateur de <em>Alone in the Dark</em> et de cette technique, est sans conteste les deux à la fois.</p>
-<h3 id="ouin--ouin--les-tank-controls-cest-dur-">Ouin ! Ouin ! Les tank-controls c&rsquo;est dur !</h3>
-<p>Si comme moi vous avez déjà eu entre les mains un jeux en caméra fixe, vous savez certainement ce que sont les tank-controls. Dans le cas contraire une petite explication s&rsquo;impose. Etant donné que les caméra ne peuvent pas suivre le joueur, on est obligé de changer de caméra quand l&rsquo;avatar sort du champs pour permetre au joueur derrière son écran de l&rsquo;accompagner dans son aventure. Lorsqu&rsquo;on joue à un jeu en caméra fixe, on a donc une transition vers une autre caméra toutes les 5 secondes et cette transition implique pour le joueur un changement de référenciel brusque et pas toujours facile à anticiper. Si toutes les caméra du jeu regardent dans la même direction ce n&rsquo;est pas un (si gros) problème. Dans ce cas précis, le changement de réferenciel conserve les rotations et on peut implémenter facilement un schema de contrôle &ldquo;intuitif&rdquo;. Par là j&rsquo;entands un schéma dans lequel le mouvement de l&rsquo;avatar à l&rsquo;écran se fait dans le référenciel du joueur (comme dans 99.9% des jeux vidéos). Dit autrement, dans ce cas particulier, le joueur pourra toujour être surpris par un changement de caméra, mais ce changement ne nécessitera pas de lui qu&rsquo;il réagisse pour adapter l&rsquo;orientation du joystique afin que l&rsquo;avatar garde le cap d&rsquo;un plan à l&rsquo;autre (le tout en une fraction de seconde sous-peine de se manger un mur ou de faire un calin à un zombie).</p>
+<h3 id="le-tank-aux-chenilles-dargile">Le Tank aux chenilles d&rsquo;argile</h3>
+<p>Si vous avez déjà eu entre les mains un jeux en caméra fixe, vous savez certainement ce que sont les tank-controls. Dans le cas contraire une petite explication s&rsquo;impose. Il s&rsquo;agit d&rsquo;une modalité d&rsquo;inputs dans laquelle vous controlez l&rsquo;avatar dans son référentiel plutôt que dans le votre.</p>
+<p>C&rsquo;est un schéma de contrôle impopulaire car il nécessite un petit temps d&rsquo;adaptation. Il est fortement lié à la caméra fixe car c&rsquo;est la seul à ce jour qui permet de s&rsquo;abstraire des problématiques liées aux changement de référenciels soudains et répétés, inhérants au genre. Vous avez surement déjà une bonne intuition de pourquoi. Mais essayons de décortiquer un peu mieux le problème.</p>
+<h4 id="le-problème-sous-tous-les-angles">Le problème sous tous les angles</h4>
+<p>Si toutes les caméra du jeu regardent dans le même sens, le problème est moindre. Dans ce cas les changements de référentiels sont des translation et la translation conserve les directions. L&rsquo;orientation de l&rsquo;avatar est donc stable d&rsquo;un écran à l&rsquo;autre. Cela permet d&rsquo;implémenter des contrôles &ldquo;naïf&rdquo; où les mouvements de l’avatar suivent directement ceux du joystick.</p>
+<illustration>
+<p>Mais en pratique, il sera difficile de respecter cette contrainte. Car on a vu que la spécialité des caméra fixes, c&rsquo;est la possiblité d&rsquo;afficher des environnement très détaillés. Si la compléxite d&rsquo;agencement de l&rsquo;espace ne reflète pas le niveau de détail, on intègre vite de la disonnance (&ldquo;Il est bizare ton manoir ! Pourquoi les pièces sont toutes les unes à la suite des autres ?&rdquo;). Quand bien même on s&rsquo;accomoderait de cette dissonance, on passerait à côté du meilleur atout des caméra fixes (dont on parlera dans la partie suivante).</p>
+<p>On va donc devoir faire varier les angle, et c&rsquo;est là que ça se complique. Si on fait ça, l&rsquo;orientation de l&rsquo;avatar est différente d&rsquo;un écran à l&rsquo;autre.</p>
+<illustration>
+<p>Si on ne fait rien, le joueur devra adapter sa trajectoire à chaque transition de caméra. A moins d&rsquo;être un ninja, cela se traduira par une imprecision significative dans ses trajectoires. Pas pratique quand le jeu consiste à esquiver des zombis dans des couloirs. Sans compter que les changements de caméra sont très fréquents, et que même si vos reflexe sont hors norme, cela ruinera votre immersion.</p>
+<h4 id="le-contrôles-modères-une-fausse-solution">Le contrôles &ldquo;modères&rdquo;, une fausse solution</h4>
+<h4 id="heading"></h4>
+<p>Etant donné que les caméra ne peuvent pas suivre le joueur, on est obligé de changer de caméra quand l&rsquo;avatar sort du champs pour permetre au joueur derrière son écran de l&rsquo;accompagner dans son aventure. Lorsqu&rsquo;on joue à un jeu en caméra fixe, on a donc une transition vers une autre caméra toutes les 5 secondes et cette transition implique pour le joueur un changement de référenciel brusque et pas toujours facile à anticiper. Si toutes les caméra du jeu regardent dans la même direction ce n&rsquo;est pas un (si gros) problème. Dans ce cas précis, le changement de réferenciel conserve les rotations et on peut implémenter facilement un schema de contrôle &ldquo;intuitif&rdquo;. Par là j&rsquo;entands un schéma dans lequel le mouvement de l&rsquo;avatar à l&rsquo;écran se fait dans le référenciel du joueur (comme dans 99.9% des jeux vidéos). Dit autrement, dans ce cas particulier, le joueur pourra toujour être surpris par un changement de caméra, mais ce changement ne nécessitera pas de lui qu&rsquo;il réagisse pour adapter l&rsquo;orientation du joystique afin que l&rsquo;avatar garde le cap d&rsquo;un plan à l&rsquo;autre (le tout en une fraction de seconde sous-peine de se manger un mur ou de faire un calin à un zombie).</p>
 <p>&ldquo;Super on a qu&rsquo;à faire ça !&rdquo; me direz vous. Sauf que non. Parce que quand on a la possibilité de créer un monde 3D complexe et ultra credible, on a envie que son agencement, et par extention notre cheminement à travers lui soit d&rsquo;un niveau de crédibilité equivalent. Sans ça on introduit une certaine disonance (&ldquo;il est bizare ton manoir, pourquoi toutes les pièces sont à la queueleuleu comme ça ?&rdquo;). Cette dissonance peut tout à fait être délibéré et servir un propos, mais on aura quand même du mal à considérer ça comme le cas nominal. Sans compter que si on fait ça, on se prive de toute la puissance artistique qui vient avec ce parti pris (que de teasing ! on y reviendra aussi !).</p>
 <p>Pour répondre à cette problématique de referenciel, à ce jour il y a 2 écoles :</p>
 <ul>
