@@ -73,8 +73,34 @@ La tragédie, c’est que les années 90 ne reviendront pas. Et sans solution de
 
 Si cette problématique vous intrigue, n’hésitez pas à explorer ce sujet et à partager vos idées. Qui sait, peut-être que votre créativité permétra de réinventer la caméra fixe ?
 
+### Oui mais les caméra fixes, c'est la vie !
+Les caméra fixes, souvent perçues comme une relique du passé, offrent en réalité une richesse et une puissance uniques qui méritent d'être redécouvertes. Elles ne se contantent pas de repousser les limites visuelles : elles changent aussi la manière dont on raconte des histoires dans un jeu vidéo.
+
+#### La puissance à l'état brut
+Le premier avantage des caméras fixes est évident et on en a déjà un peu parlé. Elles s’affranchissent des limitations techniques pour tout ce qui est statique. En utilisant des arrière-plans précalculés, les level artists disposent d’un budget infini de triangles et de lumières pour modéliser leurs environnements. En consequence, les décors atteignent une qualité visuelle en avance sur son temps de plusieurs générations. Mais ce n'est pas tout. Cette méthode est peu gourmande en ressources, libérant ainsi de la puissance pour calculer ce qui est dynamique (personnages, les effets visuels...). Et comme une image vaut 1000 mots, en 2001 les jeux vidéos c'était ça :
+
+<img mosaique des meilleurs jeux de 2001>
+
+La même année sortait Resident evil Rebirth (celui que j'ai réinstallé la semaine dernière). Et ça ressemblait à ça :
+
+<img mosaique de captures de REmake>
+
+Ce jeu, vieux de 23 ans, tournait sur une console moins puissante que le téléphone reconditionné sur lequel vous lisez peut être ce blog. Impressionnant, non ? Même s’il ne rivalise pas avec les standards graphiques des grosse productions d'aujourd'hui, il reste étonnamment crédible, et dépasse encore visuellement une bonne partie de la tera-tonne de jeux publiés chaque jours sur Steam. Maintenant, imaginez à quoi ressemblerait un AAA moderne exploitant cette technologie, si l’industrie avait continué à investir dans ce procédé ces 20 dernières années.
+
+#### Sans style, la puissance n'est rien
+Mais vous savez quoi ? Cette qualité graphique, aussi impressionnante soit-elle, n’est même pas le plus grand atout des caméras fixes. Ce qui fait que j'y revienne encore et encore 20 ans après. Ce qui me fascine et me manque profondément dans le paysage vidéoludique moderne, c’est le contrôle artistique qu’elles offrent aux créateurs.
+
+En retirant au joueur la possibilité de manipuler la caméra, on transfère directement ce pouvoir au designer. Ce simple choix ouvre un champ de possibilités incroyables : on compose chaque plan comme le ferait un réalisateur de cinéma, en utilisant la grammaire cinématographique pour guider l’attention du joueur, susciter des émotions ou installer une ambiance. Ce contrôle total permet de décider ce que le joueur voit (ou ne voit pas), comment il le voit, et dans quel ordre.
+
+L'emploi de techniques cinématographiques dans le jeux vidéo n'est pas exclusif à ce type de jeux. Le médium à toujours cherché à s'impirer de son grand frère, et ce, depuis avant même que l'on fasse de la 3D. On pense naturellement aux cinématiques de *Metal Gear* ou aux QTE de *Resident Evil*. Pourtant, aucune de ces avancées ne permet ce que réalisait une simple caméra fixe : fusionner gameplay et mise en scène dans une expérience homogène et continue.
+
+Tous ces jeux sont des chef d'oeuvre qui ont marqué le médium et executent à la perfection ce qu'ils cherchent à faire. Mais on reste dans un modèle où on altèrene gameplay et cinématiques. Les transitions sont parfois subtiles, mais il s’agit toujours d’un ballet entre ces deux formes d’expression. Même dans le plan-sequence magistral qu'est *God of War* on ne fait que flouter (admirablement bien) la limite. MOn a toujours des squences de gameplay classique, et des cinématique/QTE dans lesquelles on met des coups de pelle à un dragon en plein ciel.
+
+À l’inverse, la caméra fixe établit un contrat tacite qui vaut pour chaque seconde de l'experience. "Toi, joueur, tu contrôles ton personnage. Moi, réalisateur, je garde les pleins pouvoirs pour ce qui est de la mise en scène et de l’ambiance." Cette approche unique crée une synergie incomparable, qui me manque énormément et qui, je crois, pourrait offrir des expériences encore inexplorées.
+
 
 ### Oui mais les caméra fixes, c'est la vie !
+Les caméra fixes, souvent perçues comme une relique du passé, offrent en réalité une richesse et une puissance uniques qui méritent d'être redécouvertes. Elles ne se contantent pas de repousser les limites visuelles : elles change aussi la manière dont on raconte des histoires dans un jeu vidéo.
 
 #### La puissance à l'état brut
 Le premier avantage des caméra fixes est évident et on en a déjà un peu parlé : cela permet de s'abstraire completement des limitations technique pour tout ce qui est statique. Comme on l'a vu, cela donne aux level artistes un budget de triangles et de lumières infini pour modéliser leurs evironnements. En soit c'est déjà enorme, mais en plus de ça, cet environnement est très peu coûteux à afficher, ce qui libère les ressources pour autre chose (détails des personnages, effets visuels divers...). En consequence les jeux qui utilisent cette technique sont d'une qualité visuelle en avance sur sont temps de plusieurs générations au moment où ils sortent. Et comme une image vaut 1000 mots, en 2001 les jeux vidéos c'était ça :
