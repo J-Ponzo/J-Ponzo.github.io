@@ -79,11 +79,11 @@ Dans le même temps, ce procédé permet de libérer des ressources pour tout ce
 
 En 2001, le jeu vidéo, c'était ça :
 
-<img mosaique des meilleurs jeux de 2001>
+![Mozaïc de classics sortis en 2001](images/mozaic2001classics.opti.jpg)
 
 La même année, *Resident Evil Rebirth* sortait sur GameCube. Et ça ressemblait à ça :
 
-<img mosaique de captures de REmake>
+![Mozaïc de captures issues de REmake](images/mozaicREmake.opti.jpg)
 
 Ce jeu, vieux de 23 ans, tournait sur une console bien moins puissante que le smartphone sur lequel vous lisez peut-être cet article. Et pourtant, il reste crédible aujourd’hui, surpassant même visuellement une grande partie des innombrables jeux publiés chaque jour sur Steam. Maintenant, imaginez ce qu'un AAA moderne pourrait accomplir avec cette technique sur du hardware actuel si on avait continué de la perfectionner depuis. Les possibilités sont vertigineuses !
 
