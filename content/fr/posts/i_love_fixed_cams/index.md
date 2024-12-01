@@ -6,16 +6,21 @@ title = 'Ode à la caméra fixe et aux contrôles du tank'
 description = 'Article dans lequel je parle de caméras fixes'
 +++
 ## Introduction : Sweet sweet 90's
-Depuis toujours, j'éprouve une fascination certaine pour les jeux en caméra fixe. C'est avec des titres comme *Alone in the Dark*, *Final Fantasy* et bien sûr *Resident Evil* que j'ai grandi. Dire que ces licences ont marqué mon enfance serait un euphémisme. C'est une véritable passion qui m'a pris dans les années 90 et qui a perduré au-delà... bien au-delà... Pour tout vous dire, j'ai même réinstallé *Resident Evil Rebirth* pas plus tard que la semaine dernière, alors que le remake de *Silent Hill 2* vient tout juste de sortir et que celui de *Dead Space* traîne dans ma "*To-Play list*" depuis près d'un an. Parfois, je culpabilise un peu de la manière dont je consacre le peu de temps de jeu dont je dispose maintenant que je suis un adulte responsable (Oui, bon... ça va... j'ai un chat, ça compte ?). Mes collègues ne manquent pas de me taquiner avec ça. Ils me traitent de "boomer" et me reprochent d'être un peu trop tourné vers le passé.
+Depuis toujours, j'éprouve une fascination certaine pour les jeux en caméra fixe. C'est avec des titres comme *Alone in the Dark*, *Final Fantasy* et bien sûr *Resident Evil* que j'ai grandi. Dire que ces licences ont marqué mon enfance serait un euphémisme. C'est une véritable passion qui m'a pris dans les années 90 et qui ne m'a plus quitté. Pour tout vous dire, j'ai même réinstallé *Resident Evil Rebirth* pas plus tard que la semaine dernière, alors que le remake de *Silent Hill 2* vient tout juste de sortir et que celui de *Dead Space* traîne dans ma "*To-Play list*" depuis près d'un an. Parfois, je culpabilise un peu de la manière dont je consacre le peu de temps de jeu dont je dispose maintenant que je suis un adulte responsable (Oui, bon... ça va... j'ai un chat, ça compte ?). Mes collègues ne manquent pas de me taquiner avec ça. Ils me traitent de "boomer" et me reprochent d'être un peu trop tourné vers le passé.
 
 Peut-être qu'ils n'ont pas complètement tort, mais je pense que la réalité est un peu plus complexe. Si je suis devenu un retro-gamer, ce n'est pas parce que "le jeu vidéo c'était mieux avant !". C'est un médium extraordinaire, qui n’a rien à envier à d'autres formes d’art, qui ne cesse d'évoluer, se réinvente en permanence, et c'est une chose dont je me réjouis. Pourtant, ces "vieilleries" parviennent encore à capturer mon attention, devançant même des monuments acclamés par la critique que j’attendais depuis des mois. Si ces chefs-d'œuvre ont un tel pouvoir sur moi, c'est parce qu'ils ont quelque chose d'unique. Quelque chose qui me parle et que je n'arrive pas à retrouver dans les productions actuelles, si qualitatives soient-elles.
 
+![Image stylisée d'une chambre d'ado des années 90](images/sweet90s.opti.jpg)
+
 Il faut dire que cette famille de jeux n'a plus beaucoup d'héritiers aujourd'hui. À ma connaissance, le dernier représentant de sa lignée est *Resident Evil Zero*, sorti en 2002 sur GameCube. Et depuis, plus rien ou presque. C’est un peu comme si l’équivalent vidéoludique, d’un point de vue narratif, avait cessé d’exister comme ça, d’un coup. Hier, on avait des livres écrits à la première personne, et du jour au lendemain, pouf… on n’a plus que des narrateurs omniscients. En tant qu'amateur de ce style de jeux, je ne peux m'empêcher d'y voir une certaine injustice. Mais ça ne fait pas non plus de moi un "arriériste". Au contraire, ce que je regrette, en vérité, c'est que cette branche du médium, si prometteuse, n’ait jamais eu l’occasion d’évoluer pleinement et de réaliser son potentiel.
 
-Si vous avez tenu bon jusqu'ici, merci pour votre patience et votre curiosité. Et si vous êtes prêt à poursuivre, je vous propose d'explorer ensemble comment les caméras fixes sont apparues, pourquoi elles ont disparu, et pourquoi, à mon avis, on devrait continuer de faire des jeux avec.
+Si vous avez tenu bon jusqu'ici, merci pour votre patience et votre curiosité. Et si vous êtes prêt à poursuivre, je vous propose d'explorer ensemble comment les caméras fixes sont apparues, pourquoi selon moi elles ont disparu, et pourquoi, à mon avis, on devrait continuer de faire des jeux avec.
 
 ## Part I : Casser des murs à grand coups de design !
 Personne ne peut prétendre connaître tous les jeux vidéo sortis depuis la naissance du médium. Mais je vais quand même prendre le risque d’affirmer que la caméra fixe est née en 1992 sur PC avec Alone in the Dark (et c’est un vrai risque, car si j’ai tort, ça fout en l’air la conclusion de cette partie). Ce qui est certain, en revanche, c’est qu’elle a connu son âge d’or sur la cinquième génération de consoles (PS1/N64/Saturn), entre la fin des années 90 et le début des années 2000.
+
+![Grille-pain-PS1 sur une table de petit-dèj](images/PSToaster.opti.jpg)
+*Une authentique PS1 dans son habitat naturel*
 
 Nous étions alors au début de l’ère de la 3D. Les machines, impressionnantes pour l’époque, se rapprocheraient d’un grille-pain connecté bas de gamme si on les jugeait avec nos standards actuels. Les GPU n’étaient pas programmables, la mémoire disponible ridicule… bref, les développeurs de cette époque étaient de véritables héros. Pour créer des jeux dignes de ce nom, ils devaient composer avec des limitations matérielles drastiques et adopter des stratégies d’optimisation parfois extrêmes.
 
@@ -31,20 +36,27 @@ Renoncer à la mobilité du point de vue dans un jeu est un choix de design radi
 
 Dans ces conditions, le décor peut être rendu à l’avance en CGI ("baké") sous forme d’une image 2D. Lors de l’exécution du jeu, il suffit d’afficher cette image en trompe-l’œil, sur laquelle viennent se superposer les éléments dynamiques rendus en temps réel. Résultat : l’environnement, qui monopolise habituellement la majeure partie des ressources, ne coûte plus que deux triangles et une texture. Le gain en performance est tout simplement stratosphérique.
 
+![Prccess de composition fond static + geometry dynamique avec OpenRE](images/openRE_rendering_annoted_brighter.opti.webp)
+*(1) environnement statique (rendu à l'avance avec Blender)*\
+*(2) éléments dynamiques (rendu en temps réèl dans Godot)*\
+*(3) Rendu finale (composé en temps réèl dans Godot avec [OpenRE](/projects/open_re))*
+
 #### La cuillère n'existe pas !
-Cet exemple illustre parfaitement comment une problématique technique en apparence insoluble peut être surmontée grâce à un choix de design audacieux. La logique finit toujours par atteindre ses limites, car elle est bâtie sur des normes (c'est Morpheus qui le dit dans Matrix. Donc c'est vrai !). La créativité, elle, n'est pas bornée, ce qui lui permet parfois de réussir quand le "gros cerveau" échoue.
+Cet exemple illustre parfaitement comment une problématique technique en apparence insoluble peut être surmontée grâce à un choix de design audacieux. La logique finit toujours par atteindre ses limites, car elle est bâtie sur des normes (c'est pas moi qui le dit, c'est Morpheus dans Matrix. Donc c'est vrai !). La créativité, elle, n'est pas bornée, ce qui lui permet parfois de réussir quand le "gros cerveau" échoue.
 
 Là où je veux en venir, c’est qu’une petite dose d’ouverture d’esprit et de pensée hors du cadre a permis de créer des mondes et de raconter des histoires d’une richesse et d’une sophistication inimaginables pour une PS1. Et on ne le doit pas à un programmeur de génie, mais à la créativité d’un designer. Même si, en l'occurrence, Frédérick Raynal, créateur de Alone in the Dark et de cette technique, est sans conteste les deux à la fois.
 
 ## Part II : Le Colosse aux chenilles d'argile
-Si vous avez déjà eu entre les mains un jeu en caméra fixe, vous savez certainement ce que sont les tank-controls. Dans le cas contraire, une petite explication s’impose. Il s’agit d’une modalité d’inputs où vous contrôlez l’avatar dans son référentiel plutôt que dans le vôtre.
+Si vous avez déjà eu entre les mains un jeu en caméra fixe, vous savez certainement ce que sont les tank-controls. Dans le cas contraire, une petite explication s’impose. Il s’agit d’une modalité d’inputs où vous contrôlez l’avatar dans son référentiel plutôt que dans le vôtre. L'axe vertical le déplace d'avant en arrière tandis que l'axe horizontal permet de le faire pivoter sur lui-même.
 
-Ce schéma de contrôle est impopulaire car il nécessite un petit temps d’adaptation. Il est fortement lié à la caméra fixe, car c’est le seul à ce jour qui permet de s’abstraire des problématiques liées aux changements de référentiels soudains et répétés, inhérents au genre. Vous avez peut-être une intuition du pourquoi, mais essayons de décortiquer un peu mieux le problème.
+![Illustration humoristique des tank controls](images/jill_tank.opti.webp)
+
+Ce schéma de contrôle est impopulaire car il nécessite un petit temps d’adaptation. Il est fortement lié à la caméra fixe, car c’est le seul à ce jour qui permet de s’abstraire complètement des problématiques liées aux changements de référentiels soudains et répétés, inhérents au genre. Vous avez peut-être déjà une intuition de pourquoi, mais essayons de décortiquer un peu mieux le problème.
 
 #### Le problème sous tous les angles
 Si les caméras regardent dans le même sens, le problème est moindre. Dans ce cas, les changements de référentiels sont des translations, et la translation conserve les directions. L’orientation de l’avatar reste stable d’un écran à l’autre. Cela permet d’implémenter un schéma de contrôles " naïf ", où les mouvements de l’avatar suivent directement ceux du joystick.
 
-(Illustration : un avatar passant d’une pièce à une autre avec des caméras alignées.)
+![Illustration d'un changements de plan avec caméra alignées](images/parallel_cams.opti.webp)
 
 Mais en pratique, il sera difficile de respecter cette contrainte. La spécialité des caméras fixes est de permettre des environnements très détaillés. Si l’agencement de l’espace ne reflète pas ce niveau de détail, on intègre vite une dissonance : " Il est bizarre ton manoir ! Pourquoi les pièces sont toutes les unes à la suite des autres ? "
 
@@ -52,7 +64,7 @@ Et même si l’on acceptait cette dissonance, on se priverait de toute la puiss
 
 On va donc devoir faire varier les angles, et c’est là que ça se complique. Si on fait ça, les directions ne sont plus conservées. L’orientation de l’avatar diffère d’un écran à l’autre.
 
-(Illustration : un avatar changeant de pièce avec une caméra à angle opposé, illustrant les inversions de direction.)
+![Illustration d'un changements de plan avec caméra non-alignées](images/non_parallel_cams.opti.webp)
 
 Si on ne fait rien, le joueur devra adapter sa trajectoire à chaque transition de caméra. À moins d’être un ninja, cela se traduira par une imprécision significative dans ses déplacements. Pas pratique quand le gameplay exige d’esquiver des zombies dans des couloirs ! De plus, les changements de caméra étant fréquents, même avec de bons réflexes, ajuster sa direction toutes les cinq secondes peut briser l’immersion.
 
@@ -70,7 +82,7 @@ La tragédie, c’est que les années 90 ne reviendront pas. Et sans solution de
 Si cette problématique vous intrigue, n’hésitez pas à explorer ce sujet et à partager vos idées. Qui sait, peut-être que votre créativité permettra d'offrir au genre le second souffle qu'il mérite ?
 
 ## Part III : Un joyaux oublié
-Les caméras fixes, souvent perçues comme un vestige du passé, offrent pourtant des avantages techniques et artistiques incomparables, même aujourd'hui. Elles transcendent les limitations matérielles et offrent une manière unique de raconter des histoires dans un jeu vidéo.
+Les caméras fixes, souvent perçues comme un vestige du passé, offriraient pourtant des avantages techniques et artistiques incomparables, même aujourd'hui. Elles transcendent les limitations matérielles et constituent une manière unique de raconter des histoires dans un jeu vidéo.
 
 #### La puissance à l'état brut
 Le premier avantage est technique, et on l’a déjà évoqué : les caméras fixes permettent de s’affranchir des limitations matérielles pour tout ce qui est statique. En utilisant des arrière-plans précalculés, les level artists disposent d’un budget illimité en triangles, lumières et textures pour créer des environnements d'un niveau de détail exceptionnel.
@@ -80,12 +92,13 @@ Dans le même temps, ce procédé permet de libérer des ressources pour tout ce
 En 2001, le jeu vidéo, c'était ça :
 
 ![Mozaïc de classics sortis en 2001](images/mozaic2001classics.opti.jpg)
+*De gauche à droite et de haut en bas : Max Payne, Jak and Daxter, GTA3, Grand Turismo 3, Halo: Combat Evolved et Final Fantasy X*
 
 La même année, *Resident Evil Rebirth* sortait sur GameCube. Et ça ressemblait à ça :
 
 ![Mozaïc de captures issues de REmake](images/mozaicREmake.opti.jpg)
 
-Ce jeu, vieux de 23 ans, tournait sur une console bien moins puissante que le smartphone sur lequel vous lisez peut-être cet article. Et pourtant, il reste crédible aujourd’hui, surpassant même visuellement une grande partie des innombrables jeux publiés chaque jour sur Steam. Maintenant, imaginez ce qu'un AAA moderne pourrait accomplir avec cette technique sur du hardware actuel si on avait continué de la perfectionner depuis. Les possibilités sont vertigineuses !
+Ce jeu, vieux de 23 ans, tournait sur une console bien moins puissante que le smartphone sur lequel vous lisez peut-être cet article. Et pourtant, il reste crédible aujourd’hui, surpassant même visuellement une grande partie des innombrables jeux publiés chaque jour sur Steam. Maintenant, imaginez ce qu'un AAA moderne pourrait accomplir avec cette technique sur du hardware actuel. Les perspectives sont vertigineuses !
 
 Mais, aussi impressionnant que cela puisse être, ce n’est pas la plus grande force des caméras fixes. Leur véritable atout réside dans le contrôle artistique qu’elles offrent aux créateurs.
 
@@ -97,11 +110,11 @@ Les jeux vidéo se sont toujours inspirés du cinéma, et ce, depuis avant même
 À l’inverse, la caméra fixe établit un contrat tacite qui vaut pour chaque seconde de l'expérience. "Toi, joueur, tu contrôles ton personnage. Moi, réalisateur, je garde les pleins pouvoirs sur la mise en scène et l’ambiance." Cette approche unique crée une synergie incomparable, qui me manque énormément et qui, selon moi, pourrait encore offrir au médium des expériences de qualité et d'une grande profondeur.
 
 ## Conclusion : Mon caillou à l'édifice 
-La caméra fixe est donc plus qu'une relique du passé. C'est une approche unique, capable de fusionner narration et interactivité pour créer des expériences uniques. Faute d'un schéma de contrôle satisfaisant, elle n'est presque plus utilisée dans les grosses productions. Elle continue malgré tout de vivre sur la scène indépendante, à travers des titres comme *Alisa* ou *Tormented Souls*. J'ai de l'admiration et de la reconnaissance envers les gens qui ont réalisé ces jeux. Ce sont des projets qui m’inspirent et me donnent envie de contribuer à mon tour.
+La caméra fixe est donc une approche unique, capable de fusionner narration et interactivité pour créer des expériences tout aussi uniques, et d'un qualité visuelle impressionnante. Faute d'un schéma de contrôle satisfaisant, elle n'est presque plus utilisée au sein des grosses productions. Elle continue malgré tout de vivre sur la scène indépendante, à travers des titres comme *Alisa* ou *Tormented Souls*. J'ai de l'admiration et de la reconnaissance envers les gens qui ont réalisé ces jeux. Ce sont des projets qui m’inspirent et me donnent envie de contribuer à mon tour.
 
-Je ne suis pas sûr d'être capable de réaliser un jeu de cette trempe un jour, mais je compte bien essayer. Pour l'instant, je préfère me focaliser sur la technique et créer des outils pour permettre à d'autres de réaliser leur vision. C’est pourquoi je travaille sur OpenRE (pour Open Retro Engine). Ce projet vise à simplifier le développement de jeux en caméra fixe et à explorer ce que cette technique peut offrir aujourd'hui. Si le sujet vous intéresse, vous en apprendrez plus dans [cet article](/projects/open_re). 
+Je ne suis pas sûr d'être capable de réaliser un jeu de cette trempe un jour, mais je compte bien essayer. Pour l'instant cela dit, je préfère me focaliser sur la technique et créer des outils pour permettre à d'autres de réaliser leur vision. C’est pourquoi je travaille sur OpenRE (pour Open Retro Engine). Ce projet vise à simplifier le développement de jeux en caméra fixe et à explorer ce que cette technique peut offrir aujourd'hui. Si le sujet vous intéresse, vous en apprendrez plus dans [cet article](/projects/open_re). 
 
-À ce stade, OpenRE n'en est qu'à ses balbutiements. Mais le moment venu, le projet sera distribué dans un format libre et open-source pour que chacun puisse l'utiliser, perpétuer cet art, et peut-être même réinventer le genre. Je n'ai pas la prétention de révolutionner le jeu vidéo avec ce projet. Je souhaite simplement contribuer à faire vivre ce genre vidéoludique et à lui rendre hommage. Si cette technologie inspire des gens et leur donne envie de créer des jeux, le projet aura dépassé ses objectifs. Dans le cas contraire, je me serais quand même bien amusé à le développer.
+À ce stade, OpenRE n'en est qu'à ses balbutiements. Mais le moment venu, le projet sera distribué dans un format libre et open-source pour que chacun puisse l'utiliser, perpétuer cet art, et peut-être même réinventer le genre. Je n'ai évidemment pas la prétention de révolutionner le jeu vidéo avec ce projet. Je souhaite simplement contribuer à faire vivre ce genre vidéoludique que j'aime tant, et à lui rendre hommage. Si cette technologie inspire des gens et leur donne envie de créer des jeux, le projet aura dépassé ses objectifs. Dans le cas contraire, je me serais quand même bien amusé à le développer.
 
 
 
