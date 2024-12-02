@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr-fr"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<html lang="fr-fr"><head><meta charset="utf-8">
 <meta http-equiv="content-type" content="text/html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -18,7 +18,7 @@
 <meta property="og:locale" content="fr-fr" />
 <meta name="language" content="fr-fr" />
 
-  <link rel="alternate" hreflang="fr-fr" href="http://localhost:1313/posts/i_love_fixed_cams/" title="french" />
+  <link rel="alternate" hreflang="fr-fr" href="https://exemple/posts/i_love_fixed_cams/" title="french" />
 
 
 
@@ -31,7 +31,7 @@
     <meta property="og:type" content="article" />
     <meta property="og:article:published_time" content=2024-11-15T06:26:08&#43;0100 />
     <meta property="article:published_time" content=2024-11-15T06:26:08&#43;0100 />
-    <meta property="og:url" content="http://localhost:1313/posts/i_love_fixed_cams/" />
+    <meta property="og:url" content="https://exemple/posts/i_love_fixed_cams/" />
 
     
     <meta property="og:article:author" content="J-Ponzo(TurboTartine)" />
@@ -71,7 +71,7 @@
 <meta name="generator" content="Hugo 0.137.0">
 
     
-    <meta property="og:url" content="http://localhost:1313/posts/i_love_fixed_cams/">
+    <meta property="og:url" content="https://exemple/posts/i_love_fixed_cams/">
   <meta property="og:site_name" content="Tartine Interactive">
   <meta property="og:title" content="Ode à la caméra fixe et aux contrôles du tank">
   <meta property="og:description" content="Article dans lequel je parle de caméras fixes">
@@ -91,7 +91,7 @@
 
     
 
-    <link rel="canonical" href="http://localhost:1313/posts/i_love_fixed_cams/">
+    <link rel="canonical" href="https://exemple/posts/i_love_fixed_cams/">
     <link href="/style.min.2d921c18cf1ec555ffc03d59a8adc211c402c68c930c27d6a0c306ab175a8d09.css" rel="stylesheet">
     <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
 
@@ -105,7 +105,7 @@
 
 
 
-<link rel="manifest" href="http://localhost:1313/site.webmanifest">
+<link rel="manifest" href="https://exemple/site.webmanifest">
 
 <meta name="msapplication-config" content="/browserconfig.xml">
 <meta name="msapplication-TileColor" content="#2d89ef">
@@ -116,14 +116,15 @@
 
     
     
+    
 </head>
 <body data-theme = "dark" class="notransition">
 
-<script src="/js/theme.js"></script>
+<script src="/js/theme.min.8961c317c5b88b953fe27525839672c9343f1058ab044696ca225656c8ba2ab0.js" integrity="sha256-iWHDF8W4i5U/4nUlg5ZyyTQ/EFirBEaWyiJWVsi6KrA="></script>
 
 <div class="navbar" role="navigation">
     <nav class="menu" aria-label="Main Navigation">
-        <a href="http://localhost:1313/" class="logo">
+        <a href="https://exemple/" class="logo">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
 stroke-linejoin="round" class="feather feather-home">
@@ -256,7 +257,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Nous étions alors au début de l’ère de la 3D. Les machines, impressionnantes pour l’époque, se rapprocheraient d’un grille-pain connecté bas de gamme si on les jugeait avec nos standards actuels. Les GPU n’étaient pas programmables, la mémoire disponible ridicule… bref, les développeurs de cette époque étaient de véritables héros. Pour créer des jeux dignes de ce nom, ils devaient composer avec des limitations matérielles drastiques et adopter des stratégies d’optimisation parfois extrêmes.</p>
 <h4 id="ce-qui-ne-bouge-pas-te-rend-plus-fort">Ce qui ne bouge pas, te rend plus fort</h4>
 <p>De nombreuses techniques d’optimisation dans le jeu vidéo reposent sur un postulat simple : la majorité de la géométrie à afficher est statique. Certes, il y a les personnages, les véhicules, et les effets de particules qui eux sont dynamiques. Mais la quantité de géométrie que cela représente est relativement faible face à ce qui est nécessaire pour modéliser l’environnement. Et cet environnement, lui, ne bouge pas.</p>
-<p>Cette observation reste vraie aujourd’hui. De nombreuses technologies modernes exploitent toujours ce principe. On peut citer <a href="/misc/static_lighting/">l&rsquo;éclairage statique</a>, <a href="/misc/distance_field/">les &ldquo;distance fields&rdquo;</a> ou encore <a href="/misc/reflection_capture/">les reflection captures</a>. Ces techniques consistent à <em>&ldquo;baker&rdquo;</em> (calculer à l’avance) ce qui ne bouge pas, afin de pouvoir réutiliser ces données plus tard, en temps réel et à moindre coût.</p>
+<p>Cette observation reste vraie aujourd’hui. De nombreuses technologies modernes exploitent toujours ce principe. On peut citer <a href="/misc/static_lighting">l&rsquo;éclairage statique</a>, <a href="/misc/distance_field">les &ldquo;distance fields&rdquo;</a> ou encore <a href="/misc/reflection_capture">les reflection captures</a>. Ces techniques consistent à <em>&ldquo;baker&rdquo;</em> (calculer à l’avance) ce qui ne bouge pas, afin de pouvoir réutiliser ces données plus tard, en temps réel et à moindre coût.</p>
 <p>Cette philosophie d&rsquo;optimisation a donc influencé de nombreuses approches, mais comme nous allons le voir, la caméra fixe élève ça à un autre niveau.</p>
 <h4 id="plus-haut--plus-fort--plus-fixe-">Plus haut ! plus fort ! plus fixe !</h4>
 <p>Renoncer à la mobilité du point de vue dans un jeu est un choix de design radical qui vient avec son lot de forces et de contraintes. On y reviendra. Cela dit, d’un point de vue purement technique, ce choix place les développeurs dans un cas particulier intéressant : les pixels de l’écran eux-mêmes deviennent une donnée statique.</p>
@@ -264,7 +265,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p><img alt="Prccess de composition fond static + geometry dynamique avec OpenRE" src="/posts/i_love_fixed_cams/images/openRE_rendering_annoted_brighter.opti.webp">
 <em>(1) environnement statique (rendu à l&rsquo;avance avec Blender)</em><br>
 <em>(2) éléments dynamiques (rendu en temps réèl dans Godot)</em><br>
-<em>(3) Rendu finale (composé en temps réèl dans Godot avec <a href="/projects/open_re/">OpenRE</a>)</em></p>
+<em>(3) Rendu finale (composé en temps réèl dans Godot avec <a href="/projects/open_re">OpenRE</a>)</em></p>
 <h4 id="la-cuillère-nexiste-pas-">La cuillère n&rsquo;existe pas !</h4>
 <p>Cet exemple illustre parfaitement comment une problématique technique en apparence insoluble peut être surmontée grâce à un choix de design audacieux. La logique finit toujours par atteindre ses limites, car elle est bâtie sur des normes (c&rsquo;est pas moi qui le dit, c&rsquo;est Morpheus dans Matrix. Donc c&rsquo;est vrai !). La créativité, elle, n&rsquo;est pas bornée, ce qui lui permet parfois de réussir quand le &ldquo;gros cerveau&rdquo; échoue.</p>
 <p>Là où je veux en venir, c’est qu’une petite dose d’ouverture d’esprit et de pensée hors du cadre a permis de créer des mondes et de raconter des histoires d’une richesse et d’une sophistication inimaginables pour une PS1. Et on ne le doit pas à un programmeur de génie, mais à la créativité d’un designer. Même si, en l&rsquo;occurrence, Frédérick Raynal, créateur de Alone in the Dark et de cette technique, est sans conteste les deux à la fois.</p>
@@ -305,7 +306,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>À l’inverse, la caméra fixe établit un contrat tacite qui vaut pour chaque seconde de l&rsquo;expérience. &ldquo;Toi, joueur, tu contrôles ton personnage. Moi, réalisateur, je garde les pleins pouvoirs sur la mise en scène et l’ambiance.&rdquo; Cette approche unique crée une synergie incomparable, qui me manque énormément et qui, selon moi, pourrait encore offrir au médium des expériences de qualité et d&rsquo;une grande profondeur.</p>
 <h2 id="conclusion--mon-caillou-à-lédifice">Conclusion : Mon caillou à l&rsquo;édifice</h2>
 <p>La caméra fixe est donc une approche unique, capable de fusionner narration et interactivité pour créer des expériences tout aussi uniques, et d&rsquo;un qualité visuelle impressionnante. Faute d&rsquo;un schéma de contrôle satisfaisant, elle n&rsquo;est presque plus utilisée au sein des grosses productions. Elle continue malgré tout de vivre sur la scène indépendante, à travers des titres comme <em>Alisa</em> ou <em>Tormented Souls</em>. J&rsquo;ai de l&rsquo;admiration et de la reconnaissance envers les gens qui ont réalisé ces jeux. Ce sont des projets qui m’inspirent et me donnent envie de contribuer à mon tour.</p>
-<p>Je ne suis pas sûr d&rsquo;être capable de réaliser un jeu de cette trempe un jour, mais je compte bien essayer. Pour l&rsquo;instant cela dit, je préfère me focaliser sur la technique et créer des outils pour permettre à d&rsquo;autres de réaliser leur vision. C’est pourquoi je travaille sur OpenRE (pour Open Retro Engine). Ce projet vise à simplifier le développement de jeux en caméra fixe et à explorer ce que cette technique peut offrir aujourd&rsquo;hui. Si le sujet vous intéresse, vous en apprendrez plus dans <a href="/projects/open_re/">cet article</a>.</p>
+<p>Je ne suis pas sûr d&rsquo;être capable de réaliser un jeu de cette trempe un jour, mais je compte bien essayer. Pour l&rsquo;instant cela dit, je préfère me focaliser sur la technique et créer des outils pour permettre à d&rsquo;autres de réaliser leur vision. C’est pourquoi je travaille sur OpenRE (pour Open Retro Engine). Ce projet vise à simplifier le développement de jeux en caméra fixe et à explorer ce que cette technique peut offrir aujourd&rsquo;hui. Si le sujet vous intéresse, vous en apprendrez plus dans <a href="/projects/open_re">cet article</a>.</p>
 <p>À ce stade, OpenRE n&rsquo;en est qu&rsquo;à ses balbutiements. Mais le moment venu, le projet sera distribué dans un format libre et open-source pour que chacun puisse l&rsquo;utiliser, perpétuer cet art, et peut-être même réinventer le genre. Je n&rsquo;ai évidemment pas la prétention de révolutionner le jeu vidéo avec ce projet. Je souhaite simplement contribuer à faire vivre ce genre vidéoludique que j&rsquo;aime tant, et à lui rendre hommage. Si cette technologie inspire des gens et leur donne envie de créer des jeux, le projet aura dépassé ses objectifs. Dans le cas contraire, je me serais quand même bien amusé à le développer.</p>
 
             </div>
@@ -372,7 +373,7 @@ stroke-linejoin="round" class="feather feather-home">
 
 
     
-    <script async src="http://localhost:1313/js/main.js" ></script>
+    <script src="https://exemple/js/main.min.35f435a5d8eac613c52daa28d8af544a4512337d3e95236e4a4978417b8dcb2f.js" integrity="sha256-NfQ1pdjqxhPFLaoo2K9USkUSM30&#43;lSNuSkl4QXuNyy8="></script>
 
     
 

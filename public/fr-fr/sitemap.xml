@@ -2,85 +2,76 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/</loc>
+    <loc>https://exemple/</loc>
     <lastmod>2024-11-18T06:28:42+01:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en-us"
-                href="http://localhost:1313/en-us/"
+                href="https://exemple/en-us/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr-fr"
-                href="http://localhost:1313/"
+                href="https://exemple/"
                 />
   </url><url>
-    <loc>http://localhost:1313/projects/open_re/</loc>
+    <loc>https://exemple/projects/</loc>
     <lastmod>2024-11-18T06:28:42+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/projects/</loc>
-    <lastmod>2024-11-18T06:28:42+01:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/</loc>
+    <loc>https://exemple/posts/</loc>
     <lastmod>2024-11-15T06:26:08+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/i_love_fixed_cams/</loc>
+    <loc>https://exemple/posts/i_love_fixed_cams/</loc>
     <lastmod>2024-11-15T06:26:08+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/pages/about/</loc>
+    <loc>https://exemple/pages/about/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en-us"
-                href="http://localhost:1313/en-us/pages/about/"
+                href="https://exemple/en-us/pages/about/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr-fr"
-                href="http://localhost:1313/pages/about/"
+                href="https://exemple/pages/about/"
                 />
   </url><url>
-    <loc>http://localhost:1313/categories/</loc>
+    <loc>https://exemple/categories/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en-us"
-                href="http://localhost:1313/en-us/categories/"
+                href="https://exemple/en-us/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr-fr"
-                href="http://localhost:1313/categories/"
+                href="https://exemple/categories/"
                 />
   </url><url>
-    <loc>http://localhost:1313/misc/distance_field/</loc>
+    <loc>https://exemple/misc/</loc>
   </url><url>
-    <loc>http://localhost:1313/misc/</loc>
-  </url><url>
-    <loc>http://localhost:1313/pages/</loc>
+    <loc>https://exemple/pages/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en-us"
-                href="http://localhost:1313/en-us/pages/"
+                href="https://exemple/en-us/pages/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr-fr"
-                href="http://localhost:1313/pages/"
+                href="https://exemple/pages/"
                 />
   </url><url>
-    <loc>http://localhost:1313/misc/reflection_capture/</loc>
-  </url><url>
-    <loc>http://localhost:1313/misc/static_lighting/</loc>
-  </url><url>
-    <loc>http://localhost:1313/tags/</loc>
+    <loc>https://exemple/tags/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en-us"
-                href="http://localhost:1313/en-us/tags/"
+                href="https://exemple/en-us/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="fr-fr"
-                href="http://localhost:1313/tags/"
+                href="https://exemple/tags/"
                 />
   </url>
 </urlset>

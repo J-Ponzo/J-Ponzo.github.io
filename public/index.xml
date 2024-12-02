@@ -2,28 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Home on Tartine Interactive</title>
-    <link>http://localhost:1313/</link>
+    <link>https://exemple/</link>
     <description>Recent content in Home on Tartine Interactive</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-fr</language>
-    <lastBuildDate>Mon, 18 Nov 2024 06:28:42 +0100</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>OpenRE</title>
-      <link>http://localhost:1313/projects/open_re/</link>
-      <pubDate>Mon, 18 Nov 2024 06:28:42 +0100</pubDate>
-      
-      <guid>http://localhost:1313/projects/open_re/</guid>
-      
-      <description>&lt;p&gt;TODO&lt;/p&gt;</description>
-      
-    </item>
-    
+    <lastBuildDate>Mon, 18 Nov 2024 06:28:42 +0100</lastBuildDate><atom:link href="https://exemple/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Ode à la caméra fixe et aux contrôles du tank</title>
-      <link>http://localhost:1313/posts/i_love_fixed_cams/</link>
+      <link>https://exemple/posts/i_love_fixed_cams/</link>
       <pubDate>Fri, 15 Nov 2024 06:26:08 +0100</pubDate>
       
-      <guid>http://localhost:1313/posts/i_love_fixed_cams/</guid>
+      <guid>https://exemple/posts/i_love_fixed_cams/</guid>
       
       <description>&lt;h2 id=&#34;introduction--sweet-sweet-90s&#34;&gt;Introduction : Sweet sweet 90&amp;rsquo;s&lt;/h2&gt;
 &lt;p&gt;Depuis toujours, j&amp;rsquo;éprouve une fascination certaine pour les jeux en caméra fixe. C&amp;rsquo;est avec des titres comme &lt;em&gt;Alone in the Dark&lt;/em&gt;, &lt;em&gt;Final Fantasy&lt;/em&gt; et bien sûr &lt;em&gt;Resident Evil&lt;/em&gt; que j&amp;rsquo;ai grandi. Dire que ces licences ont marqué mon enfance serait un euphémisme. C&amp;rsquo;est une véritable passion qui m&amp;rsquo;a pris dans les années 90 et qui ne m&amp;rsquo;a plus quitté. Pour tout vous dire, j&amp;rsquo;ai même réinstallé &lt;em&gt;Resident Evil Rebirth&lt;/em&gt; pas plus tard que la semaine dernière, alors que le remake de &lt;em&gt;Silent Hill 2&lt;/em&gt; vient tout juste de sortir et que celui de &lt;em&gt;Dead Space&lt;/em&gt; traîne dans ma &amp;ldquo;&lt;em&gt;To-Play list&lt;/em&gt;&amp;rdquo; depuis près d&amp;rsquo;un an. Parfois, je culpabilise un peu de la manière dont je consacre le peu de temps de jeu dont je dispose maintenant que je suis un adulte responsable (Oui, bon&amp;hellip; ça va&amp;hellip; j&amp;rsquo;ai un chat, ça compte ?). Mes collègues ne manquent pas de me taquiner avec ça. Ils me traitent de &amp;ldquo;boomer&amp;rdquo; et me reprochent d&amp;rsquo;être un peu trop tourné vers le passé.&lt;/p&gt;</description>
@@ -32,45 +21,12 @@
     
     <item>
       <title>À propos</title>
-      <link>http://localhost:1313/pages/about/</link>
+      <link>https://exemple/pages/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/pages/about/</guid>
+      <guid>https://exemple/pages/about/</guid>
       
       <description>&lt;p&gt;TODO&lt;/p&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>Distance Field</title>
-      <link>http://localhost:1313/misc/distance_field/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/misc/distance_field/</guid>
-      
-      <description>&lt;p&gt;Puisque la géométrie ne bouge pas, on peut pré-calculer en tout point de l’espace la distance qui le sépare de l’objet le plus proche. On appel cette donnée un distance field et on l’utilise comme structure acceleratrice dans plusieurs algorithmes (différentes techniques de ray tracing et d’ombrage, simulation de fluides…). On peut anisi faire fonctionner en temps réèl des effets dont une implémentation naïve sans structure acceleratrice serait beaucoup trop coûteuse pour être utilisée en temps réèl dans un jeu même avec du hardware moderne.&lt;/p&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>Reflection Captures</title>
-      <link>http://localhost:1313/misc/reflection_capture/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/misc/reflection_capture/</guid>
-      
-      <description>&lt;p&gt;Simuler des reflexion exactes en temps réèl est très coûteux mais les reflection captures permettent une approximation convainquante. Le principe dans les grandes lignes est de pré-calculer une photo 360° depuis un point de l&amp;rsquo;espace et de se sevire des cette photo pour appliquer les reflections aux différents éléments à proximité de ce point avec plus ou moins d&amp;rsquo;intensité en fonction des paramètres de leurs materiaux. Le lien avec le postulat est peut être moins evident ici mais je classe quand même cette technique dans cette cathégorie car si elle premet un resultat convainquant malgré le fait que les objets dynamiques ne figurent pas dans les reflexions et que ces dernières sont toujours un peu décalées par rapport à où elles devraient réelement se trouver, c&amp;rsquo;est parce que la surabondance de surfaces statiques dans une scene de jeu vidéo garanti une certaine stabilité dans &amp;ldquo;l&amp;rsquo;ambience reflexive&amp;rdquo; générale en un endroit donné.&lt;/p&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>Static Lighting</title>
-      <link>http://localhost:1313/misc/static_lighting/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/misc/static_lighting/</guid>
-      
-      <description>&lt;p&gt;la contribution des lumière sur l&amp;rsquo;environnement n&amp;rsquo;a pas besoin d&amp;rsquo;être calculée en temps réèl si les lumières sont elles aussi statiques. On peut les précalculer pendant le développement (les baker dans le jargon) et enregistrer le resultat directement dans une texture spéciale qu&amp;rsquo;on appel une &amp;ldquo;light map&amp;rdquo;. Cette light map sera directement &amp;ldquo;mélangé&amp;rdquo; aux textures de l&amp;rsquo;environnement par le jeu pour que ces dernières paraissent plus ou moins éclairées ou ombragées. En plus du gain de performence, cela permet d&amp;rsquo;avoir des lumières beaucoup plus détaillées car on dispose de tout le temps qu&amp;rsquo;on veut pour calculer cette lumière statique. Alors que si la lumière est calculée dynamiquement, on a que 16ms si ont veut avoir une chance d&amp;rsquo;assure le 60fps si cher à nos yeux de joueurs.&lt;/p&gt;</description>
       
     </item>
     

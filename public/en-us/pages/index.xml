@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Pages on Tartine Interactive</title>
-    <link>http://localhost:1313/en-us/pages/</link>
+    <link>https://exemple/en-us/pages/</link>
     <description>Recent content in Pages on Tartine Interactive</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="http://localhost:1313/en-us/pages/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language><atom:link href="https://exemple/en-us/pages/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>About</title>
-      <link>http://localhost:1313/en-us/pages/about/</link>
+      <link>https://exemple/en-us/pages/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/en-us/pages/about/</guid>
+      <guid>https://exemple/en-us/pages/about/</guid>
       
       <description>&lt;p&gt;TODO&lt;/p&gt;</description>
       
