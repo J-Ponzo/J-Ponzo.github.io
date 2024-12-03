@@ -2,10 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Projets on Tartine Interactive</title>
-    <link>https://exemple/projects/</link>
+    <link>http://localhost:1313/projects/</link>
     <description>Recent content in Projets on Tartine Interactive</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-fr</language>
-    <lastBuildDate>Mon, 18 Nov 2024 06:28:42 +0100</lastBuildDate><atom:link href="https://exemple/projects/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 18 Nov 2024 06:28:42 +0100</lastBuildDate><atom:link href="http://localhost:1313/projects/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OpenRE</title>
+      <link>http://localhost:1313/projects/open_re/</link>
+      <pubDate>Mon, 18 Nov 2024 06:28:42 +0100</pubDate>
+      
+      <guid>http://localhost:1313/projects/open_re/</guid>
+      
+      <description>&lt;p&gt;TODO&lt;/p&gt;</description>
+      
+    </item>
+    
   </channel>
 </rss>
