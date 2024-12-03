@@ -5,6 +5,14 @@ draft = false
 title = 'Ode à la caméra fixe et aux contrôles du tank'
 description = 'Article dans lequel je parle de caméras fixes'
 +++
+
+## Préembule
+Je travaille actuellement sur **OpenRE (Open Retro Engine)** : une technologie permettant de créer des jeux vidéo en caméra fixe avec des arrière-plans précalculés. Si vous êtes déjà curieux, vous pouvez suivre son avancement à travers les devlogs que je publie régulièrement sur la [page du projet](/projects/open_re).
+
+Mais il est plus probable que vous vous demandiez : *"Pourquoi investir du temps et de l'énergie dans cette technique du passé ?"*, *"Qu'a-t-on à y gagner ?"*, *"Est-ce que le monde en a vraiment besoin ?"*. Ou peut-être, que vous n’êtes pas familier avec ce genre vidéoludique un peu oublié et que vous souhaitez découvrir son potentiel.
+
+Si vous vous retrouvez dans une de ces questions, ou si vous êtes simplement curieux de découvrir ce que j'ai à dire sur le sujet, cet article pourrait bien vous intéresser.
+
 ## Introduction : Sweet sweet 90's
 Depuis toujours, j'éprouve une fascination certaine pour les jeux en **caméra fixe**. C'est avec des titres comme *Alone in the Dark*, *Final Fantasy* et bien sûr *Resident Evil* que j'ai grandi. Dire que ces licences ont **marqué mon enfance** serait un euphémisme. C'est une véritable passion qui m'a pris dans les années 90 et qui ne m'a plus quitté. Pour tout vous dire, j'ai même réinstallé *Resident Evil Rebirth* pas plus tard que la semaine dernière, alors que le remake de *Silent Hill 2* vient tout juste de sortir et que celui de *Dead Space* traîne dans ma "*To-Play list*" depuis près d'un an. Parfois, je culpabilise un peu de la manière dont je consacre le peu de temps de jeu dont je dispose maintenant que je suis un adulte responsable (Oui, bon... ça va... j'ai un chat, ça compte ?). Mes collègues ne manquent pas de me taquiner avec ça. Ils me traitent de "boomer" et me reprochent d'être un peu trop tourné vers le passé.
 
@@ -112,7 +120,7 @@ Les jeux vidéo se sont toujours inspirés du cinéma, et ce, depuis avant même
 ## Conclusion : Mon caillou à l'édifice 
 La **caméra fixe** est donc une approche unique, capable de fusionner narration et interactivité pour créer des expériences tout aussi uniques, et d'un qualité visuelle impressionnante. Faute d'un schéma de contrôle satisfaisant, elle n'est **presque plus utilisée** au sein des grosses productions. Elle continue malgré tout de vivre sur la scène indépendante, à travers des titres comme *Alisa* ou *Tormented Souls*. J'ai de l'admiration et de la reconnaissance envers les gens qui ont réalisé ces jeux. Ce sont des projets qui m’inspirent et me donnent **envie de contribuer** à mon tour.
 
-Je ne suis pas sûr d'être capable de réaliser un jeu de cette trempe un jour, mais je compte bien essayer. Pour l'instant cela dit, je préfère me focaliser sur la technique et créer des outils pour permettre à d'autres de réaliser leur vision. C’est pourquoi je travaille sur **OpenRE (pour Open Retro Engine)**. Ce projet vise à simplifier le développement de jeux en caméra fixe et à explorer ce que cette technique peut offrir aujourd'hui. Si le sujet vous intéresse, vous en apprendrez plus dans [cet article](/projects/open_re). 
+Je ne suis pas sûr d'être capable de réaliser un jeu de cette trempe un jour, mais je compte bien essayer. Pour l'instant cela dit, je préfère me focaliser sur la technique et créer des outils pour permettre à d'autres de réaliser leur vision. C’est la raison d'être **OpenRE** : simplifier le développement de jeux en caméra fixe et explorer ce que cette technique peut offrir aujourd'hui. 
 
 À ce stade, OpenRE n'en est qu'à ses balbutiements. Mais le moment venu, le projet sera distribué dans un format **libre et open-source** pour que chacun puisse l'utiliser, perpétuer cet art, et peut-être même réinventer le genre. Je n'ai évidemment pas la prétention de révolutionner le jeu vidéo avec ce projet. Je souhaite simplement contribuer à **faire vivre ce genre vidéoludique** que j'aime tant, et à lui rendre hommage. Si cette technologie inspire des gens et leur donne envie de créer des jeux, le projet aura dépassé ses objectifs. Dans le cas contraire, je me serais quand même bien amusé à le développer.
 
