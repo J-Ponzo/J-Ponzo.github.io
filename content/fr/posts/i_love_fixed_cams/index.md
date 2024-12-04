@@ -18,7 +18,7 @@ Depuis toujours, j'éprouve une fascination certaine pour les jeux en **caméra 
 
 Peut-être qu'ils n'ont pas complètement tort, mais je pense que la réalité est un peu plus complexe. Si je suis **devenu un retro-gamer**, ce n'est pas parce que "le jeu vidéo c'était mieux avant !". C'est un médium extraordinaire, qui n’a rien à envier à d'autres formes d’art, qui ne cesse d'évoluer, se réinvente en permanence, et c'est une chose dont je me réjouis. Pourtant, ces "vieilleries" parviennent encore à capturer mon attention, devançant même des monuments acclamés par la critique que j’attendais depuis des mois. Si ces chefs-d'œuvre ont un tel pouvoir sur moi, c'est parce qu'ils ont **quelque chose d'unique**. Quelque chose qui me parle et que je n'arrive pas à retrouver dans les productions actuelles, si qualitatives soient-elles.
 
-![Image stylisée d'une chambre d'ado des années 90](images/sweet90s.opti.jpg)
+![Image stylisée d'une chambre d'ado des années 90](images/sweet90s.opti.webp)
 
 Il faut dire que cette famille de jeux n'a plus beaucoup d'héritiers aujourd'hui. À ma connaissance, le dernier représentant de sa lignée est *Resident Evil Zero*, sorti en 2002 sur GameCube. Et depuis, plus rien ou presque. C’est un peu comme si l’équivalent vidéoludique, d’un **point de vue narratif**, avait **cessé d’exister** comme ça, d’un coup. Hier, on avait des livres écrits à la première personne, et du jour au lendemain, pouf… on n’a plus que des narrateurs omniscients. En tant qu'amateur de ce style de jeux, je ne peux m'empêcher d'y voir une certaine **injustice**. Mais ça ne fait pas non plus de moi un "arriériste". Au contraire, ce que je regrette, en vérité, c'est que cette branche du médium, si prometteuse, n’ait **pas eu l’occasion d’évoluer** pleinement et de réaliser son potentiel.
 
@@ -27,7 +27,7 @@ Si vous avez tenu bon jusqu'ici, merci pour votre patience et votre curiosité. 
 ## Part I : Casser des murs à grand coups de design !
 Personne ne peut prétendre connaître tous les jeux vidéo sortis depuis la naissance du médium. Mais je vais quand même prendre le risque d’affirmer que la caméra fixe est **née en 1992** sur PC avec Alone in the Dark (et c’est un vrai risque, car si j’ai tort, ça fout en l’air la conclusion de cette partie). Ce qui est certain, en revanche, c’est qu’elle a connu son **âge d’or** sur la cinquième génération de consoles **(PS1/N64/Saturn)**, entre la fin des années 90 et le début des années 2000.
 
-![Grille-pain-PS1 sur une table de petit-dèj](images/PSToaster.opti.jpg)
+![Grille-pain-PS1 sur une table de petit-dèj](images/PSToaster.opti.webp)
 *Une authentique PS1 dans son habitat naturel*
 
 Nous étions alors au début de l’ère de la 3D. Les machines, impressionnantes pour l’époque, se rapprocheraient d’un **grille-pain** connecté bas de gamme si on les jugeait avec nos standards actuels. Les GPU n’étaient pas programmables, la mémoire disponible ridicule… bref, les développeurs de cette époque étaient de véritables héros. Pour créer des jeux dignes de ce nom, ils devaient composer avec des **limitations matérielles** drastiques et adopter des stratégies d’optimisation parfois extrêmes.
@@ -64,7 +64,8 @@ Ce schéma de contrôle est **impopulaire** car il nécessite un petit temps d�
 #### Le problème sous tous les angles
 Si les **caméras regardent dans le même sens**, le problème est moindre. Dans ce cas, les changements de référentiels sont des translations, et la translation **conserve les directions**. L’orientation de l’avatar reste stable d’un écran à l’autre. Cela permet d’implémenter un schéma de contrôles " naïf ", où les mouvements de l’avatar suivent directement ceux du joystick.
 
-![Illustration d'un changements de plan avec caméra alignées](images/parallel_cams.opti.webp)
+![Illustration d'un changements de plan avec caméra alignées](images/FF8_parallel_cams.opti.webp)
+*Conservation de l'orientation dans le cas de caméras alignées (Environnement : DGU de FF8, Personnage incrusté : Jill de RE3)*
 
 Mais en pratique, il sera difficile de respecter cette contrainte. La spécialité des caméras fixes est de permettre des environnements très détaillés. Si l’agencement de l’espace ne reflète pas ce niveau de détail, on **intègre vite une dissonance** : " Il est bizarre ton manoir ! Pourquoi les pièces sont toutes les unes à la suite des autres ? "
 
@@ -72,7 +73,8 @@ Et même si l’on acceptait cette dissonance, on se priverait de toute la puiss
 
 On va donc devoir faire **varier les angles**, et c’est là que ça se complique. Si on fait ça, les directions ne sont plus conservées. **L’orientation de l’avatar diffère** d’un écran à l’autre.
 
-![Illustration d'un changements de plan avec caméra non-alignées](images/non_parallel_cams.opti.webp)
+![Illustration d'un changements de plan avec caméra non-alignées](images/FF8_non_parallel_cams.opti.webp)
+*Décalage de l'orientation dans le cas de caméras non alignées (Environnement : BGU de FF8, Personnage incrusté : Jill de RE3)*
 
 Si on ne fait rien, le joueur devra adapter sa trajectoire à chaque transition de caméra. À moins d’être un ninja, cela se traduira par une **imprécision** significative dans ses déplacements. Pas pratique quand le gameplay exige d’esquiver des zombies dans des couloirs ! De plus, les changements de caméra étant fréquents, même avec de bons réflexes, ajuster sa direction toutes les cinq secondes peut **briser l’immersion**.
 
@@ -99,12 +101,12 @@ Dans le même temps, ce procédé permet de libérer des ressources pour tout ce
 
 En **2001**, le jeu vidéo, c'était ça :
 
-![Mozaïc de classics sortis en 2001](images/mozaic2001classics.opti.jpg)
+![Mozaïc de classics sortis en 2001](images/mozaic2001classics.opti.webp)
 *De gauche à droite et de haut en bas : Max Payne, Jak and Daxter, GTA3, Grand Turismo 3, Halo: Combat Evolved et Final Fantasy X*
 
 La **même année**, *Resident Evil Rebirth* sortait sur GameCube. Et ça ressemblait à ça :
 
-![Mozaïc de captures issues de REmake](images/mozaicREmake.opti.jpg)
+![Mozaïc de captures issues de REmake](images/mozaicREmake.opti.webp)
 
 Ce jeu, vieux de 23 ans, tournait sur une console bien moins puissante que le smartphone sur lequel vous lisez peut-être cet article. Et pourtant, il **reste crédible aujourd’hui**, surpassant même visuellement une grande partie des innombrables jeux publiés chaque jour sur Steam. Maintenant, imaginez ce qu'un AAA moderne pourrait accomplir avec cette technique sur du hardware actuel. Les **perspectives sont vertigineuses !**
 
