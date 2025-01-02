@@ -3,11 +3,11 @@
 <meta http-equiv="content-type" content="text/html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title itemprop="name">OpenRE | Tartine Interactive</title>
-<meta property="og:title" content="OpenRE | Tartine Interactive" />
-<meta name="twitter:title" content="OpenRE | Tartine Interactive" />
-<meta itemprop="name" content="OpenRE | Tartine Interactive" />
-<meta name="application-name" content="OpenRE | Tartine Interactive" />
+<title itemprop="name">OpenRE (Open Retro Engine) | Tartine Interactive</title>
+<meta property="og:title" content="OpenRE (Open Retro Engine) | Tartine Interactive" />
+<meta name="twitter:title" content="OpenRE (Open Retro Engine) | Tartine Interactive" />
+<meta itemprop="name" content="OpenRE (Open Retro Engine) | Tartine Interactive" />
+<meta name="application-name" content="OpenRE (Open Retro Engine) | Tartine Interactive" />
 <meta property="og:site_name" content="Tartine Interactive" />
 
 <meta name="description" content="Page de presentation du projet OpenRE">
@@ -25,12 +25,12 @@
 
 
 
-<meta name="generator" content="Hugo 0.137.0">
+<meta name="generator" content="Hugo 0.140.2">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re/">
   <meta property="og:site_name" content="Tartine Interactive">
-  <meta property="og:title" content="OpenRE">
+  <meta property="og:title" content="OpenRE (Open Retro Engine)">
   <meta property="og:description" content="Page de presentation du projet OpenRE">
   <meta property="og:locale" content="fr_fr">
   <meta property="og:type" content="article">
@@ -42,7 +42,7 @@
     
     
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="OpenRE">
+  <meta name="twitter:title" content="OpenRE (Open Retro Engine)">
   <meta name="twitter:description" content="Page de presentation du projet OpenRE">
 
 
@@ -148,7 +148,7 @@ stroke-linejoin="round" class="feather feather-home">
     <main class="page-content" aria-label="Content">
         <article>
             <header class="header">
-                <h1 class="header-title">OpenRE</h1>
+                <h1 class="header-title">OpenRE (Open Retro Engine)</h1>
                 
                 
                 
@@ -161,10 +161,35 @@ stroke-linejoin="round" class="feather feather-home">
     
     <details class="toc" ZgotmplZ>
         <summary><b>Table des matières</b></summary>
-        <nav id="TableOfContents"></nav>
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#phases-prévues">Phases prévues</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#proof-of-concept">Proof of Concept</a></li>
+            <li><a href="#sdk-open-source">SDK Open Source</a></li>
+            <li><a href="#démo">Démo</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#principe-général">Principe général</a></li>
+  </ul>
+</nav>
     </details>
             <div class="page-content">
-                <p>TODO</p>
+                <h2 id="introduction">Introduction</h2>
+<p>Comme vous pouvez le constater en détail dans <a href="/posts/i_love_fixed_cams/">cet article</a>, je suis un grand nostalgique de l&rsquo;ère des caméra fixe et des contrôles tank. Si vous ne voyez pas à quoi je fais référence, je vous conseille d&rsquo;y faire un tour. Les réponses aux questions que vous vous posez s&rsquo;y trouvent certainement.</p>
+<p>En cherchant à développer un jeu de ce type, je me suis vite rendu compte qu&rsquo;il n&rsquo;était pas facile de trouver des outils/resources traitant du sujet. Apparament les seules chose qui existent facilitent la manipulation des caméras mais je n&rsquo;ai rien trouvé permetant de tirer partie de l&rsquo;immobilité des points de vue en précalculant le rendu de la scene. Ce qui à mon sens est pourtant le principale interêt (et la principale difficulté) lié à cette technique. C&rsquo;est donc assez naturellement que j&rsquo;en suis venu à proposer ma propre solution.</p>
+<p>OpenRE est donc une technologie libre et open source qui permet de faciliter le développement de jeux en caméra fixe et arrière plan précalculée. Afin de rester fidèle à ces valeurs de liberté et d&rsquo;indépendances technologique, elle est construite par dessus Blender (pour la génération des arrière plans) et Godot4 (pour le gameplay et la composition en temps réèl des arrière plans avec les entités interactives), qui sont eux même libres et open source.</p>
+<p>Dans cette article, je présente le principe général sur lequel fonctionne OpenRE ainsi que les différentes phase de développement prévues. Vous pouvez également accéder aux devlog que chacune de ces phases depuis les sections correspondantes et ainsi suivre l&rsquo;avancement du projet.</p>
+<h2 id="phases-prévues">Phases prévues</h2>
+<h4 id="proof-of-concept">Proof of Concept</h4>
+<h4 id="sdk-open-source">SDK Open Source</h4>
+<h4 id="démo">Démo</h4>
+<h2 id="principe-général">Principe général</h2>
 
             </div>
         </article></main>
@@ -201,7 +226,7 @@ stroke-linejoin="round" class="feather feather-home">
 </a>
 </div>
     <small class="footer_copyright">
-        © 2024 J-Ponzo(TurboTartine).
+        © 2025 J-Ponzo(TurboTartine).
         Propulsé par <a href="https://github.com/hugo-sid/hugo-blog-awesome" target="_blank" rel="noopener">Hugo blog awesome</a>.
     </small>
 </footer><a href="#" title="Aller en haut" id="totop">
