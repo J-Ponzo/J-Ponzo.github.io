@@ -17,15 +17,27 @@ Dans cette article, je présente le principe général sur lequel fonctionne Ope
 ## Phases prévues
 
 #### Proof of Concept (POC)
-Dans cette phase je ne me focalise pas sur le design, la qualité du code, l'optimisation ou encore la praticité de la solution. J'explore simplement differents axes le plus rapidement possible pour essayer de déterminer ce qui va être faisable ou non et jusqu'où on pourra aller. Une règle que je m'impose est de ne pas faire de refactoring tant que j'arrive à avancer.
+Dans cette phase je ne me focalise pas sur le design, la qualité du code ou l'optimisation. J'explore simplement differents axes le plus rapidement possible pour essayer de déterminer ce qui va être faisable ou non et jusqu'où je pourrai aller. L'objectif ici est d'aller vite et de se faire un idée relativement précise de ce à quoi pourra ressembler une V1 d'OpenRE. Lorsque j'aurai suffisement de recul, la code base sera archivée et je repartirai de zéro. A ce moment là seulement, je chercherai à construir une solution propre, robuste et efficace à la lumière de l'experience acquise.
 
-L'objectif ici est d'aller vite et de se faire un idée relativement précise de ce à quoi pourra ressembler une V1 d'OpenRE. Mais lorsque j'en aurais apris suffisament pour démarrer la phase suivante, la code base sera archivée et rien ne sera récupéré. Je repartirai de zéro et à ce moment là seulement, je m'efforcerai de consevoire une solution propre, robuste et efficace à la lumière de l'experience gagnée ici.
+Le répo de ce POC ne sera malheureusement pas public. En effet j'ai besoin d'asset 3D pour mes scenes d'exemple <trouver un meilleur terme>. L'idée étant de se projeter dans les possibilités de la technologie, j'ai besoin que les rendus finaux soitent un minimum crédible. Trouver des assets de qualité et cohérents avec le rendu recherché n'est pas quelque chose de simple. Se restrindre uniquement à des assets libres de droits n'est pas réaliste. D'autant plus qu'on cherche à aller vite et que la recherche d'asset est toujour très chronophage. Je fonctionne donc beaucoup avec des assets pas trop cher ou que je possede déjà ainsi qu'avec les free contents d'Epic. Mais je n'ai pas le droits de les redistribuer.
 
-Le répo de ce POC ne sera malheureusement pas public. En effet j'ai besoin d'asset 3D pour mes scenes d'exemple <trouver un meilleur terme>. L'idée étant de se projeter dans les possibilités de la technologie, j'ai besoin que les rendus finaux soitent un minimum crédible. Trouver des assets de qualité et cohérents avec le rendu recherché n'est pas quelque chose de simple. Se restrindre uniquement à des assets libres de droits n'est pas réaliste. D'autant plus qu'on cherche à aller vite. Je fonctionne donc beaucoup avec des assets pas trop cher ou que je possede déjà ainsi qu'avec les asset gratuits d'Epic. Mais je n'ai pas le droits de les redistribuer.
+##### Devlogs :
 
 #### Développement du SDK
-Cette phase est la "vrai" phase de développement d'OpenRE. 
+Cette phase est la "vrai" phase de développement d'OpenRE. Elle aboutira si tout se passe bien à une première version utilisable du SDK. A l'heure ou j'écris ces ligne, cette phase n'a pas encore commencé. Il est donc un peu tôt pour savoir ce que contiendra ce SDK mais il y aura certainement :
+- un addon Blender
+- un addon Godot
+- quelques scripts & utilitaires
+
+Pour mes projet Godot j'utilise habituellement C# comme langage de script. Mais par soucis de rendre accessible OpenRE au plus grand nombre, je m'efforcerai d'utiliser du GDScript. Ce sera l'occasion d'apprendre.
+
+Contrairement au POC, le SDK sera bien entandu disponnible sur un repo git public et distribué sous une licence libre et open-source (qui reste à déterminer).
 
 #### Démo
+Afin de montrer ce qu'OpenRE est capable de faire, je prévois de réaliser un petit jeu avec. Cela me permetra également d'éprouver un peu la techno sur un cas réèl et si nécessaire d'y apporter des ajustement pour la rendre plus fiable et plus ergonomique.
+
+Je n'ai pas encore décidé en quoi consistera cette démo, mais elle reprendra certainement le gameplay des vieux Resident Evil. J'aimerai beaucoup qu'OpenRE soit utilisée un jour pour donner vie à autre chose que des survival horror old school. Comme vous le savez déjà si vous avez lu l'article en lien plus haut, je suis persuadé que la caméra fixe va bien au dela de ce genre specifique. Pourquoi ne pas faire autre chose dans ce cas ? Tout simplement parce que je ne suis pas Game Designer et que c'est plus facile pour moi me lancer dans un concepte bien défini et que je connais bien.
+
+J'aimerai également pouvoir distribuer cette démo sous licence open-source. Cela permetrait de faire office de projet d'exemple illustrant comment utiliser OpenRE. Mais je risque de me retrouver face à la même problématique d'asset que pour le POC. J'essairai de voir ce que je peux faire, mais je ne peux rien promettre. En revanche, le jeu buildé sera disponnible gratuitement sur ma page [itch.io](https://jponzo.itch.io/)
 
 ## Principe général

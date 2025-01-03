@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.137.0">
+<meta name="generator" content="Hugo 0.140.2">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re/">
@@ -187,12 +187,22 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Dans cette article, je présente le principe général sur lequel fonctionne OpenRE ainsi que les différentes phase de développement prévues. Vous pouvez également accéder aux devlog de chacune de ces phases depuis les sections correspondantes et ainsi suivre l&rsquo;avancement du projet.</p>
 <h2 id="phases-prévues">Phases prévues</h2>
 <h4 id="proof-of-concept-poc">Proof of Concept (POC)</h4>
-<p>Dans cette phase je ne me focalise pas sur le design, la qualité du code, l&rsquo;optimisation ou encore la praticité de la solution. J&rsquo;explore simplement differents axes le plus rapidement possible pour essayer de déterminer ce qui va être faisable ou non et jusqu&rsquo;où on pourra aller. Une règle que je m&rsquo;impose est de ne pas faire de refactoring tant que j&rsquo;arrive à avancer.</p>
-<p>L&rsquo;objectif ici est d&rsquo;aller vite et de se faire un idée relativement précise de ce à quoi pourra ressembler une V1 d&rsquo;OpenRE. Mais lorsque j&rsquo;en aurais apris suffisament pour démarrer la phase suivante, la code base sera archivée et rien ne sera récupéré. Je repartirai de zéro et à ce moment là seulement, je m&rsquo;efforcerai de consevoire une solution propre, robuste et efficace à la lumière de l&rsquo;experience gagnée ici.</p>
-<p>Le répo de ce POC ne sera malheureusement pas public. En effet j&rsquo;ai besoin d&rsquo;asset 3D pour mes scenes d&rsquo;exemple <trouver un meilleur terme>. L&rsquo;idée étant de se projeter dans les possibilités de la technologie, j&rsquo;ai besoin que les rendus finaux soitent un minimum crédible. Trouver des assets de qualité et cohérents avec le rendu recherché n&rsquo;est pas quelque chose de simple. Se restrindre uniquement à des assets libres de droits n&rsquo;est pas réaliste. D&rsquo;autant plus qu&rsquo;on cherche à aller vite. Je fonctionne donc beaucoup avec des assets pas trop cher ou que je possede déjà ainsi qu&rsquo;avec les asset gratuits d&rsquo;Epic. Mais je n&rsquo;ai pas le droits de les redistribuer.</p>
+<p>Dans cette phase je ne me focalise pas sur le design, la qualité du code ou l&rsquo;optimisation. J&rsquo;explore simplement differents axes le plus rapidement possible pour essayer de déterminer ce qui va être faisable ou non et jusqu&rsquo;où je pourrai aller. L&rsquo;objectif ici est d&rsquo;aller vite et de se faire un idée relativement précise de ce à quoi pourra ressembler une V1 d&rsquo;OpenRE. Lorsque j&rsquo;aurai suffisement de recul, la code base sera archivée et je repartirai de zéro. A ce moment là seulement, je chercherai à construir une solution propre, robuste et efficace à la lumière de l&rsquo;experience acquise.</p>
+<p>Le répo de ce POC ne sera malheureusement pas public. En effet j&rsquo;ai besoin d&rsquo;asset 3D pour mes scenes d&rsquo;exemple <trouver un meilleur terme>. L&rsquo;idée étant de se projeter dans les possibilités de la technologie, j&rsquo;ai besoin que les rendus finaux soitent un minimum crédible. Trouver des assets de qualité et cohérents avec le rendu recherché n&rsquo;est pas quelque chose de simple. Se restrindre uniquement à des assets libres de droits n&rsquo;est pas réaliste. D&rsquo;autant plus qu&rsquo;on cherche à aller vite et que la recherche d&rsquo;asset est toujour très chronophage. Je fonctionne donc beaucoup avec des assets pas trop cher ou que je possede déjà ainsi qu&rsquo;avec les free contents d&rsquo;Epic. Mais je n&rsquo;ai pas le droits de les redistribuer.</p>
+<h5 id="devlogs-">Devlogs :</h5>
 <h4 id="développement-du-sdk">Développement du SDK</h4>
-<p>Cette phase est la &ldquo;vrai&rdquo; phase de développement d&rsquo;OpenRE.</p>
+<p>Cette phase est la &ldquo;vrai&rdquo; phase de développement d&rsquo;OpenRE. Elle aboutira si tout se passe bien à une première version utilisable du SDK. A l&rsquo;heure ou j&rsquo;écris ces ligne, cette phase n&rsquo;a pas encore commencé. Il est donc un peu tôt pour savoir ce que contiendra ce SDK mais il y aura certainement :</p>
+<ul>
+<li>un addon Blender</li>
+<li>un addon Godot</li>
+<li>quelques scripts &amp; utilitaires</li>
+</ul>
+<p>Pour mes projet Godot j&rsquo;utilise habituellement C# comme langage de script. Mais par soucis de rendre accessible OpenRE au plus grand nombre, je m&rsquo;efforcerai d&rsquo;utiliser du GDScript. Ce sera l&rsquo;occasion d&rsquo;apprendre.</p>
+<p>Contrairement au POC, le SDK sera bien entandu disponnible sur un repo git public et distribué sous une licence libre et open-source (qui reste à déterminer).</p>
 <h4 id="démo">Démo</h4>
+<p>Afin de montrer ce qu&rsquo;OpenRE est capable de faire, je prévois de réaliser un petit jeu avec. Cela me permetra également d&rsquo;éprouver un peu la techno sur un cas réèl et si nécessaire d&rsquo;y apporter des ajustement pour la rendre plus fiable et plus ergonomique.</p>
+<p>Je n&rsquo;ai pas encore décidé en quoi consistera cette démo, mais elle reprendra certainement le gameplay des vieux Resident Evil. J&rsquo;aimerai beaucoup qu&rsquo;OpenRE soit utilisée un jour pour donner vie à autre chose que des survival horror old school. Comme vous le savez déjà si vous avez lu l&rsquo;article en lien plus haut, je suis persuadé que la caméra fixe va bien au dela de ce genre specifique. Pourquoi ne pas faire autre chose dans ce cas ? Tout simplement parce que je ne suis pas Game Designer et que c&rsquo;est plus facile pour moi me lancer dans un concepte bien défini et que je connais bien.</p>
+<p>J&rsquo;aimerai également pouvoir distribuer cette démo sous licence open-source. Cela permetrait de faire office de projet d&rsquo;exemple illustrant comment utiliser OpenRE. Mais je risque de me retrouver face à la même problématique d&rsquo;asset que pour le POC. J&rsquo;essairai de voir ce que je peux faire, mais je ne peux rien promettre. En revanche, le jeu buildé sera disponnible gratuitement sur ma page <a href="https://jponzo.itch.io/">itch.io</a></p>
 <h2 id="principe-général">Principe général</h2>
 
             </div>
