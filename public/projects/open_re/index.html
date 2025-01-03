@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.140.2">
+<meta name="generator" content="Hugo 0.137.0">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re/">
@@ -168,8 +168,8 @@ stroke-linejoin="round" class="feather feather-home">
       <ul>
         <li>
           <ul>
-            <li><a href="#proof-of-concept">Proof of Concept</a></li>
-            <li><a href="#sdk-open-source">SDK Open Source</a></li>
+            <li><a href="#proof-of-concept-poc">Proof of Concept (POC)</a></li>
+            <li><a href="#développement-du-sdk">Développement du SDK</a></li>
             <li><a href="#démo">Démo</a></li>
           </ul>
         </li>
@@ -184,10 +184,14 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Comme vous pouvez le constater en détail dans <a href="/posts/i_love_fixed_cams/">cet article</a>, je suis un grand nostalgique de l&rsquo;ère des caméra fixe et des contrôles tank. Si vous ne voyez pas à quoi je fais référence, je vous conseille d&rsquo;y faire un tour. Les réponses aux questions que vous vous posez s&rsquo;y trouvent certainement.</p>
 <p>En cherchant à développer un jeu de ce type, je me suis vite rendu compte qu&rsquo;il n&rsquo;était pas facile de trouver des outils/resources traitant du sujet. Apparament les seules chose qui existent facilitent la manipulation des caméras mais je n&rsquo;ai rien trouvé permetant de tirer partie de l&rsquo;immobilité des points de vue en précalculant le rendu de la scene. Ce qui à mon sens est pourtant le principale interêt (et la principale difficulté) lié à cette technique. C&rsquo;est donc assez naturellement que j&rsquo;en suis venu à proposer ma propre solution.</p>
 <p>OpenRE est donc une technologie libre et open source qui permet de faciliter le développement de jeux en caméra fixe et arrière plan précalculée. Afin de rester fidèle à ces valeurs de liberté et d&rsquo;indépendances technologique, elle est construite par dessus Blender (pour la génération des arrière plans) et Godot4 (pour le gameplay et la composition en temps réèl des arrière plans avec les entités interactives), qui sont eux même libres et open source.</p>
-<p>Dans cette article, je présente le principe général sur lequel fonctionne OpenRE ainsi que les différentes phase de développement prévues. Vous pouvez également accéder aux devlog que chacune de ces phases depuis les sections correspondantes et ainsi suivre l&rsquo;avancement du projet.</p>
+<p>Dans cette article, je présente le principe général sur lequel fonctionne OpenRE ainsi que les différentes phase de développement prévues. Vous pouvez également accéder aux devlog de chacune de ces phases depuis les sections correspondantes et ainsi suivre l&rsquo;avancement du projet.</p>
 <h2 id="phases-prévues">Phases prévues</h2>
-<h4 id="proof-of-concept">Proof of Concept</h4>
-<h4 id="sdk-open-source">SDK Open Source</h4>
+<h4 id="proof-of-concept-poc">Proof of Concept (POC)</h4>
+<p>Dans cette phase je ne me focalise pas sur le design, la qualité du code, l&rsquo;optimisation ou encore la praticité de la solution. J&rsquo;explore simplement differents axes le plus rapidement possible pour essayer de déterminer ce qui va être faisable ou non et jusqu&rsquo;où on pourra aller. Une règle que je m&rsquo;impose est de ne pas faire de refactoring tant que j&rsquo;arrive à avancer.</p>
+<p>L&rsquo;objectif ici est d&rsquo;aller vite et de se faire un idée relativement précise de ce à quoi pourra ressembler une V1 d&rsquo;OpenRE. Mais lorsque j&rsquo;en aurais apris suffisament pour démarrer la phase suivante, la code base sera archivée et rien ne sera récupéré. Je repartirai de zéro et à ce moment là seulement, je m&rsquo;efforcerai de consevoire une solution propre, robuste et efficace à la lumière de l&rsquo;experience gagnée ici.</p>
+<p>Le répo de ce POC ne sera malheureusement pas public. En effet j&rsquo;ai besoin d&rsquo;asset 3D pour mes scenes d&rsquo;exemple <trouver un meilleur terme>. L&rsquo;idée étant de se projeter dans les possibilités de la technologie, j&rsquo;ai besoin que les rendus finaux de soitent un minimum crédible. Trouver des assets de qualité et cohérents avec le rendu recherché n&rsquo;est pas quelque chose de simple. Se restrindre uniquement à des assets libres de droits n&rsquo;est pas réaliste. D&rsquo;autant plus qu&rsquo;on cherche à aller vite. Je fonctionne donc beaucoup avec des assets pas trop cher ou que je possede déjà ainsi qu&rsquo;avec les asset gratuits d&rsquo;Epic que je n&rsquo;ai pas plus le drois de redistribuer.</p>
+<h4 id="développement-du-sdk">Développement du SDK</h4>
+<p>Cette phase est la &ldquo;vrai&rdquo; phase de développement d&rsquo;OpenRE.</p>
 <h4 id="démo">Démo</h4>
 <h2 id="principe-général">Principe général</h2>
 
