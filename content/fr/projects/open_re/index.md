@@ -22,6 +22,11 @@ OpenRE s'appuiera sur 2 outils éprouvés et largement répandus :
 La première raison motivant ce choix est que ces deux softwares sont distribué sour licence open-source, ce qui permet de rester fidèle aux valeurs de liberté et d'indépendance technologique garanties par le logiciel libre. L'autre avantage plus pragmatique de ce combo est que Godot suporte nativement le format de scene de blender. Ce qui sera un avantage colossale pour la synchronisation des scenes dans les 2 environnements.
 
 ## Principe général
+La particularité d'OpenRE, c'est que le jeu que l'on crée va se découper en 2 partie bien distinctes. Tellement distinctes, qu'elles vivront dans 2 logiciels différents (Blender et Godot). On aura d'un côté le monde *déterministe* constitué de toute la géométrie qui ne bouge page (ou de manière prévisible), et de l'autre le monde *interactif* qui sera lui composé de ce qui doit réagire aux actions du joueur et n'est donc par définition pas possible à prévoire (Personnage, NPC, élements interactibles etc...).
+
+Le monde *déterministe* sera modélisé directement dans Blender. Cela permetra de produire des arrière plans de qualité grace à *Cycles* : le moteur de rendu photoréaliste de Blender. En réalité, on ne rendra pas l'image finale directement, mais plusieurs images représentants diveres informations en screen-space comme la profondeur, l'albedo, la normale, la quantité de lumière...
+
+Ces différentes images précalculées seront importées dans Godot dans lequel on aura implémenté implementé la partie *intéractive* du jeu. L'enjeu sera alors de rendre dans Godot les même informations que celles qu'on a précalculée dans blender (profondeur, albedo, normale, illumination) mais cette fois du monde interactif. Il n'y aura plus qu'à recomposer le rendu final en se basant sur la profondeur pour determiner dans quel monde piocher l'information pour chaque pixel.
 
 ## Phases prévues
 
@@ -43,6 +48,7 @@ Pour mes projet Godot j'utilise habituellement C# comme langage de script. Mais 
 Contrairement au POC, le SDK sera bien entandu disponnible sur un repo git public et distribué sous une licence libre et open-source (qui reste à déterminer).
 
 ##### Devlogs :
+*Cette phase n'a pas encore commencé*
 
 #### Démo
 Afin de montrer ce qu'OpenRE est capable de faire, je prévois de réaliser un petit jeu avec. Cela me permetra également d'éprouver un peu la techno sur un cas réèl et si nécessaire d'y apporter des ajustement pour la rendre plus fiable et plus ergonomique.
@@ -52,3 +58,6 @@ Je n'ai pas encore décidé en quoi consistera cette démo, mais elle reprendra 
 J'aimerai également pouvoir distribuer cette démo sous licence open-source. Cela permetrait de faire office de projet d'exemple illustrant comment utiliser OpenRE. Mais je risque de me retrouver face à la même problématique d'asset que pour le POC. J'essairai de voir ce que je peux faire, mais je ne peux rien promettre. En revanche, le jeu buildé sera disponnible gratuitement sur ma page [itch.io](https://jponzo.itch.io/)
 
 ##### Devlogs :
+*Cette phase n'a pas encore commencé*
+
+## Conclusion :
