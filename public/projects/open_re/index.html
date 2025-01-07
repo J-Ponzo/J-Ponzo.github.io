@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.137.0">
+<meta name="generator" content="Hugo 0.140.2">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re/">
@@ -194,10 +194,13 @@ stroke-linejoin="round" class="feather feather-home">
 <li>Godot : pour la partie interactive du jeu et le compositing avec les arrière plans</li>
 </ul>
 <p>La première raison motivant ce choix est que ces deux softwares sont distribué sour licence open-source, ce qui permet de rester fidèle aux valeurs de liberté et d&rsquo;indépendance technologique garanties par le logiciel libre. L&rsquo;autre avantage plus pragmatique de ce combo est que Godot suporte nativement le format de scene de blender. Ce qui sera un avantage colossale pour la synchronisation des scenes dans les 2 environnements.</p>
+<p>Habituellement, j&rsquo;utile le C# comme lmangage de script dans mes projets Godot. Mais afin d&rsquo;ouvrir OpenRE au plus grand nombre, je m&rsquo;efforcerai d&rsquo;utiliser du GDScript. Ce sera l&rsquo;occasion d&rsquo;apprendre.</p>
 <h2 id="principe-général">Principe général</h2>
 <p>La particularité d&rsquo;OpenRE, c&rsquo;est que le jeu que l&rsquo;on crée va se découper en 2 partie bien distinctes. Tellement distinctes, qu&rsquo;elles vivront dans 2 logiciels différents (Blender et Godot). On aura d&rsquo;un côté le monde <em>déterministe</em> constitué de toute la géométrie qui ne bouge page (ou de manière prévisible), et de l&rsquo;autre le monde <em>interactif</em> qui sera lui composé de ce qui doit réagire aux actions du joueur et n&rsquo;est donc par définition pas possible à prévoire (Personnage, NPC, élements interactibles etc&hellip;).</p>
 <p>Le monde <em>déterministe</em> sera modélisé directement dans Blender. Cela permetra de produire des arrière plans de qualité grace à <em>Cycles</em> : le moteur de rendu photoréaliste de Blender. En réalité, on ne rendra pas l&rsquo;image finale directement, mais plusieurs images représentants diveres informations en screen-space comme la profondeur, l&rsquo;albedo, la normale, la quantité de lumière&hellip;</p>
-<p>Ces différentes images précalculées seront importées dans Godot dans lequel on aura implémenté implementé la partie <em>intéractive</em> du jeu. L&rsquo;enjeu sera alors de rendre dans Godot les même informations que celles qu&rsquo;on a précalculée dans blender (profondeur, albedo, normale, illumination) mais cette fois du monde interactif. Il n&rsquo;y aura plus qu&rsquo;à recomposer le rendu final en se basant sur la profondeur pour determiner dans quel monde piocher l&rsquo;information pour chaque pixel.</p>
+<p>Dans Godot, on implémentera la partie <em>interactive</em> du jeu et on cherchera à le rendre sous la même forme que les images du monde <em>déterministe</em> issues de blender (profondeur, albedo, normal, illumination&hellip;). Si Godot implémentait un <em>deffered renderer</em>, cette opération serait assez immediate car en effet, ces images à quelque chose près les maps que l&rsquo;on trouve dans le G-Buffer. Mais malheureusement pour nous, le renders officiel de Godot est un <em>forward</em>. Un des enjeux du projet sera donc de voir comment on peu bricoller pour optenir ces maps.</p>
+<p>L&rsquo;idée est donc de populer un <em>G-Buffer deterministe</em> à partir des images pré-rendues dans Blender et un <em>G-Buffer interactif</em> rendu en temps réèl dans Godot. En théorie, à partir de ce point, on a plus qu&rsquo;à composer les 2 G-Buffer en se basant sur la depth pour obtenir le G-Buffer final et à appliquer la passe de lighting comme on le ferait dans Deffered classic.</p>
+<p>Si tout se passe comme dans le plan, les lumières <em>interactives</em> devraient s&rsquo;appliquer sans effort au arrière plans <em>determinister</em>. En revanche pour que les lumière <em>déterministe</em> illuminent le monde <em>interactif</em>, nous n&rsquo;auront d&rsquo;autre choix que de dupliquer les light de la scene Blender dans la scene Godot.</p>
 <h2 id="phases-prévues">Phases prévues</h2>
 <h4 id="proof-of-concept-poc">Proof of Concept (POC)</h4>
 <p>Dans cette phase je ne me focalise pas sur le design, la qualité du code ou l&rsquo;optimisation. J&rsquo;explore simplement differents axes le plus rapidement possible pour essayer de déterminer ce qui va être faisable ou non et jusqu&rsquo;où je pourrai aller. L&rsquo;objectif ici est d&rsquo;aller vite et de se faire un idée relativement précise de ce à quoi pourra ressembler une V1 d&rsquo;OpenRE. Lorsque j&rsquo;aurai suffisement de recul, la code base sera archivée et je repartirai de zéro. A ce moment là seulement, je chercherai à construir une solution propre, robuste et efficace à la lumière de l&rsquo;experience acquise.</p>

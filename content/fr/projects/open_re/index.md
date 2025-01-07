@@ -21,12 +21,18 @@ OpenRE s'appuiera sur 2 outils éprouvés et largement répandus :
 
 La première raison motivant ce choix est que ces deux softwares sont distribué sour licence open-source, ce qui permet de rester fidèle aux valeurs de liberté et d'indépendance technologique garanties par le logiciel libre. L'autre avantage plus pragmatique de ce combo est que Godot suporte nativement le format de scene de blender. Ce qui sera un avantage colossale pour la synchronisation des scenes dans les 2 environnements.
 
+Habituellement, j'utile le C# comme lmangage de script dans mes projets Godot. Mais afin d'ouvrir OpenRE au plus grand nombre, je m'efforcerai d'utiliser du GDScript. Ce sera l'occasion d'apprendre.
+
 ## Principe général
 La particularité d'OpenRE, c'est que le jeu que l'on crée va se découper en 2 partie bien distinctes. Tellement distinctes, qu'elles vivront dans 2 logiciels différents (Blender et Godot). On aura d'un côté le monde *déterministe* constitué de toute la géométrie qui ne bouge page (ou de manière prévisible), et de l'autre le monde *interactif* qui sera lui composé de ce qui doit réagire aux actions du joueur et n'est donc par définition pas possible à prévoire (Personnage, NPC, élements interactibles etc...).
 
 Le monde *déterministe* sera modélisé directement dans Blender. Cela permetra de produire des arrière plans de qualité grace à *Cycles* : le moteur de rendu photoréaliste de Blender. En réalité, on ne rendra pas l'image finale directement, mais plusieurs images représentants diveres informations en screen-space comme la profondeur, l'albedo, la normale, la quantité de lumière...
 
-Ces différentes images précalculées seront importées dans Godot dans lequel on aura implémenté implementé la partie *intéractive* du jeu. L'enjeu sera alors de rendre dans Godot les même informations que celles qu'on a précalculée dans blender (profondeur, albedo, normale, illumination) mais cette fois du monde interactif. Il n'y aura plus qu'à recomposer le rendu final en se basant sur la profondeur pour determiner dans quel monde piocher l'information pour chaque pixel.
+Dans Godot, on implémentera la partie *interactive* du jeu et on cherchera à le rendre sous la même forme que les images du monde *déterministe* issues de blender (profondeur, albedo, normal, illumination...). Si Godot implémentait un *deffered renderer*, cette opération serait assez immediate car en effet, ces images à quelque chose près les maps que l'on trouve dans le G-Buffer. Mais malheureusement pour nous, le renders officiel de Godot est un *forward*. Un des enjeux du projet sera donc de voir comment on peu bricoller pour optenir ces maps.
+ 
+L'idée est donc de populer un *G-Buffer deterministe* à partir des images pré-rendues dans Blender et un *G-Buffer interactif* rendu en temps réèl dans Godot. En théorie, à partir de ce point, on a plus qu'à composer les 2 G-Buffer en se basant sur la depth pour obtenir le G-Buffer final et à appliquer la passe de lighting comme on le ferait dans Deffered classic.
+ 
+Si tout se passe comme dans le plan, les lumières *interactives* devraient s'appliquer sans effort au arrière plans *determinister*. En revanche pour que les lumière *déterministe* illuminent le monde *interactif*, nous n'auront d'autre choix que de dupliquer les light de la scene Blender dans la scene Godot.
 
 ## Phases prévues
 
