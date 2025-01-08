@@ -1,4 +1,4 @@
-title = "Tartine Interactive"
+title = "Turbo Tartine Games"
 baseURL = 'https://exemple/'
 
 # This is what goes in <html lang="">
@@ -84,7 +84,7 @@ theme = "hugo-blog-awesome"
     weight = 50
 
 [Languages.en-us.params]
-  sitename = "Tartine Interactive"
+  sitename = "Turbo Tartine Games"
   defaultColor = "dark" # set color mode: dark, light, auto
   # Setting it to 'auto' applies the color scheme based on the visitor's device color preference.If you don't specify anything, ignore this parameter, or leave it blank,
   # the default value is set to 'auto'.
@@ -109,7 +109,7 @@ theme = "hugo-blog-awesome"
 [Languages.en-us.params.author]
   avatar = "avatar.jpg" # put the file in assets folder; also ensure that image has same height and width
   # Note: image is not rendered if the resource(avatar image) is not found. No error is displayed.
-  intro = "Tartine Interactive"
+  intro = "Turbo Tartine Games"
   name = "J-Ponzo(TurboTartine)"
   description = "Welcome to my blog! Here, you'll find articles, tutorials, and devlogs from my adventures as an independent developer."
 
@@ -159,7 +159,7 @@ theme = "hugo-blog-awesome"
     weight = 50
 
 [Languages.fr-fr.params]
-  sitename = "Tartine Interactive"
+  sitename = "Turbo Tartine Games"
   defaultColor = "dark" # set color mode: dark, light, auto
   # Setting it to 'auto' applies the color scheme based on the visitor's device color preference.If you don't specify anything, ignore this parameter, or leave it blank,
   # the default value is set to 'auto'.
@@ -184,7 +184,7 @@ theme = "hugo-blog-awesome"
 [Languages.fr-fr.params.author]
   avatar = "avatar.jpg" # put the file in assets folder; also ensure that image has same height and width
   # Note: image is not rendered if the resource(avatar image) is not found. No error is displayed.
-  intro = "Tartine Interactive"
+  intro = "Turbo Tartine Games"
   name = "J-Ponzo(TurboTartine)"
   description = "Bienvenue sur mon blog ! Retrouvez-y articles, tutoriels et devlogs, issus de mes peripties de développeur indépendant."
 
