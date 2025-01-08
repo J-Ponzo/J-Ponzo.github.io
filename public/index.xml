@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Home on Tartine Interactive</title>
+    <title>Home on Turbo Tartine Games</title>
     <link>http://localhost:1313/</link>
-    <description>Recent content in Home on Tartine Interactive</description>
+    <description>Recent content in Home on Turbo Tartine Games</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-fr</language>
     <lastBuildDate>Mon, 18 Nov 2024 06:28:42 +0100</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
@@ -15,8 +15,7 @@
       <guid>http://localhost:1313/projects/open_re/</guid>
       
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Comme vous pouvez le constater en détail dans &lt;a href=&#34;http://localhost:1313/posts/i_love_fixed_cams/&#34;&gt;cet article&lt;/a&gt;, je suis un grand nostalgique de l&amp;rsquo;ère des caméra fixe et des contrôles tank. Si vous ne voyez pas à quoi je fais référence, je vous conseille d&amp;rsquo;y faire un tour. Les réponses aux questions que vous vous posez s&amp;rsquo;y trouvent certainement.&lt;/p&gt;
-&lt;p&gt;En cherchant à développer un jeu de ce type, je me suis vite rendu compte qu&amp;rsquo;il n&amp;rsquo;était pas facile de trouver des outils/resources traitant du sujet. Apparament les seules chose qui existent aident à la manipulation des caméras mais je n&amp;rsquo;ai rien trouvé permetant de tirer partie de l&amp;rsquo;immobilité des points de vue en précalculant le rendu de la scene. Ce qui à mon sens est pourtant le principale interêt (et la principale difficulté) lié à cette technique. C&amp;rsquo;est donc assez naturellement que j&amp;rsquo;en suis venu à développer ma propre solution : OpnRE.&lt;/p&gt;</description>
+&lt;p&gt;Si vous avez lu &lt;a href=&#34;http://localhost:1313/posts/i_love_fixed_cams/&#34;&gt;cet article&lt;/a&gt;, vous savez déjà que je suis un grand nostalgique des caméras fixes et des contrôles tank. Ce genre vidéoludique, caractéristique de la fin des années 90, m&amp;rsquo;a toujours fasciné. Si vous ne voyez pas à quoi je fais allusion, ou que vous souhaitez simplement découvrir ce qui me plaît tant dans ces jeux, je vous invite à y jeter un œil. Cela devrait satisfaire votre curiosité.&lt;/p&gt;</description>
       
     </item>
     

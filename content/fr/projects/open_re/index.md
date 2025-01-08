@@ -6,16 +6,16 @@ title = 'OpenRE (Open Retro Engine)'
 description = 'Page de presentation du projet OpenRE'
 +++
 ## Introduction
-Comme vous pouvez le constater en détail dans [cet article](/posts/i_love_fixed_cams), je suis un grand nostalgique de l'ère des caméra fixe et des contrôles tank. Si vous ne voyez pas à quoi je fais référence, je vous conseille d'y faire un tour. Les réponses aux questions que vous vous posez s'y trouvent certainement.
+Si vous avez lu [cet article](/posts/i_love_fixed_cams), vous savez déjà que je suis un grand nostalgique des caméras fixes et des contrôles tank. Ce genre vidéoludique, caractéristique de la fin des années 90, m'a toujours fasciné. Si vous ne voyez pas à quoi je fais allusion, ou que vous souhaitez simplement découvrir ce qui me plaît tant dans ces jeux, je vous invite à y jeter un œil. Cela devrait satisfaire votre curiosité.
 
-En cherchant à développer un jeu de ce type, je me suis vite rendu compte qu'il n'était pas facile de trouver des outils/resources traitant du sujet. Apparament les seules chose qui existent aident à la manipulation des caméras mais je n'ai rien trouvé permetant de tirer partie de l'immobilité des points de vue en précalculant le rendu de la scene. Ce qui à mon sens est pourtant le principale interêt (et la principale difficulté) lié à cette technique. C'est donc assez naturellement que j'en suis venu à développer ma propre solution : OpnRE.  
+Lorsque j’ai voulu développer mon propre jeu en caméra fixe, je me suis rapidement heurté à un problème : les outils et ressources sur le sujet sont rares. Certes, on trouve quelques tutoriels sur la gestion des caméras ou sur les déplacements du joueur dans ce contexte particulier. Mais rien ne traite ce que je considère comme le principal défi de cette approche : *"Comment intégrer harmonieusement des éléments interactifs par-dessus des arrière-plans précalculés ?"* (D’ailleurs, si vous avez des références sur le sujet, n'hésitez pas à les partager dans les commentaires.)
 
-Il s'agit d'une technologie libre et open source qui vise à faciliter le développement de jeux en caméra fixe et arrière plan précalculée. C'est également un pretexte pour dépoussiérer cette technologie un peu datée et d'explorer ce qu'elle peut offrire sur du hardware moderne. Pour l'instant je cherche princalement comment gommer les différences visuelles entre les arrière plan statique et les entités interactives. Je m'interesse donc notament à comment appliquer les lumière de l'un à l'autre. Mais j'aurais certainement d'autres idées au cours du développement.
+C'est de ce constat qu'est née OpenRE : une technologie libre et open-source destinée au développement de jeux vidéo en caméra fixe et arrière-plan pré-calculés. Ce projet est aussi l'occasion d'explorer les possibilités offertes par les technologies modernes. Mon objectif est de rendre indiscernable le précalculé du rendu en temps réel en m'appuyant notamment sur des techniques comme le *deferred rendering* afin d'unifier l'éclairage des deux mondes. D’autres idées viendront sans doute enrichir le concept au fil du développement.
 
-Dans cette article, je présente le principe général sur lequel fonctionne OpenRE ainsi que les différentes phase de développement prévues. Vous pouvez également accéder aux devlog de chacune de ces phases depuis les sections correspondantes et ainsi suivre l'avancement du projet.
+Dans cet article, je vous présente le fonctionnement général d’OpenRE ainsi que les différentes étapes prévues pour son développement. Vous trouverez également des liens vers les devlogs associés à chaque phase. J'y partagerai régulièrement mes avancées, mes réussites, mes échecs et mes réflexions techniques.
 
 ## Dépendances :
-OpenRE s'appuiera sur 2 outils éprouvés et largement répandus :
+OpenRE s'appuie sur 2 outils éprouvés et largement répandus :
 - Blender : pour le rendu des arrière plans
 - Godot : pour la partie interactive du jeu et le compositing avec les arrière plans
 
@@ -28,18 +28,18 @@ La particularité d'OpenRE, c'est que le jeu que l'on crée va se découper en 2
 
 Le monde *déterministe* sera modélisé directement dans Blender. Cela permetra de produire des arrière plans de qualité grace à *Cycles* : le moteur de rendu photoréaliste de Blender. En réalité, on ne rendra pas l'image finale directement, mais plusieurs images représentants diveres informations en screen-space comme la profondeur, l'albedo, la normale, la quantité de lumière...
 
-Dans Godot, on implémentera la partie *interactive* du jeu et on cherchera à le rendre sous la même forme que les images du monde *déterministe* issues de blender (profondeur, albedo, normal, illumination...). Si Godot implémentait un *deffered renderer*, cette opération serait assez immediate car en effet, ces images à quelque chose près les maps que l'on trouve dans le G-Buffer. Mais malheureusement pour nous, le renders officiel de Godot est un *forward*. Un des enjeux du projet sera donc de voir comment on peu bricoller pour optenir ces maps.
+Dans Godot, on implémentera la partie *interactive* du jeu et on cherchera à le rendre sous la même forme que les images du monde *déterministe* issues de blender (profondeur, albedo, normal, illumination...). Si Godot implémentait un *deffered renderer*, cette opération serait assez immediate car en effet, ces images sont à quelque chose près les maps que l'on trouve dans le G-Buffer. Mais malheureusement pour nous, le renders officiel de Godot est un *forward*. Un des enjeux du projet sera donc de voir comment on peu bricoller pour optenir ces maps.
  
 L'idée est donc de populer un *G-Buffer deterministe* à partir des images pré-rendues dans Blender et un *G-Buffer interactif* rendu en temps réèl dans Godot. En théorie, à partir de ce point, on a plus qu'à composer les 2 G-Buffer en se basant sur la depth pour obtenir le G-Buffer final et à appliquer la passe de lighting comme on le ferait dans Deffered classic.
  
-Si tout se passe comme dans le plan, les lumières *interactives* devraient s'appliquer sans effort au arrière plans *determinister*. En revanche pour que les lumière *déterministe* illuminent le monde *interactif*, nous n'auront d'autre choix que de dupliquer les light de la scene Blender dans la scene Godot.
+Si tout se passe comme dans le plan, les lumières *interactives* devraient s'appliquer sans effort au monde *deterministes* (les arrières plans). En revanche pour que les lumière *déterministe* illuminent le monde *interactif*, nous n'auront d'autre choix que de dupliquer les light de la scene Blender dans la scene Godot.
 
 ## Phases prévues
 
 #### Proof of Concept (POC)
 Dans cette phase je ne me focalise pas sur le design, la qualité du code ou l'optimisation. J'explore simplement differents axes le plus rapidement possible pour essayer de déterminer ce qui va être faisable ou non et jusqu'où je pourrai aller. L'objectif ici est d'aller vite et de se faire un idée relativement précise de ce à quoi pourra ressembler une V1 d'OpenRE. Lorsque j'aurai suffisement de recul, la code base sera archivée et je repartirai de zéro. A ce moment là seulement, je chercherai à construir une solution propre, robuste et efficace à la lumière de l'experience acquise.
 
-Le répo de ce POC ne sera malheureusement pas public. En effet j'ai besoin d'asset 3D pour mes scenes d'exemple <trouver un meilleur terme>. L'idée étant de se projeter dans les possibilités de la technologie, j'ai besoin que les rendus finaux soitent un minimum crédible. Trouver des assets de qualité et cohérents avec le rendu recherché n'est pas quelque chose de simple. Se restrindre uniquement à des assets libres de droits n'est pas réaliste. D'autant plus qu'on cherche à aller vite et que la recherche d'asset est toujour très chronophage. Je fonctionne donc beaucoup avec des assets pas trop cher ou que je possede déjà ainsi qu'avec les free contents d'Epic. Mais je n'ai pas le droits de les redistribuer.
+Le répo de ce POC ne sera malheureusement pas public. En effet j'ai besoin d'asset 3D pour mes scenes d'exemple <trouver un meilleur terme>. L'idée étant de se projeter dans les possibilités de la technologie, j'ai besoin que les rendus finaux soitent un minimum crédible. Trouver des assets de qualité et cohérents avec le rendu recherché n'est pas quelque chose de simple. Se restrindre uniquement à des assets libres de droits ne serait pas réaliste. D'autant plus qu'on cherche à aller vite et que la recherche d'asset est toujour très chronophage. Je fonctionnerai donc avec des assets pas trop cher ou que je possede déjà ainsi qu'avec les free contents d'Epic. Mais je n'ai pas le droits de les redistribuer.
 
 ##### Devlogs :
 
@@ -48,8 +48,6 @@ Cette phase est la "vrai" phase de développement d'OpenRE. Elle aboutira si tou
 - un addon Blender
 - un addon Godot
 - quelques scripts & utilitaires
-
-Pour mes projet Godot j'utilise habituellement C# comme langage de script. Mais par soucis de rendre accessible OpenRE au plus grand nombre, je m'efforcerai d'utiliser du GDScript. Ce sera l'occasion d'apprendre.
 
 Contrairement au POC, le SDK sera bien entandu disponnible sur un repo git public et distribué sous une licence libre et open-source (qui reste à déterminer).
 
@@ -61,7 +59,7 @@ Afin de montrer ce qu'OpenRE est capable de faire, je prévois de réaliser un p
 
 Je n'ai pas encore décidé en quoi consistera cette démo, mais elle reprendra certainement le gameplay des vieux Resident Evil. J'aimerai beaucoup qu'OpenRE soit utilisée un jour pour donner vie à autre chose que des survival horror old school. Comme vous le savez déjà si vous avez lu l'article en lien plus haut, je suis persuadé que la caméra fixe va bien au dela de ce genre specifique. Pourquoi ne pas faire autre chose dans ce cas ? Tout simplement parce que je ne suis pas Game Designer et que c'est plus facile pour moi me lancer dans un concepte bien défini et que je connais bien.
 
-J'aimerai également pouvoir distribuer cette démo sous licence open-source. Cela permetrait de faire office de projet d'exemple illustrant comment utiliser OpenRE. Mais je risque de me retrouver face à la même problématique d'asset que pour le POC. J'essairai de voir ce que je peux faire, mais je ne peux rien promettre. En revanche, le jeu buildé sera disponnible gratuitement sur ma page [itch.io](https://jponzo.itch.io/)
+J'aimerai également pouvoir distribuer cette démo sous licence open-source. Cela permetrait de faire office de projet d'exemple illustrant comment utiliser OpenRE. Mais je risque de me retrouver face à la même problématique d'asset que pour le POC. J'essairai de voir ce que je peux faire, mais je ne peux rien promettre. En revanche, le build sera disponnible gratuitement sur ma page [itch.io](https://jponzo.itch.io/)
 
 ##### Devlogs :
 *Cette phase n'a pas encore commencé*
