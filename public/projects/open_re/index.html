@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.137.0">
+<meta name="generator" content="Hugo 0.140.2">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re/">
@@ -198,7 +198,13 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Pour le scripting, j&rsquo;utilise habituellement le C# dans mes projets Godot. Cependant, ce langage nécessite une version spécifique du moteur, ce qui peut limiter l&rsquo;adoption d&rsquo;OpenRE par la communauté. J’ai donc décidé de privilégier GDScript, le langage natif de Godot. Ce sera pour moi l’occasion d’élargir mes compétences, tout en offrant une compatibilité maximale à tous les utilisateurs.</p>
 <p>Si vous préférez C#, pas d’inquiétude : OpenRE sera compatible avec les deux versions de Godot. Vous pourrez développer votre jeu dans le langage de votre choix. GDScript ne sera nécessaire que si vous souhaitez modifier OpenRE. Par ailleurs, le moteur offre un certain niveau d’interopérabilité entre les deux langages. Vous pourrez donc, selon les cas, personnaliser OpenRE même en C#.</p>
 <h2 id="principe-général">Principe général</h2>
-<p>La particularité d&rsquo;OpenRE, c&rsquo;est que le jeu que l&rsquo;on crée va se découper en 2 partie bien distinctes. Tellement distinctes, qu&rsquo;elles vivront dans 2 logiciels différents (Blender et Godot). On aura d&rsquo;un côté le monde <em>déterministe</em> constitué de toute la géométrie qui ne bouge page (ou de manière prévisible), et de l&rsquo;autre le monde <em>interactif</em> qui sera lui composé de ce qui doit réagire aux actions du joueur et n&rsquo;est donc par définition pas possible à prévoire (Personnage, NPC, élements interactibles etc&hellip;).</p>
+<p>Si vous êtes familier avec la technique du <em>deffered rendering</em>, vous devriez comprendre facilement comment OpenRE fonctionne. Si ce n&rsquo;est pas le cas je vous recommande l&rsquo;article <a href="/posts/forward_vs_deffered">Forward Vs Deffered</a> qui vulgarise le concepte. Maintenant que nous sommes tous à la même page démarons les explications.</p>
+<p>La particularité d&rsquo;OpenRE, c&rsquo;est que le jeu que l&rsquo;on crée va se découper en 2 partie bien distinctes. Tellement distinctes, qu&rsquo;elles vivront dans 2 logiciels différents : Blender et Godot. On aura d&rsquo;un côté le monde <em>déterministe</em> constitué de toute la géométrie qui ne bouge page (ou de manière prévisible), et de l&rsquo;autre le monde <em>interactif</em> qui sera lui composé de ce qui doit réagire aux actions du joueur et n&rsquo;est donc par définition pas possible à prévoire (Personnage, NPC, élements interactibles etc&hellip;).</p>
+<p>La particularité d&rsquo;OpenRE, c&rsquo;est que le monde que l&rsquo;on créé est séparé en 2 partie bien distinctes. Tellement distinctes, que l&rsquo;on a besoin de deux logiciels différents pour les éditer :</p>
+<ul>
+<li><strong>1. Le monde déterministe (Blender) :</strong> blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla</li>
+<li><strong>2. Le monde interactif (Godot) :</strong> blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla</li>
+</ul>
 <p>Le monde <em>déterministe</em> sera modélisé directement dans Blender. Cela permetra de produire des arrière plans de qualité grace à <em>Cycles</em> : le moteur de rendu photoréaliste de Blender. En réalité, on ne rendra pas l&rsquo;image finale directement, mais plusieurs images représentants diveres informations en screen-space comme la profondeur, l&rsquo;albedo, la normale, la quantité de lumière&hellip;</p>
 <p>Dans Godot, on implémentera la partie <em>interactive</em> du jeu et on cherchera à le rendre sous la même forme que les images du monde <em>déterministe</em> issues de blender (profondeur, albedo, normal, illumination&hellip;). Si Godot implémentait un <em>deffered renderer</em>, cette opération serait assez immediate car en effet, ces images sont à quelque chose près les maps que l&rsquo;on trouve dans le G-Buffer. Mais malheureusement pour nous, le renders officiel de Godot est un <em>forward</em>. Un des enjeux du projet sera donc de voir comment on peu bricoller pour optenir ces maps.</p>
 <p>L&rsquo;idée est donc de populer un <em>G-Buffer deterministe</em> à partir des images pré-rendues dans Blender et un <em>G-Buffer interactif</em> rendu en temps réèl dans Godot. En théorie, à partir de ce point, on a plus qu&rsquo;à composer les 2 G-Buffer en se basant sur la depth pour obtenir le G-Buffer final et à appliquer la passe de lighting comme on le ferait dans Deffered classic.</p>
