@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.140.2">
+<meta name="generator" content="Hugo 0.137.0">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re/">
@@ -170,20 +170,20 @@ stroke-linejoin="round" class="feather feather-home">
         <li>
           <ul>
             <li><a href="#vue-densemble">Vue d&rsquo;ensemble</a></li>
-            <li><a href="#dg-buffer--le-g-buffer-du-monde-déterministe-">DG-Buffer : le G-Buffer du monde déterministe :</a></li>
-            <li><a href="#ig-buffer--le-g-buffer-du-monde-interactif-">IG-Buffer : le G-Buffer du monde interactif :</a></li>
-            <li><a href="#calcule-de-léclairage-">Calcule de l&rsquo;éclairage :</a></li>
+            <li><a href="#dg-buffer--le-g-buffer-du-monde-déterministe">DG-Buffer : le G-Buffer du monde déterministe</a></li>
+            <li><a href="#ig-buffer--le-g-buffer-du-monde-interactif">IG-Buffer : le G-Buffer du monde interactif</a></li>
+            <li><a href="#calcul-de-léclairage">Calcul de l&rsquo;éclairage</a></li>
           </ul>
         </li>
       </ul>
     </li>
-    <li><a href="#phases-prévues">Phases prévues</a>
+    <li><a href="#phases-de-développement">Phases de développement</a>
       <ul>
         <li>
           <ul>
-            <li><a href="#proof-of-concept-poc">Proof of Concept (POC)</a></li>
-            <li><a href="#développement-du-sdk">Développement du SDK</a></li>
-            <li><a href="#démo">Démo</a></li>
+            <li><a href="#phase-1--proof-of-concept-poc">Phase 1 : Proof of Concept (POC)</a></li>
+            <li><a href="#phase-2--le-sdk">Phase 2 : Le SDK</a></li>
+            <li><a href="#phase-3--une-démo-jouable">Phase 3 : Une Démo Jouable</a></li>
           </ul>
         </li>
       </ul>
@@ -196,7 +196,7 @@ stroke-linejoin="round" class="feather feather-home">
                 <h2 id="introduction">Introduction</h2>
 <p>Si vous avez lu <a href="/posts/i_love_fixed_cams/">cet article</a>, vous savez déjà que je suis un grand nostalgique des caméras fixes et des contrôles tank. Ce genre vidéoludique, caractéristique de la fin des années 90, m&rsquo;a toujours fasciné. Si vous ne voyez pas à quoi je fais allusion, ou que vous souhaitez simplement découvrir ce qui me plaît tant dans ces jeux, je vous invite à y jeter un œil. Cela devrait satisfaire votre curiosité.</p>
 <p>Lorsque j’ai voulu développer mon propre jeu en caméra fixe, je me suis rapidement heurté à un problème : les outils et ressources sur le sujet sont rares. Certes, on trouve quelques tutoriels sur la gestion des caméras ou sur les déplacements du joueur dans ce contexte particulier. Mais rien ne traite de ce que je considère comme le principal défi de cette approche : <em>&ldquo;Comment intégrer harmonieusement des éléments interactifs par-dessus des arrière-plans précalculés ?&rdquo;</em> (D’ailleurs, si vous avez des références sur le sujet, n&rsquo;hésitez pas à les partager dans les commentaires.)</p>
-<p>C&rsquo;est de ce constat qu&rsquo;est née OpenRE : une technologie libre et open-source destinée au développement de jeux vidéo en caméra fixe et arrière-plan pré-calculés. Ce projet est aussi l&rsquo;occasion d&rsquo;explorer les possibilités offertes par les technologies modernes. Mon objectif est de rendre indiscernable le précalculé du rendu en temps réel en m&rsquo;appuyant notamment sur des techniques comme le <em>deferred rendering</em> afin d&rsquo;unifier l&rsquo;éclairage des deux mondes. D’autres idées viendront sans doute enrichir le concept au fil du développement.</p>
+<p>C&rsquo;est de ce constat qu&rsquo;est née OpenRE : une technologie libre et open-source destinée au développement de jeux vidéo en caméra fixe et arrière-plan pré-calculés. Ce projet est aussi l&rsquo;occasion de revisiter la technique en explorant les possibilités offertes par les technologies modernes. Je cherche notament à gommer les différences visuelles entre le précalculé et le rendu en temps réel qui trahissent souvent le subterfuge. D’autres idées viendront sans doute enrichir le concept au fil du développement.</p>
 <p>Dans cet article, je vous présente le fonctionnement général d’OpenRE ainsi que les différentes étapes prévues pour son développement. Vous trouverez également des liens vers les devlogs associés à chaque phase. J&rsquo;y partagerai régulièrement mes avancées, mes réussites, mes échecs et mes réflexions techniques.</p>
 <h2 id="environnement-technique-">Environnement technique :</h2>
 <p>OpenRE repose sur deux outils largement utilisés et éprouvés :</p>
@@ -209,43 +209,46 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Pour le scripting, j&rsquo;utilise habituellement le C# dans mes projets Godot. Cependant, ce langage nécessite une version spécifique du moteur, ce qui peut limiter l&rsquo;adoption d&rsquo;OpenRE par la communauté. J’ai donc décidé de privilégier GDScript, le langage natif de Godot. Ce sera pour moi l’occasion d’élargir mes compétences, tout en offrant une compatibilité maximale à tous les utilisateurs.</p>
 <p>Si vous préférez C#, pas d’inquiétude : OpenRE sera compatible avec les deux versions de Godot. Vous pourrez développer votre jeu dans le langage de votre choix. GDScript ne sera nécessaire que si vous souhaitez modifier OpenRE. Par ailleurs, le moteur offre un certain niveau d’interopérabilité entre les deux langages. Vous pourrez donc, selon les cas, personnaliser OpenRE même en C#.</p>
 <h2 id="principe-général">Principe général</h2>
-<p>Si vous êtes familier avec la technique du <em>deffered rendering</em>, vous comprendrez rapidement le fonctionnement d&rsquo;OpenRE. Pour les autres, je vous recommande l&rsquo;article <a href="/posts/forward_vs_deffered">Forward Vs Deffered</a> qui explique les bases de manière accessible. Maintenant que nous savons tous ce qu&rsquo;est un G-Buffer, entrons dans le vif du sujet !</p>
+<p>Si vous êtes familier avec la technique du deferred rendering, vous comprendrez rapidement le fonctionnement d&rsquo;OpenRE. Sinon, je vous recommande l&rsquo;article <a href="/posts/forward_vs_deferred">Forward Vs Deferred</a> qui explique les bases de manière accessible. Maintenant que nous savons tous ce qu&rsquo;est un G-Buffer, entrons dans le vif du sujet !</p>
 <h4 id="vue-densemble">Vue d&rsquo;ensemble</h4>
-<p>La particularité d&rsquo;OpenRE, c&rsquo;est que le monde que l&rsquo;on créé est séparé en 2 partie bien distinctes. Tellement distinctes, que l&rsquo;on a besoin de deux logiciels différents pour les éditer :</p>
+<p>La particularité d&rsquo;OpenRE, c&rsquo;est que le monde que l&rsquo;on crée est séparé en 2 parties bien distinctes. Tellement distinctes qu&rsquo;on a besoin de deux logiciels différents pour les éditer :</p>
 <ul>
-<li><strong>1. Le monde déterministe (Blender) :</strong> comprend tous les éléments statiques ou prévisibles, comme l&rsquo;architecture, les meubles, ou les arbres.</li>
-<li><strong>2. Le monde interactif (Godot) :</strong>  inclut les éléments dynamiques liés au gameplay, comme les personnages, les véhicules, les objets déplaçables, ou les portes.</li>
+<li><strong>1. Le monde déterministe (Blender) :</strong> comprend tous les éléments statiques ou prévisibles, comme l&rsquo;architecture, les meubles ou les arbres.</li>
+<li><strong>2. Le monde interactif (Godot) :</strong>  inclut les éléments dynamiques liés au gameplay, comme les personnages, les véhicules, les objets déplaçables ou les portes.</li>
 </ul>
-<p>Pour rendre une frame, on commence par génèrer le G-Buffer de chacuns des 2 mondes. Ensuite, on utilise les informations contenue dans ces G-Buffers pour calculer la contributions de chaque lumière sur chaque pixel comme dans un <em>deferred renderer</em> classic ou presque.</p>
-<h4 id="dg-buffer--le-g-buffer-du-monde-déterministe-">DG-Buffer : le G-Buffer du monde déterministe :</h4>
-<p>Ce DG-Buffer est généré offline dans blender et exporté sous forme d&rsquo;images, pour être importé ensuite dans Godot. On utilise le compositor de Blender avec Cycles pour produire différentes maps, notamment :</p>
+<p>Pour rendre une frame, on commence par générer le G-Buffer de chacune des deux parties. Ensuite, on utilise les informations contenues dans ces G-Buffers pour calculer la contribution de chaque lumière sur chaque pixel comme dans un deferred renderer classique (ou presque, on y reviendra).</p>
+<h4 id="dg-buffer--le-g-buffer-du-monde-déterministe">DG-Buffer : le G-Buffer du monde déterministe</h4>
+<p>Ce DG-Buffer est pré-rendu dans Blender et exporté sous forme d&rsquo;images, qui seront importées plus tard dans Godot. On utilise le compositor de Blender avec Cycles pour produire les maps suivantes :</p>
 <ul>
-<li>La depth</li>
-<li>La normal</li>
-<li>l&rsquo;ORM (Ambiant Oclusion, Roughness et Metalic encodées dans une image)</li>
+<li>Depth</li>
+<li>Normal</li>
+<li>ORM (Ambiant Oclusion, Roughness et Metalic encodées dans une image)</li>
 <li><em>diverses maps d&rsquo;illumination</em></li>
 </ul>
-<p>A première vue, le DG-Buffer ne contient pas de map d&rsquo;albedo (la couleur) ce qui parrait étrange. A la place nous avons acces à <em>diverses maps d&rsquo;illumination</em>. Deux raisons à cela :</p>
+<p>À première vue, le DG-Buffer ne contient pas la map d&rsquo;albedo (la couleur), ce qui paraît étrange. À la place, nous avons accès à <em>diverses maps d&rsquo;illumination</em>. Deux raisons à cela :</p>
 <ul>
-<li>Le model d&rsquo;illumination de Cycle est complexe. En sortie, il nous fourni neuf maps différentes. Parmi ces cartes, une correspond à l’albedo, mais la recomposition finale de l&rsquo;image nécessite les neuf.</li>
-<li>Dans un deferred renderer normal, l’illumination est calculée en temps réel à partir du G-Buffer. Ici, pour conserver la qualité de rendu offerte par Cycles et éviter un recalcul couteux dans Godot, nous intégrons les 9 maps au DG-Buffer (et pas seulement celle qui correspond à l&rsquo;albedo).</li>
+<li>Le modèle d&rsquo;illumination de Cycles est complexe. En sortie, il nous fournit neuf maps différentes. Parmi ces maps, une correspond à l’albedo, mais la recomposition finale de l&rsquo;image nécessite les neuf.</li>
+<li>Dans un deferred renderer normal, l’illumination est calculée en temps réel à partir du G-Buffer. Ici, pour conserver la qualité de rendu offerte par Cycles et éviter un recalcul coûteux dans Godot, nous intégrons les neuf maps au DG-Buffer (et pas seulement celle qui correspond à l’albedo).</li>
 </ul>
-<h4 id="ig-buffer--le-g-buffer-du-monde-interactif-">IG-Buffer : le G-Buffer du monde interactif :</h4>
-<p>Si Godot implémentait un <em>deffered renderer</em>, on n&rsquo;aurait qu&rsquo;a récupérer directement les maps qui nous interesse dans son G-Buffer. Mais malheureusement pour nous, le renderer officiel de Godot est un <em>forward</em>. Le G-Buffer n&rsquo;existe pas, il faudra donc  trouver un moyen de le construire nous même.</p>
-<p>Il sera peut-être nécessaire de bybasser une partie du système de rendu du moteur. Ce qui risque d&rsquo;entrainer des incompatibilité avec certaines fonctionnalités graphiques natives.</p>
-<p>Il est difficle d&rsquo;anticiper ce qui restera compatible ou non. Pour l&rsquo;heure il est plus prudent de considérer qu&rsquo;OpenRE se substitura totalement à la partie graphique de Godot. En conséquence, les seules features graphiques disponnible avec OpenRE seraint celle que j&rsquo;aurais réimplémenté. Je prévois à minima :</p>
+<h4 id="ig-buffer--le-g-buffer-du-monde-interactif">IG-Buffer : le G-Buffer du monde interactif</h4>
+<p>Si Godot implémentait un deferred renderer, on pourrait récupérer directement les maps qui nous intéressent dans son G-Buffer. Mais malheureusement pour nous, le renderer officiel de Godot est un forward. Le G-Buffer n&rsquo;existe pas, il faudra donc construire le nôtre.</p>
+<p>Pour cela, il faudra probablement contourner certaines parties du système de rendu de Godot, ce qui pourrait entraîner des incompatibilités avec ses fonctionnalités graphiques natives.</p>
+<p>Il est difficile, à ce stade, de prévoir ce qui fonctionnera ou non nativement. Mais, au besoin, je prévois de réimplémenter ce qu&rsquo;il faut dans OpenRE pour qu&rsquo;on ait au minimum :</p>
 <ul>
-<li>un material PBR opaque</li>
-<li>la gestion des sources de lumières usuelles (point, cone, directionnal)</li>
+<li>un shader PBR opaque</li>
+<li>la gestion des sources de lumières usuelles (point, spot, directional)</li>
 <li>la compatibilité avec le système d&rsquo;UI natif de Godot</li>
-<li>l&rsquo;implémentation d&rsquo;un système d&rsquo;ombres dynamiques</li>
+<li>la compatibilité (au moins partielle) avec le système de particules natif de Godot</li>
+<li>l’implémentation d’un système d’ombres dynamiques</li>
 <li>un support (au moins partiel) de la transparence</li>
 </ul>
-<h4 id="calcule-de-léclairage-">Calcule de l&rsquo;éclairage :</h4>
-<p>L&rsquo;application de la lumière sera très similaire à du <em>deffered rendering</em> classique : pour chaque pixel, on accumule les contribution lumineuse de chacunes des source et on multiplie cette valeur par la couleur du pixel. Pour savoir dans quel G-Buffer récupérer les information du pixel, il suffit de comparer la depth. Il y aura juste quelques subtilités en plus liées à la dualité du monde.</p>
-<p>Pour expliquer ces subtilités, je dois aborder un point que j&rsquo;ai volontairement éludé jusqu&rsquo;ici. On sait que la géométrie qui compose le jeu est divisée en une partie déterministe et une partie interactive. Mais qu&rsquo;en est-t-il des source de lumières ? Et bien c&rsquo;est exactement pareil. Il y&rsquo;a des source intéractives qui vivent dans Godot (une lampe torche, le flash d&rsquo;un coup de feu, les phares d&rsquo;une voiture&hellip;) et des source déterministes qui vivent dans Blender (un feu de cheminé, un lampadaire, le soleil&hellip;).</p>
-<p>Première subtilité, la géometrie du monde intéractif a besoin de recevoir la lumière du monde déterministe. Pour cela on a besoin de répliquer et de syncroniser les sources déterministes dans les 2 scènes (Blender et Godot).</p>
-<p>Deuxième subtilité, nous avons maintenant des lumières déterministes ou interactives qui contribuent à des pixels eux aussi déterministes ou interactifs. Selon les combinaisons, l&rsquo;illumination ne va pas être calculée de la même manière. Voici un petit tableau récapitulatif de quoi faire quand pour que ça fonctionne.</p>
+<h4 id="calcul-de-léclairage">Calcul de l&rsquo;éclairage</h4>
+<p>Le calcul de la lumière suit le principe du deferred rendering classique : chaque pixel accumule les contributions lumineuses des sources, que l&rsquo;on multiplie ensuite par sa couleur. Pour savoir dans quel G-Buffer récupérer les informations du pixel concerné, il suffit de comparer les valeurs de la depth. Cependant, quelques subtilités émergent en raison de la dualité du monde.</p>
+<p>En effet, je ne l&rsquo;ai pas précisé jusqu&rsquo;à maintenant, mais les sources de lumière aussi peuvent être déterministes (lampadaires, feux de cheminée, soleil&hellip;) ou interactives (lampe torche, flash d&rsquo;un tir, phares de voiture). Cela a deux conséquences :</p>
+<ul>
+<li>La géométrie interactive doit recevoir la lumière déterministe. Les lumières de Blender doivent donc être répliquées et synchronisées dans Godot.</li>
+<li>Les lumières, comme les pixels, peuvent être déterministes ou interactifs. Selon la combinaison, le calcul de la contribution d&rsquo;une lumière donnée sur un pixel donné sera différent. Voici un tableau récapitulatif :</li>
+</ul>
 <table>
   <thead>
       <tr>
@@ -257,22 +260,22 @@ stroke-linejoin="round" class="feather feather-home">
   <tbody>
       <tr>
           <td style="text-align: left"><strong>Lumière Déterministe</strong></td>
-          <td style="text-align: center">Composition des maps du DG-Buffer</td>
-          <td style="text-align: center">Deffered classic</td>
+          <td style="text-align: center">Recomposition des maps de Cycles</td>
+          <td style="text-align: center">Deferred classic</td>
       </tr>
       <tr>
           <td style="text-align: left"><strong>Lumière Interactive</strong></td>
-          <td style="text-align: center">Composition des maps du DG-Buffer <br> + Deffered classic</td>
-          <td style="text-align: center">Deffered classic</td>
+          <td style="text-align: center">Recomposition des maps de Cycles <br> + Deferred classic</td>
+          <td style="text-align: center">Deferred classic</td>
       </tr>
   </tbody>
 </table>
-<h2 id="phases-prévues">Phases prévues</h2>
-<h4 id="proof-of-concept-poc">Proof of Concept (POC)</h4>
+<h2 id="phases-de-développement">Phases de développement</h2>
+<h4 id="phase-1--proof-of-concept-poc">Phase 1 : Proof of Concept (POC)</h4>
 <p>Dans cette phase je ne me focalise pas sur le design, la qualité du code ou l&rsquo;optimisation. J&rsquo;explore simplement differents axes le plus rapidement possible pour essayer de déterminer ce qui va être faisable ou non et jusqu&rsquo;où je pourrai aller. L&rsquo;objectif ici est d&rsquo;aller vite et de se faire un idée relativement précise de ce à quoi pourra ressembler une V1 d&rsquo;OpenRE. Lorsque j&rsquo;aurai suffisement de recul, la code base sera archivée et je repartirai de zéro. A ce moment là seulement, je chercherai à construir une solution propre, robuste et efficace à la lumière de l&rsquo;experience acquise.</p>
 <p>Le répo de ce POC ne sera malheureusement pas public. En effet j&rsquo;ai besoin d&rsquo;asset 3D pour mes scenes d&rsquo;exemple <trouver un meilleur terme>. L&rsquo;idée étant de se projeter dans les possibilités de la technologie, j&rsquo;ai besoin que les rendus finaux soitent un minimum crédible. Trouver des assets de qualité et cohérents avec le rendu recherché n&rsquo;est pas quelque chose de simple. Se restrindre uniquement à des assets libres de droits ne serait pas réaliste. D&rsquo;autant plus qu&rsquo;on cherche à aller vite et que la recherche d&rsquo;asset est toujour très chronophage. Je fonctionnerai donc avec des assets pas trop cher ou que je possede déjà ainsi qu&rsquo;avec les free contents d&rsquo;Epic. Mais je n&rsquo;ai pas le droits de les redistribuer.</p>
 <h5 id="devlogs-">Devlogs :</h5>
-<h4 id="développement-du-sdk">Développement du SDK</h4>
+<h4 id="phase-2--le-sdk">Phase 2 : Le SDK</h4>
 <p>Cette phase est la &ldquo;vrai&rdquo; phase de développement d&rsquo;OpenRE. Elle aboutira si tout se passe bien à une première version utilisable du SDK. A l&rsquo;heure ou j&rsquo;écris ces ligne, cette phase n&rsquo;a pas encore commencé. Il est donc un peu tôt pour savoir ce que contiendra ce SDK mais il y aura certainement :</p>
 <ul>
 <li>un addon Blender</li>
@@ -282,7 +285,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Contrairement au POC, le SDK sera bien entandu disponnible sur un repo git public et distribué sous une licence libre et open-source (qui reste à déterminer).</p>
 <h5 id="devlogs--1">Devlogs :</h5>
 <p><em>Cette phase n&rsquo;a pas encore commencé</em></p>
-<h4 id="démo">Démo</h4>
+<h4 id="phase-3--une-démo-jouable">Phase 3 : Une Démo Jouable</h4>
 <p>Afin de montrer ce qu&rsquo;OpenRE est capable de faire, je prévois de réaliser un petit jeu avec. Cela me permetra également d&rsquo;éprouver un peu la techno sur un cas réèl et si nécessaire d&rsquo;y apporter des ajustement pour la rendre plus fiable et plus ergonomique.</p>
 <p>Je n&rsquo;ai pas encore décidé en quoi consistera cette démo, mais elle reprendra certainement le gameplay des vieux Resident Evil. J&rsquo;aimerai beaucoup qu&rsquo;OpenRE soit utilisée un jour pour donner vie à autre chose que des survival horror old school. Comme vous le savez déjà si vous avez lu l&rsquo;article en lien plus haut, je suis persuadé que la caméra fixe va bien au dela de ce genre specifique. Pourquoi ne pas faire autre chose dans ce cas ? Tout simplement parce que je ne suis pas Game Designer et que c&rsquo;est plus facile pour moi me lancer dans un concepte bien défini et que je connais bien.</p>
 <p>J&rsquo;aimerai également pouvoir distribuer cette démo sous licence open-source. Cela permetrait de faire office de projet d&rsquo;exemple illustrant comment utiliser OpenRE. Mais je risque de me retrouver face à la même problématique d&rsquo;asset que pour le POC. J&rsquo;essairai de voir ce que je peux faire, mais je ne peux rien promettre. En revanche, le build sera disponnible gratuitement sur ma page <a href="https://jponzo.itch.io/">itch.io</a></p>
