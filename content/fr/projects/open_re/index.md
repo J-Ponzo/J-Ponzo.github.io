@@ -6,13 +6,13 @@ title = 'OpenRE (Open Retro Engine)'
 description = 'Page de presentation du projet OpenRE'
 +++
 ## Introduction
-Si vous avez lu [cet article](/posts/i_love_fixed_cams), vous savez déjà que je suis un grand nostalgique des caméras fixes et des contrôles tank. Ce genre vidéoludique, caractéristique de la fin des années 90, m'a toujours fasciné. Si vous ne voyez pas à quoi je fais allusion, ou que vous souhaitez simplement découvrir ce qui me plaît tant dans ces jeux, je vous invite à y jeter un œil. Cela devrait satisfaire votre curiosité.
+Si vous avez lu [cet article](/posts/i_love_fixed_cams), vous savez déjà que je suis un grand nostalgique des caméras fixes et des contrôles tank. Ce genre vidéoludique, caractéristique de la fin des années 90, m'a toujours fasciné. Si vous ne voyez pas à quoi je fais allusion, ou que vous souhaitez simplement découvrir ce qui me plaît tant dans ces jeux, je vous invite à y jeter un œil.
 
 Lorsque j’ai voulu développer mon propre jeu en caméra fixe, je me suis rapidement heurté à un problème : les outils et ressources sur le sujet sont rares. Certes, on trouve quelques tutoriels sur la gestion des caméras ou sur les déplacements du joueur dans ce contexte particulier. Mais rien ne traite de ce que je considère comme le principal défi de cette approche : *"Comment intégrer harmonieusement des éléments interactifs par-dessus des arrière-plans précalculés ?"* (D’ailleurs, si vous avez des références sur le sujet, n'hésitez pas à les partager dans les commentaires.)
 
-C'est de ce constat qu'est née OpenRE : une technologie libre et open-source destinée au développement de jeux vidéo en caméra fixe et arrière-plan pré-calculés. Ce projet est aussi l'occasion de revisiter la technique en explorant les possibilités offertes par les technologies modernes. Je cherche notament à gommer les différences visuelles entre le précalculé et le rendu en temps réel qui trahissent souvent le subterfuge. D’autres idées viendront sans doute enrichir le concept au fil du développement.
+C'est de ce constat qu'est née OpenRE : une technologie libre et open-source destinée au développement de jeux vidéo en caméra fixe et arrière-plan pré-calculés. Ce projet est aussi l'occasion de revisiter la technique en explorant les possibilités offertes par les technologies modernes. Je cherche notament à gommer les différences visuelles entre le précalculé et le rendu temps réel qui trahissent souvent le subterfuge. D’autres idées viendront sans doute enrichir le concept au fur et à mesure.
 
-Dans cet article, je vous présente le fonctionnement général d’OpenRE ainsi que les différentes étapes prévues pour son développement. Vous trouverez également des liens vers les devlogs associés à chaque phase. J'y partagerai régulièrement mes avancées, mes réussites, mes échecs et mes réflexions techniques.
+Dans cet article, je vous présente le fonctionnement général d’OpenRE ainsi que les différentes étapes prévues pour son développement. Vous trouverez également des liens vers les devlogs associés à chaque phase. J'y partagerai régulièrement mes avancées, mes réussites, mes échecs et mes réflexions.
 
 ## Environnement technique :
 OpenRE repose sur deux outils largement utilisés et éprouvés :
@@ -62,7 +62,7 @@ Il est difficile, à ce stade, de prévoir ce qui fonctionnera ou non nativement
 - un support (au moins partiel) de la transparence
  
 #### Calcul de l'éclairage
-Le calcul de la lumière suit le principe du deferred rendering classique : chaque pixel accumule les contributions lumineuses des sources, que l'on multiplie ensuite par sa couleur. Pour savoir dans quel G-Buffer récupérer les informations du pixel concerné, il suffit de comparer les valeurs de la depth. Cependant, quelques subtilités émergent en raison de la dualité du monde.
+Le calcul de la lumière suit le principe du deferred rendering classique : chaque pixel accumule les contributions lumineuses des sources, que l'on multiplie ensuite par sa couleur. Pour savoir dans quel G-Buffer récupérer les informations du pixel concerné, il suffit de comparer les valeurs de la depth et de choisir le G-Buffer qui a là plus petite. Cependant, quelques subtilités émergent en raison de la dualité du monde.
 
 En effet, je ne l'ai pas précisé jusqu'à maintenant, mais les sources de lumière aussi peuvent être déterministes (lampadaires, feux de cheminée, soleil...) ou interactives (lampe torche, flash d'un tir, phares de voiture). Cela a deux conséquences :
 - La géométrie interactive doit recevoir la lumière déterministe. Les lumières de Blender doivent donc être répliquées et synchronisées dans Godot.
@@ -76,29 +76,34 @@ En effet, je ne l'ai pas précisé jusqu'à maintenant, mais les sources de lumi
 ## Phases de développement
 
 #### Phase 1 : Proof of Concept (POC)
-Dans cette phase je ne me focalise pas sur le design, la qualité du code ou l'optimisation. J'explore simplement differents axes le plus rapidement possible pour essayer de déterminer ce qui va être faisable ou non et jusqu'où je pourrai aller. L'objectif ici est d'aller vite et de se faire un idée relativement précise de ce à quoi pourra ressembler une V1 d'OpenRE. Lorsque j'aurai suffisement de recul, la code base sera archivée et je repartirai de zéro. A ce moment là seulement, je chercherai à construir une solution propre, robuste et efficace à la lumière de l'experience acquise.
+L’objectif principal de cette phase est d’explorer rapidement différents axes pour évaluer ce qui est faisable et dégager le périmètre d'OpenRE. Je ne me focalise ni sur la qualité du code ni sur l'optimisation, mais uniquement sur l’expérimentation. L’idée est d'avoir une vision claire de ce à quoi pourrait ressembler une première version opérationnelle de la technologie.
 
-Le répo de ce POC ne sera malheureusement pas public. En effet j'ai besoin d'asset 3D pour mes scenes d'exemple <trouver un meilleur terme>. L'idée étant de se projeter dans les possibilités de la technologie, j'ai besoin que les rendus finaux soitent un minimum crédible. Trouver des assets de qualité et cohérents avec le rendu recherché n'est pas quelque chose de simple. Se restrindre uniquement à des assets libres de droits ne serait pas réaliste. D'autant plus qu'on cherche à aller vite et que la recherche d'asset est toujour très chronophage. Je fonctionnerai donc avec des assets pas trop cher ou que je possede déjà ainsi qu'avec les free contents d'Epic. Mais je n'ai pas le droits de les redistribuer.
+Lorsque j'estimerai avoir assez de recul, la codebase sera archivée et je repartirai de zéro. À ce moment-là seulement, je chercherai à construire une solution robuste, performante et ergonomique, tirant parti des enseignements acquis durant cette phase.
+
+Le dépôt de ce POC ne sera pas public. Pour juger efficacement de la technologie, je dois m’appuyer sur des visuels suffisamment convaincants, ce qui nécessitera des assets graphiques de qualité et cohérents entre eux. Trouver de tels assets libres de droits et dans un délai raisonnable ne sera pas possible. Je ferai donc avec mes précédents achats et autres free contents que je n’ai pas le droit de redistribuer en dehors d’un exécutable.
 
 ##### Devlogs :
+*Cette phase est en cours. Les devlogs seront publiés dès qu’ils seront disponibles.*
 
 #### Phase 2 : Le SDK
-Cette phase est la "vrai" phase de développement d'OpenRE. Elle aboutira si tout se passe bien à une première version utilisable du SDK. A l'heure ou j'écris ces ligne, cette phase n'a pas encore commencé. Il est donc un peu tôt pour savoir ce que contiendra ce SDK mais il y aura certainement :
+Cette phase représente le véritable développement d’OpenRE. Elle aboutira, si tout se passe comme prévu, à une première version utilisable et documentée du SDK.
+
+Bien que les détails exacts restent à préciser, le SDK devrait inclure :
 - un addon Blender
 - un addon Godot
-- quelques scripts & utilitaires
+- des scripts & utilitaires complémentaires
 
-Contrairement au POC, le SDK sera bien entandu disponnible sur un repo git public et distribué sous une licence libre et open-source (qui reste à déterminer).
+Contrairement au POC, le SDK sera bien entendu disponible sur un dépôt Git public et distribué sous licence open-source (qui reste à déterminer).
 
 ##### Devlogs :
 *Cette phase n'a pas encore commencé*
 
 #### Phase 3 : Une Démo Jouable
-Afin de montrer ce qu'OpenRE est capable de faire, je prévois de réaliser un petit jeu avec. Cela me permetra également d'éprouver un peu la techno sur un cas réèl et si nécessaire d'y apporter des ajustement pour la rendre plus fiable et plus ergonomique.
+Pour présenter ce qu'OpenRE permet de faire, je prévois de réaliser une petite démo jouable. Ce projet permettra de tester le SDK dans un cas pratique et ainsi d’éprouver sa fiabilité et son ergonomie.
 
-Je n'ai pas encore décidé en quoi consistera cette démo, mais elle reprendra certainement le gameplay des vieux Resident Evil. J'aimerai beaucoup qu'OpenRE soit utilisée un jour pour donner vie à autre chose que des survival horror old school. Comme vous le savez déjà si vous avez lu l'article en lien plus haut, je suis persuadé que la caméra fixe va bien au dela de ce genre specifique. Pourquoi ne pas faire autre chose dans ce cas ? Tout simplement parce que je ne suis pas Game Designer et que c'est plus facile pour moi me lancer dans un concepte bien défini et que je connais bien.
+Malgré ma conviction que la caméra fixe dépasse le cadre du survival-horror, cette démo s’inspirera probablement des classiques du genre. En effet, j'aimerais beaucoup voir OpenRE utilisé dans des propositions vidéoludiques nouvelles. Mais mon admiration pour ce type de jeux est une grande source de motivation. Et n'étant pas un Game Designer aguerri, m’appuyer sur des codes que je connais bien me semble plus sage.
 
-J'aimerai également pouvoir distribuer cette démo sous licence open-source. Cela permetrait de faire office de projet d'exemple illustrant comment utiliser OpenRE. Mais je risque de me retrouver face à la même problématique d'asset que pour le POC. J'essairai de voir ce que je peux faire, mais je ne peux rien promettre. En revanche, le build sera disponnible gratuitement sur ma page [itch.io](https://jponzo.itch.io/)
+Je souhaite également distribuer cette démo sous licence open-source afin qu’elle serve de projet d’exemple pour les utilisateurs d’OpenRE. Cependant, comme pour le POC, je risque de rencontrer des contraintes liées aux droits d’utilisation des assets. Je ferai de mon mieux pour trouver une solution, mais je ne peux rien garantir à ce stade. En revanche, une version jouable gratuite sera mise à disposition sur [ma page itch.io](https://jponzo.itch.io/) quoi qu’il arrive.
 
 ##### Devlogs :
 *Cette phase n'a pas encore commencé*
