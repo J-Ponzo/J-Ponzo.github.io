@@ -109,16 +109,10 @@ Je souhaite également distribuer cette démo sous licence open-source afin qu�
 *Cette phase n'a pas encore commencé*
 
 ## Conclusion :
-Vous l'aurez compris, OpenRE n'est pas le projet révolutionnaire qui va changé la face du gaming à tout jamais. C'est avant tout un hommage à un genre vidéo-ludique un peu disparu qui m'a profondement marqué en tant que joueur et que j'ai envie de perpétuer à mon niveau. 
+Je suis conscient que, tel que je le présente ici, OpenRE n’apparaît pas comme une solution universelle adaptable à tout type de projet. Le workflow reposant sur deux logiciels distincts (Blender et Godot) est atypique, et la perte de compatibilité avec certaines fonctionnalités graphiques natives de Godot peut être rédibitoire pour certains. Mais il faut bien commencer quelque part, et pour maximiser mes chances d’aller au bout de cette aventure, je préfère avancer étape par étape.
 
-Je pense qu'il est possible de faire de belles choses avec cette technique encore aujourd'hui
+Pour l’instant, cette technologie répond avant tout à mes propres besoins et ambitions créatives. Cela dit, j’espère sincèrement que OpenRE (et peut être les jeux que je réaliserai avec) sauront inspirer d’autres créateurs, en montrant que cette technique souvent délaissée, permet encore aujourd'hui de faire de belles choses et mérite d’être explorée et réinventée.
 
-Vous l'aurez compris, en l'état, OpenRE n'est pas une réponse universelle qui s'adaptera facilement à tous les projets. J'ai conscience que le workflow que je propose est plutôt atypique et que la perte de compatibilité avec les fonctionnalité graphiques native de Godot est une limitation un peu lourde pour une adoption à grande échelle.
+Si le projet suscite de l’intérêt et rassemble une communauté, je serais ravi d’enrichir OpenRE, de l’adapter à d’autres usages, et à d'autre façons de travailler plus conventionnelles. Mais pour avancer dans cette direction, vos retours sont essentiels. Qu’est-ce qui vous attire dans OpenRE ? Qu’est-ce qui pourrait freiner votre envie de l’utiliser ? Y a-t-il des fonctionnalités qui vous manquent ? Ou peut être pensez vous déjà pouvoir en tirer quelque chose ? N’hésitez pas à partager vos impressions dans les commentaires.
 
-Voyez ça de la manière suivante. Pour l'instant c'est une solution que je développe en premier lieu pour mon useage personnel. Mais je nourris parallelement l'espoir que ma démarche inspire d'autre créateurs à faire vivre à leur tour cet art oublié qu'est la caméra fix. Si il se trouve qu'à un moment donné la technologie sucite de l'interet, il n'est pas exclu que je change d'approche est que je cherche à construire quelque chose de plus généric.
-
-N'hesitez donc pas à me dire ce qui vous inspirent ou au contraire ce qui vous refroidit d'utiliser OpenRE. Qu'est ce que vous aimeriez voire dadans etc...
-
-Actuellement ce n'est qu'un hommage à un genre vidéo-ludique un peu disparu qui m'a profondement marqué en tant que joueur et que j'ai envie de perpétuer à mon niveau. Ma priorité première 
-
-Si la solution convient en l'état à certains ce sera déjà une grande victoire. Mais même si ce n'est pas, j'éspère que ma démarche de 
+En conclusion, je dirais que ce projet est pour moi une façon de rendre hommage à un genre vidéoludique qui m’a profondément marqué en tant que joueur et qui me manque beaucoup aujourd'hui. Même si OpenRE ne trouve qu’une petite audience ou même si je reste son unique utilisateur, je me plais à penser que ce que je partages sur ce blog ou ailleurs pourra insiter d’autres personnes à explorer cet art sous-estimé qu’est la caméra fixe, et à lui redonner la place qu’il mérite.
