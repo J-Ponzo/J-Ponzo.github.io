@@ -109,3 +109,16 @@ Je souhaite également distribuer cette démo sous licence open-source afin qu�
 *Cette phase n'a pas encore commencé*
 
 ## Conclusion :
+Vous l'aurez compris, OpenRE n'est pas le projet révolutionnaire qui va changé la face du gaming à tout jamais. C'est avant tout un hommage à un genre vidéo-ludique un peu disparu qui m'a profondement marqué en tant que joueur et que j'ai envie de perpétuer à mon niveau. 
+
+Je pense qu'il est possible de faire de belles choses avec cette technique encore aujourd'hui
+
+Vous l'aurez compris, en l'état, OpenRE n'est pas une réponse universelle qui s'adaptera facilement à tous les projets. J'ai conscience que le workflow que je propose est plutôt atypique et que la perte de compatibilité avec les fonctionnalité graphiques native de Godot est une limitation un peu lourde pour une adoption à grande échelle.
+
+Voyez ça de la manière suivante. Pour l'instant c'est une solution que je développe en premier lieu pour mon useage personnel. Mais je nourris parallelement l'espoir que ma démarche inspire d'autre créateurs à faire vivre à leur tour cet art oublié qu'est la caméra fix. Si il se trouve qu'à un moment donné la technologie sucite de l'interet, il n'est pas exclu que je change d'approche est que je cherche à construire quelque chose de plus généric.
+
+N'hesitez donc pas à me dire ce qui vous inspirent ou au contraire ce qui vous refroidit d'utiliser OpenRE. Qu'est ce que vous aimeriez voire dadans etc...
+
+Actuellement ce n'est qu'un hommage à un genre vidéo-ludique un peu disparu qui m'a profondement marqué en tant que joueur et que j'ai envie de perpétuer à mon niveau. Ma priorité première 
+
+Si la solution convient en l'état à certains ce sera déjà une grande victoire. Mais même si ce n'est pas, j'éspère que ma démarche de 
