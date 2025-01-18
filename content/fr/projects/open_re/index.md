@@ -15,17 +15,17 @@ C’est ce constat qui m’a poussé à créer OpenRE, une technologie libre et 
 Dans cet article, je vais vous présenter les principes fondamentaux d’OpenRE, ainsi que les grandes étapes prévues pour son développement. Vous trouverez aussi des liens vers des devlogs où je partagerai régulièrement mes avancées, mes échecs (parce qu’il y en aura !), et mes réflexions. Si vous aimez suivre les projets en coulisses, j’espère que vous apprécierez cette aventure autant que moi !
 
 ## Environnement technique :
-OpenRE repose sur deux outils largement utilisés et éprouvés :
-- Blender : pour la génération des arrière-plans
-- Godot : pour la gestion des éléments interactifs et le compositing avec les arrière-plans.
+OpenRE repose sur deux outils que vous connaissez sûrement :
+- Blender : pour créer les arrière-plans précalculés.
+- Godot : pour gérer tout ce qui est interactif et assembler le tout.
 
-Ces deux logiciels sont distribués sous licence open-source. C'est un aspect essentiel pour moi, car il garantit liberté et indépendance technologique. Cela s'aligne aussi particulièrement bien avec les objectifs d'OpenRE, qui vise à promouvoir une technologie accessible et ouverte à tous.
+Ces logiciels sont suffisement répandus et éprouvés pour en faire des choix solides. Ils sont aussi open-source ce qui est un aspect essentiel pour moi. D'abord parce que cela s'aligne particulièrement bien avec les objectifs d'OpenRE, qui vise à promouvoir une technologie accessible et ouverte à tous. Mais aussi et surtout parce que c'est un modèle beaucoup plus sécurisant. En effet, l'actualité récente rapelle que placer son capital technologique entre les mains d'une entreprise à but lucratif comporte des risques.
 
-Ensuite, sur le plan pratique, Godot prend nativement en charge le format de scènes de Blender. Ce sera un atout précieux pour la synchronisation des données entre les deux environnements. Cela permettra de fluidifier le workflow en réduisant les étapes manuelles et les erreurs potentielles.
+Ensuite, sur le plan pratique, les deux outils fonctionnent très bien ensemble. En effet Godot lit nativement les scènes créées dans Blender ce qui simplifira énormément la synchronisation entre les deux environnements, nous évitant des manipulations fastidieuses et sources d'erreur.
 
-Pour le scripting, j'utilise habituellement le C# dans mes projets Godot. Cependant, ce langage nécessite une version spécifique du moteur, ce qui peut limiter l'adoption d'OpenRE par la communauté. J’ai donc décidé de privilégier GDScript, le langage natif de Godot. Ce sera pour moi l’occasion d’élargir mes compétences, tout en offrant une compatibilité maximale à tous les utilisateurs.
+Côté scripting, je vais bousculer un peu mes habitudes et utiliser GDScript plutôt que C#. Pourquoi ce choix ? Tout simplement parce que C# nécessite une version spécifique de Godot alors que GDScript est supporté partout. Ce sera donc l'occasion pour moi d'apprendre un nouveau langage et OpenRE sera ainsi accessible au plus grand nombre.
 
-Si vous préférez C#, pas d’inquiétude : OpenRE sera compatible avec les deux versions de Godot. Vous pourrez développer votre jeu dans le langage de votre choix. GDScript ne sera nécessaire que si vous souhaitez modifier OpenRE. Par ailleurs, le moteur offre un certain niveau d’interopérabilité entre les deux langages. Vous pourrez donc, selon les cas, personnaliser OpenRE même en C#.
+Si comme moi vous êtes plus un adepte du C#, pas d'inquiètude ! Vous n'aurez besoin de GDScript que si vous avez envie de bidouiller OpenRE lui même. Mais vous pourrez développer votre jeu dans le langage de votre choix.
 
 ## Principe général
 Si vous êtes familier avec la technique du deferred rendering, vous comprendrez rapidement le fonctionnement d'OpenRE. Sinon, je vous recommande l'article [Forward Vs Deferred](/posts/forward_vs_deferred) qui explique les bases de manière accessible. Maintenant que nous savons tous ce qu'est un G-Buffer, entrons dans le vif du sujet !
