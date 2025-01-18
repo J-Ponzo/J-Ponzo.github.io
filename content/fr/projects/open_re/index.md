@@ -6,13 +6,13 @@ title = 'OpenRE (Open Retro Engine)'
 description = 'Page de presentation du projet OpenRE'
 +++
 ## Introduction
-Si vous avez lu [cet article](/posts/i_love_fixed_cams), vous savez déjà que je suis un grand nostalgique des caméras fixes et des contrôles tank. Ce genre vidéoludique, caractéristique de la fin des années 90, m'a toujours fasciné. Si vous ne voyez pas à quoi je fais allusion, ou que vous souhaitez simplement découvrir ce qui me plaît tant dans ces jeux, je vous invite à y jeter un œil.
+Si vous avez lu [cet article](/posts/i_love_fixed_cams), vous savez déjà que  j’ai un faible pour les caméras fixes et des contrôles tank. Ce genre vidéoludique, emblématiques de la fin des années 90, m'a toujours fasciné. Si ça ne vous parle pas trop, ou si vous êtes simplement curieux de découvrir ce qui le rend si unique à mes yeux, je vous invite à aller y jeter un œil.
 
-Lorsque j’ai voulu développer mon propre jeu en caméra fixe, je me suis rapidement heurté à un problème : les outils et ressources sur le sujet sont rares. Certes, on trouve quelques tutoriels sur la gestion des caméras ou sur les déplacements du joueur dans ce contexte particulier. Mais rien ne traite de ce que je considère comme le principal défi de cette approche : *"Comment intégrer harmonieusement des éléments interactifs par-dessus des arrière-plans précalculés ?"* (D’ailleurs, si vous avez des références sur le sujet, n'hésitez pas à les partager dans les commentaires.)
+C'est en essayant de créer mon propre jeu en caméra fixe que je me suis rendu compte d’une chose : les outils et ressources sur le sujet sont rares. Bien sûr, on trouve quelques tutoriels sur la gestion des caméras ou les déplacements du joueur, mais rien qui aborde ce qui, selon moi, est le vrai défi de cette approche : *"Comment intégrer efficacement et harmonieusement des éléments interactifs par-dessus des décor précalculés ?"*
 
-C'est de ce constat qu'est née OpenRE : une technologie libre et open-source destinée au développement de jeux vidéo en caméra fixe et arrière-plan pré-calculés. Ce projet est aussi l'occasion de revisiter la technique en explorant les possibilités offertes par les technologies modernes. Je cherche notament à gommer les différences visuelles entre le précalculé et le rendu temps réel qui trahissent souvent le subterfuge. D’autres idées viendront sans doute enrichir le concept au fur et à mesure.
+C’est ce constat qui m’a poussé à créer OpenRE, une technologie libre et open-source destinée à simplifier le développement de jeux en caméra fixe et arrière-plans précalculés. C'est aussi un peu le laboratoire dans lequel j'experimente pour voir jusqu'où j'arrive à pousser cette technique sur du matériel modèrne. Mon premier objectif est de réduire les différences visuelles entre précalculé et temps réel. Je les trouve en effet un peu difficile à accepter pour nos yeux d'aujourd'hui et ce sont elles qui à mon sens trahissent le plus le subterfuge. Mais il est probable que d'autres idées viennent enrichir le projet au fil du développement.
 
-Dans cet article, je vous présente le fonctionnement général d’OpenRE ainsi que les différentes étapes prévues pour son développement. Vous trouverez également des liens vers les devlogs associés à chaque phase. J'y partagerai régulièrement mes avancées, mes réussites, mes échecs et mes réflexions.
+Dans cet article, je vais vous présenter les principes fondamentaux d’OpenRE, ainsi que les grandes étapes prévues pour son développement. Vous trouverez aussi des liens vers des devlogs où je partagerai régulièrement mes avancées, mes échecs (parce qu’il y en aura !), et mes réflexions. Si vous aimez suivre les projets en coulisses, j’espère que vous apprécierez cette aventure autant que moi !
 
 ## Environnement technique :
 OpenRE repose sur deux outils largement utilisés et éprouvés :
@@ -46,14 +46,14 @@ Ce DG-Buffer est pré-rendu dans Blender et exporté sous forme d'images, qui se
 
 À première vue, le DG-Buffer ne contient pas la map d'albedo (la couleur), ce qui paraît étrange. À la place, nous avons accès à *diverses maps d'illumination*. Deux raisons à cela :
 - Le modèle d'illumination de Cycles est complexe. En sortie, il nous fournit neuf maps différentes. Parmi ces maps, une correspond à l’albedo, mais la recomposition finale de l'image nécessite les neuf.
-- Dans un deferred renderer normal, l’illumination est calculée en temps réel à partir du G-Buffer. Ici, pour conserver la qualité de rendu offerte par Cycles et alléger la charge de calcul en temps réèl, nous intégrons les neuf maps au DG-Buffer (et pas seulement celle qui correspond à l’albedo). Ainsi l'image pourra être recomposée directement côté Godot la plupart du temps (on y reviendra).
+- Dans un deferred renderer normal, l’illumination est calculée en temps réel à partir du G-Buffer. Ici, pour conserver la qualité de rendu offerte par Cycles et alléger la charge de calcul en temps réèl, nous intégrons les neuf maps au DG-Buffer (et pas seulement celle qui correspond à l’albedo). Ainsi, certaines parties de l'image pourront être recomposées directement côté Godot.
 
 #### IG-Buffer : le G-Buffer du monde interactif
-Si Godot implémentait un deferred renderer, on pourrait récupérer directement les maps qui nous intéressent dans son G-Buffer. Mais malheureusement pour nous, le renderer officiel de Godot est un forward. Le G-Buffer n'existe pas, il faudra donc construire le nôtre.
+Si Godot implémentait un deferred renderer, on pourrait piocher les maps qui nous intéressent directement dans son G-Buffer. Mais malheureusement pour nous, le renderer officiel de Godot est un forward. Le G-Buffer n'existe pas, on va donc devoir se retrousser les manches et construire le nôtre.
 
-Pour cela, il faudra probablement contourner certaines parties du système de rendu de Godot, ce qui pourrait entraîner des incompatibilités avec ses fonctionnalités graphiques natives.
+Pour cela, il faudra probablement bypasser certaines parties du système de rendu de Godot et il y aura peut etre des sequelles de cette intervention. On pourrait notament casser la compatibilité avec certaines fonctionnalités graphiques native.
 
-Il est difficile, à ce stade, de prévoir ce qui fonctionnera ou non nativement. Mais, au besoin, je prévois de réimplémenter ce qu'il faut dans OpenRE pour qu'on ait au minimum :
+Il est difficile, à ce stade, de prévoir ce qui restera disponnible ou non. Mais, je prévois de réimplémenter ce qu'il faut dans OpenRE pour qu'on ait au minimum :
 - un shader PBR opaque
 - la gestion des sources de lumières usuelles (point, spot, directional)
 - la compatibilité avec le système d'UI natif de Godot
@@ -62,7 +62,7 @@ Il est difficile, à ce stade, de prévoir ce qui fonctionnera ou non nativement
 - un support (au moins partiel) de la transparence
  
 #### Calcul de l'éclairage
-Le calcul de la lumière suit le principe du deferred rendering classique : chaque pixel accumule les contributions lumineuses des sources de la scene. L'albedo du pixel est ensuite multiplié par cette accumulation de lumière pour obtenir la couleur finale. Pour savoir dans quel G-Buffer récupérer les informations du pixel concerné, il suffit de comparer les valeurs de la depth et de choisir le G-Buffer qui a là plus petite. Cependant, quelques subtilités émergent en raison de la dualité du monde.
+Le calcul de la lumière suit le principe du deferred rendering classique : on accumule les contributions lumineuses sur chaque pixels puis on se sert de ce cummul pour déterminer la couleur final du pixel. Les informations nécessaires à ce calcul se trouve dans le G-Buffer. Dans le cas d'OpenRE il y a deux, mais il suffit comparer les valeurs de la depth pour choisir bon. Cependant, la dualité du monde implique une autre subtilite un peu moins évidente.
 
 En effet, je ne l'ai pas précisé jusqu'à maintenant, mais les sources de lumière aussi peuvent être déterministes (lampadaires, feux de cheminée, soleil...) ou interactives (lampe torche, flash d'un tir, phares de voiture). Cela a deux conséquences :
 - La géométrie interactive doit recevoir la lumière déterministe. Les lumières de Blender doivent donc être répliquées et synchronisées dans Godot.
