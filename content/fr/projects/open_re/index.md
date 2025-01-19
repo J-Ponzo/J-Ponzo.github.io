@@ -23,7 +23,7 @@ Ces logiciels sont suffisement répandus et éprouvés pour en faire des choix s
 
 Ensuite, sur le plan pratique, les deux outils fonctionnent très bien ensemble. En effet Godot lit nativement les scènes créées dans Blender ce qui simplifira énormément la synchronisation entre les deux environnements, nous évitant des manipulations fastidieuses et sources d'erreur.
 
-Côté scripting, je vais bousculer un peu mes habitudes et utiliser GDScript plutôt que C#. Pourquoi ce choix ? Tout simplement parce que C# nécessite une version spécifique de Godot alors que GDScript est supporté partout. Ce sera donc l'occasion pour moi d'apprendre un nouveau langage et OpenRE sera ainsi accessible au plus grand nombre.
+Côté scripting, je vais bousculer un peu mes habitudes et utiliser GDScript plutôt que C#. Pourquoi ce choix ? Tout simplement parce que C# nécessite une version spécifique de Godot alors que GDScript est supporté partout. Ce sera l'occasion pour moi d'apprendre un nouveau langage et OpenRE sera ainsi accessible au plus grand nombre.
 
 Si comme moi vous préférez le C#, rassurez-vous ! Vous n'aurez besoin de GDScript que si vous avez envie de bidouiller le plugin OpenRE lui même. Mais vous pourrez développer votre jeu dans le langage de votre choix.
 
@@ -66,7 +66,7 @@ Difficile de prévoir ce qu'on pourra conserver ou non à ce stade. Mais si des 
 - un support (au moins partiel) de la transparence
  
 #### Calcul de l'éclairage
-Le calcul de la lumière suit le principe du deferred rendering classique : on accumule les contributions lumineuses sur chaque pixels puis on se sert de ce cummul pour déterminer la couleur final du pixel. Les informations nécessaires à ce calcul se trouvent dans le G-Buffer. Dans le cas d'OpenRE on en a deux, mais pas de panique ! Il suffit de comparer les valeurs de la depth pour choisir le plus proche de la caméra. Mais, la dualité du monde implique une autre subtilité un peu moins évidente.
+Le calcul de la lumière suit le principe du deferred rendering classique : on accumule les contributions lumineuses sur chaque pixels puis on se sert de ce cummul pour déterminer la couleur final du pixel. Les informations nécessaires à ce calcul se trouvent dans le G-Buffer. Dans le cas d'OpenRE on en a deux, mais pas de panique ! Il suffit de comparer les valeurs de la depth pour choisir le plus proche de la caméra. Cela dit, la dualité du monde implique une autre subtilité un peu moins évidente.
 
 En effet, je ne l'ai pas précisé jusqu'ici, mais les sources de lumière aussi peuvent être déterministes (lampadaires, feux de cheminée, soleil...) ou interactives (lampe torche, flash d'un tir, phares de voiture). Cela a deux conséquences :
 - Les lumières déterministes (de Blender) doivent être répliquées dans Godot pour pouvoir éclairer les éléments interactifs.
