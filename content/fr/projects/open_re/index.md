@@ -25,35 +25,39 @@ Ensuite, sur le plan pratique, les deux outils fonctionnent très bien ensemble.
 
 Côté scripting, je vais bousculer un peu mes habitudes et utiliser GDScript plutôt que C#. Pourquoi ce choix ? Tout simplement parce que C# nécessite une version spécifique de Godot alors que GDScript est supporté partout. Ce sera donc l'occasion pour moi d'apprendre un nouveau langage et OpenRE sera ainsi accessible au plus grand nombre.
 
-Si comme moi vous êtes plus un adepte du C#, pas d'inquiètude ! Vous n'aurez besoin de GDScript que si vous avez envie de bidouiller OpenRE lui même. Mais vous pourrez développer votre jeu dans le langage de votre choix.
+Si comme moi vous préférez le C#, rassurez-vous ! Vous n'aurez besoin de GDScript que si vous avez envie de bidouiller le plugin OpenRE lui même. Mais vous pourrez développer votre jeu dans le langage de votre choix.
 
 ## Principe général
-Si vous êtes familier avec la technique du deferred rendering, vous comprendrez rapidement le fonctionnement d'OpenRE. Sinon, je vous recommande l'article [Forward Vs Deferred](/posts/forward_vs_deferred) qui explique les bases de manière accessible. Maintenant que nous savons tous ce qu'est un G-Buffer, entrons dans le vif du sujet !
+Si vous êtes déjà familier avec la technique du *deferred rendering*,  vous ne serez pas dépaysé par le fonctionnement d’OpenRE. Sinon, je vous recommande d’abord un petit détour par l’article [Forward Vs Deferred](/posts/forward_vs_deferred) qui explique les base de manière accessible. Maintenant que nous sommes tous au clair sur ce qu’est un G-Buffer, entrons dans le vif du sujet !
 
 #### Vue d'ensemble
-La particularité d'OpenRE, c'est que le monde que l'on crée est séparé en 2 parties bien distinctes. Tellement distinctes qu'on a besoin de deux logiciels différents pour les éditer :
-- **1. Le monde déterministe (Blender) :** comprend tous les éléments statiques ou prévisibles, comme l'architecture, les meubles ou les arbres.
-- **2. Le monde interactif (Godot) :**  inclut les éléments dynamiques liés au gameplay, comme les personnages, les véhicules, les objets déplaçables ou les portes.
+Le principe d’OpenRE repose sur une séparation radicale du monde en deux parties bien distinctes. Et quand je dis "bien distinctes", je veux dire que nous auront besoin de deux logiciels différents pour les éditer :
+- **1. Le monde déterministe (Blender) :** tout ce qui est statique ou prévisible, comme l’architecture, les meubles ou les arbres.
+- **2. Le monde interactif (Godot) :**  tout les éléments dynamiques liés au gameplay : personnages, véhicules, objets déplaçables, portes... bref tout ce dont le mouvement ne peut être prédit à l'avance.
 
-Pour rendre une frame, on commence par générer le G-Buffer de chacune des deux parties. Ensuite, on utilise les informations contenues dans ces G-Buffers pour calculer la contribution de chaque lumière sur chaque pixel comme dans un deferred renderer classique (ou presque, on y reviendra).
+Pour rendre une frame, OpenRE a besoin du G-Buffer de chacun des deux mondes. Le G-Buffer intéractif (IG-Buffer) est construit à la volée dans Godot tandis que le déterministe (DG-Buffer) est précalculé dans Blender. Les deux sont ensuite combiné dans Godot et une passe de *deffered shading* classique (ou presque...) est effectuée pour rendre les lumières.
 
 #### DG-Buffer : le G-Buffer du monde déterministe
-Ce DG-Buffer est pré-rendu dans Blender et exporté sous forme d'images, qui seront importées plus tard dans Godot. On utilise le compositor et Cycles (le path-traceur de Blender) pour produire les maps suivantes :
-- Depth
-- Normal
-- ORM (Ambiant Oclusion, Roughness et Metalic encodées dans une image)
+Le DG-Buffer est donc généré à l'avance dans Blender puis exporté sous forme d'images, qui seront importées plus tard dans Godot. Blender dispose de deux moteurs de rendu :
+- **Eevee** : Utilise la *rasterization* qui est la technique utilisée dans le jeu vidéo. Ce moteur permet un rendu quasi-temps réèl mais n'est pas photoréaliste.
+- **Cycles** : Utilise du *path-tracing* pour un rendu photoréaliste. Ce moteur est concu pour le cinéma et n'est pas temps réèl du tout (rendre une image prend plusieurs minutes).
+
+On utilisera bien sûre Cycles pour une qualité maximal et le compositeur de Blender nous permettra de décomposer l'image rendue pour obtenir les maps de notre DG-Buffer :
+- Depth (profondeur)
+- Normal (orientation des surfaces)
+- ORM (ambiant Oclusion, Roughness et Metalness encodées dans une seule image)
 - *diverses maps d'illumination*
 
-À première vue, le DG-Buffer ne contient pas la map d'albedo (la couleur), ce qui paraît étrange. À la place, nous avons accès à *diverses maps d'illumination*. Deux raisons à cela :
-- Le modèle d'illumination de Cycles est complexe. En sortie, il nous fournit neuf maps différentes. Parmi ces maps, une correspond à l’albedo, mais la recomposition finale de l'image nécessite les neuf.
-- Dans un deferred renderer normal, l’illumination est calculée en temps réel à partir du G-Buffer. Ici, pour conserver la qualité de rendu offerte par Cycles et alléger la charge de calcul en temps réèl, nous intégrons les neuf maps au DG-Buffer (et pas seulement celle qui correspond à l’albedo). Ainsi, certaines parties de l'image pourront être recomposées directement côté Godot.
+Vous remarquerez peut-être l’absence de la map d’albedo (couleur) au profit de *diverses maps d'illumination*. Pourquoi ?
+- 1. Le modèle d’illumination de Cycles est assez complexe. En sortie, on obtient neuf maps d'illumination différentes. En réalité, l’une de ces map correspond à l’albedo. Mais pour recomposer l’image finale, nous auront besoin des neuf.
+- 2. On pourrait se contanter d'intégrer l'albedo mais il faudrait alors recalculer l'éclairage côté Godot. On perdrait à la fois la qualité produite par Cycles et énormement de temps de calcul. Les neuf maps sont donc intégrées au DG-Buffer pour être recomposées directement lorsque c'est approprié (voire plus loin).
 
 #### IG-Buffer : le G-Buffer du monde interactif
-Si Godot implémentait un deferred renderer, on pourrait piocher les maps qui nous intéressent directement dans son G-Buffer. Mais malheureusement pour nous, le renderer officiel de Godot est un forward. Le G-Buffer n'existe pas, on va donc devoir se retrousser les manches et construire le nôtre.
+Si Godot implémentait un deferred renderer, on pourrait piocher les maps qui nous intéressent directement dans son G-Buffer. Mais malheureusement pour nous, le renderer officiel de Godot est un forward. Il n'y a donc pas de G-Buffer. 
 
-Pour cela, il faudra probablement bypasser certaines parties du système de rendu de Godot et il y aura peut etre des sequelles de cette intervention. On pourrait notament casser la compatibilité avec certaines fonctionnalités graphiques native.
+Il va falloir bricoler le nôtre, ce qui nécessitera de contourner une partie du système de rendu de Godot. Cette opération laissera probablement des sequelles. On pourrait notament casser la compatibilité avec certaines fonctionnalités graphiques natives.
 
-Il est difficile, à ce stade, de prévoir ce qui restera disponnible ou non. Mais, je prévois de réimplémenter ce qu'il faut dans OpenRE pour qu'on ait au minimum :
+Difficile de prévoir ce qu'on pourra conserver ou non à ce stade. Mais si des fonctionnalités essentielles sont perdues, je prévois d'implémenter des substitus directement dans OpenRE. Les utilisateurs pourrons notament compter sur :
 - un shader PBR opaque
 - la gestion des sources de lumières usuelles (point, spot, directional)
 - la compatibilité avec le système d'UI natif de Godot
@@ -62,11 +66,11 @@ Il est difficile, à ce stade, de prévoir ce qui restera disponnible ou non. Ma
 - un support (au moins partiel) de la transparence
  
 #### Calcul de l'éclairage
-Le calcul de la lumière suit le principe du deferred rendering classique : on accumule les contributions lumineuses sur chaque pixels puis on se sert de ce cummul pour déterminer la couleur final du pixel. Les informations nécessaires à ce calcul se trouve dans le G-Buffer. Dans le cas d'OpenRE il y a deux, mais il suffit comparer les valeurs de la depth pour choisir bon. Cependant, la dualité du monde implique une autre subtilite un peu moins évidente.
+Le calcul de la lumière suit le principe du deferred rendering classique : on accumule les contributions lumineuses sur chaque pixels puis on se sert de ce cummul pour déterminer la couleur final du pixel. Les informations nécessaires à ce calcul se trouvent dans le G-Buffer. Dans le cas d'OpenRE on en a deux, mais pas de panique ! Il suffit de comparer les valeurs de la depth pour choisir le plus proche de la caméra. Mais, la dualité du monde implique une autre subtilité un peu moins évidente.
 
-En effet, je ne l'ai pas précisé jusqu'à maintenant, mais les sources de lumière aussi peuvent être déterministes (lampadaires, feux de cheminée, soleil...) ou interactives (lampe torche, flash d'un tir, phares de voiture). Cela a deux conséquences :
-- La géométrie interactive doit recevoir la lumière déterministe. Les lumières de Blender doivent donc être répliquées et synchronisées dans Godot.
-- Les lumières, comme les pixels, peuvent être déterministes ou interactifs. Selon la combinaison, le calcul de la contribution d'une lumière donnée sur un pixel donné sera différent. Voici un tableau récapitulatif :
+En effet, je ne l'ai pas précisé jusqu'ici, mais les sources de lumière aussi peuvent être déterministes (lampadaires, feux de cheminée, soleil...) ou interactives (lampe torche, flash d'un tir, phares de voiture). Cela a deux conséquences :
+- Les lumières déterministes (de Blender) doivent être répliquées dans Godot pour pouvoir éclairer les éléments interactifs.
+- Le calcul de la contribution d'une lumière sur un pixel diffère selon les mondes auquels ils appartiennent. Voici un tableau récapitulatif des différentes combinaisons :
 
 | 			 				| Pixel Déterministe          									| Pixel Interactif     |
 | :------------------------ |:-------------------------------------------------------------:| :-------------------:|
