@@ -21,11 +21,11 @@ OpenRE repose sur deux outils que vous connaissez sûrement :
 
 Ces logiciels sont suffisement répandus et éprouvés pour en faire des choix solides. Ils sont aussi open-source ce qui est un aspect essentiel pour moi. D'abord parce que cela s'aligne particulièrement bien avec les objectifs d'OpenRE, qui vise à promouvoir une technologie accessible et ouverte à tous. Mais aussi et surtout parce que c'est un modèle beaucoup plus sécurisant. En effet, l'actualité récente rapelle que placer son capital technologique entre les mains d'une entreprise à but lucratif comporte des risques.
 
-Ensuite, sur le plan pratique, les deux outils fonctionnent très bien ensemble. En effet Godot lit nativement les scènes créées dans Blender ce qui simplifira énormément la synchronisation entre les deux environnements, nous évitant des manipulations fastidieuses et sources d'erreur.
+Ensuite, sur le plan pratique, les deux outils fonctionnent très bien ensemble. En effet Godot lit nativement les scènes créées dans Blender. Comme on le verra, nous auront besoin de synchronniser les deux environnements et cette synergie nous évitera des manipulations fastidieuses et sources d'erreur.
 
 Côté scripting, je vais bousculer un peu mes habitudes et utiliser GDScript plutôt que C#. Pourquoi ce choix ? Tout simplement parce que C# nécessite une version spécifique de Godot alors que GDScript est supporté partout. Ce sera l'occasion pour moi d'apprendre un nouveau langage et OpenRE sera ainsi accessible au plus grand nombre.
 
-Si comme moi vous préférez le C#, rassurez-vous ! Vous n'aurez besoin de GDScript que si vous avez envie de bidouiller le plugin OpenRE lui même. Mais vous pourrez développer votre jeu dans le langage de votre choix.
+Si comme moi vous préférez le C#, rassurez-vous ! Vous n'aurez besoin de GDScript que si vous souhaitez bidouiller le plugin OpenRE lui même. Mais vous pourrez développer votre jeu dans le langage de votre choix.
 
 ## Principe général
 Si vous êtes déjà familier avec la technique du *deferred rendering*,  vous ne serez pas dépaysé par le fonctionnement d’OpenRE. Sinon, je vous recommande d’abord un petit détour par l’article [Forward Vs Deferred](/posts/forward_vs_deferred) qui explique les base de manière accessible. Maintenant que nous sommes tous au clair sur ce qu’est un G-Buffer, entrons dans le vif du sujet !
@@ -84,7 +84,7 @@ Le but de cette première étape est de débrousailler le terrain pour se faire 
 
 Lorsque j'aurais une vision suffisament claire du projet et que j'aurai levé les doutes quant à sa faisabilité, ce code sera mis au placard et je repartirai d'une feuille blanche. Ce n’est qu’à ce moment-là que je me préocuperai de la qualité, de la performance et de l’ergonomie.
 
-Le dépôt de ce POC ne sera malheureusement pas public. De toutes façons, la codebase sera affreuse et vous n'aurez pas envie de mettre le nez dedans, mais ce n'est pas la raison principale. En réalité, pour juger de la qualité visuelle dont est capable OpenRE, j'aurais besoin d'assets de qualité et cohérents entre eux.  Trouver de tels assets libres de droits et dans un délai raisonnable serait un vrai casse tête. Je vais donc utiliser des ressources déjà en ma possession (achetées ou gratuites) et je ne peux pas les redistribuer.
+Le dépôt de ce POC ne sera malheureusement pas public. De toutes façons, la codebase sera affreuse et vous n'aurez pas envie de mettre le nez dedans, mais ce n'est pas la raison principale. En réalité, pour juger de la qualité visuelle d'OpenRE, j'aurais besoin d'assets de qualité et cohérents entre eux.  Trouver de tels assets libres de droits et dans un délai raisonnable serait un vrai casse tête. Je vais donc utiliser des ressources déjà en ma possession (achetées ou gratuites) et je ne peux pas les redistribuer.
 
 
 
@@ -92,22 +92,22 @@ Le dépôt de ce POC ne sera malheureusement pas public. De toutes façons, la c
 *Cette phase est en cours. Les devlogs seront publiés dès qu’ils seront disponibles.*
 
 #### Phase 2 : Le SDK
-C'est ici que les choses serieuses commenceront. Le jeu étant de faire passer OpenRE du stade de prototype informe à quelque chose de réèlement utilisable. Si tout ce passe comme prévue, à l'issue de cette phase nous auront un SDK fonctionnel et suffisement documenté pour être utilisé dans de vrai projets.
+C'est ici que les choses serieuses commenceront. L'enjeu étant de faire passer OpenRE du stade de prototype informe à quelque chose de réèlement utilisable. Si tout ce passe comme prévue, à l'issue de cette phase nous auront un SDK fonctionnel et suffisement documenté pour être utilisé dans de vrai projets.
 
 A l'heure ou j'écris ces lignes, le POC est bien avancé mais pas encore terminé. Certains détails restent donc à préciser mais le SDK devrait inclure :
 - un addon Blender
 - un addon Godot
 - des scripts & utilitaires complémentaires
 
-Contrairement au POC, le SDK sera open-source et disponible sur un dépôt public. Je serais en effet très heureux de savoir qu'OpenRE est utilisé dans certaines de vos créations. N'hésitez pas à me dire ce que vous faites avec, cela m'interesse au plus haut point. Dans un premier temps je ne pense pas accepter de contributions spontanées. Mais je vous encourage à partager vos idées, retours et autres *bug reports* sur le [github du projet]().
+Contrairement au POC, le SDK sera open-source et disponible sur un dépôt public. Je serais en effet très heureux d'apprendre qu'OpenRE est utilisé dans vos créations. Si le coeur vous en dit, n'hésitez pas à me faire savoir sur quoi vous travaillez. Cela m'interesse au plus haut point. Dans un premier temps je ne pense pas accepter de contributions spontanées. Mais je vous encourage à partager vos idées, retours et autres *bug reports* sur le [github du projet](). 
 
 ##### Devlogs :
 *Cette phase n'a pas encore commencé*
 
 #### Phase 3 : Une Démo Jouable
-Pour présenter ce qu'OpenRE permet de faire, je prévois de réaliser une petite démo jouable. Je pourrai ainsi tester le SDK dans un cas pratique afin d’éprouver sa fiabilité et son ergonomie.
+Pour montrer ce qu'OpenRE permet de faire, je prévois de réaliser une petite démo jouable. Je pourrai ainsi tester le SDK sur un cas pratique afin d’éprouver sa fiabilité et son ergonomie.
 
-Malgré ma conviction que la caméra fixe dépasse le cadre du survival-horror, cette démo s’inspirera probablement des classiques du genre. En effet, j'aimerais beaucoup voir OpenRE utilisé dans des propositions vidéoludiques nouvelles. Mais j'ai peu d'expérience en tant que game designer. Il est donc plus rassurant pour moi de m'appuyer sur des codes bien établis plutôt que de partir dans l'inconnu. 
+Si vous avez lu l'article cité dans l'intro, vous savez que pour moi la caméra fixe dépasse largement le cadre du survival-horror. J'aimerais beaucoup voir OpenRE utilisé pour d'autres types de jeux, voir même dans des propositions vidéoludiques nouvelles. Mais je ne suis pas vraiment game designer et il est donc plus réaliste pour moi de m'appuyer sur des codes bien établis plutôt que de partir dans l'inconnu. On restra donc surement dans la veine des survivals horrors classics des années 90 auquels j'ai énormement joué.
 
 Idéalement, cette démo sera elle aussi open-source et servira de projet d’exemple. Mais là encore, des contraintes liées aux droits d’utilisation des assets pourraient compliquer les choses. Je ne peux donc rien promettre mais quoi qu’il arrive, une version jouable gratuite sera mise à disposition sur [ma page itch.io](https://jponzo.itch.io/)
 
@@ -115,7 +115,7 @@ Idéalement, cette démo sera elle aussi open-source et servira de projet d’ex
 *Cette phase n'a pas encore commencé*
 
 ## Conclusion :
-Je suis conscient que, tel que je le présente ici, OpenRE n’apparaît pas comme une solution universelle adaptable à tout type de projet. Le workflow reposant sur deux logiciels distincts (Blender et Godot) est atypique, et la perte de compatibilité avec certaines fonctionnalités graphiques natives de Godot peut être rédibitoire pour certains. Mais il faut bien commencer quelque part, et pour maximiser mes chances d’aller au bout de cette aventure, je préfère avancer étape par étape.
+Je suis conscient que, tel que je le présenté ici, OpenRE n’apparaît pas comme une solution universelle adaptable à tout type de projet. Le workflow reposant sur deux logiciels distincts (Blender et Godot) est atypique, et la perte de compatibilité avec certaines fonctionnalités graphiques natives de Godot peut être rédibitoire pour certains. Mais il faut bien commencer quelque part, et pour maximiser mes chances d’aller au bout de cette aventure, je préfère avancer étape par étape.
 
 Pour l’instant, cette technologie répond avant tout à mes propres besoins et ambitions créatives. Cela dit, j’espère sincèrement que OpenRE (et peut être les jeux que je réaliserai avec) sauront inspirer d’autres créateurs, en montrant que cette technique souvent délaissée, permet encore aujourd'hui de faire de belles choses et mérite d’être explorée et réinventée.
 
