@@ -223,7 +223,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Si cette mise en bouche ne vous a pas rassasié et vous voulez comprendre un peu mieux ce qui se passe sous le capot, je vous invite à poursuivre la lecture. Sinon je vous donne rendez-vous directement à la Partie 3.</p>
 <h4 id="vue-densemble">Vue d&rsquo;ensemble</h4>
 <p>Si vous êtes déjà familier avec la technique du <em>deferred rendering</em>, vous ne serez pas dépaysé par le fonctionnement d’OpenRE. Sinon, je vous recommande d’abord un petit détour par l’article <a href="/posts/forward_vs_deferred">Forward Vs Deferred</a> qui explique les base de manière accessible. Maintenant que nous sommes tous au clair sur ce qu’est un G-Buffer, entrons dans le vif du sujet !</p>
-<p>Comme évoqué dans la patie précendente, OpenRE repose sur une séparation radicale du monde en deux parties bien distinctes. Et quand je dis &ldquo;bien distinctes&rdquo;, je veux dire que nous auront besoin de deux logiciels différents pour les éditer :</p>
+<p>Comme évoqué dans la patie précendente, OpenRE repose sur une séparation du monde en deux parties bien distinctes :</p>
 <ul>
 <li><strong>1. Le monde déterministe (Blender) :</strong> tout ce qui est statique ou prévisible, comme l’architecture, les meubles ou les arbres.</li>
 <li><strong>2. Le monde interactif (Godot) :</strong>  tout les éléments dynamiques liés au gameplay : personnages, véhicules, objets déplaçables, portes&hellip; bref tout ce dont le mouvement ne peut être prédit à l&rsquo;avance.</li>
