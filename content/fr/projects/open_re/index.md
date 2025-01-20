@@ -80,11 +80,13 @@ En effet, je ne l'ai pas précisé jusqu'ici, mais les sources de lumière aussi
 ## Phases de développement
 
 #### Phase 1 : Proof of Concept (POC)
-L’objectif principal de cette phase est d’explorer rapidement différents axes pour évaluer ce qui est faisable et dégager le périmètre d'OpenRE. Je ne me focalise ni sur la qualité du code ni sur l'optimisation, mais uniquement sur l’expérimentation. L’idée est d'avoir une vision claire de ce à quoi pourrait ressembler une première version opérationnelle de la technologie.
+Le but de cette première étape est de débrousailler le terrain pour se faire une première idée du potentiel d'OpenRE. On cherche à évaluer ce qui est possible et les résultats que l'on peut espérer. L'important ici n'est pas l'optimisation ou l'élegance du code. On cherche simplement à identifier les verroux techniques et on s'assure qu'il est possible de les faire sauter (à grand coup de débrouille et d'improvisation si il le faut).
 
-Lorsque j'estimerai avoir assez de recul, la codebase sera archivée et je repartirai de zéro. À ce moment-là seulement, je chercherai à construire une solution robuste, performante et ergonomique, tirant parti des enseignements acquis durant cette phase.
+Lorsque j'aurais une vision suffisament claire du projet et que j'aurai levé les doutes quant à sa faisabilité, ce code sera mis au placard et je repartirai d'une feuille blanche. Ce n’est qu’à ce moment-là que je me préocuperai de la qualité, de la performance et de l’ergonomie.
 
-Le dépôt de ce POC ne sera pas public. Pour juger efficacement de la technologie, je dois m’appuyer sur des visuels suffisamment convaincants, ce qui nécessitera des assets graphiques de qualité et cohérents entre eux. Trouver de tels assets libres de droits et dans un délai raisonnable ne sera pas possible. Je ferai donc avec mes précédents achats et autres free contents que je n’ai pas le droit de redistribuer en dehors d’un exécutable.
+Le dépôt de ce POC ne sera malheureusement pas public. De toutes façons, la codebase sera affreuse et vous n'aurez pas envie de mettre le nez dedans, mais ce n'est pas la raison principale. En réalité, pour juger de la qualité visuelle dont est capable OpenRE, j'aurais besoin d'assets de qualité et cohérents entre eux.  Trouver de tels assets libres de droits et dans un délai raisonnable serait un vrai casse tête. Je vais donc utiliser des ressources déjà en ma possession (achetées ou gratuites) et je ne peux pas les redistribuer.
+
+
 
 ##### Devlogs :
 *Cette phase est en cours. Les devlogs seront publiés dès qu’ils seront disponibles.*
