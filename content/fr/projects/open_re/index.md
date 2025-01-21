@@ -14,7 +14,7 @@ C’est ce constat qui m’a poussé à créer OpenRE, une technologie libre et 
 
 Dans cet article, je vais vous présenter les principes fondamentaux d’OpenRE, ainsi que les grandes étapes prévues pour son développement. Vous trouverez aussi des liens vers des devlogs où je partagerai régulièrement mes avancées, mes échecs (parce qu’il y en aura !), et mes réflexions. Si vous aimez suivre les projets en coulisses, j’espère que vous apprécierez cette aventure autant que moi !
 
-## Partie 1 : Environnement technique :
+## Partie I : Environnement technique :
 OpenRE repose sur deux outils que vous connaissez sûrement :
 - Blender : pour créer les arrière-plans précalculés.
 - Godot : pour gérer tout ce qui est interactif et assembler le tout.
@@ -27,19 +27,18 @@ Côté scripting, je vais bousculer un peu mes habitudes et utiliser GDScript pl
 
 Si comme moi vous préférez le C#, rassurez-vous ! Vous n'aurez besoin de GDScript que si vous souhaitez bidouiller le plugin OpenRE lui même. Mais vous pourrez développer votre jeu dans le langage de votre choix.
 
-## Partie 2 : Principe général
-Maintenant nous allons mettre un peu les mains dans le camboubi. Cette section est destinée à ceux qui veulent plonger dans les détails techniques. Si cet aspect ne vous interesse pas spétialement, et que vous préférez aborder OpenRE d'un point de vue utilisateur (ce qui est votre droit), voici une synthèse des points à retenir :
-- OpenRE s'appuie sur une séparation stricte du monde. Il y a d'un côté le monde deterministe et de l'autre le monde interactif
-- Le monde déterministe comprend ce qui est static. On l'édite dans Blender
-- Le monde interactif comprend ce qui est dynamique. On l'édite dans Godot
-- Le monde déterministe est précalulé dans Blender puis exporté sous la forme d'une collection d'images (contenant diverse données)
-- Cette collection d'images représentant le monde deterministe est importée dans Godot pour y être fusionnée en temps réèl avec le monde interactif. A l'écran les deux mondes sont quasi-indicernables. Ils s'occludent mutuellement et les lumières de l'un s'appliquent à l'autre.
-- Ce procédé offre une qualité graphique élevée pour les arrière-plans tout en minimisant les coûts en performance.
-- Mais ce procédé n'est pas sans consequences : la compatibilité avec certaines fonctionnalité graphique de Godot pourrait être perdue
-- Pour mitiger cela, les fonctionnalités perdues et considérées comme essentielles seront réimplémentées dans OpenRE
+## Part II : Principe général
+Maintenant nous allons mettre un peu les mains dans le camboubi. Si vous aimez plonger dans les détails techniques, cette section est faite pour vous. Sinon, pas de panique : voici une synthèse des points clés pour comprendre l’essentiel sans entrer dans les détails :
+- OpenRE repose sur une séparation stricte du monde en 2 parties :
+	- Le monde déterministe (éléments statiques comme les décors), édité dans Blender.
+	- Le monde interactif (éléments dynamiques comme les personnages ou objets), édité dans Godot.
+- Le monde déterministe est à l'origine les arrière plans précalculés. Ces derniers sont généres par Blender et exportés sous la forme d'une collection d'images représentant diverse données (depth, normals, couleur, etc.). Ces images sont ensuite importées dans Godot pour être fusionnées au monde intéractif en temps réèl.
+- Ce procédé offre une excellente qualité graphique pour une charge de calcule très faible. La structure composite des arrière plans permet une fusion quasi-indicernable des deux mondes : ils s'occludent mutuellement et l'éclairage est parfaitement unifiés.
+- Certaines fonctionnalités graphiques natives de Godot pourraient être incompatibles avec ce système. Si des fonctionnalités essentielles sont concernées, des solutions alternative seront implémentées dans OpenRE.
 
+<schéma général>
 
-Si cette mise en bouche ne vous a pas rassasié et vous voulez comprendre un peu mieux ce qui se passe sous le capot, je vous invite à poursuivre la lecture. Sinon je vous donne rendez-vous directement à la Partie 3.
+Si cette mise en bouche vous suffit, vous pouvez passer directement à la Partie 3. Mais si vous voulez comprendre un peu mieux ce qui se passe sous le capot, je vous invite à poursuivre la lecture.
 
 #### Vue d'ensemble
 Si vous êtes déjà familier avec la technique du *deferred rendering*, vous ne serez pas dépaysé par le fonctionnement d’OpenRE. Sinon, je vous recommande d’abord un petit détour par l’article [Forward Vs Deferred](/posts/forward_vs_deferred) qui explique les base de manière accessible. Maintenant que nous sommes tous au clair sur ce qu’est un G-Buffer, entrons dans le vif du sujet !
@@ -90,7 +89,7 @@ En effet, je ne l'ai pas précisé jusqu'ici, mais les sources de lumière aussi
 | **Lumière Déterministe** 	| Recomposition des maps de Cycles  							|  Deferred Light Pass |
 | **Lumière Interactive** 	| Recomposition des maps de Cycles <br> + Deferred Light Pass	|  Deferred Light Pass |
 
-## Partie 3 : Phases de développement
+## Part III : Phases de développement
 
 #### Proof of Concept (POC)
 Le but de cette première étape est de débrousailler le terrain pour se faire une première idée du potentiel d'OpenRE. On cherche à évaluer ce qui est possible et les résultats que l'on peut espérer. L'important ici n'est pas l'optimisation ou l'élegance du code. On cherche simplement à identifier les verroux techniques et on s'assure qu'il est possible de les faire sauter (à grand coup de débrouille et d'improvisation si il le faut).

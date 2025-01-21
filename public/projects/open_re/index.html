@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.137.0">
+<meta name="generator" content="Hugo 0.140.2">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re/">
@@ -164,8 +164,8 @@ stroke-linejoin="round" class="feather feather-home">
         <nav id="TableOfContents">
   <ul>
     <li><a href="#introduction">Introduction</a></li>
-    <li><a href="#partie-1--environnement-technique-">Partie 1 : Environnement technique :</a></li>
-    <li><a href="#partie-2--principe-général">Partie 2 : Principe général</a>
+    <li><a href="#partie-i--environnement-technique-">Partie I : Environnement technique :</a></li>
+    <li><a href="#part-ii--principe-général">Part II : Principe général</a>
       <ul>
         <li>
           <ul>
@@ -177,7 +177,7 @@ stroke-linejoin="round" class="feather feather-home">
         </li>
       </ul>
     </li>
-    <li><a href="#partie-3--phases-de-développement">Partie 3 : Phases de développement</a>
+    <li><a href="#part-iii--phases-de-développement">Part III : Phases de développement</a>
       <ul>
         <li>
           <ul>
@@ -198,7 +198,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>C&rsquo;est en essayant de créer mon propre jeu en caméra fixe que je me suis rendu compte d’une chose : les outils et ressources sur le sujet sont rares. Bien sûr, on trouve quelques tutoriels sur la gestion des caméras ou les déplacements du joueur, mais rien qui aborde ce qui, selon moi, est le vrai défi de cette approche : <em>&ldquo;Comment intégrer efficacement et harmonieusement des éléments interactifs par-dessus des décor précalculés ?&rdquo;</em></p>
 <p>C’est ce constat qui m’a poussé à créer OpenRE, une technologie libre et open-source destinée à simplifier le développement de jeux en caméra fixe et arrière-plans précalculés. C&rsquo;est aussi un peu le laboratoire dans lequel j&rsquo;experimente pour voir jusqu&rsquo;où j&rsquo;arrive à pousser cette technique sur du matériel modèrne. Mon premier objectif est de réduire les différences visuelles entre précalculé et temps réel. Je les trouve en effet un peu difficile à accepter pour nos yeux d&rsquo;aujourd&rsquo;hui et ce sont elles qui à mon sens trahissent le plus le subterfuge. Mais il est probable que d&rsquo;autres idées viennent enrichir le projet au fil du développement.</p>
 <p>Dans cet article, je vais vous présenter les principes fondamentaux d’OpenRE, ainsi que les grandes étapes prévues pour son développement. Vous trouverez aussi des liens vers des devlogs où je partagerai régulièrement mes avancées, mes échecs (parce qu’il y en aura !), et mes réflexions. Si vous aimez suivre les projets en coulisses, j’espère que vous apprécierez cette aventure autant que moi !</p>
-<h2 id="partie-1--environnement-technique-">Partie 1 : Environnement technique :</h2>
+<h2 id="partie-i--environnement-technique-">Partie I : Environnement technique :</h2>
 <p>OpenRE repose sur deux outils que vous connaissez sûrement :</p>
 <ul>
 <li>Blender : pour créer les arrière-plans précalculés.</li>
@@ -208,19 +208,21 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Ensuite, sur le plan pratique, les deux outils fonctionnent très bien ensemble. En effet Godot lit nativement les scènes créées dans Blender. Comme on le verra, nous auront besoin de synchronniser les deux environnements et cette synergie nous évitera des manipulations fastidieuses et sources d&rsquo;erreur.</p>
 <p>Côté scripting, je vais bousculer un peu mes habitudes et utiliser GDScript plutôt que C#. Pourquoi ce choix ? Tout simplement parce que C# nécessite une version spécifique de Godot alors que GDScript est supporté partout. Ce sera l&rsquo;occasion pour moi d&rsquo;apprendre un nouveau langage et OpenRE sera ainsi accessible au plus grand nombre.</p>
 <p>Si comme moi vous préférez le C#, rassurez-vous ! Vous n&rsquo;aurez besoin de GDScript que si vous souhaitez bidouiller le plugin OpenRE lui même. Mais vous pourrez développer votre jeu dans le langage de votre choix.</p>
-<h2 id="partie-2--principe-général">Partie 2 : Principe général</h2>
-<p>Maintenant nous allons mettre un peu les mains dans le camboubi. Cette section est destinée à ceux qui veulent plonger dans les détails techniques. Si cet aspect ne vous interesse pas spétialement, et que vous préférez aborder OpenRE d&rsquo;un point de vue utilisateur (ce qui est votre droit), voici une synthèse des points à retenir :</p>
+<h2 id="part-ii--principe-général">Part II : Principe général</h2>
+<p>Maintenant nous allons mettre un peu les mains dans le camboubi. Si vous aimez plonger dans les détails techniques, cette section est faite pour vous. Sinon, pas de panique : voici une synthèse des points clés pour comprendre l’essentiel sans entrer dans les détails :</p>
 <ul>
-<li>OpenRE s&rsquo;appuie sur une séparation stricte du monde. Il y a d&rsquo;un côté le monde deterministe et de l&rsquo;autre le monde interactif</li>
-<li>Le monde déterministe comprend ce qui est static. On l&rsquo;édite dans Blender</li>
-<li>Le monde interactif comprend ce qui est dynamique. On l&rsquo;édite dans Godot</li>
-<li>Le monde déterministe est précalulé dans Blender puis exporté sous la forme d&rsquo;une collection d&rsquo;images (contenant diverse données)</li>
-<li>Cette collection d&rsquo;images représentant le monde deterministe est importée dans Godot pour y être fusionnée en temps réèl avec le monde interactif. A l&rsquo;écran les deux mondes sont quasi-indicernables. Ils s&rsquo;occludent mutuellement et les lumières de l&rsquo;un s&rsquo;appliquent à l&rsquo;autre.</li>
-<li>Ce procédé offre une qualité graphique élevée pour les arrière-plans tout en minimisant les coûts en performance.</li>
-<li>Mais ce procédé n&rsquo;est pas sans consequences : la compatibilité avec certaines fonctionnalité graphique de Godot pourrait être perdue</li>
-<li>Pour mitiger cela, les fonctionnalités perdues et considérées comme essentielles seront réimplémentées dans OpenRE</li>
+<li>OpenRE repose sur une séparation stricte du monde en 2 parties :
+<ul>
+<li>Le monde déterministe (éléments statiques comme les décors), édité dans Blender.</li>
+<li>Le monde interactif (éléments dynamiques comme les personnages ou objets), édité dans Godot.</li>
 </ul>
-<p>Si cette mise en bouche ne vous a pas rassasié et vous voulez comprendre un peu mieux ce qui se passe sous le capot, je vous invite à poursuivre la lecture. Sinon je vous donne rendez-vous directement à la Partie 3.</p>
+</li>
+<li>Le monde déterministe est à l&rsquo;origine les arrière plans précalculés. Ces derniers sont généres par Blender et exportés sous la forme d&rsquo;une collection d&rsquo;images représentant diverse données (depth, normals, couleur, etc.). Ces images sont ensuite importées dans Godot pour être fusionnées au monde intéractif en temps réèl.</li>
+<li>Ce procédé offre une excellente qualité graphique pour une charge de calcule très faible. La structure composite des arrière plans permet une fusion quasi-indicernable des deux mondes : ils s&rsquo;occludent mutuellement et l&rsquo;éclairage est parfaitement unifiés.</li>
+<li>Certaines fonctionnalités graphiques natives de Godot pourraient être incompatibles avec ce système. Si des fonctionnalités essentielles sont concernées, des solutions alternative seront implémentées dans OpenRE.</li>
+</ul>
+<p>&lt;schéma général&gt;</p>
+<p>Si cette mise en bouche vous suffit, vous pouvez passer directement à la Partie 3. Mais si vous voulez comprendre un peu mieux ce qui se passe sous le capot, je vous invite à poursuivre la lecture.</p>
 <h4 id="vue-densemble">Vue d&rsquo;ensemble</h4>
 <p>Si vous êtes déjà familier avec la technique du <em>deferred rendering</em>, vous ne serez pas dépaysé par le fonctionnement d’OpenRE. Sinon, je vous recommande d’abord un petit détour par l’article <a href="/posts/forward_vs_deferred">Forward Vs Deferred</a> qui explique les base de manière accessible. Maintenant que nous sommes tous au clair sur ce qu’est un G-Buffer, entrons dans le vif du sujet !</p>
 <p>Comme évoqué dans la patie précendente, OpenRE repose sur une séparation du monde en deux parties bien distinctes :</p>
@@ -295,7 +297,7 @@ stroke-linejoin="round" class="feather feather-home">
       </tr>
   </tbody>
 </table>
-<h2 id="partie-3--phases-de-développement">Partie 3 : Phases de développement</h2>
+<h2 id="part-iii--phases-de-développement">Part III : Phases de développement</h2>
 <h4 id="proof-of-concept-poc">Proof of Concept (POC)</h4>
 <p>Le but de cette première étape est de débrousailler le terrain pour se faire une première idée du potentiel d&rsquo;OpenRE. On cherche à évaluer ce qui est possible et les résultats que l&rsquo;on peut espérer. L&rsquo;important ici n&rsquo;est pas l&rsquo;optimisation ou l&rsquo;élegance du code. On cherche simplement à identifier les verroux techniques et on s&rsquo;assure qu&rsquo;il est possible de les faire sauter (à grand coup de débrouille et d&rsquo;improvisation si il le faut).</p>
 <p>Lorsque j&rsquo;aurais une vision suffisament claire du projet et que j&rsquo;aurai levé les doutes quant à sa faisabilité, ce code sera mis au placard et je repartirai d&rsquo;une feuille blanche. Ce n’est qu’à ce moment-là que je me préocuperai de la qualité, de la performance et de l’ergonomie.</p>
@@ -310,7 +312,7 @@ stroke-linejoin="round" class="feather feather-home">
 <li>un addon Godot</li>
 <li>des scripts &amp; utilitaires complémentaires</li>
 </ul>
-<p>Contrairement au POC, le SDK sera open-source et disponible sur un dépôt public. Je serais en effet très heureux d&rsquo;apprendre qu&rsquo;OpenRE est utilisé dans vos créations. Si le coeur vous en dit, n&rsquo;hésitez pas à me faire savoir sur quoi vous travaillez. Cela m&rsquo;interesse au plus haut point. Dans un premier temps je ne pense pas accepter de contributions spontanées. Mais je vous encourage à partager vos idées, retours et autres <em>bug reports</em> sur le <a href="/">github du projet</a>.</p>
+<p>Contrairement au POC, le SDK sera open-source et disponible sur un dépôt public. Je serais en effet très heureux d&rsquo;apprendre qu&rsquo;OpenRE est utilisé dans vos créations. Si le coeur vous en dit, n&rsquo;hésitez pas à me faire savoir sur quoi vous travaillez. Cela m&rsquo;interesse au plus haut point. Dans un premier temps je ne pense pas accepter de contributions spontanées. Mais je vous encourage à partager vos idées, retours et autres <em>bug reports</em> sur le <a href="">github du projet</a>.</p>
 <h5 id="devlogs--1">Devlogs :</h5>
 <p><em>Cette phase n&rsquo;a pas encore commencé</em></p>
 <h4 id="une-démo-jouable">Une Démo Jouable</h4>
