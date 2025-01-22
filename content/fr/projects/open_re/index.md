@@ -14,7 +14,7 @@ C’est ce constat qui m’a conduit à créer OpenRE, une technologie libre et 
 
 Dans cet article, je vais vous présenter les principes fondamentaux d’OpenRE ainsi que les étapes majeures de son développement. Vous y trouverez aussi des liens vers des devlogs où je partagerai régulièrement mes avancées, mes échecs (parce qu’il y en aura !), et mes réflexions. Si vous aimez suivre les projets en coulisses, j’espère que cette aventure vous passionnera autant que moi !
 
-## Partie I : Environnement technique :
+## Part I : Environnement technique :
 OpenRE repose sur deux outils que vous connaissez sûrement :
 - Blender : pour créer les arrière-plans précalculés.
 - Godot : pour gérer les éléments interactifs et assembler le tout.
@@ -28,17 +28,38 @@ Côté scripting, j’ai choisi de bousculer mes habitudes en optant pour GDScri
 Si comme moi vous préférez le C#, soyer rassurés ! Vous n'aurez besoin de GDScript que si vous souhaitez modifier le plugin OpenRE lui même. Pour développer votre jeu, vous pourrez utiliser le langage de votre choix.
 
 ## Part II : Principe général
-Maintenant nous allons mettre un peu les mains dans le camboubi. Si vous aimez plonger dans les détails techniques, cette section est faite pour vous. Sinon, pas de panique : voici une synthèse des points clés pour comprendre l’essentiel sans entrer dans les détails :
-- OpenRE repose sur une séparation stricte du monde en 2 parties :
-	- Le monde déterministe, édité dans Blender : architecture, mobilier, vegetation...
-	- Le monde interactif, édité dans Godot : personnages, vehicules, objets déplacables...
-- Le monde déterministe est à l'origine les arrière plans précalculés. Ces derniers sont généres par Blender et exportés sous la forme d'une collection d'images représentant diverse données (depth, normals, couleur, etc.). Ces images sont ensuite importées dans Godot pour être fusionnées au monde intéractif lors de l'execution du jeu.
-- Ce procédé offre une excellente qualité graphique pour une charge de calcule très faible. La structure composite des arrière plans permet une fusion quasi-indicernable des deux mondes : ils s'occludent mutuellement et l'éclairage est parfaitement unifiés.
-- Certaines fonctionnalités graphiques natives de Godot pourraient être incompatibles avec ce système. Si des fonctionnalités essentielles sont concernées, des solutions alternative seront implémentées dans OpenRE.
+OpenRE repose sur une séparation du monde en deux parties bien distinctes. Et quand je dis "bien distinctes", je veux dire que nous auront besoin de deux logiciels différents pour les éditer. 
 
-<schéma général>
+#### Le monde déterministe (Blender) :
+Le monde déterministe est celui qui donnera les arrière plans précalculés. Il est édité dans Blender. De manière un peu reductrice, on pourrait dire qu'il représente la partie *statique* de la scène. Mais je n'aime pas employer cette terminologie. D'abord elle entre en conflict avec la notion d'*entité statiques ou dynamiques* utilisée dans tous les moteurs de jeux. Cela intègre une confusion malvenue, mais surtout : c'est faux !
 
-Si cette mise en bouche vous suffit, vous pouvez passer directement à la Partie 3. Mais si vous voulez comprendre un peu mieux ce qui se passe sous le capot, je vous invite à poursuivre la lecture.
+Certes, ce n'est pas du tout prévu à l'heure actuelle. Mais on pourrait imaginer que dans une version ulterieur d'OpenRE les arrière plans ne soient plus des images fixes, mais des sequences animées qui bouclent. Le terme statique n'aurait alors plus aucun sens. C'est pourquoi on utilisera plutôt le mot *déterministe*. Pour l'instant cela designe effectivement ce qui est static (architecture, mobilier, props...). Mais cela pourrait s'étandre à d'autre choses (des voitures qui circulent, de la végétation ou des rideau agités par le vent...)
+
+#### Le monde intéractif (Godot) :
+Le monde intéractif vit dans Godot. Il comprends tous les éléments liés au gameplay : personnages, véhicules controllables, objets manipulables etc...  Là encore j'évite d'utiliser le mot *dynamique* pour ne pas créer de confusions avec la terminologie des moteurs de jeu. Mais dans les premières versions d'OpenRE (au moins), les deux voudront dire la même chose.
+
+En pratique, ce monde est plutôt vide. En effet, la plupart du temps, un jeu comprends beaucoup plus d'éléments déterministes que d'éléments interactifs. Cela veut dire que dans le cas général, les ressource graphiques sont acaparées par le monde déterministe. Grâce à OpenRE et à la magie du précalculé, on va pouvoir s'abstraire en grande partie de cette charge. Ce qui nous en laissera suffisement sous le pied pour être beaucoup plus généreux sur les détails qu'un jeu classique.
+
+#### La fusion des mondes :
+Nous avont donc un monde déterministe et un monde intéractif qui vivent dans des environnements différents. Pour chaque point de vu du jeu, on aura une caméra déterministe et une caméra intéractive, vivant dans leur environnement respectif, et dont les paramètres (position, orientation, fov, resolution etc...) devront être synchronisés.
+
+Pour chacun de ces points de vue, un rendu sera effectué par Blender depuis la caméra déterministe. Ce rendu sera ensuite exporté puis importé dans Godot pour enfin être associé à la caméra intéractive correspondante. Lors de l'execution du jeu, quand une caméra sera active, elle fusionnera ce qu'elle filme avec ce rendu (qui est l'arrière plan). 
+
+Dans les faits, l'arrière plan généré par Blender n'est pas l'image finale. Le rendu est en réalité décomposée en une collection d'images représentant chacunes diverses données (depth, normals, couleur, etc.). On ne rentrera pas dans les détails pour l'instant, mais retenez que cette structure composite permettra une fusion quasi-indicernable des deux mondes. Sans plus d'effort de l'utilisateur, ils s'occluderont naturellement l'un l'autre et l'éclairage sera parfaitement unifié. 
+
+#### Limitations :
+Là encore je ne rentrerai pas dans les détails pour l'instant, mais il se pourrait que certaines fonctionnalité graphiques de Godot ne soient pas compatibles avec ce fonctionnement. Sachez cependant que des solutions alternatives seront implémentées dans le plugin OpenRE si les fonctionnalités concernées s'avérait essentielles. Vous pourrez notament compter sur :
+- les types de lumières usuelles (point, spot, directional)
+- un shader PBR opaque
+- la compatibilité avec le système d'UI natif de Godot
+- la compatibilité avec le système de particules natif de Godot (au moins partielle)
+- des ombres dynamiques
+- un support de la transparence (au moins partiel) 
+
+Si ce petit apperçu vous parrait suffisante, vous pouvez passer directement à la Partie III. Mais si vous voulez comprendre un peu mieux ce qui se passe sous le capot, enfilez vos gants et dirigez vous vers la section suivante.
+
+## Part III : Détails Techniques :
+Maintenant nous allons mettre un peu les mains dans le camboubi. Si vous aimez les détails techniques, cette partie est faite pour vous. Mais sachez qu'elle n'est pas essentielle. Elle s'adresse à ceux qui souhaite comprendre un peu mieux ce qui se passe sous le capot. Si ce n'est pas votre cas, vous pouvez passer directement à la partie IV.
 
 #### Un Deferred (presque) comme les autres
 Pour fusionner les mondes, OpenRE reprend le principe du deffered rendering. Cette technique consiste à séparer le rendu en deux passes :
@@ -65,15 +86,7 @@ Vous remarquerez peut-être l’absence de la map d’albedo (couleur) au profit
 #### IG-Buffer : le G-Buffer du monde interactif
 Si Godot implémentait un deferred renderer, on pourrait piocher les maps qui nous intéressent directement dans son G-Buffer. Mais malheureusement pour nous, le renderer officiel de Godot est un forward. Il n'y a donc pas de G-Buffer. 
 
-Il va falloir bricoler le nôtre, ce qui nécessitera de contourner une partie du système de rendu de Godot. Cette opération laissera probablement des sequelles. On pourrait notament casser la compatibilité avec certaines fonctionnalités graphiques natives.
-
-Difficile de prévoir ce qu'on pourra conserver ou non à ce stade. Mais si des fonctionnalités essentielles sont perdues, je prévois d'implémenter des substitus directement dans OpenRE. Les utilisateurs pourrons notament compter sur :
-- les types de lumières usuelles (point, spot, directional)
-- un shader PBR opaque
-- la compatibilité avec le système d'UI natif de Godot
-- la compatibilité avec le système de particules natif de Godot (au moins partielle)
-- des ombres dynamiques
-- un support de la transparence (au moins partiel) 
+Il va falloir bricoler le nôtre, ce qui nécessitera de contourner une partie du système de rendu de Godot. Cette opération laissera probablement des sequelles. On pourrait notament casser la compatibilité avec certaines fonctionnalités graphiques natives (comme je l'évoquais dans la partie II).
  
 #### Calcul de l'éclairage
 Maintenant que l'on sait comment construire nos G-Buffer, il n'y a plus qu'a calculer la lumière selon une passe de deferred shading classique. Cela dit la dualité du monde implique quelques complications.
@@ -89,7 +102,7 @@ Le second point est un peu plus subtile. Je ne l'ai pas précisé jusqu'ici, mai
 | **Lumière Déterministe** 	| Recomposition des maps de Cycles  							|  Deferred Light Pass |
 | **Lumière Interactive** 	| Recomposition des maps de Cycles <br> + Deferred Light Pass	|  Deferred Light Pass |
 
-## Part III : Phases de développement
+## Part IV : Phases de développement
 
 #### Proof of Concept (POC)
 Le but de cette première étape est de débrousailler le terrain pour se faire une première idée du potentiel d'OpenRE. On cherche à évaluer ce qui est possible et les résultats que l'on peut espérer. L'important ici n'est pas l'optimisation ou l'élegance du code. On cherche simplement à identifier les verroux techniques et on s'assure qu'il est possible de les faire sauter (à grand coup de débrouille et d'improvisation si il le faut).
@@ -97,8 +110,6 @@ Le but de cette première étape est de débrousailler le terrain pour se faire 
 Lorsque j'aurais une vision suffisament claire du projet et que j'aurai levé les doutes quant à sa faisabilité, ce code sera mis au placard et je repartirai d'une feuille blanche. Ce n’est qu’à ce moment-là que je me préocuperai de la qualité, de la performance et de l’ergonomie.
 
 Le dépôt de ce POC ne sera malheureusement pas public. De toutes façons, la codebase sera affreuse et vous n'aurez pas envie de mettre le nez dedans, mais ce n'est pas la raison principale. En réalité, pour juger de la qualité visuelle d'OpenRE, j'aurais besoin d'assets de qualité et cohérents entre eux.  Trouver de tels assets libres de droits et dans un délai raisonnable serait un vrai casse tête. Je vais donc utiliser des ressources déjà en ma possession (achetées ou gratuites) et je ne peux pas les redistribuer.
-
-
 
 ##### Devlogs :
 *Cette phase est en cours. Les devlogs seront publiés dès qu’ils seront disponibles.*
