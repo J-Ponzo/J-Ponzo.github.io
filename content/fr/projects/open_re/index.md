@@ -6,7 +6,7 @@ title = 'OpenRE (Open Retro Engine)'
 description = 'Page de presentation du projet OpenRE'
 +++
 ## Introduction
-Si vous avez lu [cet article](/posts/i_love_fixed_cams), vous savez déjà que  j’ai un faible pour les jeux vidéos en caméras fixes. Ce genre, emblématique de la fin des années 90, m'a toujours fasciné. Si cela ne vous évoquent pas grand-chose, ou si vous êtes simplement curieux découvrir ce qui les rend si uniques à mes yeux, je vous invite à aller y jeter un œil.
+Si vous avez lu [cet article](/posts/i_love_fixed_cams), vous savez déjà que  j’ai un faible pour les jeux vidéos en caméras fixes. Ce genre, emblématique de la fin des années 90, m'a toujours fasciné. Si cela ne vous évoquent pas grand-chose, ou si vous êtes simplement curieux de découvrir ce qui les rend si uniques à mes yeux, je vous invite à y jeter un œil.
 
 En tentant de développer mon propre jeu en caméra fixe, j’ai rapidement réalisé une chose : les outils et ressources disponnibles sur le sujet sont rares. Certes, on trouve quelques tutoriels pour gérer les caméras ou implémenter les déplacements du joueur. Mais je n'ai rien trouvé qui aide à relever le vrai défi de cette approche : *"Comment intégrer harmonieusement des éléments interactifs dans des décor précalculés ?"*
 
@@ -28,17 +28,21 @@ Côté scripting, j’ai choisi de bousculer mes habitudes en optant pour GDScri
 Si comme moi vous préférez le C#, soyer rassurés ! Vous n'aurez besoin de GDScript que si vous souhaitez modifier le plugin OpenRE lui même. Pour développer votre jeu, vous pourrez utiliser le langage de votre choix.
 
 ## Part II : Principe général
-OpenRE repose sur une séparation du monde en deux parties bien distinctes. Et par "bien distinctes", j’entends que chaque monde devra être édité dans un logiciel dédié.
+OpenRE repose sur une séparation du monde en deux parties bien distinctes. Et par "bien distinctes", j’entends que chacune d'elles nécessitera un logiciel dédié.
 
 #### Le monde déterministe (Blender) :
-Le monde déterministe est celui qui donnera les arrière plans précalculés. Il est édité dans Blender. De manière un peu reductrice, on pourrait dire qu'il représente la partie *statique* de la scène. Mais je n'aime pas employer cette terminologie. D'abord elle entre en conflict avec la notion d'*entité statiques ou dynamiques* utilisée dans tous les moteurs de jeux. Cela intègre une confusion malvenue, mais surtout : c'est faux !
+Le monde *déterministe* est créé dans Blender. C'est de lui que seront tirés les arrière plans précalculés. On pourrait, de manière un peu reductrice, dire qu’il représente la partie *statique* de la scène. Je préfère éviter ce terme car il est déjà utilisé par les moteurs de jeu ce qui prète à confusion. De plus il n'est pas tout a fait exacte en l'occurence.
 
-Certes, ce n'est pas du tout prévu à l'heure actuelle. Mais on pourrait imaginer que dans une version ulterieur d'OpenRE les arrière plans ne soient plus des images fixes, mais des sequences animées qui bouclent. Le terme statique n'aurait alors plus aucun sens. C'est pourquoi on utilisera plutôt le mot *déterministe*. Pour l'instant cela designe effectivement ce qui est static (architecture, mobilier, props...). Mais cela pourrait s'étandre à d'autre choses (des voitures qui circulent, de la végétation ou des rideau agités par le vent...)
+En effet, ce n'est pas encore d'actualité, mais à l'avenir, OpenRE pourrait supporter des arrière plans animés. On pourrait alors imaginer des boucle dans lesquelles de la végétation ou des rideaux seraient agités par le vent. Ou encore des voitures qui circulent dans les rues la nuit illuminant les allentours à chaque passage. Parler d'éléments "statiques" dans ce context serait tout simplement incorrect.
+
+Pour l'heure, le terme *déterministe* désignera effectivement ce que l'on qualifie de "statique" dans un moteur de jeu (architectures, meubles, objets inanimés, etc.). Mais cela pourrait englober bien plus dans le futur. La seule limite réèlement infranchissable, c'est que ce monde ne pourra jamais dépendre des actions du joueur ou d'éléments de gameplay aléatoirs. Car bien entandu, au moment de génèrer les arrière plans, ces évenements ne peuvent pas être connus.
 
 #### Le monde intéractif (Godot) :
-Le monde intéractif vit dans Godot. Il comprends tous les éléments liés au gameplay : personnages, véhicules controllables, objets manipulables etc...  Là encore j'évite d'utiliser le mot *dynamique* pour ne pas créer de confusions avec la terminologie des moteurs de jeu. Mais dans les premières versions d'OpenRE (au moins), les deux voudront dire la même chose.
+De son côté, le monde interactif est implémenté dans Godot. Il comprend tout ce qui relève du gameplay : personnages, véhicules contrôlables, objets manipulables, etc. Là encore, j’évite de le qualifier de *dynamique* pour éviter la confusion avec la terminologie des moteurs de jeu.
 
-En pratique, ce monde est plutôt vide. En effet, la plupart du temps, un jeu comprends beaucoup plus d'éléments déterministes que d'éléments interactifs. Cela veut dire que dans le cas général, les ressource graphiques sont acaparées par le monde déterministe. Grâce à OpenRE et à la magie du précalculé, on va pouvoir s'abstraire en grande partie de cette charge. Ce qui nous en laissera suffisement sous le pied pour être beaucoup plus généreux sur les détails qu'un jeu classique.
+En pratique, ce monde sera relativement vide comparé au monde déterministe. En effet, dans la plupart des jeux, les éléments interactifs représentent une quantité de géométrie beaucoup moins importante que les environnements. Cela signifie que dans le cas général, les ressources graphiques sont majoritairement consommées par le monde déterministe. 
+
+OpenRE s'abstrait en grande partie de cette charge de calcul en déléguant rendu de la partie déterministe à Blender. Ce qui libère d'autant plus de budget pour la partie interactive. On pourra donc se permettre une plus grande générosité sur les détails.
 
 #### La fusion des mondes :
 Nous avont donc un monde déterministe et un monde intéractif qui vivent dans des environnements différents. Pour chaque point de vu du jeu, on aura une caméra déterministe et une caméra intéractive, vivant dans leur environnement respectif, et dont les paramètres (position, orientation, fov, resolution etc...) devront être synchronisés.
