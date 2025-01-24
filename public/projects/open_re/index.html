@@ -269,28 +269,33 @@ stroke-linejoin="round" class="feather feather-home">
 <li>un support partiel de la transparence</li>
 </ul>
 <h2 id="part-iii--détails-techniques-">Part III : Détails Techniques :</h2>
-<p>Maintenant nous allons mettre un peu les mains dans le camboubi. Si vous aimez les détails techniques, cette partie est faite pour vous. Mais sachez qu&rsquo;elle n&rsquo;est pas essentielle. Elle s&rsquo;adresse à ceux qui souhaite comprendre un peu mieux ce qui se passe sous le capot. Si ce n&rsquo;est pas votre cas, vous pouvez passer directement à la partie IV.</p>
+<p>Maintenant nous allons mettre les mains dans le cambouis ! Si vous aimez les détails techniques, cette partie est faite pour vous. Mais sachez qu&rsquo;elle n&rsquo;est pas essentielle. Elle s&rsquo;adresse à ceux qui souhaite comprendre un peu mieux ce qui se passe sous le capot. Si vous aborder OpenRE d&rsquo;un point de utilisateur uniquement ce n&rsquo;est probablement pas votre cas. Je vous invite alors à passer directement à la partie IV.</p>
 <h4 id="un-deferred-presque-comme-les-autres">Un Deferred (presque) comme les autres</h4>
 <p>Pour fusionner les mondes, OpenRE reprend le principe du deffered rendering. Cette technique consiste à séparer le rendu en deux passes :</p>
 <ul>
-<li><strong>1. geometry pass :</strong> cette première étape vise à produire une collection de textures qu&rsquo;on appel le G-Buffer. Ces textures encodent dans leur chanels RGB des donnée décrivant les propriétés géométriques de la scène en <em>screen space</em> (position, normal, albedo etc&hellip;).</li>
+<li><strong>1. geometry pass :</strong> cette première étape vise à produire une collection de textures qu&rsquo;on appel le G-Buffer (Geometry Buffer). Ces textures encodent dans leur chanels RGB des donnée décrivant les propriétés géométriques de la scène en <em>screen space</em> (position, normal, albedo etc&hellip;).</li>
 <li><strong>2. deffered shading pass :</strong> pour obtenir l&rsquo;image final, il suffit alors d&rsquo;accumuler les contributions lumineuse de la scène sur chaque pixel. Ce qui n&rsquo;est pas très compliqué étant donné que le G-Buffer nous fourni toutes les données nécessaires en chaque point de l&rsquo;écran.</li>
 </ul>
-<p>Comme évoqué dans la patie précendente, OpenRE sépare la scène en deux parties distinctes. Pour rendre une frame, OpenRE a donc besoin d&rsquo;un G-Buffer pour chacun des deux mondes. Le G-Buffer intéractif sera construit à la volée dans Godot tandis que le déterministe aura été précalculé par Blender. Les deux seront ensuite combiné dans Godot et une passe de <em>deffered shading</em> classique (ou presque&hellip;) sera effectuée pour rendre les lumières.</p>
+<p>Comme évoqué dans la partie précendente, OpenRE sépare la scène en deux parties distinctes. Pour rendre une frame, OpenRE aura besoin d&rsquo;un G-Buffer pour chacune de ces parties. On aura donc :</p>
+<ul>
+<li>le G-Buffer intéractif qui sera construit à la volée dans Godot</li>
+<li>le G-Buffer déterministe qui aura été précalculé par Blender (la série d&rsquo;images exportées vous vous rappellez ?).</li>
+</ul>
+<p>Les deux seront ensuite combinés et une passe de <em>deffered shading</em> classique (ou presque&hellip;) sera effectuée pour rendre les lumières.</p>
 <h4 id="dg-buffer--le-g-buffer-du-monde-déterministe">DG-Buffer : le G-Buffer du monde déterministe</h4>
 <p>Blender dispose de deux moteurs de rendu :</p>
 <ul>
-<li><strong>Eevee</strong> : Basé sur la <em>rasterization</em> qui est la technique utilisée dans le jeu vidéo. Ce moteur permet un rendu quasi-temps réèl mais n&rsquo;est pas photoréaliste.</li>
-<li><strong>Cycles</strong> : Basé sur du <em>path-tracing</em> pour un rendu photoréaliste. Ce moteur est concu pour le cinéma et n&rsquo;est pas temps réèl du tout (rendre une image prend plusieurs minutes).</li>
+<li><strong>Eevee</strong> : Basé sur la <em>rasterization</em>. Permet un rendu quasi-temps réèl mais moins réaliste.</li>
+<li><strong>Cycles</strong> : Basé sur du <em>path-tracing</em>. Il produit des images photoréaliste mais le rendu nécessite beaucoup de temps.</li>
 </ul>
-<p>On utilisera bien sûre Cycles pour une qualité maximal et le compositeur de Blender nous permettra de décomposer le rendu pour obtenir les maps de notre DG-Buffer :</p>
+<p>Pour OpenRE, nous utilisons bien sûr Cycles, afin de garantir une qualité visuelle maximale. Grâce au compositeur de Blender, le rendu peut être décomposé en plusieurs textures qui constituront notre DG-Buffer :</p>
 <ul>
-<li>Depth (profondeur dont on peut déduire la position)</li>
-<li>Normal (orientation des surfaces)</li>
-<li>ORM (donnée additionnelles nécessaires au rendu PBR)</li>
-<li><em>diverses maps d&rsquo;illumination</em></li>
+<li><strong>Depth Map :</strong> Encode la profondeur de chaque pixel. Permetra aux mondes de s&rsquo;occluder correctement. La position du pixel sera également déduite de cette donnée.</li>
+<li><strong>Normal Map :</strong> Décrit l&rsquo;orientation des surfaces qui interviendra dans la calcul de l&rsquo;éclairage</li>
+<li><strong>ORM Map :</strong> Regroupe des données additionnelles nécessaire au rendu PBR (Ambiant Occlusion, Roughtness, Metalness)</li>
+<li><em><strong>diverses maps d&rsquo;illumination</strong></em></li>
 </ul>
-<p>Vous remarquerez peut-être l’absence de la map d’albedo (couleur) au profit de <em>diverses maps d&rsquo;illumination</em>. Pourquoi ?</p>
+<p>Si vous savez ce que contient habituellement un G-Buffer, vous vous demandez peut être où est passée la map d&rsquo;albedo ? Et que peuvent bien être ces fameuses <em>diverses maps d&rsquo;illumination</em> ?</p>
 <ul>
 <li>
 <ol>
@@ -299,26 +304,28 @@ stroke-linejoin="round" class="feather feather-home">
 </li>
 <li>
 <ol start="2">
-<li>On pourrait se contanter d&rsquo;intégrer l&rsquo;albedo mais il faudrait alors recalculer l&rsquo;éclairage côté Godot. On perdrait à la fois la qualité produite par Cycles et énormement de temps de calcul. Les neuf maps sont donc intégrées au DG-Buffer pour permetre une recomposition directe lorsque c&rsquo;est approprié (voire plus loin).</li>
+<li>On pourrait se contanter d&rsquo;intégrer l&rsquo;albedo mais il faudrait alors recalculer l&rsquo;éclairage côté Godot. On perdrait à la fois la qualité visuelle de Cycles et énormement de temps de calcul. Les neuf maps sont donc intégrées au DG-Buffer pour permetre une recomposition directe lorsque c&rsquo;est approprié (voire plus loin).</li>
 </ol>
 </li>
 </ul>
 <h4 id="ig-buffer--le-g-buffer-du-monde-interactif">IG-Buffer : le G-Buffer du monde interactif</h4>
 <p>Si Godot implémentait un deferred renderer, on pourrait piocher les maps qui nous intéressent directement dans son G-Buffer. Mais malheureusement pour nous, le renderer officiel de Godot est un forward. Il n&rsquo;y a donc pas de G-Buffer.</p>
-<p>Il va falloir bricoler le nôtre, ce qui nécessitera peut-être de contourner une partie du système de rendu de Godot. Cette opération laissera probablement des sequelles. On pourrait notament casser la compatibilité avec certaines fonctionnalités graphiques natives. Difficile à ce stade de prévoire ce qui restera disponnible ou non nativement. Mais comme évoqué dans la partie II, des substitus seront implémentés dans OpenRE si des fonctionnalité importantes sont touchées.</p>
+<p>Il va falloir bricoler le nôtre, ce qui nécessitera peut-être de contourner une partie du système de rendu de Godot. Cette opération laissera probablement des sequelles. On pourrait notament casser la compatibilité avec certaines fonctionnalités graphiques natives. Difficile à ce stade de prévoire ce qui restera disponnible ou non. Cela dépendra des soltions que je trouverai pour contourner l&rsquo;absence de G-Buffer. Mais comme évoqué dans la partie II, des substitus seront implémentés dans OpenRE si des fonctionnalité importantes sont touchées.</p>
 <h4 id="calcul-de-léclairage">Calcul de l&rsquo;éclairage</h4>
-<p>Maintenant que nous disposons de nos G-Buffer, il n&rsquo;y a plus qu&rsquo;a calculer la lumière selon une passe de deferred shading classique. Cela dit la dualité du monde implique quelques complications.</p>
-<p>Une première question évidente se pose : &ldquo;dans quel G-Buffer récupérer les données ?&rdquo; C&rsquo;est en réalité assez simple. Les textures de profondeur nous permettent de savoir quel monde occlude l&rsquo;autre pour chaque pixel de l&rsquo;écran. Il suffit donc de choisir le G-Buffer du monde qui est visible à la coordonnée du pixel considéré.</p>
+<p>Maintenant que nous disposons de nos G-Buffer, il n&rsquo;y a plus qu&rsquo;a calculer la lumière lors d&rsquo;une passe de deferred shading. Cela dit la dualité du monde implique quelques complications.</p>
+<h5 id="1-choix-du-g-buffer-">1. Choix du G-Buffer :</h5>
+<p>Une première question évidente se pose : &ldquo;dans quel G-Buffer récupérer les données ?&rdquo; C&rsquo;est en réalité assez simple. La comparaison des Depth Maps nous permet de savoir quel monde occlude l&rsquo;autre pour chaque pixel de l&rsquo;écran. Il suffit donc de choisir le G-Buffer du monde qui est visible à la coordonnée du pixel considéré.</p>
+<h5 id="2-différents-modes-de-calcul-de-la-lumière-">2. Différents modes de calcul de la lumière :</h5>
 <p>Le second point est un peu plus subtile. Je ne l&rsquo;ai pas précisé jusqu&rsquo;ici, mais les sources de lumière aussi peuvent être déterministes (lampadaires, feux de cheminée, soleil&hellip;) ou interactives (lampe torche, flash d&rsquo;un tir, phares de voiture). Cela a deux conséquences :</p>
 <ul>
 <li>
 <ol>
-<li>Comme les caméra, les lumières déterministes (de Blender) doivent être répliquées dans Godot pour pouvoir éclairer les éléments interactifs. Le lumières intéractives, elles, n&rsquo;existeront que dans Godot.</li>
+<li>Comme les caméra, les lumières déterministes présentes dans Blender on un homologue interactif dans Godot. Sans cela, elle ne pourraient pas éclairer les éléments interactifs. Le lumières intéractives, elles, n&rsquo;existent que dans Godot.</li>
 </ol>
 </li>
 <li>
 <ol start="2">
-<li>Le calcul de la contribution d&rsquo;une lumière sur un pixel diffère selon les mondes auquels chacun d&rsquo;eux appartien. Voici un tableau récapitulatif des différentes combinaisons :</li>
+<li>Le calcul de la contribution d&rsquo;une lumière sur un pixel diffère selon les mondes auquels chacun d&rsquo;eux appartient. Voici un tableau récapitulatif des différentes combinaisons :</li>
 </ol>
 </li>
 </ul>
