@@ -72,7 +72,7 @@ Malgré ses avantages, cette approche pourrait entraîner des incompatibilités 
 - un support partiel de la transparence
 
 ## Part III : Détails Techniques :
-Maintenant nous allons mettre les mains dans le cambouis ! Si vous aimez les détails techniques, cette partie est faite pour vous. Mais sachez qu'elle n'est pas essentielle. Elle s'adresse à ceux qui souhaite comprendre un peu mieux ce qui se passe sous le capot. Si vous aborder OpenRE d'un point de utilisateur uniquement ce n'est probablement pas votre cas. Je vous invite alors à passer directement à la partie IV.
+Maintenant nous allons mettre les mains dans le cambouis ! Si vous aimez les détails techniques, cette partie est faite pour vous. Mais sachez qu'elle est optionnelle. Elle s'adresse à ceux qui souhaite comprendre un peu mieux ce qui se passe sous le capot. Si vous aborder OpenRE d'un point de vu utilisateur ce n'est peut-être pas votre cas. J'ai essayé de la rendre le plus abordable possible, mais n'hésitez pas à passer directement à la partie IV si vous ne trouvez pas ça interessant.
 
 #### Un Deferred (presque) comme les autres
 Pour fusionner les mondes, OpenRE reprend le principe du deffered rendering. Cette technique consiste à séparer le rendu en deux passes :
@@ -88,11 +88,11 @@ Les deux seront ensuite combinés et une passe de *deffered shading* classique (
 #### DG-Buffer : le G-Buffer du monde déterministe
 Blender dispose de deux moteurs de rendu :
 - **Eevee** : Basé sur la *rasterization*. Permet un rendu quasi-temps réèl mais moins réaliste.
-- **Cycles** : Basé sur du *path-tracing*. Il produit des images photoréaliste mais le rendu nécessite beaucoup de temps.
+- **Cycles** : Basé sur du *path-tracing*. Il produit des images photoréaliste mais le rendu prend un certain temps.
 
-Pour OpenRE, nous utilisons bien sûr Cycles, afin de garantir une qualité visuelle maximale. Grâce au compositeur de Blender, le rendu peut être décomposé en plusieurs textures qui constituront notre DG-Buffer :
+Pour OpenRE, nous utiliserons bien sûr Cycles, afin de garantir une qualité visuelle maximale. Grâce au compositeur de Blender, le rendu pourra être décomposé en plusieurs textures qui constituront notre DG-Buffer :
 - **Depth Map :** Encode la profondeur de chaque pixel. Permetra aux mondes de s'occluder correctement. La position du pixel sera également déduite de cette donnée.
-- **Normal Map :** Décrit l'orientation des surfaces qui interviendra dans la calcul de l'éclairage
+- **Normal Map :** Décrit l'orientation des surfaces. Cela interviendra dans la calcul de l'éclairage
 - **ORM Map :** Regroupe des données additionnelles nécessaire au rendu PBR (Ambiant Occlusion, Roughtness, Metalness)
 - ***diverses maps d'illumination***
 
@@ -103,23 +103,23 @@ Si vous savez ce que contient habituellement un G-Buffer, vous vous demandez peu
 #### IG-Buffer : le G-Buffer du monde interactif
 Si Godot implémentait un deferred renderer, on pourrait piocher les maps qui nous intéressent directement dans son G-Buffer. Mais malheureusement pour nous, le renderer officiel de Godot est un forward. Il n'y a donc pas de G-Buffer. 
 
-Il va falloir bricoler le nôtre, ce qui nécessitera peut-être de contourner une partie du système de rendu de Godot. Cette opération laissera probablement des sequelles. On pourrait notament casser la compatibilité avec certaines fonctionnalités graphiques natives. Difficile à ce stade de prévoire ce qui restera disponnible ou non. Cela dépendra des soltions que je trouverai pour contourner l'absence de G-Buffer. Mais comme évoqué dans la partie II, des substitus seront implémentés dans OpenRE si des fonctionnalité importantes sont touchées.
+Il va falloir bricoler le nôtre, ce qui nécessitera peut-être de contourner une partie du système de rendu de Godot. Cette opération laissera probablement des sequelles. On pourrait notament casser la compatibilité avec certaines fonctionnalités graphiques natives. Difficile à ce stade de prévoire ce qui restera disponnible ou non. Cela dépendra de la solution que j'arriverai à mettre place pour construire le G-Buffer. Mais comme évoqué dans la partie II, des substitus seront implémentés dans OpenRE si des fonctionnalité importantes sont touchées.
  
 #### Calcul de l'éclairage
-Maintenant que nous disposons de nos G-Buffer, il n'y a plus qu'a calculer la lumière lors d'une passe de deferred shading. Cela dit la dualité du monde implique quelques complications.
+Maintenant que nous disposons de nos G-Buffer, il n'y a plus qu'a calculer la lumière grâce à une passe de deferred shading. Mais la dualité du monde introduit quelques complications.
 
 ##### 1. Choix du G-Buffer :
 Une première question évidente se pose : "dans quel G-Buffer récupérer les données ?" C'est en réalité assez simple. La comparaison des Depth Maps nous permet de savoir quel monde occlude l'autre pour chaque pixel de l'écran. Il suffit donc de choisir le G-Buffer du monde qui est visible à la coordonnée du pixel considéré.
 
 ##### 2. Différents modes de calcul de la lumière :
 Le second point est un peu plus subtile. Je ne l'ai pas précisé jusqu'ici, mais les sources de lumière aussi peuvent être déterministes (lampadaires, feux de cheminée, soleil...) ou interactives (lampe torche, flash d'un tir, phares de voiture). Cela a deux conséquences :
-- 1. Comme les caméra, les lumières déterministes présentes dans Blender on un homologue interactif dans Godot. Sans cela, elle ne pourraient pas éclairer les éléments interactifs. Le lumières intéractives, elles, n'existent que dans Godot.
-- 2. Le calcul de la contribution d'une lumière sur un pixel diffère selon les mondes auquels chacun d'eux appartient. Voici un tableau récapitulatif des différentes combinaisons :
+- 1. Comme les caméra, les lumières déterministes présentes dans Blender devront être répliquées dans Godot. Sans cela, elle ne pourront pas éclairer les éléments interactifs. Les lumières intéractives, elles, n'existeront que dans Godot.
+- 2. Le calcul de la contribution d'une lumière données sur un pixel donné varie selon le monde auquel l'un et l'autre appartiennent. Voici un tableau récapitulatif des différentes combinaisons :
 
 | 			 				| Pixel Déterministe          									| Pixel Interactif     |
 | :------------------------ |:-------------------------------------------------------------:| :-------------------:|
-| **Lumière Déterministe** 	| Recomposition des maps de Cycles  							|  Deferred Light Pass |
-| **Lumière Interactive** 	| Recomposition des maps de Cycles <br> + Deferred Light Pass	|  Deferred Light Pass |
+| **Lumière Déterministe** 	| Recomposition des maps de Cycles  							|  Deferred Shading |
+| **Lumière Interactive** 	| Recomposition des maps de Cycles <br> + Deferred Shading	|  Deferred Shading |
 
 ## Part IV : Phases de développement
 
@@ -141,26 +141,28 @@ A l'heure ou j'écris ces lignes, le POC est bien avancé mais pas encore termin
 - un addon Godot
 - des scripts & utilitaires complémentaires
 
-Contrairement au POC, le SDK sera open-source et disponible sur un dépôt public. Je serais en effet très heureux d'apprendre qu'OpenRE est utilisé dans vos créations. Si le coeur vous en dit, n'hésitez pas à me faire savoir sur quoi vous travaillez. Cela m'interesse au plus haut point. Dans un premier temps je ne pense pas accepter de contributions spontanées. Mais je vous encourage à partager vos idées, retours et autres *bug reports* sur le [github du projet](). 
+Contrairement au POC, le SDK sera open-source et disponible sur un dépôt public. Rien ne me ferait plus plaisir que de savoir qu’OpenRE est utilisé dans vos créations. Si vous décidez de l’adopter, n'hésitez pas à me faire savoir sur quoi vous travaillez. Cela m'interesse au plus haut point ! 
+
+Dans un premier temps, je n'accepterai probablement pas de contributions spontanées, mais vos retours, suggestions et rapports de bugs seront toujours les bienvenus. N'hésitez pas à les partager sur le [GitHub du projet](). 
 
 ##### Devlogs :
 *Cette phase n'a pas encore commencé*
 
 #### Une Démo Jouable
-Pour montrer ce qu'OpenRE permet de faire, je prévois de réaliser une petite démo jouable. Je pourrai ainsi tester le SDK sur un cas pratique afin d’éprouver sa fiabilité et son ergonomie.
+Pour montrer ce qu’OpenRE permet de réaliser, je compte créer une petite démo jouable. Ce projet servira de cas pratique pour éprouver l'ergonomie et la fiabilité du SDK, tout en illustrant ses capacités en situation réelle.
 
-Si vous avez lu l'article cité dans l'intro, vous savez que pour moi la caméra fixe dépasse largement le cadre du survival-horror. J'aimerais beaucoup voir OpenRE utilisé pour d'autres types de jeux, voir même dans des propositions vidéoludiques nouvelles. Mais je ne suis pas vraiment game designer et il est donc plus réaliste pour moi de m'appuyer sur des codes bien établis plutôt que de partir dans l'inconnu. On restra donc surement dans la veine des survivals horrors classics des années 90 auquels j'ai énormement joué.
+Si vous avez lu l'article mentionné dans l’introduction, vous savez que pour moi la caméra fixe dépasse largement le cadre du survival-horror. J’aimerais beaucoup qu’OpenRE soit utilisé dans d’autres types de jeux, voir même dans des propositions vidéoludiques nouvelles. Mais je ne suis pas game designer, il est donc plus raisonnable pour moi de m’appuyer sur des codes bien établis. Je vais donc jouer la sécurité et rester sur un survival-horror classic.
 
-Idéalement, cette démo sera elle aussi open-source et servira de projet d’exemple. Mais là encore, des contraintes liées aux droits d’utilisation des assets pourraient compliquer les choses. Je ne peux donc rien promettre mais quoi qu’il arrive, une version jouable gratuite sera mise à disposition sur [ma page itch.io](https://jponzo.itch.io/)
+Idéalement, cette démo sera elle aussi open-source et fera office de projet d’exemple. Mais là encore, des contraintes liées aux droits d’utilisation des assets pourraient compliquer les choses. Je ne peux donc rien promettre mais quoi qu’il arrive, une version sera mise à disposition gratuitement sur [ma page itch.io](https://jponzo.itch.io/)
 
 ##### Devlogs :
 *Cette phase n'a pas encore commencé*
 
 ## Conclusion :
-Je suis conscient que, tel que je le présente ici, OpenRE n’apparaît pas comme une solution universelle adaptable à tout type de projet. Le workflow reposant sur deux logiciels distincts (Blender et Godot) est atypique, et la perte de compatibilité avec certaines fonctionnalités graphiques natives de Godot peut être rédibitoire pour certains. Mais il faut bien commencer quelque part, et pour maximiser mes chances d’aller au bout de cette aventure, je préfère avancer étape par étape.
+Je suis conscient que, tel que je le présente ici, OpenRE n’apparaît pas comme une solution universelle qui conviendra à tout les projets. Le workflow reposant sur deux logiciels distincts est atypique, et la perte de compatibilité avec certaines fonctionnalités graphiques natives de Godot pourrait en effrayer plus d'un. Mais il faut bien commencer quelque part et pour maximiser mes chances d'aller au bout de l'aventure, je choisi d’avancer progressivement et de manière pragmatique, étape par étape.
 
-Pour l’instant, cette technologie répond avant tout à mes propres besoins et ambitions créatives. Cela dit, j’espère sincèrement qu'OpenRE (et peut être les jeux que je réaliserai avec) sauront inspirer d’autres créateurs. J'aimerais montrer que cette technique souvent délaissée, permet encore aujourd'hui de faire de belles choses et mérite d’être explorée et réinventée.
+Pour l’instant, cette technologie répond avant tout à mes propres besoins et ambitions créatives. Cela dit, j’espère sincèrement qu'OpenRE – et peut-être les jeux que je créerai avec – pourra inspirer d’autres créateurs. J'aimerais montrer que cette technique souvent délaissée, peut encore aujourd’hui produire des expériences mémorables et mérite d’être explorée, voire réinventée.
 
-Si le projet suscite de l’intérêt et rassemble une communauté, je serais ravi d’enrichir OpenRE, de l’adapter à d’autres usages, et à d'autre façons de travailler plus conventionnelles. Mais pour avancer dans cette direction, vos retours sont essentiels. Qu’est-ce qui vous attire dans OpenRE ? Qu’est-ce qui pourrait freiner votre envie de l’utiliser ? Y a-t-il des fonctionnalités qui vous manquent ? Ou peut être pensez vous déjà pouvoir en tirer quelque chose ? N’hésitez pas à partager vos impressions dans les commentaires.
+Si le projet suscite de l’intérêt et rassemble une communauté, je serais ravi de l'enrichir, de l’adapter à d’autres usages, et à d'autre façons de travailler plus conventionnelles. Mais pour avancer dans cette direction, vos retours sont indispensables. Qu’est-ce qui vous attire dans OpenRE ? Quelles limitations pourraient freiner votre envie de l’utiliser ? Y a-t-il des fonctionnalités spécifiques qui vous manquent ? Ou, au contraire, peut être pensez vous déjà pouvoir en faire quelque chose ? N’hésitez pas à partager vos impressions dans les commentaires.
 
-En conclusion, je dirais que ce projet est pour moi une façon de rendre hommage à un genre vidéoludique qui m’a profondément marqué en tant que joueur et qui me manque beaucoup aujourd'hui. Même si OpenRE ne trouve qu’une petite audience ou même si je reste son unique utilisateur, je me plais à penser que ce que je partages sur ce blog ou ailleurs pourra insiter d’autres personnes à explorer cet art sous-estimé qu’est la caméra fixe, et à lui redonner la place qu’il mérite.
+En conclusion, je dirais que ce projet est pour moi une façon de rendre hommage à un genre vidéoludique qui m’a profondément marqué en tant que joueur et qui me manque beaucoup aujourd'hui. Si OpenRE ne trouve qu’une petite audience ou même si je reste son unique utilisateur, je serai tout de même fier d’avoir contribué, à ma façon, à faire vivre cet art sous-estimé qu’est la caméra fixe. Et si ce que je partage sur ce blog ou ailleurs peut encourager d’autres personnes à explorer cette voie, cette aventure sera pour moi un succès.
