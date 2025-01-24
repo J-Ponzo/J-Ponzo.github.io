@@ -45,11 +45,22 @@ En pratique, ce monde sera relativement vide comparé au monde déterministe. En
 OpenRE s'abstrait en grande partie de cette charge de calcul en déléguant rendu de la partie déterministe à Blender. Ce qui libère d'autant plus de budget pour la partie interactive. On pourra donc se permettre une plus grande générosité sur les détails.
 
 #### La fusion des mondes :
-Nous avont donc un monde déterministe et un monde intéractif qui vivent dans des environnements différents. Pour chaque point de vu du jeu, on aura une caméra déterministe et une caméra intéractive, vivant dans leur environnement respectif, et dont les paramètres (position, orientation, fov, resolution etc...) devront être synchronisés.
+Nous avont donc un monde déterministe et un monde intéractif qui vivent dans leur environnement respectif. Il est temps de les faire cohabiter. Pour cela, chaque point de vue du jeu est materialisé par un duo de caméras :
+- une caméra déterministe, dans Blender
+- une caméra intéractive dans Godot 
 
-Pour chacun de ces points de vue, un rendu sera effectué par Blender depuis la caméra déterministe. Ce rendu sera ensuite exporté puis importé dans Godot pour enfin être associé à la caméra intéractive correspondante. Lors de l'execution du jeu, quand une caméra sera active, elle fusionnera ce qu'elle filme avec ce rendu (qui est l'arrière plan). 
+Ces deux caméras doivent evidement être parfaitement alignées pour que l'illusion fonctionne. On prendra donc soin de synchroniser leurs position, orientation, FOV, résolution etc.
 
-Dans les faits, l'arrière plan généré par Blender n'est pas l'image finale. Le rendu est en réalité décomposée en une collection d'images représentant chacunes diverses données (depth, normals, couleur, etc.). On ne rentrera pas dans les détails pour l'instant, mais retenez que cette structure composite permettra une fusion quasi-indicernable des deux mondes. Sans plus d'effort de l'utilisateur, ils s'occluderont naturellement l'un l'autre et l'éclairage sera parfaitement unifié. 
+Pour chacun de ces couples, il faudra ensuite :
+- 1. Effectuer un rendu depuis la caméra déterministe pour produire l'arrière plan dans Blender
+- 2. Exporter l'arrière plan sous forme d'images
+- 3. Importer l'arrière plan dans Godot et l'associer à la caméra interactive correspondante.
+
+Notez que le 's' à "images" n'est pas une faute de frappe. L'arrière plan exporté ne sera pas directement l'image final. Il devra être décomposé en une serie d'images. Chaque image représentant des données différentes : profondeur, normales, couleur etc.
+
+Ainsi lors de l'exectution, les caméra interactives seront en mesure de composer ce qu'elles filment avec l'arrière plan associé. Sans intervention supplémentaire de la part de l'utilisateur, les deux monde seront fusionnés de manière quasi-indicernable : ils s'occluderont l'un l'autre naturellement et leur éclairage sera uniforme et cohérent.
+
+Evidement toutes ces étapes ne pourront pas être effectuées manuellement. Ce sera le rôle d'OpenRE d'automatiser tout cela.
 
 #### Limitations :
 Là encore je ne rentrerai pas dans les détails pour l'instant, mais il se pourrait que certaines fonctionnalité graphiques de Godot ne soient pas compatibles avec ce fonctionnement. Sachez cependant que des solutions alternatives seront implémentées dans le plugin OpenRE si les fonctionnalités concernées s'avérait essentielles. Vous pourrez notament compter sur :

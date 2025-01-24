@@ -231,9 +231,33 @@ stroke-linejoin="round" class="feather feather-home">
 <p>En pratique, ce monde sera relativement vide comparé au monde déterministe. En effet, dans la plupart des jeux, les éléments interactifs représentent une quantité de géométrie beaucoup moins importante que les environnements. Cela signifie que dans le cas général, les ressources graphiques sont majoritairement consommées par le monde déterministe.</p>
 <p>OpenRE s&rsquo;abstrait en grande partie de cette charge de calcul en déléguant rendu de la partie déterministe à Blender. Ce qui libère d&rsquo;autant plus de budget pour la partie interactive. On pourra donc se permettre une plus grande générosité sur les détails.</p>
 <h4 id="la-fusion-des-mondes-">La fusion des mondes :</h4>
-<p>Nous avont donc un monde déterministe et un monde intéractif qui vivent dans des environnements différents. Pour chaque point de vu du jeu, on aura une caméra déterministe et une caméra intéractive, vivant dans leur environnement respectif, et dont les paramètres (position, orientation, fov, resolution etc&hellip;) devront être synchronisés.</p>
-<p>Pour chacun de ces points de vue, un rendu sera effectué par Blender depuis la caméra déterministe. Ce rendu sera ensuite exporté puis importé dans Godot pour enfin être associé à la caméra intéractive correspondante. Lors de l&rsquo;execution du jeu, quand une caméra sera active, elle fusionnera ce qu&rsquo;elle filme avec ce rendu (qui est l&rsquo;arrière plan).</p>
-<p>Dans les faits, l&rsquo;arrière plan généré par Blender n&rsquo;est pas l&rsquo;image finale. Le rendu est en réalité décomposée en une collection d&rsquo;images représentant chacunes diverses données (depth, normals, couleur, etc.). On ne rentrera pas dans les détails pour l&rsquo;instant, mais retenez que cette structure composite permettra une fusion quasi-indicernable des deux mondes. Sans plus d&rsquo;effort de l&rsquo;utilisateur, ils s&rsquo;occluderont naturellement l&rsquo;un l&rsquo;autre et l&rsquo;éclairage sera parfaitement unifié.</p>
+<p>Nous avont donc un monde déterministe et un monde intéractif qui vivent dans leur environnement respectif. Il est temps de les faire cohabiter. Pour cela, chaque point de vue du jeu est materialisé par un duo de caméras :</p>
+<ul>
+<li>une caméra déterministe, dans Blender</li>
+<li>une caméra intéractive dans Godot</li>
+</ul>
+<p>Ces deux caméras doivent evidement être parfaitement alignées pour que l&rsquo;illusion fonctionne. On prendra donc soin de synchroniser leurs position, orientation, FOV, résolution etc.</p>
+<p>Pour chacun de ces couples, il faudra ensuite :</p>
+<ul>
+<li>
+<ol>
+<li>Effectuer un rendu depuis la caméra déterministe pour produire l&rsquo;arrière plan dans Blender</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>Exporter l&rsquo;arrière plan sous forme d&rsquo;images</li>
+</ol>
+</li>
+<li>
+<ol start="3">
+<li>Importer l&rsquo;arrière plan dans Godot et l&rsquo;associer à la caméra interactive correspondante.</li>
+</ol>
+</li>
+</ul>
+<p>Notez que le &rsquo;s&rsquo; à &ldquo;images&rdquo; n&rsquo;est pas une faute de frappe. L&rsquo;arrière plan exporté ne sera pas directement l&rsquo;image final. Il devra être décomposé en une serie d&rsquo;images. Chaque image représentant des données différentes : profondeur, normales, couleur etc.</p>
+<p>Ainsi lors de l&rsquo;exectution, les caméra interactives seront en mesure de composer ce qu&rsquo;elles filment avec l&rsquo;arrière plan associé. Sans intervention supplémentaire de la part de l&rsquo;utilisateur, les deux monde seront fusionnés de manière quasi-indicernable : ils s&rsquo;occluderont l&rsquo;un l&rsquo;autre naturellement et leur éclairage sera uniforme et cohérent.</p>
+<p>Evidement toutes ces étapes ne pourront pas être effectuées manuellement. Ce sera le rôle d&rsquo;OpenRE d&rsquo;automatiser tout cela.</p>
 <h4 id="limitations-">Limitations :</h4>
 <p>Là encore je ne rentrerai pas dans les détails pour l&rsquo;instant, mais il se pourrait que certaines fonctionnalité graphiques de Godot ne soient pas compatibles avec ce fonctionnement. Sachez cependant que des solutions alternatives seront implémentées dans le plugin OpenRE si les fonctionnalités concernées s&rsquo;avérait essentielles. Vous pourrez notament compter sur :</p>
 <ul>
