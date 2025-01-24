@@ -19,7 +19,7 @@ OpenRE repose sur deux outils que vous connaissez sûrement :
 - Blender : pour créer les arrière-plans précalculés.
 - Godot : pour gérer les éléments interactifs et assembler le tout.
 
-La maturité et la popularité de ces deux logiciels en font des choix solides. Ils sont également open-source, ce qui s'aligne parfaitement avec la philosophie d'OpenRE : promouvoir une technologie accessible et ouverte à tous. L’open-source offre aussi une certaine sécurité qu'il est impossible d'avoir avec des solutions propriétaires. En effet, comme le rappellent certains evenements récents, placer son capital technologique entre les mains d'une entreprise à but lucratif n'est pas sans risques.
+La maturité et la popularité de ces deux logiciels en font des choix solides. Ils sont aussi open-source, ce qui s'aligne parfaitement avec la philosophie d'OpenRE : promouvoir une technologie accessible et ouverte à tous. L’open-source offre également une certaine sécurité qu'il est impossible d'avoir avec des solutions propriétaires. En effet, comme le rappellent certains evenements récents, placer son capital technologique entre les mains d'une entreprise à but lucratif n'est pas sans risques.
 
 Sur le plan pratique, Blender et Godot se complètent très bien. Godot prend en charge nativement les scènes créées dans Blender, ce qui simplifie la synchronisation entre les deux environnements. Cette compatibilité nous évitera des manipulations fastidieuses et sources d'erreur.
 
@@ -56,20 +56,20 @@ Pour chacun de ces couples, il faudra ensuite :
 - 2. Exporter l'arrière plan sous forme d'images
 - 3. Importer l'arrière plan dans Godot et l'associer à la caméra interactive correspondante.
 
-Notez que le 's' à "images" n'est pas une faute de frappe. L'arrière plan exporté ne sera pas directement l'image final. Il devra être décomposé en une serie d'images. Chaque image représentant des données différentes : profondeur, normales, couleur etc.
+Notez que le 's' à "images" n'est pas une faute de frappe. L'arrière plan exporté ne sera pas l'image final. Le rendu sera décomposé en une serie d'images représentant chacune des données spécifiques : profondeur, normales, couleur etc.
 
-Ainsi lors de l'exectution, les caméra interactives seront en mesure de composer ce qu'elles filment avec l'arrière plan associé. Sans intervention supplémentaire de la part de l'utilisateur, les deux monde seront fusionnés de manière quasi-indicernable : ils s'occluderont l'un l'autre naturellement et leur éclairage sera uniforme et cohérent.
+Ainsi lors de l'exectution, les caméra interactives seront en mesure de composer ce qu'elles capturent avec l'arrière plan associé. Sans intervention supplémentaire de la part de l'utilisateur, les deux monde seront fusionnés de manière quasi-indicernable : ils s'occluderont l'un l'autre naturellement et leur éclairage sera uniforme et cohérent.
 
 Evidement toutes ces étapes ne pourront pas être effectuées manuellement. Ce sera le rôle d'OpenRE d'automatiser tout cela.
 
 #### Limitations :
-Là encore je ne rentrerai pas dans les détails pour l'instant, mais il se pourrait que certaines fonctionnalité graphiques de Godot ne soient pas compatibles avec ce fonctionnement. Sachez cependant que des solutions alternatives seront implémentées dans le plugin OpenRE si les fonctionnalités concernées s'avérait essentielles. Vous pourrez notament compter sur :
-- les types de lumières usuelles (point, spot, directional)
+Malgré ses avantages, cette approche pourrait entraîner des incompatibilités avec certaines fonctionnalités graphiques natives de Godot. Le cas echéant, OpenRE proposera des solutions alternatives à travers son plugin. Vous pourrez notamment compter sur :
+- les types de lumières courrants (point, spot, directional)
 - un shader PBR opaque
-- la compatibilité avec le système d'UI natif de Godot
-- la compatibilité avec le système de particules natif de Godot (au moins partielle)
+- la compatibilité avec le système d'UI de Godot
+- la compatibilité partielle avec le système de particules de Godot
 - des ombres dynamiques
-- un support de la transparence (au moins partiel) 
+- un support partiel de la transparence
 
 ## Part III : Détails Techniques :
 Maintenant nous allons mettre un peu les mains dans le camboubi. Si vous aimez les détails techniques, cette partie est faite pour vous. Mais sachez qu'elle n'est pas essentielle. Elle s'adresse à ceux qui souhaite comprendre un peu mieux ce qui se passe sous le capot. Si ce n'est pas votre cas, vous pouvez passer directement à la partie IV.

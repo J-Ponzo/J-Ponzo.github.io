@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.137.0">
+<meta name="generator" content="Hugo 0.140.2">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re/">
@@ -216,7 +216,7 @@ stroke-linejoin="round" class="feather feather-home">
 <li>Blender : pour créer les arrière-plans précalculés.</li>
 <li>Godot : pour gérer les éléments interactifs et assembler le tout.</li>
 </ul>
-<p>La maturité et la popularité de ces deux logiciels en font des choix solides. Ils sont également open-source, ce qui s&rsquo;aligne parfaitement avec la philosophie d&rsquo;OpenRE : promouvoir une technologie accessible et ouverte à tous. L’open-source offre aussi une certaine sécurité qu&rsquo;il est impossible d&rsquo;avoir avec des solutions propriétaires. En effet, comme le rappellent certains evenements récents, placer son capital technologique entre les mains d&rsquo;une entreprise à but lucratif n&rsquo;est pas sans risques.</p>
+<p>La maturité et la popularité de ces deux logiciels en font des choix solides. Ils sont aussi open-source, ce qui s&rsquo;aligne parfaitement avec la philosophie d&rsquo;OpenRE : promouvoir une technologie accessible et ouverte à tous. L’open-source offre également une certaine sécurité qu&rsquo;il est impossible d&rsquo;avoir avec des solutions propriétaires. En effet, comme le rappellent certains evenements récents, placer son capital technologique entre les mains d&rsquo;une entreprise à but lucratif n&rsquo;est pas sans risques.</p>
 <p>Sur le plan pratique, Blender et Godot se complètent très bien. Godot prend en charge nativement les scènes créées dans Blender, ce qui simplifie la synchronisation entre les deux environnements. Cette compatibilité nous évitera des manipulations fastidieuses et sources d&rsquo;erreur.</p>
 <p>Côté scripting, j’ai choisi de bousculer mes habitudes en optant pour GDScript plutôt que C#. Pourquoi ce choix ? Tout simplement parce que GDScript est supporté par toutes les versions de Godot, contrairement à C#, qui nécessite la version .NET. Cette flexibilité permettra à OpenRE de rester accessible au plus grand nombre. Et ce sera l’occasion pour moi d&rsquo;apprendre un nouveau langage.</p>
 <p>Si comme moi vous préférez le C#, soyer rassurés ! Vous n&rsquo;aurez besoin de GDScript que si vous souhaitez modifier le plugin OpenRE lui même. Pour développer votre jeu, vous pourrez utiliser le langage de votre choix.</p>
@@ -255,18 +255,18 @@ stroke-linejoin="round" class="feather feather-home">
 </ol>
 </li>
 </ul>
-<p>Notez que le &rsquo;s&rsquo; à &ldquo;images&rdquo; n&rsquo;est pas une faute de frappe. L&rsquo;arrière plan exporté ne sera pas directement l&rsquo;image final. Il devra être décomposé en une serie d&rsquo;images. Chaque image représentant des données différentes : profondeur, normales, couleur etc.</p>
-<p>Ainsi lors de l&rsquo;exectution, les caméra interactives seront en mesure de composer ce qu&rsquo;elles filment avec l&rsquo;arrière plan associé. Sans intervention supplémentaire de la part de l&rsquo;utilisateur, les deux monde seront fusionnés de manière quasi-indicernable : ils s&rsquo;occluderont l&rsquo;un l&rsquo;autre naturellement et leur éclairage sera uniforme et cohérent.</p>
+<p>Notez que le &rsquo;s&rsquo; à &ldquo;images&rdquo; n&rsquo;est pas une faute de frappe. L&rsquo;arrière plan exporté ne sera pas l&rsquo;image final. Le rendu sera décomposé en une serie d&rsquo;images représentant chacune des données spécifiques : profondeur, normales, couleur etc.</p>
+<p>Ainsi lors de l&rsquo;exectution, les caméra interactives seront en mesure de composer ce qu&rsquo;elles capturent avec l&rsquo;arrière plan associé. Sans intervention supplémentaire de la part de l&rsquo;utilisateur, les deux monde seront fusionnés de manière quasi-indicernable : ils s&rsquo;occluderont l&rsquo;un l&rsquo;autre naturellement et leur éclairage sera uniforme et cohérent.</p>
 <p>Evidement toutes ces étapes ne pourront pas être effectuées manuellement. Ce sera le rôle d&rsquo;OpenRE d&rsquo;automatiser tout cela.</p>
 <h4 id="limitations-">Limitations :</h4>
-<p>Là encore je ne rentrerai pas dans les détails pour l&rsquo;instant, mais il se pourrait que certaines fonctionnalité graphiques de Godot ne soient pas compatibles avec ce fonctionnement. Sachez cependant que des solutions alternatives seront implémentées dans le plugin OpenRE si les fonctionnalités concernées s&rsquo;avérait essentielles. Vous pourrez notament compter sur :</p>
+<p>Malgré ses avantages, cette approche pourrait entraîner des incompatibilités avec certaines fonctionnalités graphiques natives de Godot. Le cas echéant, OpenRE proposera des solutions alternatives à travers son plugin. Vous pourrez notamment compter sur :</p>
 <ul>
-<li>les types de lumières usuelles (point, spot, directional)</li>
+<li>les types de lumières courrants (point, spot, directional)</li>
 <li>un shader PBR opaque</li>
-<li>la compatibilité avec le système d&rsquo;UI natif de Godot</li>
-<li>la compatibilité avec le système de particules natif de Godot (au moins partielle)</li>
+<li>la compatibilité avec le système d&rsquo;UI de Godot</li>
+<li>la compatibilité partielle avec le système de particules de Godot</li>
 <li>des ombres dynamiques</li>
-<li>un support de la transparence (au moins partiel)</li>
+<li>un support partiel de la transparence</li>
 </ul>
 <h2 id="part-iii--détails-techniques-">Part III : Détails Techniques :</h2>
 <p>Maintenant nous allons mettre un peu les mains dans le camboubi. Si vous aimez les détails techniques, cette partie est faite pour vous. Mais sachez qu&rsquo;elle n&rsquo;est pas essentielle. Elle s&rsquo;adresse à ceux qui souhaite comprendre un peu mieux ce qui se passe sous le capot. Si ce n&rsquo;est pas votre cas, vous pouvez passer directement à la partie IV.</p>
@@ -358,7 +358,7 @@ stroke-linejoin="round" class="feather feather-home">
 <li>un addon Godot</li>
 <li>des scripts &amp; utilitaires complémentaires</li>
 </ul>
-<p>Contrairement au POC, le SDK sera open-source et disponible sur un dépôt public. Je serais en effet très heureux d&rsquo;apprendre qu&rsquo;OpenRE est utilisé dans vos créations. Si le coeur vous en dit, n&rsquo;hésitez pas à me faire savoir sur quoi vous travaillez. Cela m&rsquo;interesse au plus haut point. Dans un premier temps je ne pense pas accepter de contributions spontanées. Mais je vous encourage à partager vos idées, retours et autres <em>bug reports</em> sur le <a href="/">github du projet</a>.</p>
+<p>Contrairement au POC, le SDK sera open-source et disponible sur un dépôt public. Je serais en effet très heureux d&rsquo;apprendre qu&rsquo;OpenRE est utilisé dans vos créations. Si le coeur vous en dit, n&rsquo;hésitez pas à me faire savoir sur quoi vous travaillez. Cela m&rsquo;interesse au plus haut point. Dans un premier temps je ne pense pas accepter de contributions spontanées. Mais je vous encourage à partager vos idées, retours et autres <em>bug reports</em> sur le <a href="">github du projet</a>.</p>
 <h5 id="devlogs--1">Devlogs :</h5>
 <p><em>Cette phase n&rsquo;a pas encore commencé</em></p>
 <h4 id="une-démo-jouable">Une Démo Jouable</h4>
