@@ -25,7 +25,7 @@ La maturité et la popularité de ces deux logiciels en font des choix solides. 
 
 Sur le plan pratique, Blender et Godot se complètent très bien. Godot prend en charge nativement les scènes créées dans Blender, ce qui simplifie la synchronisation entre les deux environnements. Cette compatibilité nous évitera des manipulations fastidieuses et sources d'erreur.
 
-<meme des mains avec blender et godot>
+![Même "Epic Handshake" illustrant que Godo + Blender = un monde meilleur](images/handshake.opti.webp)
 
 Côté scripting, j’ai choisi de bousculer mes habitudes en optant pour GDScript plutôt que C#. Pourquoi ce choix ? Tout simplement parce que GDScript est supporté par toutes les versions de Godot, contrairement à C#, qui nécessite la version .NET. Cette flexibilité permettra à OpenRE de rester accessible au plus grand nombre. Et ce sera l’occasion pour moi d'apprendre un nouveau langage.
 
@@ -41,12 +41,12 @@ En effet, ce n'est pas encore d'actualité, mais à l'avenir, OpenRE pourrait su
 
 Pour l'heure, le terme *déterministe* désignera effectivement ce que l'on qualifie de "statique" dans un moteur de jeu (architectures, meubles, objets inanimés, etc.). Mais cela pourrait englober bien plus dans le futur. La seule limite réèlement infranchissable, c'est que ce monde ne pourra jamais dépendre des actions du joueur ou d'éléments de gameplay aléatoirs. Car bien entandu, au moment de génèrer les arrière plans, ces évenements ne peuvent pas être connus.
 
-<img Cigare_scene dans blender>
+![Monde déterministe édité dans Blender](images/blender-det-world.opti.webp)
 
 #### Le monde intéractif (Godot) :
 De son côté, le monde interactif est implémenté dans Godot. Il comprend tout ce qui relève du gameplay : personnages, véhicules contrôlables, objets manipulables, etc. Là encore, j’évite de le qualifier de *dynamique* pour éviter la confusion avec la terminologie des moteurs de jeu.
 
-<gif Cigare_scene dans Godot>
+![Monde interactif édité dans Godot](images/godot-int-world.opti.webp)
 
 En pratique, ce monde sera relativement vide comparé au monde déterministe. En effet, dans la plupart des jeux, les éléments interactifs représentent une quantité de géométrie beaucoup moins importante que les environnements. Cela signifie que dans le cas général, les ressources graphiques sont majoritairement consommées par le monde déterministe. 
 
