@@ -325,8 +325,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Maintenant que nous disposons de nos G-Buffer, il n&rsquo;y a plus qu&rsquo;a calculer la lumière grâce à une passe de deferred shading. Mais la dualité du monde introduit quelques complications.</p>
 <h5 id="1-choix-du-g-buffer-">1. Choix du G-Buffer :</h5>
 <p>Une première question évidente se pose : &ldquo;dans quel G-Buffer récupérer les données ?&rdquo; C&rsquo;est en réalité assez simple. La comparaison des Depth Maps nous permet de savoir quel monde occlude l&rsquo;autre pour chaque pixel de l&rsquo;écran. Il suffit donc de choisir le G-Buffer du monde qui est visible à la coordonnée du pixel considéré.</p>
-<p><img src="/projects/open_re/images/cigar_room_loop_800px_10fps.webp" alt="Image de reference">
-<img src="/projects/open_re/images/cigar_room_loop_worlds_occlusion_debug.webp" alt="Visuel de debug illustrant l&rsquo;occlusion des mondes"></p>
+<p><img src="/projects/open_re/images/cigar_room_loop_worlds_occlusion_debug_with_ref.webp" alt="Image de reference"></p>
 <h5 id="2-différents-modes-de-calcul-de-la-lumière-">2. Différents modes de calcul de la lumière :</h5>
 <p>Le second point est un peu plus subtile. Je ne l&rsquo;ai pas précisé jusqu&rsquo;ici, mais les sources de lumière aussi peuvent être déterministes (lampadaires, feux de cheminée, soleil&hellip;) ou interactives (lampe torche, flash d&rsquo;un tir, phares de voiture). Cela a deux conséquences :</p>
 <ul>

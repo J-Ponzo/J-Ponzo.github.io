@@ -128,8 +128,7 @@ Maintenant que nous disposons de nos G-Buffer, il n'y a plus qu'a calculer la lu
 ##### 1. Choix du G-Buffer :
 Une première question évidente se pose : "dans quel G-Buffer récupérer les données ?" C'est en réalité assez simple. La comparaison des Depth Maps nous permet de savoir quel monde occlude l'autre pour chaque pixel de l'écran. Il suffit donc de choisir le G-Buffer du monde qui est visible à la coordonnée du pixel considéré.
 
-![Image de reference](images/cigar_room_loop_800px_10fps.webp)
-![Visuel de debug illustrant l'occlusion des mondes](images/cigar_room_loop_worlds_occlusion_debug.webp)
+![Image de reference](images/cigar_room_loop_worlds_occlusion_debug_with_ref.webp)
 
 ##### 2. Différents modes de calcul de la lumière :
 Le second point est un peu plus subtile. Je ne l'ai pas précisé jusqu'ici, mais les sources de lumière aussi peuvent être déterministes (lampadaires, feux de cheminée, soleil...) ou interactives (lampe torche, flash d'un tir, phares de voiture). Cela a deux conséquences :
