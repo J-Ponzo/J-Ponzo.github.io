@@ -325,7 +325,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Maintenant que nous disposons de nos G-Buffer, il n&rsquo;y a plus qu&rsquo;a calculer la lumière grâce à une passe de deferred shading. Mais la dualité du monde introduit quelques complications.</p>
 <h5 id="1-choix-du-g-buffer-">1. Choix du G-Buffer :</h5>
 <p>Une première question évidente se pose : &ldquo;dans quel G-Buffer récupérer les données ?&rdquo; C&rsquo;est en réalité assez simple. La comparaison des Depth Maps nous permet de savoir quel monde occlude l&rsquo;autre pour chaque pixel de l&rsquo;écran. Il suffit donc de choisir le G-Buffer du monde qui est visible à la coordonnée du pixel considéré.</p>
-<p><img src="/projects/open_re/images/cigar_room_loop_worlds_occlusion_debug_with_ref.webp" alt="Image de reference"></p>
+<p><img src="/projects/open_re/images/cigar_room_loop_worlds_occlusion_debug_with_ref.webp" alt="Visuel de debug illustrand l&rsquo;occlusion mutuelle des mondes"></p>
 <h5 id="2-différents-modes-de-calcul-de-la-lumière-">2. Différents modes de calcul de la lumière :</h5>
 <p>Le second point est un peu plus subtile. Je ne l&rsquo;ai pas précisé jusqu&rsquo;ici, mais les sources de lumière aussi peuvent être déterministes (lampadaires, feux de cheminée, soleil&hellip;) ou interactives (lampe torche, flash d&rsquo;un tir, phares de voiture). Cela a deux conséquences :</p>
 <ul>
@@ -361,9 +361,7 @@ stroke-linejoin="round" class="feather feather-home">
       </tr>
   </tbody>
 </table>
-<p><img src="/projects/open_re/images/cigar_room_loop_determinist_light_debug.webp" alt="Visuel de debug des modes de calculs pour une lumière déterministe">
-<img src="/projects/open_re/images/cigar_room_loop_800px_10fps.webp" alt="Image de reference">
-<img src="/projects/open_re/images/cigar_room_loop_interactive_light_debug.webp" alt="Visuel de debug des modes de calculs pour une lumière intéractive"></p>
+<p><img src="/projects/open_re/images/cigar_room_loop_light_modes_debug_with_ref.webp" alt="Visuel de debug illustrant les différents modes de calcul de la lumière"></p>
 <h2 id="part-iv--phases-de-développement">Part IV : Phases de développement</h2>
 <h4 id="proof-of-concept-poc">Proof of Concept (POC)</h4>
 <p>Le but de cette première étape est de débrousailler le terrain pour se faire une première idée du potentiel d&rsquo;OpenRE. On cherche à évaluer ce qui est possible et les résultats que l&rsquo;on peut espérer. L&rsquo;important ici n&rsquo;est pas l&rsquo;optimisation ou l&rsquo;élegance du code. On cherche simplement à identifier les verroux techniques et on s&rsquo;assure qu&rsquo;il est possible de les faire sauter (à grand coup de débrouille et d&rsquo;improvisation si il le faut).</p>

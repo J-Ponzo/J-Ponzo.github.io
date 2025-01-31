@@ -128,7 +128,7 @@ Maintenant que nous disposons de nos G-Buffer, il n'y a plus qu'a calculer la lu
 ##### 1. Choix du G-Buffer :
 Une première question évidente se pose : "dans quel G-Buffer récupérer les données ?" C'est en réalité assez simple. La comparaison des Depth Maps nous permet de savoir quel monde occlude l'autre pour chaque pixel de l'écran. Il suffit donc de choisir le G-Buffer du monde qui est visible à la coordonnée du pixel considéré.
 
-![Image de reference](images/cigar_room_loop_worlds_occlusion_debug_with_ref.webp)
+![Visuel de debug illustrand l'occlusion mutuelle des mondes](images/cigar_room_loop_worlds_occlusion_debug_with_ref.webp)
 
 ##### 2. Différents modes de calcul de la lumière :
 Le second point est un peu plus subtile. Je ne l'ai pas précisé jusqu'ici, mais les sources de lumière aussi peuvent être déterministes (lampadaires, feux de cheminée, soleil...) ou interactives (lampe torche, flash d'un tir, phares de voiture). Cela a deux conséquences :
@@ -140,9 +140,7 @@ Le second point est un peu plus subtile. Je ne l'ai pas précisé jusqu'ici, mai
 | **Lumière Déterministe** 	| Recomposition des maps de Cycles  							|  Deferred Shading |
 | **Lumière Interactive** 	| Recomposition des maps de Cycles <br> + Deferred Shading	|  Deferred Shading |
 
-![Visuel de debug des modes de calculs pour une lumière déterministe](images/cigar_room_loop_determinist_light_debug.webp)
-![Image de reference](images/cigar_room_loop_800px_10fps.webp)
-![Visuel de debug des modes de calculs pour une lumière intéractive](images/cigar_room_loop_interactive_light_debug.webp)
+![Visuel de debug illustrant les différents modes de calcul de la lumière](images/cigar_room_loop_light_modes_debug_with_ref.webp)
 
 ## Part IV : Phases de développement
 
