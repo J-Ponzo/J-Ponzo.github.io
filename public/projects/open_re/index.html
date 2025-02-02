@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.140.2">
+<meta name="generator" content="Hugo 0.137.0">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re/">
@@ -219,7 +219,7 @@ stroke-linejoin="round" class="feather feather-home">
 </ul>
 <p>La maturité et la popularité de ces deux logiciels en font des choix solides. Ils sont aussi open-source, ce qui s&rsquo;aligne parfaitement avec la philosophie d&rsquo;OpenRE : promouvoir une technologie accessible et ouverte à tous. L’open-source offre également une certaine sécurité qu&rsquo;il est impossible d&rsquo;avoir avec des solutions propriétaires. En effet, comme le rappellent certains evenements récents, placer son capital technologique entre les mains d&rsquo;une entreprise à but lucratif n&rsquo;est pas sans risques.</p>
 <p>Sur le plan pratique, Blender et Godot se complètent très bien. Godot prend en charge nativement les scènes créées dans Blender, ce qui simplifie la synchronisation entre les deux environnements. Cette compatibilité nous évitera des manipulations fastidieuses et sources d&rsquo;erreur.</p>
-<p><img src="/projects/open_re/images/handshake.opti.webp" alt="Même &ldquo;Epic Handshake&rdquo; illustrant que Godo &#43; Blender = un monde meilleur"></p>
+<p><img alt="Même &ldquo;Epic Handshake&rdquo; illustrant que Godo + Blender = un monde meilleur" src="/projects/open_re/images/handshake.opti.webp"></p>
 <p>Côté scripting, j’ai choisi de bousculer mes habitudes en optant pour GDScript plutôt que C#. Pourquoi ce choix ? Tout simplement parce que GDScript est supporté par toutes les versions de Godot, contrairement à C#, qui nécessite la version .NET. Cette flexibilité permettra à OpenRE de rester accessible au plus grand nombre. Et ce sera l’occasion pour moi d&rsquo;apprendre un nouveau langage.</p>
 <p>Si comme moi vous préférez le C#, soyer rassurés ! Vous n&rsquo;aurez besoin de GDScript que si vous souhaitez modifier le plugin OpenRE lui même. Pour développer votre jeu, vous pourrez utiliser le langage de votre choix.</p>
 <h2 id="part-ii--principe-général">Part II : Principe général</h2>
@@ -228,10 +228,10 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Le monde <em>déterministe</em> est créé dans Blender. C&rsquo;est de lui que seront tirés les arrière plans précalculés. On pourrait, de manière un peu reductrice, dire qu’il représente la partie <em>statique</em> de la scène. Je préfère éviter ce terme car il est déjà utilisé par les moteurs de jeu ce qui prète à confusion. De plus il n&rsquo;est pas tout a fait exacte en l&rsquo;occurence.</p>
 <p>En effet, ce n&rsquo;est pas encore d&rsquo;actualité, mais à l&rsquo;avenir, OpenRE pourrait supporter des arrière plans animés. On pourrait alors imaginer des boucle dans lesquelles de la végétation ou des rideaux seraient agités par le vent. Ou encore des voitures qui circulent dans les rues la nuit illuminant les allentours à chaque passage. Parler d&rsquo;éléments &ldquo;statiques&rdquo; dans ce context serait tout simplement incorrect.</p>
 <p>Pour l&rsquo;heure, le terme <em>déterministe</em> désignera effectivement ce que l&rsquo;on qualifie de &ldquo;statique&rdquo; dans un moteur de jeu (architectures, meubles, objets inanimés, etc.). Mais cela pourrait englober bien plus dans le futur. La seule limite réèlement infranchissable, c&rsquo;est que ce monde ne pourra jamais dépendre des actions du joueur ou d&rsquo;éléments de gameplay aléatoirs. Car bien entandu, au moment de génèrer les arrière plans, ces évenements ne peuvent pas être connus.</p>
-<p><img src="/projects/open_re/images/blender-det-world.opti.webp" alt="Monde déterministe édité dans Blender"></p>
+<p><img alt="Monde déterministe édité dans Blender" src="/projects/open_re/images/blender-det-world.opti.webp"></p>
 <h4 id="le-monde-intéractif-godot-">Le monde intéractif (Godot) :</h4>
 <p>De son côté, le monde interactif est implémenté dans Godot. Il comprend tout ce qui relève du gameplay : personnages, véhicules contrôlables, objets manipulables, etc. Là encore, j’évite de le qualifier de <em>dynamique</em> pour éviter la confusion avec la terminologie des moteurs de jeu.</p>
-<p><img src="/projects/open_re/images/godot-int-world.opti.webp" alt="Monde interactif édité dans Godot"></p>
+<p><img alt="Monde interactif édité dans Godot" src="/projects/open_re/images/godot-int-world.opti.webp"></p>
 <p>En pratique, ce monde sera relativement vide comparé au monde déterministe. En effet, dans la plupart des jeux, les éléments interactifs représentent une quantité de géométrie beaucoup moins importante que les environnements. Cela signifie que dans le cas général, les ressources graphiques sont majoritairement consommées par le monde déterministe.</p>
 <p>OpenRE s&rsquo;abstrait en grande partie de cette charge de calcul en déléguant le rendu de la partie déterministe à Blender. Ce qui libère d&rsquo;autant plus de budget pour la partie interactive. On pourra donc se permettre une plus grande générosité sur les détails.</p>
 <h4 id="la-fusion-des-mondes-">La fusion des mondes :</h4>
@@ -261,7 +261,7 @@ stroke-linejoin="round" class="feather feather-home">
 </ul>
 <p>Notez que le &rsquo;s&rsquo; à &ldquo;images&rdquo; n&rsquo;est pas une faute de frappe. L&rsquo;arrière plan exporté ne sera pas l&rsquo;image final. Le rendu sera décomposé en une serie d&rsquo;images représentant chacune des données spécifiques : profondeur, normales, couleur etc.</p>
 <p>Ainsi lors de l&rsquo;exectution, les caméra interactives seront en mesure de composer ce qu&rsquo;elles capturent avec l&rsquo;arrière plan associé. Sans intervention supplémentaire de la part de l&rsquo;utilisateur, les deux monde seront fusionnés de manière quasi-indicernable : ils s&rsquo;occluderont l&rsquo;un l&rsquo;autre naturellement et leur éclairage sera uniforme et cohérent.</p>
-<p><img src="/projects/open_re/images/OpenRE_diagram.webp" alt="Diagramme illustrant le fonctionnement général de OpenRE"></p>
+<p><img alt="Diagramme illustrant le fonctionnement général de OpenRE" src="/projects/open_re/images/OpenRE_diagram.webp"></p>
 <p>Evidement, ce serait extrèmement fastidieux d&rsquo;effectuer toutes ces étapes à la main. Pour que la technologie soit exploitable, OpenRE devra être capable d&rsquo;automatiser tout cela.</p>
 <h4 id="limitations-">Limitations :</h4>
 <p>Malgré ses avantages, cette approche pourrait entraîner des incompatibilités avec certaines fonctionnalités graphiques natives de Godot. Le cas echéant, OpenRE proposera des solutions alternatives à travers son plugin. Vous pourrez notamment compter sur :</p>
@@ -307,22 +307,22 @@ stroke-linejoin="round" class="feather feather-home">
       <tr>
           <td style="text-align: center"><strong>Depth</strong></td>
           <td style="text-align: left">Encode la profondeur de chaque pixel. Permetra aux mondes de s&rsquo;occluder correctement. La position du pixel sera également déduite de cette donnée.</td>
-          <td style="text-align: center"><img src="/projects/open_re/images/D_Depth_square.opti.webp" alt="Depht map"></td>
+          <td style="text-align: center"><img alt="Depht map" src="/projects/open_re/images/D_Depth_square.opti.webp"></td>
       </tr>
       <tr>
           <td style="text-align: center"><strong>Normal</strong></td>
           <td style="text-align: left">Décrit l&rsquo;orientation des surfaces. Cette donnée interviendra dans la calcul de l&rsquo;éclairage</td>
-          <td style="text-align: center"><img src="/projects/open_re/images/D_Normal_square.opti.webp" alt="Normal map"></td>
+          <td style="text-align: center"><img alt="Normal map" src="/projects/open_re/images/D_Normal_square.opti.webp"></td>
       </tr>
       <tr>
           <td style="text-align: center"><strong>ORM</strong></td>
           <td style="text-align: left">Regroupe des données additionnelles nécessaire au rendu PBR (Ambiant Occlusion, Roughtness, Metalness)</td>
-          <td style="text-align: center"><img src="/projects/open_re/images/D_ORM_square.opti.webp" alt="ORM map"></td>
+          <td style="text-align: center"><img alt="ORM map" src="/projects/open_re/images/D_ORM_square.opti.webp"></td>
       </tr>
       <tr>
           <td style="text-align: center"><strong>diverses maps d&rsquo;illumination</strong></td>
           <td style="text-align: left">Information relative à la lumière</td>
-          <td style="text-align: center"><img src="/projects/open_re/images/illuminationMaps.opti.webp" alt="Collection de maps d&rsquo;illumination"></td>
+          <td style="text-align: center"><img alt="Collection de maps d&rsquo;illumination" src="/projects/open_re/images/illuminationMaps.opti.webp"></td>
       </tr>
   </tbody>
 </table>
@@ -334,7 +334,7 @@ stroke-linejoin="round" class="feather feather-home">
 </ol>
 </li>
 </ul>
-<p><img src="/projects/open_re/images/cycle_recompose.opti.webp" alt="Formule de recomposition de l&rsquo;image générée par Cycle"></p>
+<p><img alt="Formule de recomposition de l&rsquo;image générée par Cycle" src="/projects/open_re/images/cycle_recompose.opti.webp"></p>
 <ul>
 <li>
 <ol start="2">
@@ -349,7 +349,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Maintenant que nous disposons de nos G-Buffer, il n&rsquo;y a plus qu&rsquo;a calculer la lumière grâce à une passe de deferred shading. Mais la dualité du monde introduit quelques complications.</p>
 <h5 id="1-choix-du-g-buffer-">1. Choix du G-Buffer :</h5>
 <p>Une première question évidente se pose : &ldquo;dans quel G-Buffer récupérer les données ?&rdquo; C&rsquo;est en réalité assez simple. La comparaison des Depth Maps nous permet de savoir quel monde occlude l&rsquo;autre pour chaque pixel de l&rsquo;écran. Il suffit donc de choisir le G-Buffer du monde qui est visible à la coordonnée du pixel considéré.</p>
-<p><img src="/projects/open_re/images/cigar_room_loop_worlds_occlusion_debug_with_ref.webp" alt="Visuel de debug illustrand l&rsquo;occlusion mutuelle des mondes"></p>
+<p><img alt="Visuel de debug illustrand l&rsquo;occlusion mutuelle des mondes" src="/projects/open_re/images/cigar_room_loop_worlds_occlusion_debug_with_ref.webp"></p>
 <h5 id="2-différents-modes-de-calcul-de-la-lumière-">2. Différents modes de calcul de la lumière :</h5>
 <p>Le second point est un peu plus subtile. Je ne l&rsquo;ai pas précisé jusqu&rsquo;ici, mais les sources de lumière aussi peuvent être déterministes (lampadaires, feux de cheminée, soleil&hellip;) ou interactives (lampe torche, flash d&rsquo;un tir, phares de voiture). Cela a deux conséquences :</p>
 <ul>
@@ -375,17 +375,17 @@ stroke-linejoin="round" class="feather feather-home">
   <tbody>
       <tr>
           <td style="text-align: left"><strong>Lumière Déterministe</strong></td>
-          <td style="text-align: center">Recomposition des maps de Cycles</td>
-          <td style="text-align: center">Deferred Shading</td>
+          <td style="text-align: center"><span style="color:green;">Recomposition des maps de Cycles</span></td>
+          <td style="text-align: center"><span style="color:red;">Deferred Shading</span></td>
       </tr>
       <tr>
           <td style="text-align: left"><strong>Lumière Interactive</strong></td>
-          <td style="text-align: center">Recomposition des maps de Cycles <br> + Deferred Shading</td>
-          <td style="text-align: center">Deferred Shading</td>
+          <td style="text-align: center"><span style="color:yellow;">Recomposition des maps de Cycles <br> + Deferred Shading</span></td>
+          <td style="text-align: center"><span style="color:red;">Deferred Shading</span></td>
       </tr>
   </tbody>
 </table>
-<p><img src="/projects/open_re/images/cigar_room_loop_light_modes_debug_with_ref.webp" alt="Visuel de debug illustrant les différents modes de calcul de la lumière"></p>
+<p><img alt="Visuel de debug illustrant les différents modes de calcul de la lumière" src="/projects/open_re/images/cigar_room_loop_light_modes_debug_with_ref.webp"></p>
 <h2 id="part-iv--phases-de-développement">Part IV : Phases de développement</h2>
 <h4 id="proof-of-concept-poc">Proof of Concept (POC)</h4>
 <p>Le but de cette première étape est de débrousailler le terrain pour se faire une première idée du potentiel d&rsquo;OpenRE. On cherche à évaluer ce qui est possible et les résultats que l&rsquo;on peut espérer. L&rsquo;important ici n&rsquo;est pas l&rsquo;optimisation ou l&rsquo;élegance du code. On cherche simplement à identifier les verroux techniques et on s&rsquo;assure qu&rsquo;il est possible de les faire sauter (à grand coup de débrouille et d&rsquo;improvisation si il le faut).</p>
@@ -402,7 +402,7 @@ stroke-linejoin="round" class="feather feather-home">
 <li>des scripts &amp; utilitaires complémentaires</li>
 </ul>
 <p>Contrairement au POC, le SDK sera open-source et disponible sur un dépôt public. Rien ne me ferait plus plaisir que de savoir qu’OpenRE est utilisé dans vos créations. Si vous décidez de l’adopter, n&rsquo;hésitez pas à me faire savoir sur quoi vous travaillez. Cela m&rsquo;interesse au plus haut point !</p>
-<p>Dans un premier temps, je n&rsquo;accepterai probablement pas de contributions spontanées, mais vos retours, suggestions et rapports de bugs seront toujours les bienvenus. N&rsquo;hésitez pas à les partager sur le <a href="">GitHub du projet</a>.</p>
+<p>Dans un premier temps, je n&rsquo;accepterai probablement pas de contributions spontanées, mais vos retours, suggestions et rapports de bugs seront toujours les bienvenus. N&rsquo;hésitez pas à les partager sur le <a href="/">GitHub du projet</a>.</p>
 <h5 id="devlogs--1">Devlogs :</h5>
 <p><em>Cette phase n&rsquo;a pas encore commencé</em></p>
 <h4 id="une-démo-jouable">Une Démo Jouable</h4>

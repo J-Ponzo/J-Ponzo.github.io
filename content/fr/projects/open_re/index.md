@@ -137,8 +137,8 @@ Le second point est un peu plus subtile. Je ne l'ai pas précisé jusqu'ici, mai
 
 | 			 				| Pixel Déterministe          									| Pixel Interactif     |
 | :------------------------ |:-------------------------------------------------------------:| :-------------------:|
-| **Lumière Déterministe** 	| Recomposition des maps de Cycles  							|  Deferred Shading |
-| **Lumière Interactive** 	| Recomposition des maps de Cycles <br> + Deferred Shading	|  Deferred Shading |
+| **Lumière Déterministe** 	| <span style="color:green;">Recomposition des maps de Cycles</span>  							|  <span style="color:red;">Deferred Shading</span> |
+| **Lumière Interactive** 	| <span style="color:yellow;">Recomposition des maps de Cycles <br> + Deferred Shading</span>	|  <span style="color:red;">Deferred Shading</span> |
 
 ![Visuel de debug illustrant les différents modes de calcul de la lumière](images/cigar_room_loop_light_modes_debug_with_ref.webp)
 
