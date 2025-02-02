@@ -261,7 +261,7 @@ stroke-linejoin="round" class="feather feather-home">
 </ul>
 <p>Notez que le &rsquo;s&rsquo; à &ldquo;images&rdquo; n&rsquo;est pas une faute de frappe. L&rsquo;arrière plan exporté ne sera pas l&rsquo;image final. Le rendu sera décomposé en une serie d&rsquo;images représentant chacune des données spécifiques : profondeur, normales, couleur etc.</p>
 <p>Ainsi lors de l&rsquo;exectution, les caméra interactives seront en mesure de composer ce qu&rsquo;elles capturent avec l&rsquo;arrière plan associé. Sans intervention supplémentaire de la part de l&rsquo;utilisateur, les deux monde seront fusionnés de manière quasi-indicernable : ils s&rsquo;occluderont l&rsquo;un l&rsquo;autre naturellement et leur éclairage sera uniforme et cohérent.</p>
-<p>&lt;schéma général&gt;</p>
+<p><img src="/projects/open_re/images/OpenRE_diagram.webp" alt="Diagramme illustrant le fonctionnement général de OpenRE"></p>
 <p>Evidement, ce serait extrèmement fastidieux d&rsquo;effectuer toutes ces étapes à la main. Pour que la technologie soit exploitable, OpenRE devra être capable d&rsquo;automatiser tout cela.</p>
 <h4 id="limitations-">Limitations :</h4>
 <p>Malgré ses avantages, cette approche pourrait entraîner des incompatibilités avec certaines fonctionnalités graphiques natives de Godot. Le cas echéant, OpenRE proposera des solutions alternatives à travers son plugin. Vous pourrez notamment compter sur :</p>
@@ -295,13 +295,37 @@ stroke-linejoin="round" class="feather feather-home">
 <li><strong>Cycles</strong> : Basé sur du <em>path-tracing</em>. Il produit des images photoréaliste mais le rendu prend un certain temps.</li>
 </ul>
 <p>Pour OpenRE, nous utiliserons bien sûr Cycles, afin de garantir une qualité visuelle maximale. Grâce au compositeur de Blender, le rendu pourra être décomposé en plusieurs textures qui constituront notre DG-Buffer :</p>
-<ul>
-<li><strong>Depth Map :</strong> Encode la profondeur de chaque pixel. Permetra aux mondes de s&rsquo;occluder correctement. La position du pixel sera également déduite de cette donnée.</li>
-<li><strong>Normal Map :</strong> Décrit l&rsquo;orientation des surfaces. Cette donnée interviendra dans la calcul de l&rsquo;éclairage</li>
-<li><strong>ORM Map :</strong> Regroupe des données additionnelles nécessaire au rendu PBR (Ambiant Occlusion, Roughtness, Metalness)</li>
-<li><em><strong>diverses maps d&rsquo;illumination</strong></em></li>
-</ul>
-<p>&lt;Détail des maps de cigar_scn&gt;</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: center">Map</th>
+          <th style="text-align: left">Description</th>
+          <th style="text-align: center">Image</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center"><strong>Depth</strong></td>
+          <td style="text-align: left">Encode la profondeur de chaque pixel. Permetra aux mondes de s&rsquo;occluder correctement. La position du pixel sera également déduite de cette donnée.</td>
+          <td style="text-align: center"><img src="/projects/open_re/images/D_Depth_square.opti.webp" alt="Depht map"></td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>Normal</strong></td>
+          <td style="text-align: left">Décrit l&rsquo;orientation des surfaces. Cette donnée interviendra dans la calcul de l&rsquo;éclairage</td>
+          <td style="text-align: center"><img src="/projects/open_re/images/D_Normal_square.opti.webp" alt="Normal map"></td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>ORM</strong></td>
+          <td style="text-align: left">Regroupe des données additionnelles nécessaire au rendu PBR (Ambiant Occlusion, Roughtness, Metalness)</td>
+          <td style="text-align: center"><img src="/projects/open_re/images/D_ORM_square.opti.webp" alt="ORM map"></td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>diverses maps d&rsquo;illumination</strong></td>
+          <td style="text-align: left">Information relative à la lumière</td>
+          <td style="text-align: center"><img src="/projects/open_re/images/illuminationMaps.opti.webp" alt="Collection de maps d&rsquo;illumination"></td>
+      </tr>
+  </tbody>
+</table>
 <p>Si vous savez ce que contient habituellement un G-Buffer, vous vous demandez peut être où est passée la map d&rsquo;albedo ? Ou ce que peuvent bien être ces fameuses <em>diverses maps d&rsquo;illumination</em> ?</p>
 <ul>
 <li>
@@ -310,7 +334,7 @@ stroke-linejoin="round" class="feather feather-home">
 </ol>
 </li>
 </ul>
-<p>&lt;formule de recomposition avec miniature des maps d&rsquo;illumination&gt;</p>
+<p><img src="/projects/open_re/images/cycle_recompose.opti.webp" alt="Formule de recomposition de l&rsquo;image générée par Cycle"></p>
 <ul>
 <li>
 <ol start="2">

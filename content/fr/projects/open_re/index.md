@@ -68,7 +68,7 @@ Notez que le 's' à "images" n'est pas une faute de frappe. L'arrière plan expo
 
 Ainsi lors de l'exectution, les caméra interactives seront en mesure de composer ce qu'elles capturent avec l'arrière plan associé. Sans intervention supplémentaire de la part de l'utilisateur, les deux monde seront fusionnés de manière quasi-indicernable : ils s'occluderont l'un l'autre naturellement et leur éclairage sera uniforme et cohérent.
 
-<schéma général>
+![Diagramme illustrant le fonctionnement général de OpenRE](images/OpenRE_diagram.webp)
 
 Evidement, ce serait extrèmement fastidieux d'effectuer toutes ces étapes à la main. Pour que la technologie soit exploitable, OpenRE devra être capable d'automatiser tout cela.
 
@@ -103,17 +103,17 @@ Blender dispose de deux moteurs de rendu :
 - **Cycles** : Basé sur du *path-tracing*. Il produit des images photoréaliste mais le rendu prend un certain temps.
 
 Pour OpenRE, nous utiliserons bien sûr Cycles, afin de garantir une qualité visuelle maximale. Grâce au compositeur de Blender, le rendu pourra être décomposé en plusieurs textures qui constituront notre DG-Buffer :
-- **Depth Map :** Encode la profondeur de chaque pixel. Permetra aux mondes de s'occluder correctement. La position du pixel sera également déduite de cette donnée.
-- **Normal Map :** Décrit l'orientation des surfaces. Cette donnée interviendra dans la calcul de l'éclairage
-- **ORM Map :** Regroupe des données additionnelles nécessaire au rendu PBR (Ambiant Occlusion, Roughtness, Metalness)
-- ***diverses maps d'illumination***
-
-<Détail des maps de cigar_scn>
+| 			 Map			| Description          									| Image     |
+| :------------------------: |:-------------------------------------------------------------| :-------------------:|
+| **Depth** 	| Encode la profondeur de chaque pixel. Permetra aux mondes de s'occluder correctement. La position du pixel sera également déduite de cette donnée. |  ![Depht map](images/D_Depth_square.opti.webp) |
+| **Normal** 	| Décrit l'orientation des surfaces. Cette donnée interviendra dans la calcul de l'éclairage	|  ![Normal map](images/D_Normal_square.opti.webp) |
+| **ORM** 	| Regroupe des données additionnelles nécessaire au rendu PBR (Ambiant Occlusion, Roughtness, Metalness)	|  ![ORM map](images/D_ORM_square.opti.webp) |
+| **diverses maps d'illumination** 	| Information relative à la lumière	|  ![Collection de maps d'illumination](images/illuminationMaps.opti.webp) |
 
 Si vous savez ce que contient habituellement un G-Buffer, vous vous demandez peut être où est passée la map d'albedo ? Ou ce que peuvent bien être ces fameuses *diverses maps d'illumination* ?
 - 1. Le modèle d’illumination de Cycles est assez complexe. En sortie, on obtient neuf maps d'illumination différentes. En réalité, l’une de ces map correspond à l’albedo. Mais pour recomposer l’image finale, nous auront besoin des neuf.
 
-<formule de recomposition avec miniature des maps d'illumination>
+![Formule de recomposition de l'image générée par Cycle](images/cycle_recompose.opti.webp)
 
 - 2. On pourrait se contanter d'intégrer l'albedo mais il faudrait alors recalculer tout l'éclairage côté Godot. On perdrait à la fois la qualité visuelle de Cycles et énormement de temps de calcul. Les neuf maps sont donc intégrées au DG-Buffer pour permetre une recomposition directe lorsque c'est approprié (voire plus loin).
 
