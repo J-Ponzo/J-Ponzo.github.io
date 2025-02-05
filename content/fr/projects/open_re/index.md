@@ -6,13 +6,16 @@ title = 'OpenRE (Open Retro Engine)'
 description = 'Page de presentation du projet OpenRE'
 +++
 ## Introduction
-Lorsque j'ai voulu développer mon propre jeu en caméra fixe, j’ai rapidement réalisé une chose : les outils et ressources disponnibles sur le sujet sont rares. Certes, on trouve quelques tutoriels pour gérer les caméras ou implémenter les déplacements du joueur. Mais je n'ai pas trouvé de réponse à la question qui m'intéresse réèlement : *"Comment intégrer des éléments interactifs dans des décor pré-rendus ?"*
+Lorsque j'ai voulu développer mon propre jeu en caméra fixe, j’ai rapidement réalisé une chose : les outils et ressources disponnibles sur le sujet sont rares. Certes, on trouve quelques tutoriels pour gérer les caméras ou implémenter les déplacements du joueur. Mais je n'ai pas trouvé de réponse à la question qui m'intéresse réèlement : *"Comment intégrer des éléments interactifs dans des décor précalculés ?"*
 
-C’est de ce constat que m’est venue l'idée d'OpenRE. Il s'agit d'une technologie libre et open-source conçue pour simplifier le développement de jeux en caméra fixe avec des arrière-plans précalculés. Ce projet me sert également de laboratoire pour explorer le potentiel de cette technique sur du matériel moderne. Mon objectif est de réduire l’écart visuel entre précalculés et temps réèl. Ces dissonances graphiques sont effectivement un peu difficile à accepter pour nos standards actuels. Elle trahisse le subterfuge et sont pour moi le principal obstacle à l'immersion.
+J'ai donc commencé à bricoler de mon côté pour trouver une solution à ce problème et je commence à avoir un début de résultat :
+{{< youtube ok0o0HhgfeY >}}
 
-<Freeze de vieux jeux caméra fixe>
+Oui je sais, cette scène n'a aucun sens. Soyez indulgent, j'ai dis que ce n'était qu'un début. Et puis je trouve ces T-Poses magnifiques (pas vous ?). Plus serieusement, ce qu'il est important de noté dans cette vidéo, c'est que les seuls models rendus en temps réèl sont les personnages. Tout le reste - planché, murs, plafond, mobilier, props en tout genre - est en réalité une image précalculée.
 
-Dans cet article, je vais vous présenter les principes fondamentaux d’OpenRE ainsi que les étapes majeures de son développement. Vous y trouverez aussi des liens vers des devlogs où je partagerai régulièrement mes avancées, mes échecs (parce qu’il y en aura !), et mes réflexions. Si vous aimez suivre les projets en coulisses, j’espère que cette aventure vous passionnera autant que moi !
+Si j'écris cet article aujourd'hui, c'est parce que je trouve ces résultat plutôt encourageant. J'ai donc naturellement envie de les partager et d'expliquer un peu comment ça fonctionne. Mais partant du constat que rien de semblable n'a l'aire d'éxiter, j'ai décider d'aller un peu plus loin. Plutôt que d'utiliser cette technologie directement dans mon jeu, je compte la développer à part et la rendre accessible sous licence open-source. Elle a donc besoin d'un nom, et ce nom c'est OpenRE pour *Open Retro Engine*.
+
+Nous ne somme qu'au tout début du projet. Il y a encore beaucoup de zones d'ombre, et beaucoup de choses sont suceptible de changer d'ici à ce qu'on ai une première version utilisable. Ne prenez donc pas ce qui suit comme des promesses, mais comme une présentation de comment j'enviseage les choses à l'heure actuelle. Je posterai régulièrement des devlogs pour partager mes avancées, mes échecs (parce qu’il y en aura !), et mes réflexions. Si vous aimez suivre les projets en coulisses, j’espère que cette aventure vous passionnera autant que moi !
 
 ## Part I : Environnement technique :
 OpenRE repose sur deux outils que vous connaissez sûrement :
@@ -21,7 +24,7 @@ OpenRE repose sur deux outils que vous connaissez sûrement :
 
 La maturité et la popularité de ces deux logiciels en font des choix solides. Ils sont aussi open-source, ce qui s'aligne parfaitement avec la philosophie d'OpenRE : promouvoir une technologie accessible et ouverte à tous. L’open-source offre également une certaine sécurité qu'il est impossible d'avoir avec des solutions propriétaires. En effet, comme le rappellent certains evenements récents, placer son capital technologique entre les mains d'une entreprise à but lucratif n'est pas sans risques.
 
-Sur le plan pratique, Blender et Godot se complètent très bien. Godot prend en charge nativement les scènes créées dans Blender, ce qui simplifie la synchronisation entre les deux environnements. Cette compatibilité nous évitera des manipulations fastidieuses et sources d'erreur.
+Sur le plan pratique, Blender et Godot se complètent très bien. Godot prend en charge nativement les scènes créées dans Blender, ce qui simplifie la synchronisation entre les deux environnements. Cette compatibilité devrait nous aider réduire les manipulations fastidieuses et sources d'erreur.
 
 ![Même "Epic Handshake" illustrant que Godo + Blender = un monde meilleur](images/handshake.opti.webp)
 
@@ -68,7 +71,7 @@ Ainsi lors de l'exectution, les caméra interactives seront en mesure de compose
 
 ![Diagramme illustrant le fonctionnement général de OpenRE](images/OpenRE_diagram.webp)
 
-Evidement, ce serait extrèmement fastidieux d'effectuer toutes ces étapes à la main. Pour que la technologie soit exploitable, OpenRE devra être capable d'automatiser tout cela.
+Evidement, il serait trop fastidieux d'effectuer toutes ces étapes à la main pour chauque point de vu à chaque fois que quelque chose change dans la scène. Pour que la technologie soit exploitable, OpenRE devra être capable d'automatiser tout cela.
 
 #### Limitations :
 Malgré ses avantages, cette approche pourrait entraîner des incompatibilités avec certaines fonctionnalités graphiques natives de Godot. Le cas echéant, OpenRE proposera des solutions alternatives à travers son plugin. Vous pourrez notamment compter sur :
@@ -130,7 +133,7 @@ Une première question évidente se pose : "dans quel G-Buffer récupérer les d
 
 ##### 2. Différents modes de calcul de la lumière :
 Le second point est un peu plus subtile. Je ne l'ai pas précisé jusqu'ici, mais les sources de lumière aussi peuvent être déterministes (lampadaires, feux de cheminée, soleil...) ou interactives (lampe torche, flash d'un tir, phares de voiture). Cela a deux conséquences :
-- 1. Comme les caméra, les lumières déterministes présentes dans Blender devront être répliquées dans Godot. Sans cela, elle ne pourront pas éclairer les éléments interactifs. Les lumières intéractives, elles, n'existeront que dans Godot.
+- 1. Les lumières déterministes présentes dans Blender devront être répliquées dans Godot. Sans cela, elle ne pourront pas éclairer les éléments interactifs. Les lumières intéractives, elles, n'existeront que dans Godot.
 - 2. Le calcul de la contribution d'une lumière données sur un pixel donné varie selon le monde auquel l'un et l'autre appartiennent. Voici un tableau récapitulatif des différentes combinaisons :
 
 | 			 				| Pixel Déterministe          									| Pixel Interactif     |
@@ -147,7 +150,7 @@ Le but de cette première étape est de débrousailler le terrain pour se faire 
 
 Lorsque j'aurais une vision suffisament claire du projet et que j'aurai levé les doutes quant à sa faisabilité, ce code sera mis au placard et je repartirai d'une feuille blanche. Ce n’est qu’à ce moment-là que je me préocuperai de la qualité, de la performance et de l’ergonomie.
 
-Le dépôt de ce POC ne sera malheureusement pas public. De toutes façons, la codebase sera affreuse et vous n'aurez pas envie de mettre le nez dedans, mais ce n'est pas la raison principale. En réalité, pour juger de la qualité visuelle d'OpenRE, j'aurais besoin d'assets de qualité et cohérents entre eux.  Trouver de tels assets libres de droits et dans un délai raisonnable serait un vrai casse tête. Je vais donc utiliser des ressources déjà en ma possession (achetées ou gratuites) et je ne peux pas les redistribuer.
+Le dépôt de ce POC ne sera malheureusement pas public. De toutes façons, la codebase sera affreuse et vous n'aurez pas envie de mettre le nez dedans, mais ce n'est pas la raison principale. En réalité, pour juger les capacités de rendu d'OpenRE, j'aurais besoin d'assets de qualité et cohérents entre eux.  Trouver de tels assets libres de droits et dans un délai raisonnable serait un vrai casse tête. Je vais donc utiliser des ressources déjà en ma possession (achetées ou gratuites) et je ne peux pas les redistribuer.
 
 ##### Devlogs :
 *Cette phase est en cours. Les devlogs seront publiés dès qu’ils seront disponibles.*
@@ -178,7 +181,7 @@ Idéalement, cette démo sera elle aussi open-source et fera office de projet d�
 *Cette phase n'a pas encore commencé*
 
 ## Conclusion :
-Je suis conscient que, tel que je le présente ici, OpenRE n’apparaît pas comme une solution universelle qui conviendra à tout les projets. Le workflow reposant sur deux logiciels distincts est atypique, et la perte de compatibilité avec certaines fonctionnalités graphiques natives de Godot pourrait en effrayer plus d'un. Mais il faut bien commencer quelque part et pour maximiser mes chances d'aller au bout de l'aventure, je choisi d’avancer progressivement et de manière pragmatique, étape par étape.
+Je suis conscient que, tel que je le présente ici, OpenRE n’apparaît pas comme une solution universelle qui conviendra à tout les projets. Le workflow reposant sur deux logiciels distincts est atypique, et la perte de compatibilité avec certaines fonctionnalités graphiques natives de Godot pourrait en effrayer plus d'un. Mais il faut bien commencer quelque part et pour maximiser mes chances d'aller au bout de l'aventure, je choisi d’avancer de manière pragmatique.
 
 Pour l’instant, cette technologie répond avant tout à mes propres besoins et ambitions créatives. Cela dit, j’espère sincèrement qu'OpenRE – et peut-être les jeux que je créerai avec – pourra inspirer d’autres créateurs. J'aimerais montrer que cette technique souvent délaissée, peut encore aujourd’hui produire des expériences mémorables et mérite d’être revisitée.
 
