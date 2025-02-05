@@ -6,11 +6,9 @@ title = 'OpenRE (Open Retro Engine)'
 description = 'Page de presentation du projet OpenRE'
 +++
 ## Introduction
-Si vous avez lu [cet article](/posts/i_love_fixed_cams), vous savez déjà que  j’ai un faible pour les jeux vidéos en caméras fixes. Ce genre, emblématique de la fin des années 90, m'a toujours fasciné. Si cela ne vous évoquent pas grand-chose, ou si vous êtes simplement curieux de découvrir ce qui les rend si uniques à mes yeux, je vous invite à y jeter un œil.
+Lorsque j'ai voulu développer mon propre jeu en caméra fixe, j’ai rapidement réalisé une chose : les outils et ressources disponnibles sur le sujet sont rares. Certes, on trouve quelques tutoriels pour gérer les caméras ou implémenter les déplacements du joueur. Mais je n'ai pas trouvé de réponse à la question qui m'intéresse réèlement : *"Comment intégrer des éléments interactifs dans des décor pré-rendus ?"*
 
-Mais lorsque j'ai voulu développer mon propre jeu en caméra fixe, j’ai rapidement réalisé une chose : les outils et ressources disponnibles sur le sujet sont rares. Certes, on trouve quelques tutoriels pour gérer les caméras ou implémenter les déplacements du joueur. Mais je n'ai rien trouvé qui aide à relever le vrai défi de cette approche : *"Comment intégrer harmonieusement des éléments interactifs dans des décor précalculés ?"*
-
-C’est ce constat qui m’a conduit à créer OpenRE, une technologie libre et open-source conçue pour simplifier le développement de jeux en caméra fixe avec des arrière-plans précalculés. Ce projet me sert également de laboratoire pour explorer le potentiel de cette technique sur du matériel moderne. Mon objectif est de réduire l’écart visuel entre précalculés et temps réèl. Ces dissonances graphiques sont effectivement un peu difficile à accepter pour nos standards actuels. Elle trahisse le subterfuge et sont pour moi le principal obstacle à l'immersion.
+C’est de ce constat que m’est venue l'idée d'OpenRE. Il s'agit d'une technologie libre et open-source conçue pour simplifier le développement de jeux en caméra fixe avec des arrière-plans précalculés. Ce projet me sert également de laboratoire pour explorer le potentiel de cette technique sur du matériel moderne. Mon objectif est de réduire l’écart visuel entre précalculés et temps réèl. Ces dissonances graphiques sont effectivement un peu difficile à accepter pour nos standards actuels. Elle trahisse le subterfuge et sont pour moi le principal obstacle à l'immersion.
 
 <Freeze de vieux jeux caméra fixe>
 
@@ -50,7 +48,7 @@ De son côté, le monde interactif est implémenté dans Godot. Il comprend tout
 
 En pratique, ce monde sera relativement vide comparé au monde déterministe. En effet, dans la plupart des jeux, les éléments interactifs représentent une quantité de géométrie beaucoup moins importante que les environnements. Cela signifie que dans le cas général, les ressources graphiques sont majoritairement consommées par le monde déterministe. 
 
-OpenRE s'abstrait en grande partie de cette charge de calcul en déléguant le rendu de la partie déterministe à Blender. Ce qui libère d'autant plus de budget pour la partie interactive. On pourra donc se permettre une plus grande générosité sur les détails.
+OpenRE s'abstrait en grande partie de cette charge de calcul en précalculant la partie déterministe dans Blender (c'est là tout le principe). Cela libère les ressources pour la partie interactive, nous permettant d'être plus généreux en détails et effets visuels.
 
 #### La fusion des mondes :
 Nous avont donc un monde déterministe et un monde intéractif qui vivent dans leur environnement respectif. Il est temps de les faire cohabiter. Pour cela, chaque point de vue du jeu est materialisé par un duo de caméras :
@@ -89,7 +87,7 @@ Pour fusionner les mondes, OpenRE reprend le principe du deffered rendering. Cet
 - **1. geometry pass :** cette première étape vise à produire une collection de textures qu'on appel le G-Buffer (Geometry Buffer). Ces textures encodent dans leur chanels RGB des donnée décrivant les propriétés géométriques de la scène en *screen space* (position, normal, albedo etc...).
 - **2. deffered shading pass :** pour obtenir l'image final, il suffit alors d'accumuler les contributions lumineuse de la scène sur chaque pixel. Ce qui n'est pas très compliqué étant donné que le G-Buffer nous fourni toutes les données nécessaires en chaque point de l'écran.
 
-<schéma général du deferred>
+![Schema illustrant le fonctionnement d'un deferred renderer](images/deferred_schema_arrows.opti.webp)
 
 Comme évoqué dans la partie précendente, OpenRE sépare la scène en deux parties distinctes. Pour rendre une frame, OpenRE aura besoin d'un G-Buffer pour chacune de ces parties. On aura donc :
 - le G-Buffer intéractif qui sera construit à la volée dans Godot 
@@ -172,7 +170,7 @@ Dans un premier temps, je n'accepterai probablement pas de contributions spontan
 #### Une Démo Jouable
 Pour montrer ce qu’OpenRE permet de réaliser, je compte créer une petite démo jouable. Ce projet servira de cas pratique pour éprouver l'ergonomie et la fiabilité du SDK, tout en illustrant ses capacités en situation réelle.
 
-Si vous avez lu l'article mentionné dans l’introduction, vous savez que pour moi la caméra fixe dépasse largement le cadre du survival-horror. J’aimerais beaucoup qu’OpenRE soit utilisé dans d’autres types de jeux, voir même dans des propositions vidéoludiques nouvelles. Mais je ne suis pas game designer, il est donc plus raisonnable pour moi de m’appuyer sur des codes bien établis. Je vais donc jouer la sécurité et rester sur un survival-horror classic.
+Si vous avez lu [cet article](/posts/i_love_fixed_cams), vous savez que pour moi la caméra fixe dépasse largement le cadre du survival-horror. J’aimerais beaucoup qu’OpenRE soit utilisé dans d’autres types de jeux, voir même dans des propositions vidéoludiques nouvelles. Mais je ne suis pas game designer, il est donc plus raisonnable pour moi de m’appuyer sur des codes bien établis. Je vais donc jouer la sécurité et rester sur un survival-horror classic.
 
 Idéalement, cette démo sera elle aussi open-source et fera office de projet d’exemple. Mais là encore, des contraintes liées aux droits d’utilisation des assets pourraient compliquer les choses. Je ne peux donc rien promettre mais quoi qu’il arrive, une version sera mise à disposition gratuitement sur [ma page itch.io](https://jponzo.itch.io/)
 
@@ -182,8 +180,8 @@ Idéalement, cette démo sera elle aussi open-source et fera office de projet d�
 ## Conclusion :
 Je suis conscient que, tel que je le présente ici, OpenRE n’apparaît pas comme une solution universelle qui conviendra à tout les projets. Le workflow reposant sur deux logiciels distincts est atypique, et la perte de compatibilité avec certaines fonctionnalités graphiques natives de Godot pourrait en effrayer plus d'un. Mais il faut bien commencer quelque part et pour maximiser mes chances d'aller au bout de l'aventure, je choisi d’avancer progressivement et de manière pragmatique, étape par étape.
 
-Pour l’instant, cette technologie répond avant tout à mes propres besoins et ambitions créatives. Cela dit, j’espère sincèrement qu'OpenRE – et peut-être les jeux que je créerai avec – pourra inspirer d’autres créateurs. J'aimerais montrer que cette technique souvent délaissée, peut encore aujourd’hui produire des expériences mémorables et mérite d’être explorée, voire réinventée.
+Pour l’instant, cette technologie répond avant tout à mes propres besoins et ambitions créatives. Cela dit, j’espère sincèrement qu'OpenRE – et peut-être les jeux que je créerai avec – pourra inspirer d’autres créateurs. J'aimerais montrer que cette technique souvent délaissée, peut encore aujourd’hui produire des expériences mémorables et mérite d’être revisitée.
 
 Si le projet suscite de l’intérêt et rassemble une communauté, je serais ravi de l'enrichir, de l’adapter à d’autres usages, et à d'autre façons de travailler plus conventionnelles. Mais pour avancer dans cette direction, vos retours sont indispensables. Qu’est-ce qui vous attire dans OpenRE ? Quelles limitations pourraient freiner votre envie de l’utiliser ? Y a-t-il des fonctionnalités spécifiques qui vous manquent ? Ou, au contraire, peut être pensez vous déjà pouvoir en faire quelque chose ? N’hésitez pas à partager vos impressions dans les commentaires.
 
-En conclusion, je dirais que ce projet est pour moi une façon de rendre hommage à un genre vidéoludique qui m’a profondément marqué en tant que joueur et qui me manque beaucoup aujourd'hui. Si OpenRE ne trouve qu’une petite audience ou même si je reste son unique utilisateur, je serai tout de même fier d’avoir contribué, à ma façon, à faire vivre cet art sous-estimé qu’est la caméra fixe. Et si ce que je partage sur ce blog ou ailleurs peut encourager d’autres personnes à explorer cette voie, cette aventure sera pour moi un succès.
+En conclusion, je dirais que ce projet est pour moi une façon de rendre hommage à un genre vidéoludique qui m’a profondément marqué en tant que joueur et qui me manque beaucoup aujourd'hui. Si OpenRE ne trouve qu’une petite audience ou même si je reste son unique utilisateur, je serai tout de même fier d’avoir contribué, à ma façon, à faire vivre cet art sous-estimé qu’est la caméra fixe. Et si ce que je partage sur ce blog ou ailleurs peut encourager d’autres personnes à explorer cette voie, cette aventure sera pour moi un réèl succès.
