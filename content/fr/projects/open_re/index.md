@@ -8,14 +8,14 @@ description = 'Page de presentation du projet OpenRE'
 ## Introduction
 Lorsque j'ai voulu développer mon propre jeu en caméra fixe, j’ai rapidement réalisé une chose : les outils et ressources disponnibles sur le sujet sont rares. Certes, on trouve quelques tutoriels pour gérer les caméras ou implémenter les déplacements du joueur. Mais je n'ai pas trouvé de réponse à la question qui m'intéresse réèlement : *"Comment intégrer des éléments interactifs dans des décor précalculés ?"*
 
-J'ai donc commencé à bricoler de mon côté pour trouver une solution à ce problème et je commence à avoir un début de résultat :
+J'ai donc commencé à bricoler de mon côté pour trouver une solution à ce problème et je pense avoir un début de réponse :
 {{< youtube ok0o0HhgfeY >}}
 
-Oui je sais, cette scène n'a aucun sens. Soyez indulgent, j'ai dis que ce n'était qu'un début. Et puis je trouve ces T-Poses magnifiques (pas vous ?). Plus serieusement, ce qu'il est important de noté dans cette vidéo, c'est que les seuls models rendus en temps réèl sont les personnages. Tout le reste - planché, murs, plafond, mobilier, props en tout genre - est en réalité une image précalculée.
+Oui je sais, cette scène n'a aucun sens. Soyez indulgent, j'ai dis que c'était un début. Et puis je trouve ces T-Poses magnifiques (pas vous ?). Plus serieusement, ce qu'il est important de noté dans cette vidéo, c'est que les seuls models rendus en temps réèl sont les personnages. Tout le reste - planché, murs, plafond, mobilier, props en tout genre - est en réalité une image précalculée.
 
-Si j'écris cet article aujourd'hui, c'est parce que je trouve ces résultat plutôt encourageant. J'ai donc naturellement envie de les partager et d'expliquer un peu comment ça fonctionne. Mais partant du constat que rien de semblable n'a l'aire d'éxiter, j'ai décider d'aller un peu plus loin. Plutôt que d'utiliser cette technologie directement dans mon jeu, je compte la développer à part et la rendre accessible sous licence open-source. Elle a donc besoin d'un nom, et ce nom c'est OpenRE pour *Open Retro Engine*.
+Si j'écris cet article aujourd'hui, c'est parce que je trouve ces résultat plutôt encourageant. J'ai donc naturellement envie de les partager et d'expliquer un peu comment ça fonctionne. Mais partant du constat que rien de semblable n'a l'aire d'éxiter, j'ai décider d'aller un peu plus loin. Plutôt que d'utiliser cette technologie directement dans mon jeu, je compte la développer à part et la rendre accessible sous licence open-source. Elle a donc besoin d'un nom, et ce nom sera OpenRE pour *Open Retro Engine*.
 
-Nous ne somme qu'au tout début du projet. Il y a encore beaucoup de zones d'ombre, et beaucoup de choses sont suceptible de changer d'ici à ce qu'on ai une première version utilisable. Ne prenez donc pas ce qui suit comme des promesses, mais comme une présentation de comment j'enviseage les choses à l'heure actuelle. Je posterai régulièrement des devlogs pour partager mes avancées, mes échecs (parce qu’il y en aura !), et mes réflexions. Si vous aimez suivre les projets en coulisses, j’espère que cette aventure vous passionnera autant que moi !
+Nous ne somme qu'au tout début du projet. Il y a encore beaucoup de zones d'ombre, et beaucoup de choses sont suceptible de changer d'ici la première version utilisable. Ne prenez donc pas ce qui suit comme des promesses, mais plutôt comme le point de départ d'une idée qui va progressivement se définir et se stabiliser. Je posterai régulièrement des devlogs pour partager mes avancées, mes échecs (parce qu’il y en aura !), et les éventuels changements de direction. Si vous aimez suivre les projets en coulisses, j’espère que cette aventure vous passionnera autant que moi !
 
 ## Part I : Environnement technique :
 OpenRE repose sur deux outils que vous connaissez sûrement :
@@ -38,9 +38,9 @@ OpenRE repose sur une séparation du monde en deux parties bien distinctes. Et p
 #### Le monde déterministe (Blender) :
 Le monde *déterministe* est créé dans Blender. C'est de lui que seront tirés les arrière plans précalculés. On pourrait, de manière un peu reductrice, dire qu’il représente la partie *statique* de la scène. Je préfère éviter ce terme car il est déjà utilisé par les moteurs de jeu ce qui prète à confusion. De plus il n'est pas tout a fait exacte en l'occurence.
 
-En effet, ce n'est pas encore d'actualité, mais à l'avenir, OpenRE pourrait supporter des arrière plans animés. On pourrait alors imaginer des boucle dans lesquelles de la végétation ou des rideaux seraient agités par le vent. Ou encore des voitures qui circulent dans les rues la nuit illuminant les allentours à chaque passage. Parler d'éléments "statiques" dans ce context serait tout simplement incorrect.
+En effet, c'est totalement hors scope pour une V1. Mais il se pourrait qu'un jour, OpenRE supporte des arrière plans animés. On pourrait alors imaginer des petites boucle dans lesquelles le vent agite des rideaux ou de la vegétation. Ou encore des voitures qui circulent dans les rues la nuit, illuminant les allentours à chaque passage. Parler d'éléments "statiques" dans ce context serait tout simplement incorrect.
 
-Pour l'heure, le terme *déterministe* désignera effectivement ce que l'on qualifie de "statique" dans un moteur de jeu (architectures, meubles, objets inanimés, etc.). Mais cela pourrait englober bien plus dans le futur. La seule limite réèlement infranchissable, c'est que ce monde ne pourra jamais dépendre des actions du joueur ou d'éléments de gameplay aléatoirs. Car bien entandu, au moment de génèrer les arrière plans, ces évenements ne peuvent pas être connus.
+Pour l'heure, le terme *déterministe* désigne effectivement ce que l'on qualifie de "statique" dans un moteur de jeu (architectures, meubles, objets inanimés, etc.). Mais cela pourrait englober bien plus dans le futur. La seule limite réèlement infranchissable, c'est que ce monde ne pourra jamais dépendre des actions du joueur ou d'éléments de gameplay aléatoirs. Car bien entandu, au moment de génèrer les arrière plans, ces évenements ne sont pas encore connus.
 
 ![Monde déterministe édité dans Blender](images/blender-det-world.opti.webp)
 
@@ -51,7 +51,7 @@ De son côté, le monde interactif est implémenté dans Godot. Il comprend tout
 
 En pratique, ce monde sera relativement vide comparé au monde déterministe. En effet, dans la plupart des jeux, les éléments interactifs représentent une quantité de géométrie beaucoup moins importante que les environnements. Cela signifie que dans le cas général, les ressources graphiques sont majoritairement consommées par le monde déterministe. 
 
-OpenRE s'abstrait en grande partie de cette charge de calcul en précalculant la partie déterministe dans Blender (c'est là tout le principe). Cela libère les ressources pour la partie interactive, nous permettant d'être plus généreux en détails et effets visuels.
+OpenRE s'abstrait en grande partie de cette charge de calcul en précalculant la partie déterministe dans Blender (c'est là tout le principe). Cela devrait libérer pas mal de ressources pour la partie interactive. Théoriquement, nous pourront donc être plus généreux en détails, lumières et effets visuels.
 
 #### La fusion des mondes :
 Nous avont donc un monde déterministe et un monde intéractif qui vivent dans leur environnement respectif. Il est temps de les faire cohabiter. Pour cela, chaque point de vue du jeu est materialisé par un duo de caméras :
@@ -69,11 +69,12 @@ Notez que le 's' à "images" n'est pas une faute de frappe. L'arrière plan expo
 
 Ainsi lors de l'exectution, les caméra interactives seront en mesure de composer ce qu'elles capturent avec l'arrière plan associé. Sans intervention supplémentaire de la part de l'utilisateur, les deux monde seront fusionnés de manière quasi-indicernable : ils s'occluderont l'un l'autre naturellement et leur éclairage sera uniforme et cohérent.
 
+[TODO Refaire]
 ![Diagramme illustrant le fonctionnement général de OpenRE](images/OpenRE_diagram.webp)
 
-Evidement, il serait trop fastidieux d'effectuer toutes ces étapes à la main pour chauque point de vu à chaque fois que quelque chose change dans la scène. Pour que la technologie soit exploitable, OpenRE devra être capable d'automatiser tout cela.
+Evidement, il serait trop fastidieux d'effectuer toutes ces étapes à la main, pour chauque point de vu, à chaque fois que quelque chose change dans la scène. Pour que la technologie soit exploitable, OpenRE devra être capable d'automatiser tout cela.
 
-#### Limitations :
+#### Limitations : <TODO Réécrire>
 Malgré ses avantages, cette approche pourrait entraîner des incompatibilités avec certaines fonctionnalités graphiques natives de Godot. Le cas echéant, OpenRE proposera des solutions alternatives à travers son plugin. Vous pourrez notamment compter sur :
 - les types de lumières courrants (point, spot, directional)
 - un shader PBR opaque
@@ -111,14 +112,14 @@ Pour OpenRE, nous utiliserons bien sûr Cycles, afin de garantir une qualité vi
 | **ORM** 	| Regroupe des données additionnelles nécessaire au rendu PBR (Ambiant Occlusion, Roughtness, Metalness)	|  ![ORM map](images/D_ORM_square.opti.webp) |
 | **diverses maps d'illumination** 	| Information relative à la lumière	|  ![Collection de maps d'illumination](images/illuminationMaps.opti.webp) |
 
-Si vous savez ce que contient habituellement un G-Buffer, vous vous demandez peut être où est passée la map d'albedo ? Ou ce que peuvent bien être ces fameuses *diverses maps d'illumination* ?
-- 1. Le modèle d’illumination de Cycles est assez complexe. En sortie, on obtient neuf maps d'illumination différentes. En réalité, l’une de ces map correspond à l’albedo. Mais pour recomposer l’image finale, nous auront besoin des neuf.
+Si vous mangez du G-Buffer tous les matins au p'tit dej', vous vous demandez peut être où est passée la map d'albedo ? Ou à quoi correspondent ces fameuses *diverses maps d'illumination* ? Il faut savoir que le modèle de Cycles est plus complexe que ce à quoi le temps réèl nous a habitué. En sortie, on obtient neuf maps d'illumination différentes. En réalité, l’une de ces map correspond à l’albedo. Mais pour recomposer l’image finale, nous auront besoin des neuf.
 
+[TODO Refaire]
 ![Formule de recomposition de l'image générée par Cycle](images/cycle_recompose.opti.webp)
 
-- 2. On pourrait se contanter d'intégrer l'albedo mais il faudrait alors recalculer tout l'éclairage côté Godot. On perdrait à la fois la qualité visuelle de Cycles et énormement de temps de calcul. Les neuf maps sont donc intégrées au DG-Buffer pour permetre une recomposition directe lorsque c'est approprié (voire plus loin).
+On pourrait se contanter de n'intégrer que l'albedo au DG-Buffer. Mais il faudrait alors recalculer tout l'éclairage côté Godot. On perdrait à la fois la qualité visuelle de Cycles et énormement de temps de calcul. Les neuf maps sont donc exportées pour permettre une recomposition directe lorsque c'est approprié (voire plus loin).
 
-#### IG-Buffer : le G-Buffer du monde interactif
+#### IG-Buffer : le G-Buffer du monde interactif <TODO Réécrire>
 Si Godot implémentait un deferred renderer, on pourrait piocher les maps qui nous intéressent directement dans son G-Buffer. Mais malheureusement pour nous, le renderer officiel de Godot est un forward. Il n'y a donc pas de G-Buffer. 
 
 Il va falloir bricoler le nôtre, ce qui nécessitera peut-être de contourner une partie du système de rendu de Godot. Cette opération laissera probablement des sequelles. On pourrait notament casser la compatibilité avec certaines fonctionnalités graphiques natives. Difficile à ce stade de prévoire ce qui restera disponnible ou non. Cela dépendra de la solution que j'arriverai à mettre place pour construire le G-Buffer. Mais comme évoqué dans la partie II, des substitus seront implémentés dans OpenRE si des fonctionnalité importantes sont touchées.
@@ -129,6 +130,7 @@ Maintenant que nous disposons de nos G-Buffer, il n'y a plus qu'a calculer la lu
 ##### 1. Choix du G-Buffer :
 Une première question évidente se pose : "dans quel G-Buffer récupérer les données ?" C'est en réalité assez simple. La comparaison des Depth Maps nous permet de savoir quel monde occlude l'autre pour chaque pixel de l'écran. Il suffit donc de choisir le G-Buffer du monde qui est visible à la coordonnée du pixel considéré.
 
+[TODO Ajouter légende]
 ![Visuel de debug illustrand l'occlusion mutuelle des mondes](images/cigar_room_loop_worlds_occlusion_debug_with_ref.webp)
 
 ##### 2. Différents modes de calcul de la lumière :
@@ -141,6 +143,7 @@ Le second point est un peu plus subtile. Je ne l'ai pas précisé jusqu'ici, mai
 | **Lumière Déterministe** 	| <span style="color:green;">Recomposition des maps de Cycles</span>  							|  <span style="color:red;">Deferred Shading</span> |
 | **Lumière Interactive** 	| <span style="color:yellow;">Recomposition des maps de Cycles <br> + Deferred Shading</span>	|  <span style="color:red;">Deferred Shading</span> |
 
+[TODO Recaputurer avec les bonnes couleurs]
 ![Visuel de debug illustrant les différents modes de calcul de la lumière](images/cigar_room_loop_light_modes_debug_with_ref.webp)
 
 ## Part IV : Phases de développement
