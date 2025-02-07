@@ -264,19 +264,20 @@ stroke-linejoin="round" class="feather feather-home">
 </ol>
 </li>
 </ul>
-<p>Notez que le &rsquo;s&rsquo; à &ldquo;images&rdquo; n&rsquo;est pas une faute de frappe. L&rsquo;arrière plan exporté ne sera pas directement le rendu final. En effet, ce dernier sera décomposé en une serie d&rsquo;images représentant chacune des données spécifiques : profondeur, normales, couleur etc.</p>
-<p>Ainsi lors de l&rsquo;exectution, les caméra interactives seront en mesure de composer ce qu&rsquo;elles capturent avec ces données. Sans intervention supplémentaire de la part de l&rsquo;utilisateur, les deux monde seront fusionnés de manière quasi-indicernable : ils s&rsquo;occluderont l&rsquo;un l&rsquo;autre naturellement et leur éclairage sera uniforme et cohérent.</p>
+<p>Notez que le &rsquo;s&rsquo; à &ldquo;images&rdquo; n&rsquo;est pas une faute de frappe. L&rsquo;arrière plan exporté ne sera pas directement le rendu final. En effet, ce dernier sera décomposé en une serie d&rsquo;images représentant chacune des données spécifiques : profondeur, normales, couleur etc. Sous cette forme, ils sera possible de composer l&rsquo;arrière plan avec ce que la caméra filme en temps réèl. Sans intervention supplémentaire de la part de l&rsquo;utilisateur, les deux monde seront alors fusionnés de manière quasi-indicernable : ils s&rsquo;occluderont l&rsquo;un l&rsquo;autre naturellement et leur éclairage sera uniforme et cohérent.</p>
 <p><img src="/projects/open_re/images/OpenRE_diagram.webp" alt="Diagramme illustrant le fonctionnement général de OpenRE"></p>
 <p>Evidement, il serait trop fastidieux d&rsquo;effectuer toutes ces étapes à la main, pour chauque point de vu, à chaque fois que quelque chose change dans la scène. Pour que la technologie soit exploitable, OpenRE devra être capable d&rsquo;automatiser tout cela.</p>
 <h4 id="limitations--todo-réécrire">Limitations : &lt;TODO Réécrire&gt;</h4>
-<p>Malgré ses avantages, cette approche pourrait entraîner des incompatibilités avec certaines fonctionnalités graphiques natives de Godot. Le cas echéant, OpenRE proposera des solutions alternatives à travers son plugin. Vous pourrez notamment compter sur :</p>
+<p>L&rsquo;implémentation actuelle présente malheureusement des limitations assez lourdes. En effet, je bypass presque completement le système de rendu de Godot en m&rsquo;appuyant sur un shader custom. Cela signifie qu&rsquo;en l&rsquo;état, les features graphiques natives ne sont pas utilisable. Tout doit être réimplémenté côté OpenRE. Pour l&rsquo;instant, le monde intéractif ne peut beneficier que de :</p>
 <ul>
-<li>les types de lumières courrants (point, spot, directional)</li>
-<li>un shader PBR opaque</li>
-<li>la compatibilité avec le système d&rsquo;UI de Godot</li>
-<li>la compatibilité partielle avec le système de particules de Godot</li>
-<li>des ombres dynamiques</li>
-<li>un support partiel de la transparence</li>
+<li>8 points lights basiques (couleur, intensité)</li>
+<li>8 spot lights basiques (couleur, intensité, angle)</li>
+<li>4 ombres dynamiques (appliquable sur les spot lights uniquement)</li>
+<li>1 unique shader PBR opaque</li>
+</ul>
+<p>C&rsquo;est bien entandu trop peu pour faire un jeu complet. Mais le combat continue ! Mes prochains sujets sont :</p>
+<ul>
+<li>Un support</li>
 </ul>
 <h2 id="part-iii--détails-techniques-">Part III : Détails Techniques :</h2>
 <p>Maintenant nous allons mettre les mains dans le cambouis ! Si vous aimez les détails techniques, cette partie est faite pour vous. Mais sachez qu&rsquo;elle est optionnelle. Elle s&rsquo;adresse à ceux qui souhaite comprendre un peu mieux ce qui se passe sous le capot. Si vous aborder OpenRE d&rsquo;un point de vu utilisateur ce n&rsquo;est peut-être pas votre cas. J&rsquo;ai essayé de la rendre le plus abordable possible, mais n&rsquo;hésitez pas à passer directement à la partie IV si vous ne trouvez pas ça interessant.</p>

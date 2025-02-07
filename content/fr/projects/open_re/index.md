@@ -65,22 +65,21 @@ Pour chacun de ces couples, il faudra ensuite :
 - 2. Exporter l'arrière plan sous forme d'images
 - 3. Importer l'arrière plan dans Godot et l'associer à la caméra interactive correspondante.
 
-Notez que le 's' à "images" n'est pas une faute de frappe. L'arrière plan exporté ne sera pas directement le rendu final. En effet, ce dernier sera décomposé en une serie d'images représentant chacune des données spécifiques : profondeur, normales, couleur etc.
-
-Ainsi lors de l'exectution, les caméra interactives seront en mesure de composer ce qu'elles capturent avec ces données. Sans intervention supplémentaire de la part de l'utilisateur, les deux monde seront fusionnés de manière quasi-indicernable : ils s'occluderont l'un l'autre naturellement et leur éclairage sera uniforme et cohérent.
+Notez que le 's' à "images" n'est pas une faute de frappe. L'arrière plan exporté ne sera pas directement le rendu final. En effet, ce dernier sera décomposé en une serie d'images représentant chacune des données spécifiques : profondeur, normales, couleur etc. Sous cette forme, ils sera possible de composer l'arrière plan avec ce que la caméra filme en temps réèl. Sans intervention supplémentaire de la part de l'utilisateur, les deux monde seront alors fusionnés de manière quasi-indicernable : ils s'occluderont l'un l'autre naturellement et leur éclairage sera uniforme et cohérent.
 
 ![Diagramme illustrant le fonctionnement général de OpenRE](images/OpenRE_diagram.webp)
 
 Evidement, il serait trop fastidieux d'effectuer toutes ces étapes à la main, pour chauque point de vu, à chaque fois que quelque chose change dans la scène. Pour que la technologie soit exploitable, OpenRE devra être capable d'automatiser tout cela.
 
 #### Limitations : <TODO Réécrire>
-Malgré ses avantages, cette approche pourrait entraîner des incompatibilités avec certaines fonctionnalités graphiques natives de Godot. Le cas echéant, OpenRE proposera des solutions alternatives à travers son plugin. Vous pourrez notamment compter sur :
-- les types de lumières courrants (point, spot, directional)
-- un shader PBR opaque
-- la compatibilité avec le système d'UI de Godot
-- la compatibilité partielle avec le système de particules de Godot
-- des ombres dynamiques
-- un support partiel de la transparence
+L'implémentation actuelle présente malheureusement des limitations assez lourdes. En effet, je bypass presque completement le système de rendu de Godot en m'appuyant sur un shader custom. Cela signifie qu'en l'état, les features graphiques natives ne sont pas utilisable. Tout doit être réimplémenté côté OpenRE. Pour l'instant, le monde intéractif ne peut beneficier que de :
+- 8 points lights basiques (couleur, intensité)
+- 8 spot lights basiques (couleur, intensité, angle)
+- 4 ombres dynamiques (appliquable sur les spot lights uniquement)
+- 1 unique shader PBR opaque
+
+C'est bien entandu trop peu pour faire un jeu complet. Mais le combat continue ! Mes prochains sujets sont :
+- Un support
 
 ## Part III : Détails Techniques :
 Maintenant nous allons mettre les mains dans le cambouis ! Si vous aimez les détails techniques, cette partie est faite pour vous. Mais sachez qu'elle est optionnelle. Elle s'adresse à ceux qui souhaite comprendre un peu mieux ce qui se passe sous le capot. Si vous aborder OpenRE d'un point de vu utilisateur ce n'est peut-être pas votre cas. J'ai essayé de la rendre le plus abordable possible, mais n'hésitez pas à passer directement à la partie IV si vous ne trouvez pas ça interessant.
