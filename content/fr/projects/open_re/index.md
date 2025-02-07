@@ -69,7 +69,6 @@ Notez que le 's' à "images" n'est pas une faute de frappe. L'arrière plan expo
 
 Ainsi lors de l'exectution, les caméra interactives seront en mesure de composer ce qu'elles capturent avec ces données. Sans intervention supplémentaire de la part de l'utilisateur, les deux monde seront fusionnés de manière quasi-indicernable : ils s'occluderont l'un l'autre naturellement et leur éclairage sera uniforme et cohérent.
 
-[TODO Refaire]
 ![Diagramme illustrant le fonctionnement général de OpenRE](images/OpenRE_diagram.webp)
 
 Evidement, il serait trop fastidieux d'effectuer toutes ces étapes à la main, pour chauque point de vu, à chaque fois que quelque chose change dans la scène. Pour que la technologie soit exploitable, OpenRE devra être capable d'automatiser tout cela.
@@ -114,7 +113,6 @@ Pour OpenRE, nous utiliserons bien sûr Cycles, afin de garantir une qualité vi
 
 Si vous mangez du G-Buffer tous les matins au p'tit dej', vous vous demandez peut être où est passée la map d'albedo ? Ou à quoi correspondent ces fameuses *diverses maps d'illumination* ? Il faut savoir que le modèle de Cycles est plus complexe que ce à quoi le temps réèl nous a habitué. En sortie, on obtient neuf maps d'illumination différentes. En réalité, l’une de ces map correspond à l’albedo. Mais pour recomposer l’image finale, nous auront besoin des neuf.
 
-[TODO Refaire]
 ![Formule de recomposition de l'image générée par Cycle](images/cycle_recompose.opti.webp)
 
 On pourrait se contanter de n'intégrer que l'albedo au DG-Buffer. Mais il faudrait alors recalculer tout l'éclairage côté Godot. On perdrait à la fois la qualité visuelle de Cycles et énormement de temps de calcul. Les neuf maps sont donc exportées pour permettre une recomposition directe lorsque c'est approprié (voire plus loin).
