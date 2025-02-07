@@ -65,9 +65,9 @@ Pour chacun de ces couples, il faudra ensuite :
 - 2. Exporter l'arrière plan sous forme d'images
 - 3. Importer l'arrière plan dans Godot et l'associer à la caméra interactive correspondante.
 
-Notez que le 's' à "images" n'est pas une faute de frappe. L'arrière plan exporté ne sera pas l'image final. Le rendu sera décomposé en une serie d'images représentant chacune des données spécifiques : profondeur, normales, couleur etc.
+Notez que le 's' à "images" n'est pas une faute de frappe. L'arrière plan exporté ne sera pas directement le rendu final. En effet, ce dernier sera décomposé en une serie d'images représentant chacune des données spécifiques : profondeur, normales, couleur etc.
 
-Ainsi lors de l'exectution, les caméra interactives seront en mesure de composer ce qu'elles capturent avec l'arrière plan associé. Sans intervention supplémentaire de la part de l'utilisateur, les deux monde seront fusionnés de manière quasi-indicernable : ils s'occluderont l'un l'autre naturellement et leur éclairage sera uniforme et cohérent.
+Ainsi lors de l'exectution, les caméra interactives seront en mesure de composer ce qu'elles capturent avec ces données. Sans intervention supplémentaire de la part de l'utilisateur, les deux monde seront fusionnés de manière quasi-indicernable : ils s'occluderont l'un l'autre naturellement et leur éclairage sera uniforme et cohérent.
 
 [TODO Refaire]
 ![Diagramme illustrant le fonctionnement général de OpenRE](images/OpenRE_diagram.webp)
@@ -149,19 +149,19 @@ Le second point est un peu plus subtile. Je ne l'ai pas précisé jusqu'ici, mai
 ## Part IV : Phases de développement
 
 #### Proof of Concept (POC)
-Le but de cette première étape est de débrousailler le terrain pour se faire une première idée du potentiel d'OpenRE. On cherche à évaluer ce qui est possible et les résultats que l'on peut espérer. L'important ici n'est pas l'optimisation ou l'élegance du code. On cherche simplement à identifier les verroux techniques et on s'assure qu'il est possible de les faire sauter (à grand coup de débrouille et d'improvisation si il le faut).
+Le but de cette première étape est de débrousailler le terrain pour me faire une première idée du potentiel d'OpenRE. J'ai déjà pas mal avancé là dessus, les images de la scène d'exemple que vous pouvez voire dans cet article sont issues de ce POC. Mon objectif ici n'est pas l'optimisation ou l'élegance du code. Je cherche simplement à identifier les verroux techniques et à m'assurer qu'il est possible de les faire sauter (à grand coup de débrouille et d'improvisation la plupart du temps).
 
 Lorsque j'aurais une vision suffisament claire du projet et que j'aurai levé les doutes quant à sa faisabilité, ce code sera mis au placard et je repartirai d'une feuille blanche. Ce n’est qu’à ce moment-là que je me préocuperai de la qualité, de la performance et de l’ergonomie.
 
-Le dépôt de ce POC ne sera malheureusement pas public. De toutes façons, la codebase sera affreuse et vous n'aurez pas envie de mettre le nez dedans, mais ce n'est pas la raison principale. En réalité, pour juger les capacités de rendu d'OpenRE, j'aurais besoin d'assets de qualité et cohérents entre eux.  Trouver de tels assets libres de droits et dans un délai raisonnable serait un vrai casse tête. Je vais donc utiliser des ressources déjà en ma possession (achetées ou gratuites) et je ne peux pas les redistribuer.
+Le dépôt de ce POC ne sera malheureusement pas public. De toutes façons, la codebase est affreuse. Je vous assure, vous n'avez pas envie de mettre le nez dedans. Mais ce n'est pas la raison principale. En réalité, pour juger les capacités de rendu d'OpenRE, j'ai besoin d'assets de qualité et cohérents entre eux.  Trouver de tels assets libres de droits et dans un délai raisonnable serait un vrai casse tête. J'utilise donc des ressources déjà en ma possession (achetées ou gratuites) et je ne peux pas les redistribuer.
 
 ##### Devlogs :
 *Cette phase est en cours. Les devlogs seront publiés dès qu’ils seront disponibles.*
 
 #### Le SDK
-C'est ici que les choses serieuses commenceront. L'enjeu étant de faire passer OpenRE du stade de prototype informe à quelque chose de réèlement utilisable. Si tout ce passe comme prévue, à l'issue de cette phase nous auront un SDK fonctionnel et suffisement documenté pour être utilisé dans de vrai projets.
+C'est ici que les choses serieuses commenceront. L'enjeu étant de faire passer OpenRE d'un prototype un peu bancale à quelque chose de réèlement utilisable. Si tout se passe comme prévue, à l'issue de cette phase nous auront un SDK fonctionnel et suffisement documenté pour être utilisé dans de vrai projets.
 
-A l'heure ou j'écris ces lignes, le POC est bien avancé mais pas encore terminé. Certains détails restent donc à préciser mais le SDK devrait inclure :
+Le POC n'étant pas tout à fait terminé je ne suis pas encore certain de ce que le SDK incluera. Mais on se dirige apriorie vers :
 - un addon Blender
 - un addon Godot
 - des scripts & utilitaires complémentaires
