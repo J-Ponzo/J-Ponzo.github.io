@@ -24,7 +24,7 @@ OpenRE repose sur deux outils que vous connaissez sûrement :
 
 La maturité et la popularité de ces deux logiciels en font des choix solides. Ils sont aussi open-source, ce qui s'aligne parfaitement avec la philosophie d'OpenRE : promouvoir une technologie accessible et ouverte à tous. L’open-source offre également une certaine sécurité qu'il est impossible d'avoir avec des solutions propriétaires. En effet, comme le rappellent certains evenements récents, placer son capital technologique entre les mains d'une entreprise à but lucratif n'est pas sans risques.
 
-Sur le plan pratique, Blender et Godot se complètent très bien. Godot prend en charge nativement les scènes créées dans Blender, ce qui simplifie la synchronisation entre les deux environnements. Cette compatibilité devrait nous aider réduire les manipulations fastidieuses et sources d'erreur.
+Sur le plan pratique, Blender et Godot se complètent très bien. Godot prend en charge nativement les scènes créées dans Blender, ce qui simplifie la synchronisation entre les deux environnements. Cette compatibilité devrait nous aider à réduire la quantité nécessaire de manipulations fastidieuses et sources d'erreur.
 
 ![Même "Epic Handshake" illustrant que Godo + Blender = un monde meilleur](images/handshake.opti.webp)
 
@@ -38,11 +38,11 @@ OpenRE repose sur une séparation du monde en deux parties bien distinctes. Et p
 #### Le monde déterministe (Blender) :
 Le monde *déterministe* est créé dans Blender. C'est de lui que seront tirés les arrière plans précalculés. On pourrait, de manière un peu reductrice, dire qu’il représente la partie *statique* de la scène. Je préfère éviter ce terme car il est déjà utilisé par les moteurs de jeu ce qui prète à confusion. De plus il n'est pas tout a fait exacte en l'occurence.
 
+![Monde déterministe édité dans Blender](images/blender-det-world.opti.webp)
+
 En effet, c'est totalement hors scope pour une V1. Mais il se pourrait qu'un jour, OpenRE supporte des arrière plans animés. On pourrait alors imaginer des petites boucle dans lesquelles le vent agite des rideaux ou de la vegétation. Ou encore des voitures qui circulent dans les rues la nuit, illuminant les allentours à chaque passage. Parler d'éléments "statiques" dans ce context serait tout simplement incorrect.
 
 Pour l'heure, le terme *déterministe* désigne effectivement ce que l'on qualifie de "statique" dans un moteur de jeu (architectures, meubles, objets inanimés, etc.). Mais cela pourrait englober bien plus dans le futur. La seule limite réèlement infranchissable, c'est que ce monde ne pourra jamais dépendre des actions du joueur ou d'éléments de gameplay aléatoirs. Car bien entandu, au moment de génèrer les arrière plans, ces évenements ne sont pas encore connus.
-
-![Monde déterministe édité dans Blender](images/blender-det-world.opti.webp)
 
 #### Le monde intéractif (Godot) :
 De son côté, le monde interactif est implémenté dans Godot. Il comprend tout ce qui relève du gameplay : personnages, véhicules contrôlables, objets manipulables, etc. Là encore, j’évite de le qualifier de *dynamique* pour éviter la confusion avec la terminologie des moteurs de jeu.
@@ -71,15 +71,18 @@ Notez que le 's' à "images" n'est pas une faute de frappe. L'arrière plan expo
 
 Evidement, il serait trop fastidieux d'effectuer toutes ces étapes à la main, pour chauque point de vu, à chaque fois que quelque chose change dans la scène. Pour que la technologie soit exploitable, OpenRE devra être capable d'automatiser tout cela.
 
-#### Limitations : <TODO Réécrire>
-L'implémentation actuelle présente malheureusement des limitations assez lourdes. En effet, je bypass presque completement le système de rendu de Godot en m'appuyant sur un shader custom. Cela signifie qu'en l'état, les features graphiques natives ne sont pas utilisable. Tout doit être réimplémenté côté OpenRE. Pour l'instant, le monde intéractif ne peut beneficier que de :
+#### Limitations :
+L'implémentation actuelle présente malheureusement des limitations assez lourdes. En effet, je bypass presque completement le système de rendu de Godot en m'appuyant sur un post-process custom pour rendre les lumières. Cela signifie qu'en l'état, les features graphiques natives ne sont pas utilisable. Tout doit être réimplémenté dans le shader du post-process. En conséquences, le monde intéractif ne peut pour l'instant beneficier que de :
 - 8 points lights basiques (couleur, intensité)
 - 8 spot lights basiques (couleur, intensité, angle)
 - 4 ombres dynamiques (appliquable sur les spot lights uniquement)
 - 1 unique shader PBR opaque
 
-C'est bien entandu trop peu pour faire un jeu complet. Mais le combat continue ! Mes prochains sujets sont :
-- Un support
+C'est bien entandu trop peu pour faire un jeu complet. Mais le combat continue ! J'ai notament l'intention d'ajouter :
+- 1 directionnal light basique (couleur, intensité)
+- la compatibilité des ombres dynamiques avec tout les types de lumière
+- un support des particules natives de Godot (un peu flou à l'heure actuel, mais je vois mal comment on pourrait faire l'impasse là dessus)
+- une solution pour implémenter des reflets et de la transparence (encore plus flou)
 
 ## Part III : Détails Techniques :
 Maintenant nous allons mettre les mains dans le cambouis ! Si vous aimez les détails techniques, cette partie est faite pour vous. Mais sachez qu'elle est optionnelle. Elle s'adresse à ceux qui souhaite comprendre un peu mieux ce qui se passe sous le capot. Si vous aborder OpenRE d'un point de vu utilisateur ce n'est peut-être pas votre cas. J'ai essayé de la rendre le plus abordable possible, mais n'hésitez pas à passer directement à la partie IV si vous ne trouvez pas ça interessant.
@@ -91,11 +94,11 @@ Pour fusionner les mondes, OpenRE reprend le principe du deffered rendering. Cet
 
 ![Schema illustrant le fonctionnement d'un deferred renderer](images/deferred_schema_arrows.opti.webp)
 
-Comme évoqué dans la partie précendente, OpenRE sépare la scène en deux parties distinctes. Pour rendre une frame, OpenRE aura besoin d'un G-Buffer pour chacune de ces parties. On aura donc :
-- le G-Buffer intéractif qui sera construit à la volée dans Godot 
-- le G-Buffer déterministe qui aura été précalculé par Blender (la série d'images exportées vous vous rappellez ?). 
+Comme évoqué dans la partie précendente, OpenRE sépare la scène en deux parties distinctes. Pour rendre une frame, on aura donc besoin d'un G-Buffer pour chacune de ces parties :
+- le G-Buffer intéractif sera construit à la volée dans Godot 
+- le G-Buffer déterministe aura été précalculé par Blender (la série d'images exportées vous vous rappellez ?). 
 
-Les deux seront ensuite combinés et une passe de *deffered shading* classique (ou presque...) sera effectuée pour rendre les lumières.
+Les deux sont ensuite fournis au fameux post-process custom qui applique une passe de *deferred shading* classique (ou presque...) pour rendre les lumières.
 
 #### DG-Buffer : le G-Buffer du monde déterministe
 Blender dispose de deux moteurs de rendu :
@@ -103,8 +106,8 @@ Blender dispose de deux moteurs de rendu :
 - **Cycles** : Basé sur du *path-tracing*. Il produit des images photoréaliste mais le rendu prend un certain temps.
 
 Pour OpenRE, nous utiliserons bien sûr Cycles, afin de garantir une qualité visuelle maximale. Grâce au compositeur de Blender, le rendu pourra être décomposé en plusieurs textures qui constituront notre DG-Buffer :
-| 			 Map			| Description          									| Image     |
-| :------------------------: |:-------------------------------------------------------------| :-------------------:|
+|<div style="width:128px">Map</div>| Description          									|<div style="width:192px">Image</div>|
+|:------------------------:|:-------------------------------------------------------------|:-------------------:|
 | **Depth** 	| Encode la profondeur de chaque pixel. Permetra aux mondes de s'occluder correctement. La position du pixel sera également déduite de cette donnée. |  ![Depht map](images/D_Depth_square.opti.webp) |
 | **Normal** 	| Décrit l'orientation des surfaces. Cette donnée interviendra dans la calcul de l'éclairage	|  ![Normal map](images/D_Normal_square.opti.webp) |
 | **ORM** 	| Regroupe des données additionnelles nécessaire au rendu PBR (Ambiant Occlusion, Roughtness, Metalness)	|  ![ORM map](images/D_ORM_square.opti.webp) |
@@ -116,13 +119,23 @@ Si vous mangez du G-Buffer tous les matins au p'tit dej', vous vous demandez peu
 
 On pourrait se contanter de n'intégrer que l'albedo au DG-Buffer. Mais il faudrait alors recalculer tout l'éclairage côté Godot. On perdrait à la fois la qualité visuelle de Cycles et énormement de temps de calcul. Les neuf maps sont donc exportées pour permettre une recomposition directe lorsque c'est approprié (voire plus loin).
 
-#### IG-Buffer : le G-Buffer du monde interactif <TODO Réécrire>
+#### IG-Buffer : le G-Buffer du monde interactif
 Si Godot implémentait un deferred renderer, on pourrait piocher les maps qui nous intéressent directement dans son G-Buffer. Mais malheureusement pour nous, le renderer officiel de Godot est un forward. Il n'y a donc pas de G-Buffer. 
 
-Il va falloir bricoler le nôtre, ce qui nécessitera peut-être de contourner une partie du système de rendu de Godot. Cette opération laissera probablement des sequelles. On pourrait notament casser la compatibilité avec certaines fonctionnalités graphiques natives. Difficile à ce stade de prévoire ce qui restera disponnible ou non. Cela dépendra de la solution que j'arriverai à mettre place pour construire le G-Buffer. Mais comme évoqué dans la partie II, des substitus seront implémentés dans OpenRE si des fonctionnalité importantes sont touchées.
+Il va falloir bricoler le nôtre et pour cela on va utiliser des render targets. Si vous n'êtes pas familier avec le terme, c'est un système qui permet d'effecteur un rendu de la scène depuis une caméra, mais dans une texture plutôt qu'à l'écran directement. L'avantage c'est qu'on va pouvoir appliquer du post-process à cette texture et ainsi prendre la main sur la façon dont elle est rendu. 
+
+Pour construire notre IG-Buffer, on va donc créer une render target pour chacune des textures qui le compose. Et pour chacune de ces render targets, on écrira un post-process dédié qui sera chargé de rendre spécifiquement la donnée qui nous intéresse. 
+
+Cela peut parraitre un peu fastidieux mais ça ne l'est finalement pas tant que ça. Car en effet, je suis un peu malhonnète quand j'affirme que Godot n'a pas de G-Buffer dans lequel récupérer les informations. En réalité, le moteur expose nativement à ses shaders des textures contenant des données très proches de ce qu'on veut. La plupart du temps, le post-process tiendra en une ligne et se contantera de sampler l'une de ces textures.
+| 			 <div style="width:128px">Map</div>			| Description          									| <div style="width:256px"> Image  </div>|
+| :------------------------: |:-------------------------------------------------------------| :-------------------:|
+| **Depth** 	| On utilise la *depth_texture* fournie par Godot. Elle n'est pas rouge comme dans le DG-Buffer. La valeur est simplement dupliqué dans les 3 cannaux. Par contre elle n'a pas l'aire encodée de la même façon (le claire est proche et le sombre éloigné). Là c'est déjà plus gênant et on verra dans un devlog dédié que c'est en réalité encore pire. |  ![Depht map](images/I_depth_squared.opti.webp) |
+| **Normal** 	| Ici, c'est la *normal_roughness_texture* qu'on utilise (en ignorant simplement la roughness). Là encore l'encodage est différent. On y reviendra aussi dans un devlog, mais c'est moin complèxe que pour la depht. |  ![Normal map](images/I_normal_squared.opti.webp) |
+| **ORM** 	| Pour celle ci, Godot ne nous fourni pas ce qu'il faut. Un focus sur le bricolage associé aura lui aussi son devlog	|  ![ORM map](images/I_ORM_squared.opti.webp) |
+| **Albedo** 	| Celle là, c'est la plus facile. On affiche directement la *screen_texture* de Godot. Rien de plus à dire ici.	|  ![Collection de maps d'illumination](images/I_albedo_squared.opti.webp) |
  
 #### Calcul de l'éclairage
-Maintenant que nous disposons de nos G-Buffer, il n'y a plus qu'a calculer la lumière grâce à une passe de deferred shading. Mais la dualité du monde introduit quelques complications.
+Maintenant que nous disposons de nos G-Buffer, il n'y a plus qu'a calculer la lumière en post-process grâce à une passe de deferred shading. Mais la dualité du monde introduit quelques complications.
 
 ##### 1. Choix du G-Buffer :
 Une première question évidente se pose : "dans quel G-Buffer récupérer les données ?" C'est en réalité assez simple. La comparaison des Depth Maps nous permet de savoir quel monde occlude l'autre pour chaque pixel de l'écran. Il suffit donc de choisir le G-Buffer du monde qui est visible à la coordonnée du pixel considéré.
@@ -173,7 +186,7 @@ Dans un premier temps, je n'accepterai probablement pas de contributions spontan
 #### Une Démo Jouable
 Pour montrer ce qu’OpenRE permet de réaliser, je compte créer une petite démo jouable. Ce projet servira de cas pratique pour éprouver l'ergonomie et la fiabilité du SDK, tout en illustrant ses capacités en situation réelle.
 
-Si vous avez lu [cet article](/posts/i_love_fixed_cams), vous savez que pour moi la caméra fixe dépasse largement le cadre du survival-horror. J’aimerais beaucoup qu’OpenRE soit utilisé dans d’autres types de jeux, voir même dans des propositions vidéoludiques nouvelles. Mais je ne suis pas game designer, il est donc plus raisonnable pour moi de m’appuyer sur des codes bien établis. Je vais donc jouer la sécurité et rester sur un survival-horror classic.
+Si vous avez lu [cet article](/posts/i_love_fixed_cams), vous savez que pour moi la caméra fixe dépasse largement le cadre du survival-horror. J’aimerais beaucoup qu’OpenRE soit utilisé dans d’autres types de jeux, voir même dans des propositions vidéoludiques nouvelles. Mais je ne suis pas game designer, il est donc plus raisonnable pour moi de m’appuyer sur des codes bien établis que je connais déjà un peu. Je vais donc jouer la sécurité et rester sur un survival-horror classic.
 
 Idéalement, cette démo sera elle aussi open-source et fera office de projet d’exemple. Mais là encore, des contraintes liées aux droits d’utilisation des assets pourraient compliquer les choses. Je ne peux donc rien promettre mais quoi qu’il arrive, une version sera mise à disposition gratuitement sur [ma page itch.io](https://jponzo.itch.io/)
 
