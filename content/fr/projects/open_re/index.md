@@ -6,12 +6,12 @@ title = 'OpenRE (Open Retro Engine)'
 description = 'Page de presentation du projet OpenRE'
 +++
 ## Introduction
-Lorsque j'ai voulu développer mon propre jeu en caméra fixe, j’ai rapidement réalisé une chose : les outils et ressources disponnibles sur le sujet sont rares. Certes, on trouve quelques tutoriels pour gérer les caméras ou implémenter les déplacements du joueur. Mais je n'ai pas trouvé de réponse à la question qui m'intéresse réèlement : *"Comment intégrer des éléments interactifs dans des décor précalculés ?"*
+Lorsque j'ai cherché à développer mon propre jeu en caméra fixe, j’ai rapidement réalisé une chose : les outils et ressources disponnibles sur le sujet sont rares. Certes, on trouve quelques tutoriels pour gérer les caméras ou implémenter les déplacements du joueur. Mais je n'ai pas trouvé de réponse à la question qui m'intéresse réèlement : *"Comment intégrer des éléments interactifs dans des décor précalculés ?"*
 
 J'ai donc commencé à bricoler de mon côté pour trouver une solution à ce problème et je pense avoir un début de réponse :
 {{< youtube ok0o0HhgfeY >}}
 
-Oui je sais, cette scène n'a aucun sens. Soyez indulgent, j'ai dis que c'était un début. Et puis je trouve ces T-Poses magnifiques (pas vous ?). Plus serieusement, ce qu'il est important de noté dans cette vidéo, c'est que les seuls models rendus en temps réèl sont les personnages. Tout le reste - planché, murs, plafond, mobilier, props en tout genre - est en réalité une image précalculée.
+Bon, je sais, cette scène n'a aucun sens. Mais soyez indulgent, j'ai dis que c'était un début. Et puis je trouve ces T-Poses magnifiques (pas vous ?). Plus serieusement, ce qui est important dans cette vidéo, c'est que les seuls models 3D rendus en temps réèl sont les personnages. Tout le reste - planché, murs, plafond, mobilier, props en tout genre - est en réalité une image précalculée.
 
 Si j'écris cet article aujourd'hui, c'est parce que je trouve ces résultat plutôt encourageant. J'ai donc naturellement envie de les partager et d'expliquer un peu comment ça fonctionne. Mais partant du constat que rien de semblable n'a l'aire d'éxiter, j'ai décider d'aller un peu plus loin. Plutôt que d'utiliser cette technologie directement dans mon jeu, je compte la développer à part et la rendre accessible sous licence open-source. Elle a donc besoin d'un nom, et ce nom sera OpenRE pour *Open Retro Engine*.
 
@@ -24,7 +24,7 @@ OpenRE repose sur deux outils que vous connaissez sûrement :
 
 La maturité et la popularité de ces deux logiciels en font des choix solides. Ils sont aussi open-source, ce qui s'aligne parfaitement avec la philosophie d'OpenRE : promouvoir une technologie accessible et ouverte à tous. L’open-source offre également une certaine sécurité qu'il est impossible d'avoir avec des solutions propriétaires. En effet, comme le rappellent certains evenements récents, placer son capital technologique entre les mains d'une entreprise à but lucratif n'est pas sans risques.
 
-Sur le plan pratique, Blender et Godot se complètent très bien. Godot prend en charge nativement les scènes créées dans Blender, ce qui simplifie la synchronisation entre les deux environnements. Cette compatibilité devrait nous aider à réduire la quantité nécessaire de manipulations fastidieuses et sources d'erreur.
+Sur le plan pratique, Blender et Godot se complètent très bien. Godot prend en charge nativement les scènes créées dans Blender, ce qui simplifie la synchronisation entre les deux environnements. Cette compatibilité devrait nous aider à limiter les manipulations fastidieuses et sources d'erreur.
 
 ![Même "Epic Handshake" illustrant que Godo + Blender = un monde meilleur](images/handshake.opti.webp)
 
@@ -65,32 +65,32 @@ Pour chacun de ces couples, il faudra ensuite :
 - 2. Exporter l'arrière plan sous forme d'images
 - 3. Importer l'arrière plan dans Godot et l'associer à la caméra interactive correspondante.
 
-Notez que le 's' à "images" n'est pas une faute de frappe. L'arrière plan exporté ne sera pas directement le rendu final. En effet, ce dernier sera décomposé en une serie d'images représentant chacune des données spécifiques : profondeur, normales, couleur etc. Sous cette forme, ils sera possible de composer l'arrière plan avec ce que la caméra filme en temps réèl. Sans intervention supplémentaire de la part de l'utilisateur, les deux monde seront alors fusionnés de manière quasi-indicernable : ils s'occluderont l'un l'autre naturellement et leur éclairage sera uniforme et cohérent.
+Notez que le 's' à "images" n'est pas une faute de frappe. Nous n'exporteront pas directement le rendu final en un seul bloc. En effet, ce dernier sera décomposé en une serie d'images représentant chacune des données spécifiques : profondeur, normales, couleur etc. Sous cette forme, ils sera possible de composer l'arrière plan avec ce que la caméra filme en temps réèl. Sans intervention supplémentaire de la part de l'utilisateur, les deux monde seront alors fusionnés de manière quasi-indicernable : ils s'occluderont l'un l'autre naturellement et leur éclairage sera uniforme et cohérent.
 
 ![Diagramme illustrant le fonctionnement général de OpenRE](images/OpenRE_diagram.webp)
 
 Evidement, il serait trop fastidieux d'effectuer toutes ces étapes à la main, pour chauque point de vu, à chaque fois que quelque chose change dans la scène. Pour que la technologie soit exploitable, OpenRE devra être capable d'automatiser tout cela.
 
 #### Limitations :
-L'implémentation actuelle présente malheureusement des limitations assez lourdes. En effet, je bypass presque completement le système de rendu de Godot en m'appuyant sur un post-process custom pour rendre les lumières. Cela signifie qu'en l'état, les features graphiques natives ne sont pas utilisable. Tout doit être réimplémenté dans le shader du post-process. En conséquences, le monde intéractif ne peut pour l'instant beneficier que de :
+L'implémentation actuelle présente malheureusement des limitations assez lourdes. En effet, je bypass presque completement le système de rendu de Godot en m'appuyant sur un post-process custom pour incorporer l'arrière plan et rendre les lumières. Cela signifie qu'en l'état, les features graphiques natives ne sont pas utilisable. Tout doit être réimplémenté dans le shader du post-process. En conséquences, le monde intéractif ne peut pour l'instant beneficier que de :
 - 8 points lights basiques (couleur, intensité)
 - 8 spot lights basiques (couleur, intensité, angle)
 - 4 ombres dynamiques (appliquable sur les spot lights uniquement)
-- 1 unique shader PBR opaque
+- 1 unique material PBR opaque
 
 C'est bien entandu trop peu pour faire un jeu complet. Mais le combat continue ! J'ai notament l'intention d'ajouter :
 - 1 directionnal light basique (couleur, intensité)
 - la compatibilité des ombres dynamiques avec tout les types de lumière
-- un support des particules natives de Godot (un peu flou à l'heure actuel, mais je vois mal comment on pourrait faire l'impasse là dessus)
-- une solution pour implémenter des reflets et de la transparence (encore plus flou)
+- un support des particules natives de Godot (je ne sais pas exactement comment je vais m'y perendre, mais je vois mal comment on pourrait s'en passer)
+- une solution pour implémenter des reflets et de la transparence (encore plus flou à l'heure actuelle, mais ce serait bien d'avoir un support au moins partiel de ces effets)
 
 ## Part III : Détails Techniques :
 Maintenant nous allons mettre les mains dans le cambouis ! Si vous aimez les détails techniques, cette partie est faite pour vous. Mais sachez qu'elle est optionnelle. Elle s'adresse à ceux qui souhaite comprendre un peu mieux ce qui se passe sous le capot. Si vous aborder OpenRE d'un point de vu utilisateur ce n'est peut-être pas votre cas. J'ai essayé de la rendre le plus abordable possible, mais n'hésitez pas à passer directement à la partie IV si vous ne trouvez pas ça interessant.
 
 #### Un Deferred (presque) comme les autres
 Pour fusionner les mondes, OpenRE reprend le principe du deffered rendering. Cette technique consiste à séparer le rendu en deux passes :
-- **1. geometry pass :** cette première étape vise à produire une collection de textures qu'on appel le G-Buffer (Geometry Buffer). Ces textures encodent dans leur chanels RGB des donnée décrivant les propriétés géométriques de la scène en *screen space* (position, normal, albedo etc...).
-- **2. deffered shading pass :** pour obtenir l'image final, il suffit alors d'accumuler les contributions lumineuse de la scène sur chaque pixel. Ce qui n'est pas très compliqué étant donné que le G-Buffer nous fourni toutes les données nécessaires en chaque point de l'écran.
+- **1. geometry pass :** cette première étape vise à produire une collection de textures qu'on appel le G-Buffer (Geometry Buffer). Ces textures encodent dans leur chanels RGB des donnée décrivant les propriétés géométriques de la scène en *screen space* (position, normal, couleur etc...).
+- **2. deffered shading pass :** pour obtenir l'image final, il suffit alors d'accumuler les contributions lumineuse de la scène sur chaque pixel. Ce qui n'est pas très compliqué puisque le G-Buffer nous fourni toutes les données nécessaires au calcul en chaque point de l'écran.
 
 ![Schema illustrant le fonctionnement d'un deferred renderer](images/deferred_schema_arrows.opti.webp)
 
@@ -98,7 +98,7 @@ Comme évoqué dans la partie précendente, OpenRE sépare la scène en deux par
 - le G-Buffer intéractif sera construit à la volée dans Godot 
 - le G-Buffer déterministe aura été précalculé par Blender (la série d'images exportées vous vous rappellez ?). 
 
-Les deux sont ensuite fournis au fameux post-process custom qui applique une passe de *deferred shading* classique (ou presque...) pour rendre les lumières.
+Les deux seront ensuite fournis au fameux post-process custom qui appliquera une passe de *deferred shading* classique (ou presque...) pour rendre les lumières.
 
 #### DG-Buffer : le G-Buffer du monde déterministe
 Blender dispose de deux moteurs de rendu :
@@ -108,16 +108,16 @@ Blender dispose de deux moteurs de rendu :
 Pour OpenRE, nous utiliserons bien sûr Cycles, afin de garantir une qualité visuelle maximale. Grâce au compositeur de Blender, le rendu pourra être décomposé en plusieurs textures qui constituront notre DG-Buffer :
 |<div style="width:128px">Map</div>| Description          									|<div style="width:192px">Image</div>|
 |:------------------------:|:-------------------------------------------------------------|:-------------------:|
-| **Depth** 	| Encode la profondeur de chaque pixel. Permetra aux mondes de s'occluder correctement. La position du pixel sera également déduite de cette donnée. |  ![Depht map](images/D_Depth_square.opti.webp) |
-| **Normal** 	| Décrit l'orientation des surfaces. Cette donnée interviendra dans la calcul de l'éclairage	|  ![Normal map](images/D_Normal_square.opti.webp) |
+| **Depth** 	| Encode la profondeur de chaque pixel. Permetra aux mondes de s'occluder correctement. La position du pixel dans le monde pourra être déduite de cette donnée et de la position de la caméra. On en aura besoin pour calculer la lumière temps réèl |  ![Depht map](images/D_Depth_square.opti.webp) |
+| **Normal** 	| Décrit l'orientation des surfaces. Cette donnée interviendra également dans la calcul de l'éclairage temps réèl.	|  ![Normal map](images/D_Normal_square.opti.webp) |
 | **ORM** 	| Regroupe des données additionnelles nécessaire au rendu PBR (Ambiant Occlusion, Roughtness, Metalness)	|  ![ORM map](images/D_ORM_square.opti.webp) |
-| **diverses maps d'illumination** 	| Information relative à la lumière	|  ![Collection de maps d'illumination](images/illuminationMaps.opti.webp) |
+| **diverses maps d'illumination** 	| Information relative à la lumière pré-calculée	|  ![Collection de maps d'illumination](images/illuminationMaps.opti.webp) |
 
-Si vous mangez du G-Buffer tous les matins au p'tit dej', vous vous demandez peut être où est passée la map d'albedo ? Ou à quoi correspondent ces fameuses *diverses maps d'illumination* ? Il faut savoir que le modèle de Cycles est plus complexe que ce à quoi le temps réèl nous a habitué. En sortie, on obtient neuf maps d'illumination différentes. En réalité, l’une de ces map correspond à l’albedo. Mais pour recomposer l’image finale, nous auront besoin des neuf.
+Si vous mangez du G-Buffer tous les matins au p'tit dej', vous vous demandez peut être où est passée la map d'albedo ? Ou à quoi correspondent ces fameuses *diverses maps d'illumination* ? Il faut savoir que le modèle de Cycles est plus complexe que ce à quoi le temps réèl nous a habitué. La lumière pré-calculée par path-tracing se compose de neuf maps d'illumination différentes. En réalité, l’une de ces map correspond à l’albedo (un mot compliqué pour dire "la couleur d'une surface"). Mais pour recomposer l’image finale, nous auront besoin des neuf.
 
 ![Formule de recomposition de l'image générée par Cycle](images/cycle_recompose.opti.webp)
 
-On pourrait se contanter de n'intégrer que l'albedo au DG-Buffer. Mais il faudrait alors recalculer tout l'éclairage côté Godot. On perdrait à la fois la qualité visuelle de Cycles et énormement de temps de calcul. Les neuf maps sont donc exportées pour permettre une recomposition directe lorsque c'est approprié (voire plus loin).
+On pourrait se contanter de n'intégrer que l'albedo au DG-Buffer. Mais il faudrait alors recalculer tout l'éclairage en temps réèl côté Godot, ce qui n'est pas toujours nécessaires. Les neuf maps sont donc exportées pour permettre une recomposition directe de certaines parties de l'image. De cette manière, on concerve la qualité visuelle de Cycle sur ces zone, et on économise (beaucoup) de temps de calcul.
 
 #### IG-Buffer : le G-Buffer du monde interactif
 Si Godot implémentait un deferred renderer, on pourrait piocher les maps qui nous intéressent directement dans son G-Buffer. Mais malheureusement pour nous, le renderer officiel de Godot est un forward. Il n'y a donc pas de G-Buffer. 
@@ -129,10 +129,10 @@ Pour construire notre IG-Buffer, on va donc créer une render target pour chacun
 Cela peut parraitre un peu fastidieux mais ça ne l'est finalement pas tant que ça. Car en effet, je suis un peu malhonnète quand j'affirme que Godot n'a pas de G-Buffer dans lequel récupérer les informations. En réalité, le moteur expose nativement à ses shaders des textures contenant des données très proches de ce qu'on veut. La plupart du temps, le post-process tiendra en une ligne et se contantera de sampler l'une de ces textures.
 | 			 <div style="width:128px">Map</div>			| Description          									| <div style="width:256px"> Image  </div>|
 | :------------------------: |:-------------------------------------------------------------| :-------------------:|
-| **Depth** 	| On utilise la *depth_texture* fournie par Godot. Elle n'est pas rouge comme dans le DG-Buffer. La valeur est simplement dupliqué dans les 3 cannaux. Par contre elle n'a pas l'aire encodée de la même façon (le claire est proche et le sombre éloigné). Là c'est déjà plus gênant et on verra dans un devlog dédié que c'est en réalité encore pire. |  ![Depht map](images/I_depth_squared.opti.webp) |
+| **Depth** 	| On utilise la *depth_texture* fournie par Godot. Elle n'est pas rouge comme dans le DG-Buffer car la valeur est dupliqué dans les 3 cannaux. Par contre elle n'a pas l'aire encodée de la même façon : le claire est proche et le sombre éloigné. Là c'est déjà plus gênant et on verra dans un devlog dédié que c'est en réalité encore pire. |  ![Depht map](images/I_depth_squared.opti.webp) |
 | **Normal** 	| Ici, c'est la *normal_roughness_texture* qu'on utilise (en ignorant simplement la roughness). Là encore l'encodage est différent. On y reviendra aussi dans un devlog, mais c'est moin complèxe que pour la depht. |  ![Normal map](images/I_normal_squared.opti.webp) |
 | **ORM** 	| Pour celle ci, Godot ne nous fourni pas ce qu'il faut. Un focus sur le bricolage associé aura lui aussi son devlog	|  ![ORM map](images/I_ORM_squared.opti.webp) |
-| **Albedo** 	| Celle là, c'est la plus facile. On affiche directement la *screen_texture* de Godot. Rien de plus à dire ici.	|  ![Collection de maps d'illumination](images/I_albedo_squared.opti.webp) |
+| **Albedo** 	| Celle là, c'est la plus facile. On affiche directement la *screen_texture* de Godot.	|  ![Collection de maps d'illumination](images/I_albedo_squared.opti.webp) |
  
 #### Calcul de l'éclairage
 Maintenant que nous disposons de nos G-Buffer, il n'y a plus qu'a calculer la lumière en post-process grâce à une passe de deferred shading. Mais la dualité du monde introduit quelques complications.
@@ -147,18 +147,18 @@ Une première question évidente se pose : "dans quel G-Buffer récupérer les d
 </video>
 
 {{< /rawhtml >}}
-***<span style="color:blue;"> depth interactif > depth determinist </span>***<br>
-***<span style="color:red;"> depth interactif < depth determinist </span>***
+***<span style="color:blue;"> IG_Buffer.depth > DG_Buffer.depth => Pixel Déterministe </span>***<br>
+***<span style="color:red;"> IG_Buffer.depth < DG_Buffer.depth => Pixel Interactif </span>***
 
 ##### 2. Différents modes de calcul de la lumière :
 Le second point est un peu plus subtile. Je ne l'ai pas précisé jusqu'ici, mais les sources de lumière aussi peuvent être déterministes (lampadaires, feux de cheminée, soleil...) ou interactives (lampe torche, flash d'un tir, phares de voiture). Cela a deux conséquences :
-- 1. Les lumières déterministes présentes dans Blender devront être répliquées dans Godot. Sans cela, elle ne pourront pas éclairer les éléments interactifs. Les lumières intéractives, elles, n'existeront que dans Godot.
+- 1. Les lumières déterministes présentes dans Blender devront être répliquées dans Godot. Sans cela, elle ne pourront pas éclairer les éléments interactifs.
 - 2. Le calcul de la contribution d'une lumière données sur un pixel donné varie selon le monde auquel l'un et l'autre appartiennent. Voici un tableau récapitulatif des différentes combinaisons :
 
 | 			 				| Pixel Déterministe          									| Pixel Interactif     |
 | :------------------------ |:-------------------------------------------------------------:| :-------------------:|
-| **Lumière Déterministe** 	| <span style="color:green;">Recomposition des maps de Cycles</span>  							|  <span style="color:red;">Deferred Shading</span> |
-| **Lumière Interactive** 	| <span style="color:yellow;">Recomposition des maps de Cycles <br> + Deferred Shading</span>	|  <span style="color:red;">Deferred Shading</span> |
+| **Lumière Déterministe** 	| <span style="color:green;">Recomposition des maps de Cycles (Précal.)</span>  							|  <span style="color:red;">Deferred Shading (Temps Réèl)</span> |
+| **Lumière Interactive** 	| <span style="color:yellow;">Recomposition des maps de Cycles (Précal.) <br> + Deferred Shading (Temps Réèl)</span>	|  <span style="color:red;">Deferred Shading (Temps Réèl)</span> |
 
 {{< rawhtml >}} 
 
@@ -168,7 +168,7 @@ Le second point est un peu plus subtile. Je ne l'ai pas précisé jusqu'ici, mai
 </video>
 
 {{< /rawhtml >}}
-*Ces vidéos décrivent le mode de calcul utilisé sur chaque pixels. Celle du haut correspond à la lumière émise par le lustre au dessus de la table (source déterministe). Celle du bas correspond à la "lampe torche" de la femme au centre (source interactive)*
+*Ces vidéos décrivent le mode de calcul utilisé sur chaque pixels. Celle du haut correspond à la lumière émise par le lustre au dessus de la table (source déterministe). Celle du bas correspond à la "lampe torche" de la femme au centre (source interactive). Les couleurs corespondent aux combinaisons décrites dans le tableau ci-dessus*
 
 ## Part IV : Phases de développement
 
@@ -177,7 +177,7 @@ Le but de cette première étape est de débrousailler le terrain pour me faire 
 
 Lorsque j'aurais une vision suffisament claire du projet et que j'aurai levé les doutes quant à sa faisabilité, ce code sera mis au placard et je repartirai d'une feuille blanche. Ce n’est qu’à ce moment-là que je me préocuperai de la qualité, de la performance et de l’ergonomie.
 
-Le dépôt de ce POC ne sera malheureusement pas public. De toutes façons, la codebase est affreuse. Je vous assure, vous n'avez pas envie de mettre le nez dedans. Mais ce n'est pas la raison principale. En réalité, pour juger les capacités de rendu d'OpenRE, j'ai besoin d'assets de qualité et cohérents entre eux.  Trouver de tels assets libres de droits et dans un délai raisonnable serait un vrai casse tête. J'utilise donc des ressources déjà en ma possession (achetées ou gratuites) et je ne peux pas les redistribuer.
+Le dépôt de ce POC n'est malheureusement pas public. De toutes façons, la codebase est affreuse. Je vous assure, vous n'avez pas envie de mettre le nez dedans. Mais ce n'est pas la raison principale. En réalité, pour juger les capacités de rendu d'OpenRE, j'ai besoin d'assets de qualité et cohérents entre eux.  Trouver de tels assets libres de droits et dans un délai raisonnable serait un vrai casse tête. J'utilise donc des ressources déjà en ma possession (achetées ou gratuites) et je ne peux pas les redistribuer.
 
 ##### Devlogs :
 *Cette phase est en cours. Les devlogs seront publiés dès qu’ils seront disponibles.*
