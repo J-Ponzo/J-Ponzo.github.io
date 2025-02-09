@@ -380,9 +380,18 @@ stroke-linejoin="round" class="feather feather-home">
 <h4 id="calcul-de-léclairage">Calcul de l&rsquo;éclairage</h4>
 <p>Maintenant que nous disposons de nos G-Buffer, il n&rsquo;y a plus qu&rsquo;a calculer la lumière en post-process grâce à une passe de deferred shading. Mais la dualité du monde introduit quelques complications.</p>
 <h5 id="1-choix-du-g-buffer-">1. Choix du G-Buffer :</h5>
-<p>Une première question évidente se pose : &ldquo;dans quel G-Buffer récupérer les données ?&rdquo; C&rsquo;est en réalité assez simple. La comparaison des Depth Maps nous permet de savoir quel monde occlude l&rsquo;autre pour chaque pixel de l&rsquo;écran. Il suffit donc de choisir le G-Buffer du monde qui est visible à la coordonnée du pixel considéré.</p>
-<p>[TODO Ajouter légende]
-<img alt="Visuel de debug illustrand l&rsquo;occlusion mutuelle des mondes" src="/projects/open_re/images/cigar_room_loop_worlds_occlusion_debug_with_ref.webp"></p>
+<p>Une première question évidente se pose : &ldquo;dans quel G-Buffer récupérer les données ?&rdquo; C&rsquo;est en réalité assez simple. La comparaison des Depth Maps nous permet de savoir quel monde occlude l&rsquo;autre pour chaque pixel de l&rsquo;écran. Il suffit donc de choisir le G-Buffer du monde qui est visible à la coordonnée du pixel considéré.
+
+ 
+
+<video width=100% controls muted loop playsinline autoplay>
+    <source src="videos/cigar_room_loop_worlds_occlusion_debug_with_ref.mp4" type="video/mp4">
+    Your browser does not support the video tag.  
+</video>
+
+
+<em><strong><span style="color:blue;"> depth interactif &gt; depth determinist </span></strong></em><br>
+<em><strong><span style="color:red;"> depth interactif &lt; depth determinist </span></strong></em></p>
 <h5 id="2-différents-modes-de-calcul-de-la-lumière-">2. Différents modes de calcul de la lumière :</h5>
 <p>Le second point est un peu plus subtile. Je ne l&rsquo;ai pas précisé jusqu&rsquo;ici, mais les sources de lumière aussi peuvent être déterministes (lampadaires, feux de cheminée, soleil&hellip;) ou interactives (lampe torche, flash d&rsquo;un tir, phares de voiture). Cela a deux conséquences :</p>
 <ul>
@@ -418,8 +427,16 @@ stroke-linejoin="round" class="feather feather-home">
       </tr>
   </tbody>
 </table>
-<p>[TODO Recaputurer avec les bonnes couleurs]
-<img alt="Visuel de debug illustrant les différents modes de calcul de la lumière" src="/projects/open_re/images/cigar_room_loop_light_modes_debug_with_ref.webp"></p>
+<p>
+ 
+
+<video width=100% controls muted loop playsinline autoplay>
+    <source src="videos/cigar_room_loop_light_modes_debug_with_ref.mp4" type="video/mp4">
+    Your browser does not support the video tag.  
+</video>
+
+
+<em>Ces vidéos décrivent le mode de calcul utilisé sur chaque pixels. Celle du haut correspond à la lumière émise par le lustre au dessus de la table (source déterministe). Celle du bas correspond à la &ldquo;lampe torche&rdquo; de la femme au centre (source interactive)</em></p>
 <h2 id="part-iv--phases-de-développement">Part IV : Phases de développement</h2>
 <h4 id="proof-of-concept-poc">Proof of Concept (POC)</h4>
 <p>Le but de cette première étape est de débrousailler le terrain pour me faire une première idée du potentiel d&rsquo;OpenRE. J&rsquo;ai déjà pas mal avancé là dessus, les images de la scène d&rsquo;exemple que vous pouvez voire dans cet article sont issues de ce POC. Mon objectif ici n&rsquo;est pas l&rsquo;optimisation ou l&rsquo;élegance du code. Je cherche simplement à identifier les verroux techniques et à m&rsquo;assurer qu&rsquo;il est possible de les faire sauter (à grand coup de débrouille et d&rsquo;improvisation la plupart du temps).</p>

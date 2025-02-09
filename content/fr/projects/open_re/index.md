@@ -139,9 +139,16 @@ Maintenant que nous disposons de nos G-Buffer, il n'y a plus qu'a calculer la lu
 
 ##### 1. Choix du G-Buffer :
 Une première question évidente se pose : "dans quel G-Buffer récupérer les données ?" C'est en réalité assez simple. La comparaison des Depth Maps nous permet de savoir quel monde occlude l'autre pour chaque pixel de l'écran. Il suffit donc de choisir le G-Buffer du monde qui est visible à la coordonnée du pixel considéré.
+{{< rawhtml >}} 
 
-[TODO Ajouter légende]
-![Visuel de debug illustrand l'occlusion mutuelle des mondes](images/cigar_room_loop_worlds_occlusion_debug_with_ref.webp)
+<video width=100% controls muted loop playsinline autoplay>
+    <source src="videos/cigar_room_loop_worlds_occlusion_debug_with_ref.mp4" type="video/mp4">
+    Your browser does not support the video tag.  
+</video>
+
+{{< /rawhtml >}}
+***<span style="color:blue;"> depth interactif > depth determinist </span>***<br>
+***<span style="color:red;"> depth interactif < depth determinist </span>***
 
 ##### 2. Différents modes de calcul de la lumière :
 Le second point est un peu plus subtile. Je ne l'ai pas précisé jusqu'ici, mais les sources de lumière aussi peuvent être déterministes (lampadaires, feux de cheminée, soleil...) ou interactives (lampe torche, flash d'un tir, phares de voiture). Cela a deux conséquences :
@@ -153,8 +160,15 @@ Le second point est un peu plus subtile. Je ne l'ai pas précisé jusqu'ici, mai
 | **Lumière Déterministe** 	| <span style="color:green;">Recomposition des maps de Cycles</span>  							|  <span style="color:red;">Deferred Shading</span> |
 | **Lumière Interactive** 	| <span style="color:yellow;">Recomposition des maps de Cycles <br> + Deferred Shading</span>	|  <span style="color:red;">Deferred Shading</span> |
 
-[TODO Recaputurer avec les bonnes couleurs]
-![Visuel de debug illustrant les différents modes de calcul de la lumière](images/cigar_room_loop_light_modes_debug_with_ref.webp)
+{{< rawhtml >}} 
+
+<video width=100% controls muted loop playsinline autoplay>
+    <source src="videos/cigar_room_loop_light_modes_debug_with_ref.mp4" type="video/mp4">
+    Your browser does not support the video tag.  
+</video>
+
+{{< /rawhtml >}}
+*Ces vidéos décrivent le mode de calcul utilisé sur chaque pixels. Celle du haut correspond à la lumière émise par le lustre au dessus de la table (source déterministe). Celle du bas correspond à la "lampe torche" de la femme au centre (source interactive)*
 
 ## Part IV : Phases de développement
 
