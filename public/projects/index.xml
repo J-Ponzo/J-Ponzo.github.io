@@ -15,7 +15,7 @@
       <guid>http://localhost:1313/projects/open_re/</guid>
       
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Lorsque j&amp;rsquo;ai voulu développer mon propre jeu en caméra fixe, j’ai rapidement réalisé une chose : les outils et ressources disponnibles sur le sujet sont rares. Certes, on trouve quelques tutoriels pour gérer les caméras ou implémenter les déplacements du joueur. Mais je n&amp;rsquo;ai pas trouvé de réponse à la question qui m&amp;rsquo;intéresse réèlement : &lt;em&gt;&amp;ldquo;Comment intégrer des éléments interactifs dans des décor précalculés ?&amp;rdquo;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Lorsque j&amp;rsquo;ai cherché à développer mon propre jeu en caméra fixe, j’ai rapidement réalisé une chose : les outils et ressources disponnibles sur le sujet sont rares. Certes, on trouve quelques tutoriels pour gérer les caméras ou implémenter les déplacements du joueur. Mais je n&amp;rsquo;ai pas trouvé de réponse à la question qui m&amp;rsquo;intéresse réèlement : &lt;em&gt;&amp;ldquo;Comment intégrer des éléments interactifs dans des décor précalculés ?&amp;rdquo;&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;J&amp;rsquo;ai donc commencé à bricoler de mon côté pour trouver une solution à ce problème et je pense avoir un début de réponse :
 
 

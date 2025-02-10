@@ -269,7 +269,7 @@ stroke-linejoin="round" class="feather feather-home">
 </ul>
 <p>Notez que le &rsquo;s&rsquo; à &ldquo;images&rdquo; n&rsquo;est pas une faute de frappe. Nous n&rsquo;exporteront pas directement le rendu final en un seul bloc. En effet, ce dernier sera décomposé en une serie d&rsquo;images représentant chacune des données spécifiques : profondeur, normales, couleur etc. Sous cette forme, ils sera possible de composer l&rsquo;arrière plan avec ce que la caméra filme en temps réèl. Sans intervention supplémentaire de la part de l&rsquo;utilisateur, les deux monde seront alors fusionnés de manière quasi-indicernable : ils s&rsquo;occluderont l&rsquo;un l&rsquo;autre naturellement et leur éclairage sera uniforme et cohérent.</p>
 <p><img alt="Diagramme illustrant le fonctionnement général de OpenRE" src="/projects/open_re/images/OpenRE_diagram.webp"></p>
-<p>Evidement, il serait trop fastidieux d&rsquo;effectuer toutes ces étapes à la main, pour chauque point de vu, à chaque fois que quelque chose change dans la scène. Pour que la technologie soit exploitable, OpenRE devra être capable d&rsquo;automatiser tout cela.</p>
+<p>Evidement, il serait trop fastidieux d&rsquo;effectuer toutes ces étapes à la main, pour chaque point de vu et à chaque fois que quelque chose change dans la scène déterministe. Pour que la technologie soit exploitable, OpenRE devra être capable d&rsquo;automatiser tout cela.</p>
 <h4 id="limitations-">Limitations :</h4>
 <p>L&rsquo;implémentation actuelle présente malheureusement des limitations assez lourdes. En effet, je bypass presque completement le système de rendu de Godot en m&rsquo;appuyant sur un post-process custom pour incorporer l&rsquo;arrière plan et rendre les lumières. Cela signifie qu&rsquo;en l&rsquo;état, les features graphiques natives ne sont pas utilisable. Tout doit être réimplémenté dans le shader du post-process. En conséquences, le monde intéractif ne peut pour l&rsquo;instant beneficier que de :</p>
 <ul>
@@ -299,7 +299,7 @@ stroke-linejoin="round" class="feather feather-home">
 <li>le G-Buffer intéractif sera construit à la volée dans Godot</li>
 <li>le G-Buffer déterministe aura été précalculé par Blender (la série d&rsquo;images exportées vous vous rappellez ?).</li>
 </ul>
-<p>Les deux seront ensuite fournis au fameux post-process custom qui appliquera une passe de <em>deferred shading</em> classique (ou presque&hellip;) pour rendre les lumières.</p>
+<p>Les deux seront ensuite fournis au fameux post-process custom qui les composera et appliquera une passe de <em>deferred shading</em> classique (ou presque&hellip;) pour rendre les lumières.</p>
 <h4 id="dg-buffer--le-g-buffer-du-monde-déterministe">DG-Buffer : le G-Buffer du monde déterministe</h4>
 <p>Blender dispose de deux moteurs de rendu :</p>
 <ul>

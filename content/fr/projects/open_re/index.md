@@ -69,7 +69,7 @@ Notez que le 's' à "images" n'est pas une faute de frappe. Nous n'exporteront p
 
 ![Diagramme illustrant le fonctionnement général de OpenRE](images/OpenRE_diagram.webp)
 
-Evidement, il serait trop fastidieux d'effectuer toutes ces étapes à la main, pour chauque point de vu, à chaque fois que quelque chose change dans la scène. Pour que la technologie soit exploitable, OpenRE devra être capable d'automatiser tout cela.
+Evidement, il serait trop fastidieux d'effectuer toutes ces étapes à la main, pour chaque point de vu et à chaque fois que quelque chose change dans la scène déterministe. Pour que la technologie soit exploitable, OpenRE devra être capable d'automatiser tout cela.
 
 #### Limitations :
 L'implémentation actuelle présente malheureusement des limitations assez lourdes. En effet, je bypass presque completement le système de rendu de Godot en m'appuyant sur un post-process custom pour incorporer l'arrière plan et rendre les lumières. Cela signifie qu'en l'état, les features graphiques natives ne sont pas utilisable. Tout doit être réimplémenté dans le shader du post-process. En conséquences, le monde intéractif ne peut pour l'instant beneficier que de :
@@ -98,7 +98,7 @@ Comme évoqué dans la partie précendente, OpenRE sépare la scène en deux par
 - le G-Buffer intéractif sera construit à la volée dans Godot 
 - le G-Buffer déterministe aura été précalculé par Blender (la série d'images exportées vous vous rappellez ?). 
 
-Les deux seront ensuite fournis au fameux post-process custom qui appliquera une passe de *deferred shading* classique (ou presque...) pour rendre les lumières.
+Les deux seront ensuite fournis au fameux post-process custom qui les composera et appliquera une passe de *deferred shading* classique (ou presque...) pour rendre les lumières.
 
 #### DG-Buffer : le G-Buffer du monde déterministe
 Blender dispose de deux moteurs de rendu :
