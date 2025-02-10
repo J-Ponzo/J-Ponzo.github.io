@@ -292,12 +292,23 @@ stroke-linejoin="round" class="feather feather-home">
 <li><strong>Cycles</strong> : basé sur le path-tracing. Il produit des images photoréalistes, mais le rendu prend un certain temps.</li>
 </ul>
 <p>Pour OpenRE, nous utiliserons bien sûr Cycles, afin de garantir une qualité visuelle maximale. Grâce au compositeur de Blender, le rendu pourra être décomposé en plusieurs textures qui constitueront notre DG-Buffer :</p>
+<style>
+table th:first-of-type {
+    width: 20%;
+}
+table th:nth-of-type(2) {
+    width: 40%;
+}
+table th:nth-of-type(3) {
+    width: 40%;
+}
+</style>
 <table>
   <thead>
       <tr>
-          <th style="text-align: center"><div style="width:128px">Map</div></th>
+          <th style="text-align: center">Map</th>
           <th style="text-align: left">Description</th>
-          <th style="text-align: center"><div style="width:192px">Image</div></th>
+          <th style="text-align: center">Image</th>
       </tr>
   </thead>
   <tbody>
@@ -331,12 +342,23 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Il va falloir bricoler le nôtre et, pour cela, on va utiliser des render targets. Si vous n&rsquo;êtes pas familier avec le terme, c&rsquo;est un système qui permet d&rsquo;effectuer un rendu de la scène depuis une caméra, mais dans une texture plutôt qu&rsquo;à l&rsquo;écran directement. L&rsquo;avantage, c&rsquo;est qu&rsquo;on va pouvoir appliquer du post-process à cette texture et ainsi prendre la main sur la façon dont elle est rendue.</p>
 <p>Pour construire notre IG-Buffer, on va donc créer une render target pour chacune des textures qui le composent. Et pour chacune de ces render targets, on écrira un post-process dédié qui sera chargé de rendre spécifiquement la donnée qui nous intéresse.</p>
 <p>Cela peut paraître un peu fastidieux, mais finalement pas tant que ça. En effet, je suis un peu malhonnête quand j&rsquo;affirme que Godot n&rsquo;a pas de G-Buffer dans lequel récupérer les informations. En réalité, le moteur expose nativement à ses shaders des textures contenant des données très proches de ce qu&rsquo;on veut. La plupart du temps, le post-process tiendra en une ligne et se contentera de sampler l&rsquo;une de ces textures.</p>
+<style>
+table th:first-of-type {
+    width: 20%;
+}
+table th:nth-of-type(2) {
+    width: 40%;
+}
+table th:nth-of-type(3) {
+    width: 40%;
+}
+</style>
 <table>
   <thead>
       <tr>
-          <th style="text-align: center"><div style="width:128px">Map</div></th>
+          <th style="text-align: center">Map</th>
           <th style="text-align: left">Description</th>
-          <th style="text-align: center"><div style="width:256px">Image</div></th>
+          <th style="text-align: center">Image</th>
       </tr>
   </thead>
   <tbody>
@@ -383,6 +405,17 @@ stroke-linejoin="round" class="feather feather-home">
 <li><strong>1.</strong> Les lumières déterministes présentes dans Blender devront être répliquées dans Godot. Sans cela, elles ne pourront pas éclairer les éléments interactifs.</li>
 <li><strong>2.</strong> Le calcul de la contribution d&rsquo;une lumière donnée sur un pixel varie selon le monde auquel chacun appartient. Voici un tableau récapitulatif des différentes combinaisons :</li>
 </ul>
+<style>
+table th:first-of-type {
+    width: 10%;
+}
+table th:nth-of-type(2) {
+    width: 50%;
+}
+table th:nth-of-type(3) {
+    width: 30%;
+}
+</style>
 <table>
   <thead>
       <tr>
@@ -399,7 +432,7 @@ stroke-linejoin="round" class="feather feather-home">
       </tr>
       <tr>
           <td><strong>Lumière Interactive</strong></td>
-          <td style="text-align: center"><span style="color:yellow;">Recomposition des maps de Cycles (Précalculée) + Deferred Shading (Temps Réel)</span></td>
+          <td style="text-align: center"><span style="color:yellow;">Recomposition des maps de Cycles (Précalculée) <br> + Deferred Shading (Temps Réel)</span></td>
           <td style="text-align: center"><span style="color:red;">Deferred Shading (Temps Réel)</span></td>
       </tr>
   </tbody>

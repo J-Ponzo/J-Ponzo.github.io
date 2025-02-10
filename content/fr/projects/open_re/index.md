@@ -107,7 +107,18 @@ Blender dispose de deux moteurs de rendu :
 
 Pour OpenRE, nous utiliserons bien sûr Cycles, afin de garantir une qualité visuelle maximale. Grâce au compositeur de Blender, le rendu pourra être décomposé en plusieurs textures qui constitueront notre DG-Buffer :
 
-| <div style="width:128px">Map</div> | Description                                                                                                                                                   | <div style="width:192px">Image</div> |
+<style>
+table th:first-of-type {
+    width: 20%;
+}
+table th:nth-of-type(2) {
+    width: 40%;
+}
+table th:nth-of-type(3) {
+    width: 40%;
+}
+</style>
+| Map | Description                                                                                                                                                   | Image |
 |:--------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------:|
 | **Depth**                      | Encode la profondeur de chaque pixel. Permet d'assurer une occlusion correcte entre les mondes. La position du pixel dans le monde pourra être déduite de cette donnée et de la position de la caméra. On en aura besoin pour calculer la lumière temps réel. | ![Depth map](images/D_Depth_square.opti.webp) |
 | **Normal**                     | Décrit l'orientation des surfaces. Cette donnée interviendra également dans le calcul de l'éclairage temps réel.                                             | ![Normal map](images/D_Normal_square.opti.webp) |
@@ -129,7 +140,19 @@ Pour construire notre IG-Buffer, on va donc créer une render target pour chacun
 
 Cela peut paraître un peu fastidieux, mais finalement pas tant que ça. En effet, je suis un peu malhonnête quand j'affirme que Godot n'a pas de G-Buffer dans lequel récupérer les informations. En réalité, le moteur expose nativement à ses shaders des textures contenant des données très proches de ce qu'on veut. La plupart du temps, le post-process tiendra en une ligne et se contentera de sampler l'une de ces textures.
 
-| <div style="width:128px">Map</div> | Description                                                                                                                                                                                                                                   | <div style="width:256px">Image</div> |
+<style>
+table th:first-of-type {
+    width: 20%;
+}
+table th:nth-of-type(2) {
+    width: 40%;
+}
+table th:nth-of-type(3) {
+    width: 40%;
+}
+</style>
+
+| Map | Description                                                                                                                                                                                                                                 | Image |
 |:--------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------:|
 | **Depth**                      | On utilise la *depth_texture* fournie par Godot. Elle n'est pas rouge comme dans le DG-Buffer, car la valeur est dupliquée dans les 3 canaux. Par contre, elle n'a pas l'air encodée de la même façon : le clair est proche et le sombre éloigné. Là, c'est déjà plus gênant, et on verra dans un devlog dédié que c'est en réalité encore pire. | ![Depth map](images/I_depth_squared.opti.webp) |
 | **Normal**                     | Ici, c'est la *normal_roughness_texture* qu'on utilise (en ignorant simplement la roughness). Là encore, l'encodage est différent. On y reviendra aussi dans un devlog, mais c'est moins complexe que pour la depth.                                                         | ![Normal map](images/I_normal_squared.opti.webp) |
@@ -159,10 +182,21 @@ Le second point est un peu plus subtil. Je ne l'ai pas précisé jusqu'ici, mais
 - **1.** Les lumières déterministes présentes dans Blender devront être répliquées dans Godot. Sans cela, elles ne pourront pas éclairer les éléments interactifs.
 - **2.** Le calcul de la contribution d'une lumière donnée sur un pixel varie selon le monde auquel chacun appartient. Voici un tableau récapitulatif des différentes combinaisons :
 
+<style>
+table th:first-of-type {
+    width: 10%;
+}
+table th:nth-of-type(2) {
+    width: 50%;
+}
+table th:nth-of-type(3) {
+    width: 30%;
+}
+</style>
 |                         | Pixel Déterministe                                                                                     | Pixel Interactif                                  |
 |-------------------------|:------------------------------------------------------------------------------------------------------:|:-------------------------------------------------:|
 | **Lumière Déterministe** | <span style="color:green;">Recomposition des maps de Cycles (Précalculée)</span>                      | <span style="color:red;">Deferred Shading (Temps Réel)</span> |
-| **Lumière Interactive**  | <span style="color:yellow;">Recomposition des maps de Cycles (Précalculée) + Deferred Shading (Temps Réel)</span> | <span style="color:red;">Deferred Shading (Temps Réel)</span> |
+| **Lumière Interactive**  | <span style="color:yellow;">Recomposition des maps de Cycles (Précalculée) <br> + Deferred Shading (Temps Réel)</span> | <span style="color:red;">Deferred Shading (Temps Réel)</span> |
 
 {{< rawhtml >}} 
 
