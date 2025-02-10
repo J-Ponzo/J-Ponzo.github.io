@@ -69,10 +69,10 @@ Notez que le « s » à "images" n'est pas une faute de frappe. Nous n'exportero
 
 ![Diagramme illustrant le fonctionnement général de OpenRE](images/OpenRE_diagram.webp)
 
-Évidemment, il serait trop fastidieux d'effectuer toutes ces étapes à la main, pour chaque point de vue et à chaque fois que quelque chose change dans la scène déterministe. Pour que la technologie soit exploitable, OpenRE devra être capable d'automatiser tout cela.
+Évidemment, il serait trop fastidieux d'effectuer toutes ces étapes à la main pour tout point de vue à chaque fois qu'on bouge un fauteil ou qu'on change la couleur du tapis. Pour que la technologie soit exploitable, OpenRE devra être capable d'automatiser tout cela.
 
 #### Limitations :
-L'implémentation actuelle présente malheureusement des limitations assez lourdes. En effet, je bypass presque complètement le système de rendu de Godot en m'appuyant sur un post-process custom pour incorporer l'arrière-plan et rendre les lumières. Cela signifie qu'en l'état, les fonctionnalités graphiques natives ne sont pas utilisables. Tout doit être réimplémenté dans le shader du post-process. En conséquence, le monde interactif ne peut pour l'instant bénéficier que de :
+L'implémentation actuelle présente malheureusement des limitations assez lourdes. En effet, je bypass presque complètement le système de rendu de Godot en m'appuyant sur un post-process custom pour incorporer l'arrière-plan et rendre les lumières. Cela signifie qu'en l'état, les fonctionnalités graphiques natives ne sont pas utilisables. Tout doit être réimplémenté dans le shader du post-process. En conséquence, le monde interactif ne bénéficie pour l'instant que de :
 - 8 points lights basiques (couleur, intensité)
 - 8 spot lights basiques (couleur, intensité, angle)
 - 4 ombres dynamiques (appliquables sur les spot lights uniquement)
@@ -98,7 +98,7 @@ Comme évoqué dans la partie précédente, OpenRE sépare la scène en deux par
 - Le G-Buffer interactif sera construit à la volée dans Godot.
 - Le G-Buffer déterministe aura été précalculé par Blender (la série d'images exportées, vous vous rappelez ?).
 
-Les deux seront ensuite fournis au fameux post-process custom qui les composera et appliquera une passe de deferred shading classique (ou presque …) pour rendre les lumières.
+Les deux seront ensuite fournis au fameux post-process custom qui les composera et leur appliquera une passe de deferred shading classique (ou presque …) pour rendre les lumières.
 
 #### DG-Buffer : le G-Buffer du monde déterministe
 Blender dispose de deux moteurs de rendu :
@@ -127,7 +127,7 @@ Il va falloir bricoler le nôtre et, pour cela, on va utiliser des render target
 
 Pour construire notre IG-Buffer, on va donc créer une render target pour chacune des textures qui le composent. Et pour chacune de ces render targets, on écrira un post-process dédié qui sera chargé de rendre spécifiquement la donnée qui nous intéresse.
 
-Cela peut paraître un peu fastidieux, mais ce ne l'est finalement pas tant que ça. Car, en effet, je suis un peu malhonnête quand j'affirme que Godot n'a pas de G-Buffer dans lequel récupérer les informations. En réalité, le moteur expose nativement à ses shaders des textures contenant des données très proches de ce qu'on veut. La plupart du temps, le post-process tiendra en une ligne et se contentera de sampler l'une de ces textures.
+Cela peut paraître un peu fastidieux, mais finalement pas tant que ça. En effet, je suis un peu malhonnête quand j'affirme que Godot n'a pas de G-Buffer dans lequel récupérer les informations. En réalité, le moteur expose nativement à ses shaders des textures contenant des données très proches de ce qu'on veut. La plupart du temps, le post-process tiendra en une ligne et se contentera de sampler l'une de ces textures.
 
 | <div style="width:128px">Map</div> | Description                                                                                                                                                                                                                                   | <div style="width:256px">Image</div> |
 |:--------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------:|
@@ -157,7 +157,7 @@ Une première question évidente se pose : "Dans quel G-Buffer récupérer les d
 ##### 2. Différents modes de calcul de la lumière :
 Le second point est un peu plus subtil. Je ne l'ai pas précisé jusqu'ici, mais les sources de lumière aussi peuvent être déterministes (lampadaires, feux de cheminée, soleil…) ou interactives (lampe torche, flash d'un tir, phares de voiture). Cela a deux conséquences :
 - **1.** Les lumières déterministes présentes dans Blender devront être répliquées dans Godot. Sans cela, elles ne pourront pas éclairer les éléments interactifs.
-- **2.** Le calcul de la contribution d'une lumière donnée sur un pixel varie selon le monde auquel il appartient. Voici un tableau récapitulatif des différentes combinaisons :
+- **2.** Le calcul de la contribution d'une lumière donnée sur un pixel varie selon le monde auquel chacun appartient. Voici un tableau récapitulatif des différentes combinaisons :
 
 |                         | Pixel Déterministe                                                                                     | Pixel Interactif                                  |
 |-------------------------|:------------------------------------------------------------------------------------------------------:|:-------------------------------------------------:|
