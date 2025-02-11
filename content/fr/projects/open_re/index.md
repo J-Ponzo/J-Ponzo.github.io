@@ -174,8 +174,8 @@ Une première question évidente se pose : "Dans quel G-Buffer récupérer les d
 
 {{< /rawhtml >}}
 
-***<span style="color:blue;">IG_Buffer.depth > DG_Buffer.depth ⇒ Pixel Déterministe</span>***  
-***<span style="color:red;">IG_Buffer.depth < DG_Buffer.depth ⇒ Pixel Interactif</span>***
+***<span style="background:blue;color:white;padding:5px;">IG_Buffer.depth > DG_Buffer.depth ⇒ Pixel Déterministe</span>***  
+***<span style="background:red;color:white;padding:5px;">IG_Buffer.depth < DG_Buffer.depth ⇒ Pixel Interactif</span>***
 
 ##### 2. Différents modes de calcul de la lumière :
 Le second point est un peu plus subtil. Je ne l'ai pas précisé jusqu'ici, mais les sources de lumière aussi peuvent être déterministes (lampadaires, feux de cheminée, soleil…) ou interactives (lampe torche, flash d'un tir, phares de voiture). Cela a deux conséquences :
@@ -195,8 +195,8 @@ table th:nth-of-type(3) {
 </style>
 |                         | Pixel Déterministe                                                                                     | Pixel Interactif                                  |
 |-------------------------|:------------------------------------------------------------------------------------------------------:|:-------------------------------------------------:|
-| **Lumière Déterministe** | <span style="color:green;">Recomposition des maps de Cycles (Précalculée)</span>                      | <span style="color:red;">Deferred Shading (Temps Réel)</span> |
-| **Lumière Interactive**  | <span style="color:yellow;">Recomposition des maps de Cycles (Précalculée) <br> + Deferred Shading (Temps Réel)</span> | <span style="color:red;">Deferred Shading (Temps Réel)</span> |
+| **Lumière Déterministe** | <span style="background:lime;color:black;display:block;">Recomposition des maps de Cycles (Précalculée)</span>                      | <span style="background:red;color:white;display:block;">Deferred Shading (Temps Réel)</span> |
+| **Lumière Interactive**  | <span style="background:yellow;color:black;display:block;">Recomposition des maps de Cycles (Précalculée) <br> + Deferred Shading (Temps Réel)</span> | <span style="background-color:red;color:white;display:block;">Deferred Shading (Temps Réel)</span> |
 
 {{< rawhtml >}} 
 
