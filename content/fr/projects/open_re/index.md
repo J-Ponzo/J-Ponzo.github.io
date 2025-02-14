@@ -81,6 +81,7 @@ L'implémentation actuelle présente malheureusement des limitations assez lourd
 C'est bien entendu trop peu pour faire un jeu complet. Mais le combat continue ! J'ai notamment l'intention d'ajouter :
 - 1 directional light basique (couleur, intensité)
 - La compatibilité des ombres dynamiques avec tous les types de lumière
+- Un equivalent des skybox
 - Un support des particules natives de Godot (je ne sais pas exactement comment je vais m'y prendre, mais je vois mal comment on pourrait s'en passer)
 - Une solution pour implémenter des reflets et de la transparence (encore plus flou à l'heure actuelle, mais ce serait bien d'avoir un support au moins partiel de ces effets)
 
