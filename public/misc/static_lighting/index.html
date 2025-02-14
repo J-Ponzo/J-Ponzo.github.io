@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.140.2">
+<meta name="generator" content="Hugo 0.137.0">
 
     
     <meta property="og:url" content="http://localhost:1313/misc/static_lighting/">
@@ -100,7 +100,7 @@ stroke-linejoin="round" class="feather feather-home">
                 
                 <li>
                     <a class="menu-link " href="/">
-                        Acceuil
+                        Accueil
                     </a>
                     
                 </li>
@@ -155,7 +155,27 @@ stroke-linejoin="round" class="feather feather-home">
                 <p>la contribution des lumière sur l&rsquo;environnement n&rsquo;a pas besoin d&rsquo;être calculée en temps réèl si les lumières sont elles aussi statiques. On peut les précalculer pendant le développement (les baker dans le jargon) et enregistrer le resultat directement dans une texture spéciale qu&rsquo;on appel une &ldquo;light map&rdquo;. Cette light map sera directement &ldquo;mélangé&rdquo; aux textures de l&rsquo;environnement par le jeu pour que ces dernières paraissent plus ou moins éclairées ou ombragées. En plus du gain de performence, cela permet d&rsquo;avoir des lumières beaucoup plus détaillées car on dispose de tout le temps qu&rsquo;on veut pour calculer cette lumière statique. Alors que si la lumière est calculée dynamiquement, on a que 16ms si ont veut avoir une chance d&rsquo;assure le 60fps si cher à nos yeux de joueurs.</p>
 
             </div>
-        </article></main>
+        </article><hr style="margin-top: 40px; margin-bottom: 40px;" />
+<div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "turbo-tartine-games-blog" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a></main>
 </div>
 <footer class="footer">
     <span class="footer_item"> </span>

@@ -8,7 +8,7 @@
     <language>fr-fr</language>
     <lastBuildDate>Mon, 18 Nov 2024 06:28:42 +0100</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>OpenRE (Open Retro Engine)</title>
+      <title>Les prémices d&#39;OpenRE (Open Retro Engine)</title>
       <link>http://localhost:1313/projects/open_re/</link>
       <pubDate>Mon, 18 Nov 2024 06:28:42 +0100</pubDate>
       
@@ -18,8 +18,11 @@
 &lt;p&gt;Lorsque j&amp;rsquo;ai cherché à développer mon propre jeu en caméra fixe, j’ai rapidement réalisé une chose : les outils et ressources disponibles sur le sujet sont rares. Certes, on trouve quelques tutoriels pour gérer les caméras ou implémenter les déplacements du joueur. Mais je n&amp;rsquo;ai pas trouvé de réponse à la question qui m&amp;rsquo;intéresse réellement : &lt;em&gt;&amp;ldquo;Comment intégrer des éléments interactifs dans des décors précalculés ?&amp;rdquo;&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;J&amp;rsquo;ai donc commencé à bricoler de mon côté pour trouver une solution à ce problème et je pense avoir un début de réponse :
 
+
+    
     &lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
-      &lt;iframe allow=&#34;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share&#34; allowfullscreen=&#34;allowfullscreen&#34; loading=&#34;eager&#34; referrerpolicy=&#34;strict-origin-when-cross-origin&#34; src=&#34;https://www.youtube.com/embed/ok0o0HhgfeY?autoplay=0&amp;amp;controls=1&amp;amp;end=0&amp;amp;loop=0&amp;amp;mute=0&amp;amp;start=0&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; title=&#34;YouTube video&#34;&gt;&lt;/iframe&gt;
+      &lt;iframe allow=&#34;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share&#34; allowfullscreen=&#34;allowfullscreen&#34; loading=&#34;eager&#34; referrerpolicy=&#34;strict-origin-when-cross-origin&#34; src=&#34;https://www.youtube.com/embed/ok0o0HhgfeY?autoplay=0&amp;controls=1&amp;end=0&amp;loop=0&amp;mute=0&amp;start=0&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; title=&#34;YouTube video&#34;
+      &gt;&lt;/iframe&gt;
     &lt;/div&gt;
 &lt;/p&gt;</description>
       
@@ -33,7 +36,7 @@
       <guid>http://localhost:1313/posts/i_love_fixed_cams/</guid>
       
       <description>&lt;h2 id=&#34;préembule&#34;&gt;Préembule&lt;/h2&gt;
-&lt;p&gt;Je travaille actuellement sur &lt;strong&gt;OpenRE (Open Retro Engine)&lt;/strong&gt; : une technologie permettant de créer des jeux vidéo en caméra fixe avec des arrière-plans précalculés. Si vous êtes déjà curieux, vous pouvez suivre son avancement à travers les devlogs que je publie régulièrement sur la &lt;a href=&#34;http://localhost:1313/projects/open_re/&#34;&gt;page du projet&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Je travaille actuellement sur &lt;strong&gt;OpenRE (Open Retro Engine)&lt;/strong&gt; : une technologie permettant de créer des jeux vidéo en caméra fixe avec des arrière-plans précalculés. Si vous êtes déjà curieux, vous trouverez plus d&amp;rsquo;information sur &lt;a href=&#34;http://localhost:1313/projects/open_re/&#34;&gt;cette page&lt;/a&gt;. Vous pourrez également suivre son avancement à travers les devlogs que je publie régulièrement.&lt;/p&gt;
 &lt;p&gt;Mais il est plus probable que vous vous demandiez : &lt;em&gt;&amp;ldquo;Pourquoi investir du temps et de l&amp;rsquo;énergie dans cette technique du passé ?&amp;rdquo;&lt;/em&gt;, &lt;em&gt;&amp;ldquo;Qu&amp;rsquo;a-t-on à y gagner ?&amp;rdquo;&lt;/em&gt;, &lt;em&gt;&amp;ldquo;Est-ce que le monde en a vraiment besoin ?&amp;rdquo;&lt;/em&gt;. Ou peut-être, que vous n’êtes pas familier avec ce genre vidéoludique un peu oublié et que vous souhaitez découvrir son potentiel.&lt;/p&gt;</description>
       
     </item>

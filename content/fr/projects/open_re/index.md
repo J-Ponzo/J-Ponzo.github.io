@@ -2,7 +2,7 @@
 author = 'Turbo Tartine'
 date = '2024-11-18T06:28:42+01:00'
 draft = false
-title = 'OpenRE (Open Retro Engine)'
+title = "Les prémices d'OpenRE (Open Retro Engine)"
 description = 'Page de presentation du projet OpenRE'
 +++
 ## Introduction

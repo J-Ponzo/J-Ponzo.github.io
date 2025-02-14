@@ -7,7 +7,7 @@ description = 'Article dans lequel je parle de caméras fixes'
 +++
 
 ## Préembule
-Je travaille actuellement sur **OpenRE (Open Retro Engine)** : une technologie permettant de créer des jeux vidéo en caméra fixe avec des arrière-plans précalculés. Si vous êtes déjà curieux, vous pouvez suivre son avancement à travers les devlogs que je publie régulièrement sur la [page du projet](/projects/open_re).
+Je travaille actuellement sur **OpenRE (Open Retro Engine)** : une technologie permettant de créer des jeux vidéo en caméra fixe avec des arrière-plans précalculés. Si vous êtes déjà curieux, vous trouverez plus d'information sur [cette page](/projects/open_re). Vous pourrez également suivre son avancement à travers les devlogs que je publie régulièrement.
 
 Mais il est plus probable que vous vous demandiez : *"Pourquoi investir du temps et de l'énergie dans cette technique du passé ?"*, *"Qu'a-t-on à y gagner ?"*, *"Est-ce que le monde en a vraiment besoin ?"*. Ou peut-être, que vous n’êtes pas familier avec ce genre vidéoludique un peu oublié et que vous souhaitez découvrir son potentiel.
 
