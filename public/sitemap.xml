@@ -1,16 +1,36 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  
-  <sitemap>
-    <loc>http://localhost:1313/fr-fr/sitemap.xml</loc>
-    
-      <lastmod>2024-11-18T06:28:42+01:00</lastmod>
-    
-  </sitemap>
-  
-  <sitemap>
-    <loc>http://localhost:1313/en-us/sitemap.xml</loc>
-    
-  </sitemap>
-  
-</sitemapindex>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2024-11-18T06:28:42+01:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/projects/open_re/</loc>
+    <lastmod>2024-11-18T06:28:42+01:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/projects/</loc>
+    <lastmod>2024-11-18T06:28:42+01:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2024-11-15T06:26:08+01:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/i_love_fixed_cams/</loc>
+    <lastmod>2024-11-15T06:26:08+01:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/pages/about/</loc>
+  </url><url>
+    <loc>http://localhost:1313/categories/</loc>
+  </url><url>
+    <loc>http://localhost:1313/misc/distance_field/</loc>
+  </url><url>
+    <loc>http://localhost:1313/misc/</loc>
+  </url><url>
+    <loc>http://localhost:1313/pages/</loc>
+  </url><url>
+    <loc>http://localhost:1313/misc/reflection_capture/</loc>
+  </url><url>
+    <loc>http://localhost:1313/misc/static_lighting/</loc>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+  </url>
+</urlset>
