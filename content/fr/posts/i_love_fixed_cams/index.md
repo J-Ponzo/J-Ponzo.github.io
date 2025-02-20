@@ -35,7 +35,7 @@ Nous étions alors au début de l’ère de la 3D. Les machines, impressionnante
 #### Ce qui ne bouge pas, te rend plus fort
 De nombreuses techniques d’optimisation dans le jeu vidéo reposent sur un postulat simple : la **majorité de la géométrie** à afficher est **statique**. Certes, il y a les personnages, les véhicules, et les effets de particules qui eux sont dynamiques. Mais la quantité de géométrie que cela représente est relativement faible face à ce qui est nécessaire pour modéliser l’environnement. Et cet environnement, lui, ne bouge pas.
 
-Cette observation reste vraie aujourd’hui. De nombreuses **technologies modernes exploitent toujours ce principe**. On peut citer [l'éclairage statique](/misc/static_lighting), [les "distance fields"](/misc/distance_field) ou encore [les reflection captures](/misc/reflection_capture). Ces techniques consistent à *"baker"* (calculer à l’avance) ce qui ne bouge pas, afin de pouvoir réutiliser ces données plus tard, en temps réel et à moindre coût.
+Cette observation reste vraie aujourd’hui. De nombreuses **technologies modernes exploitent toujours ce principe**. On peut citer l'éclairage statique, les "distance fields" ou encore les reflection captures. Ces techniques consistent à *"baker"* (calculer à l’avance) ce qui ne bouge pas, afin de pouvoir réutiliser ces données plus tard, en temps réel et à moindre coût.
 
 Cette philosophie d'optimisation a donc influencé de nombreuses approches, mais comme nous allons le voir, la **caméra fixe élève ça à un autre niveau**.
 
