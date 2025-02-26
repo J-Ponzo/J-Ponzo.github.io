@@ -13,7 +13,10 @@
       
       <guid>http://localhost:1313/pages/about/</guid>
       
-      <description>&lt;p&gt;TODO&lt;/p&gt;</description>
+      <description>&lt;h2 id=&#34;bienvenu-sur-turbo-tartine-games-&#34;&gt;Bienvenu sur Turbo Tartine Games !&lt;/h2&gt;
+&lt;p&gt;Bienvenu dans ce petit coin d&amp;rsquo;internet où je partage ma passion pour le développement de jeux vidéo indépendant.&lt;/p&gt;
+&lt;h2 id=&#34;qui-suis-je-&#34;&gt;Qui suis-je ?&lt;/h2&gt;
+&lt;p&gt;Je m&amp;rsquo;appel Jérémy et le jour, je suis développeur chez Wanadev Studio. Mon travail consiste à développer des jeux (principalement en VR) sous Unreal Engine. Mais lorsque la nuit tombe, je deviens TurboTartine. Sous cette identité je continue vivre ma passion pour le gamedev, mais sur mon temps libre. Cette double vie me permet d&amp;rsquo;apréhender le gamedev dans deux contextes très différents :&lt;/p&gt;</description>
       
     </item>
     
