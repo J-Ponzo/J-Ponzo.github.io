@@ -13,6 +13,7 @@ Je m'appel Jérémy, je suis passionné de jeux vidéo depuis toujours et j'ai l
 
 Chacune de ces activités nourrit l’autre, et cet équilibre entre vie professionnelle et projets personnels est des plus épanouissant.
 
+###V1
 ## Pourquoi ce blog ?
 En réalité il y a plusieurs raisons et je vais les présenter ici de la plus personnelle à la plus générale.
 
@@ -34,7 +35,14 @@ La critique que je fais au milieu (que par ailleurs j'aime tant), c'est qu'il pe
 
 Spoiler, ce blog ne résoudra pas le problème, mais s'il parvient à inspirer d'autre personnes à documenter leurs travaux librement, ce sera un bon début. 
 
+### V3
+Le jeu vidéo est parfois un millieu une peu renfermé sur lui même qui a une petite tendance à cultiver le secret et la rivalité plutôt que la collaboration. D'abord ce sont des valeurs dans lesquelles je me retrouve assez peu, mais surtout je pense qu'elles font du tord à l'industrie. Si on se compare au Web par exemple, nous sommes au niveau zero en terme de modularité, d'interopérabilité et de normalisation. Leurs applications sont des assemblages de technologies, souvent open-source, qui s'interfassent élegament entre elles en s'appuyant sur des standard. Ainsi, chaque innovation contribue à un capitale technologique commun.
 
+De notre côté, nous sommes enfermés dans des moteurs qui sont des ecosystèmes hermetiques et incompatibles les uns avec les autres ce qui par nature limite beaucoup la mutualisation des efforts. Ils sont également propriétaires pour la plupart ce qui implique de choisir entre construir de zéro (en écrivant son propre moteur), ou placer son destin entre les mains d'une entreprise tierse, dont les interêts ne sont pas figés dans le temps et peuvent à tout moment diverger des notres.
+
+Les plus défavorisés par ce mode de fonctionnement sont les petites productions pour lesquelles déveopper et maintenir un moteur maison n'est plus un choix viable aujourd'hui. Je constate également que c'est sur ces petites structures que repose le gros de l'innovation de medium. Les mastodon devant se resigner à faire des jeux un peu "passe partout" pour éspérer récupérer leur mise qui se compte désormais en centaines de millions (sans compter que récupérer sa mise n'est pas suffisant pour garder ses actionnaires, mais ceci est une autre histoire).
+
+A mon sens une industrie qui n'innove plus n'est pas promise à un avenir radieux. C'est pour cela que je pense, que plus de collaboration et d'ouverture sont bénéfiques pour le secteur tout entier. Spoiler, ce blog n'inversera pas la tendance à lui seul, mais il s'inscrit dans cette démarche. J'aspire à en faire un espace dans lequel je m'exprime de manière transparente et authentique sur ma passion. Notez qu'une section commentaires est disponnible à la fin de chaque article. C'était important pour moi de vous permetre de réagir aux sujets évoqués. Car si ce blog peut être un espace d'échange plutôt qu'un discours à sens unique, c'est beaucoup mieux.
 
 ## Organisation générale
 <expliquer ici comment le blog est structuré et les parti pris permettant une navigation facile peut importe le profil de l'utilisateur>
