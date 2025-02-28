@@ -4,27 +4,25 @@ author : "Turbo Tartine"
 disableComments : true
 ---
 ## Hello World !
-Bienvenu sur Turbo Tartine Games, ce petit coin d'internet dans lequel je partage ma passion pour le développement de jeux vidéo.
+Bienvenue sur Turbo Tartine Games, ce petit coin d’Internet dans lequel je partage ma passion pour le développement de jeux vidéo.
 
 ## Qui suis-je ?
-Je m'appel Jérémy, je suis passionné de jeux vidéo depuis toujours et j'ai la chance d'avoir pu en faire mon métier. Je travail dans un studio Lyonnais du nom de Wanadev Studio où mes journées consiste à développer des jeux (principalement en VR) sous Unreal Engine. Mais lorsque la nuit tombe, je deviens TurboTartine. Sous cette identité pas vraiment secrète, je continue de faire des jeux, mais sur mon temps libre. Cette double vie me permet d'apréhender cette passion sous deux angles très différents :
-- D'un côté j'ai l'occasion de travailler sur des jeux d'une certaine envergure, avec des moyens et des gens talentueux dont j'apprends tous les jours (Et accessoirement, ça me permet de remplir mon frigo, ce qui est plutôt pratique).
-- De l'autre, je dispose d'une liberté totale pour experimenter et créer sans aucune contrainte de production ou objectif de rentabilité (Ce qui explique pourquoi mon Git regorge de projets fantastiques… et inachevés)
+Je m’appelle Jérémy, je suis passionné de jeux vidéo depuis toujours et j’ai la chance d’avoir pu en fait un métier. Je travaille dans un studio lyonnais du nom de WanadevStudio. Mes journées consistent à développer des jeux (principalement en VR) sous Unreal Engine. Mais lorsque la nuit tombe, je deviens TurboTartine. Sous cette identité pas vraiment secrète, je continue de faire des jeux, mais sur mon temps libre. Cette double vie me permet d’appréhender cette passion sous deux angles très différents :
+- D’un côté, j’ai l’occasion de travailler sur des jeux d’une certaine envergure, avec des moyens et des collègues talentueux dont j’apprends tous les jours (et accessoirement, ça me permet de remplir mon frigo, ce qui ne gâche rien).
+- De l’autre, je dispose d’une liberté totale pour expérimenter et créer sans aucune contrainte de production ou d’objectif de rentabilité (ce qui explique pourquoi mon Git regorge de projets fantastiques… et inachevés).
 
 Chacune de ces activités nourrit l’autre, et cet équilibre entre vie professionnelle et projets personnels est extrêmement important pour moi.
 
 ## Pourquoi ce blog ?
-Le jeu vidéo est un univers facinant mais parfois un peu fermé et opaque. Une certaine culture du secret y règne et je trouve ça assez dommage. Je comprends la nécessité de contrôler l’information dans le cadre d'une stratégie marketing. Particulièrement pour un AAA vers lequel tous les regards sont braqués.  Je conçois aussi qu’une entreprise investissant massivement en R&D cherche à protéger son avantage technologique (même si, à mon avis, ça reste contre-productif, mais c’est un autre débat).
+Le jeu vidéo est un univers fascinant, mais parfois un peu fermé. Une certaine culture du secret y règne, et je trouve ça dommage. Je comprends la nécessité de contrôler l’information dans le cadre d’une stratégie marketing, en particulier pour un AAA vers lequel tous les regards sont braqués. Je conçois aussi qu’une entreprise investissant massivement en R&D cherche à protéger son avantage technologique (même si, à mon avis, cela reste contre-productif, mais c’est un autre débat).
 
-En revanche, en tant qu’indépendants, nous avons tout intérêt à nous entraider, à parler ouvertement de ce qu'on fait et à partager nos connaissances (et notre code). C'est la raison pour laquelle j'ai créer ce blog. J'ai l'intention d'y partager mes opinions, mes projets, mes réussites et mes galères, de la manière la plus transparente et authentique possible. Dans le pire des cas, ce sera mon carnet de bord personnel. Qui sait ? Structurer mes idées m'aidera peut être à garder le cap et à concretiser mes projets plus souvent (ce qui ne serait déjà pas mal !).
+Cela dit, en tant qu’indépendants, nous avons tout intérêt à nous entraider, à parler ouvertement de ce que nous faisons et à partager nos connaissances (et encore mieux notre code). C’est pourquoi j’ai créé ce blog : un espace où je partage mes idées, mes projets, mes réussites et mes galères de manière transparente et authentique. En gros, c'est ici que je documente ma vie de "solo indie dev".
 
- Mais je me plais à penser que mes publications pourront aussi être utiles à d’autres. Que vous soyez créateur de jeux ou simplement passionné par le sujet, j’espère que vous trouverez ici quelque chose d’intéressant.  Et si c’est le cas, n'hésitez pas à faire de ce blog un espace d'échange en partageant vos retours dans les commentaires.
+## A qui je m'adresse ?
+Dans le pire des cas, ce sera mon carnet de bord personnel pour m’aider à garder le cap (et peut-être à finir plus de projets). Mais j’espère aussi que mes publications pourront être utiles à d’autres. J’aimerais parler à un public assez large : que vous soyez programmeur, designer, artiste, issu des métiers de la communication ou de la production, débutant ou expert, ou tout simplement un joueur curieux de l’envers du décor, j’espère que vous y trouverez quelque chose d’utile.
 
-## Quel contenu s'y trouve ?
-Des articles sur des chose que j'aime (ou pas), des tutoriels, des sujets techniques, d'autre plus accessibles... je parlerais aussi de mes projets personnels au travers de devlogs et de retours d'experience... le contenu du site pourra englober beaucoup de choses du moment qu'il y a un rapport avec le jeux vidéo. L'objectif est en quelques sortes de documenter mon activité de solo gamedev indé.
+Étant plutôt tourné vers la technique, j’aborderai forcément des sujets un peu complexes, car c’est ce qui me motive. Mais je m’efforcerai de les rendre accessibles en proposant, si nécessaire, des articles complémentaires pour vulgariser certains concepts. À minima, je ferai en sorte que les parties trop techniques restent optionnelles. Et puis, il y aura aussi des articles plus décontractés sur des thématiques variées autour du jeu vidéo.
 
-J'éspère arriver à parler à un public assez large et pas seulement à des dévelopeurs purs et durs (même si ça me ferait plaisir aussi bien évidement). Je suis quelqu'un de plutôt tourné vers la technique. Je traiterai donc forcement de sujets un peu chevelus car c'est ce qui me parle et me motive. Mais je m'efforcerai de rendre ça le plus accessible possible, en proposant si il faut des articles complémentaires vulgarisant les conceptes un peu specifiques. A minima, je struturerai les articles de manière à confiner les passages trop technique à  des sections optionelles.
+Sentez-vous donc libre de vous balader ici et là, et de voir si quelque chose vous inspire. Et si c’est le cas, n’hésitez pas à partager vos retours dans les commentaires !
 
-Cela dit, l'exercice ne sera surement pas facile et j'aurais peut être du mal à avoir un discour à la fois pertinant et compréhensible pour tous les publics. Encore une fois, n'hésitez pas à donner vos resentis dans les commentaires pour que je puisse présiser (ou corriger) certaines choses. Cela me permettra également de m'ajuster au fur et à mesure sur les articles suivant. 
-
-Si vous êtes toujours là, j'espère que l'idée vous plais. Et le cas échéant je vous souhaite une bonne lécture !
+Bonne lecture !
