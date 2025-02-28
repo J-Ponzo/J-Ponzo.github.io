@@ -13,8 +13,10 @@
       
       <guid>http://localhost:1313/pages/about/</guid>
       
-      <description>&lt;h2 id=&#34;bienvenu-sur-turbo-tartine-games-&#34;&gt;Bienvenu sur Turbo Tartine Games !&lt;/h2&gt;
-&lt;p&gt;Bienvenu sur ce petit coin d&amp;rsquo;internet dans lequel je partage ma passion pour le développement de jeux vidéo. Le contenu de ce blog se veut varié. Il y aura des articles accessible, d&amp;rsquo;autres plus techniques, des tutoriels, de la vulgarisation, des retour d&amp;rsquo;experience, des projets personnels, des devlogs&amp;hellip; Que vous soyez vous même gamedev, que vous cherchiez à le devenir ou si vous êtes simplement intéréssé par le sujet, vous devriez y trouver quelque chose à votre gout (en tout cas je l&amp;rsquo;espère).&lt;/p&gt;</description>
+      <description>&lt;h2 id=&#34;hello-world-&#34;&gt;Hello World !&lt;/h2&gt;
+&lt;p&gt;Bienvenu sur Turbo Tartine Games, ce petit coin d&amp;rsquo;internet dans lequel je partage ma passion pour le développement de jeux vidéo.&lt;/p&gt;
+&lt;h2 id=&#34;qui-suis-je-&#34;&gt;Qui suis-je ?&lt;/h2&gt;
+&lt;p&gt;Je m&amp;rsquo;appel Jérémy, je suis passionné de jeux vidéo depuis toujours et j&amp;rsquo;ai la chance d&amp;rsquo;avoir pu en faire mon métier. Je travail dans un studio Lyonnais du nom de Wanadev Studio où mes journées consiste à développer des jeux (principalement en VR) sous Unreal Engine. Mais lorsque la nuit tombe, je deviens TurboTartine. Sous cette identité je continue de faire des jeux, mais sur mon temps libre. Cette double vie me permet d&amp;rsquo;apréhender cette passion sous deux angles très différents :&lt;/p&gt;</description>
       
     </item>
     
