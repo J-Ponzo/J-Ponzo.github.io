@@ -8,13 +8,15 @@
     <language>fr-fr</language>
     <lastBuildDate>Fri, 21 Feb 2025 12:51:02 +0100</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>OpenRE POC devlog 0 : &lt;TODO find name&gt;</title>
+      <title>OpenRE devlog 0 : &lt;TODO find name&gt;</title>
       <link>http://localhost:1313/projects/open_re_poc_devlog_0/</link>
       <pubDate>Fri, 21 Feb 2025 12:51:02 +0100</pubDate>
       
       <guid>http://localhost:1313/projects/open_re_poc_devlog_0/</guid>
       
-      <description></description>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Ce develog est le premier de la série qui documente le POC du projet OpenRE. C&amp;rsquo;est l&amp;rsquo;occation de dire quelque mots sur le mode opératoir que j&amp;rsquo;enviseage. Au cours du dévelopement, je prendrai des notes chaque fois que je rencontrerai un sujet potentiel. Tous les mois (si j&amp;rsquo;arrive à m&amp;rsquo;y tenir), je selectionnerai les plus pertinants pour les développerai dans un nouveau develog.&lt;/p&gt;
+&lt;p&gt;Etant donné que je développe OpenRE sur mon temps libre, il est probable que le rythme soit irréguliers. Certains numéros seront plus léger que d&amp;rsquo;autres mais ce n&amp;rsquo;est pas bien grave. Au contraire, ce sera interessant de voire comment la cadence se module au fils de l&amp;rsquo;aventure.&lt;/p&gt;</description>
       
     </item>
     
