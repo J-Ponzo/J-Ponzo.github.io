@@ -3,17 +3,17 @@
 <meta http-equiv="content-type" content="text/html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title itemprop="name">OpenRE POC devlog 0 : &lt;TODO find name&gt; | Turbo Tartine Games</title>
-<meta property="og:title" content="OpenRE POC devlog 0 : &lt;TODO find name&gt; | Turbo Tartine Games" />
-<meta name="twitter:title" content="OpenRE POC devlog 0 : &lt;TODO find name&gt; | Turbo Tartine Games" />
-<meta itemprop="name" content="OpenRE POC devlog 0 : &lt;TODO find name&gt; | Turbo Tartine Games" />
-<meta name="application-name" content="OpenRE POC devlog 0 : &lt;TODO find name&gt; | Turbo Tartine Games" />
+<title itemprop="name">OpenRE devlog 0 : &lt;TODO find name&gt; | Turbo Tartine Games</title>
+<meta property="og:title" content="OpenRE devlog 0 : &lt;TODO find name&gt; | Turbo Tartine Games" />
+<meta name="twitter:title" content="OpenRE devlog 0 : &lt;TODO find name&gt; | Turbo Tartine Games" />
+<meta itemprop="name" content="OpenRE devlog 0 : &lt;TODO find name&gt; | Turbo Tartine Games" />
+<meta name="application-name" content="OpenRE devlog 0 : &lt;TODO find name&gt; | Turbo Tartine Games" />
 <meta property="og:site_name" content="Turbo Tartine Games" />
 
-<meta name="description" content="Bienvenu sur mon blog ! Vous y trouverez articles, tutoriels et devlogs, issus de mes peripties de développeur indépendant">
-<meta itemprop="description" content="Bienvenu sur mon blog ! Vous y trouverez articles, tutoriels et devlogs, issus de mes peripties de développeur indépendant" />
-<meta property="og:description" content="Bienvenu sur mon blog ! Vous y trouverez articles, tutoriels et devlogs, issus de mes peripties de développeur indépendant" />
-<meta name="twitter:description" content="Bienvenu sur mon blog ! Vous y trouverez articles, tutoriels et devlogs, issus de mes peripties de développeur indépendant" />
+<meta name="description" content="devlog 0 du projet OpenRE">
+<meta itemprop="description" content="devlog 0 du projet OpenRE" />
+<meta property="og:description" content="devlog 0 du projet OpenRE" />
+<meta name="twitter:description" content="devlog 0 du projet OpenRE" />
 
 <meta property="og:locale" content="fr-fr" />
 <meta name="language" content="fr-fr" />
@@ -25,13 +25,13 @@
 
 
 
-<meta name="generator" content="Hugo 0.137.0">
+<meta name="generator" content="Hugo 0.140.2">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re_poc_devlog_0/">
   <meta property="og:site_name" content="Turbo Tartine Games">
-  <meta property="og:title" content="OpenRE POC devlog 0 : ">
-  <meta property="og:description" content="Bienvenu sur mon blog ! Vous y trouverez articles, tutoriels et devlogs, issus de mes peripties de développeur indépendant">
+  <meta property="og:title" content="OpenRE devlog 0 : ">
+  <meta property="og:description" content="devlog 0 du projet OpenRE">
   <meta property="og:locale" content="fr_fr">
   <meta property="og:type" content="article">
     <meta property="article:section" content="projects">
@@ -42,8 +42,8 @@
     
     
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="OpenRE POC devlog 0 : ">
-  <meta name="twitter:description" content="Bienvenu sur mon blog ! Vous y trouverez articles, tutoriels et devlogs, issus de mes peripties de développeur indépendant">
+  <meta name="twitter:title" content="OpenRE devlog 0 : ">
+  <meta name="twitter:description" content="devlog 0 du projet OpenRE">
 
 
     
@@ -148,7 +148,7 @@ stroke-linejoin="round" class="feather feather-home">
     <main class="page-content" aria-label="Content">
         <article>
             <header class="header">
-                <h1 class="header-title">OpenRE POC devlog 0 : &lt;TODO find name&gt;</h1>
+                <h1 class="header-title">OpenRE devlog 0 : &lt;TODO find name&gt;</h1>
                 
                 
                 
@@ -161,10 +161,64 @@ stroke-linejoin="round" class="feather feather-home">
     
     <details class="toc" ZgotmplZ>
         <summary><b>Table des matières</b></summary>
-        <nav id="TableOfContents"></nav>
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#faire-coincider-les-mondes">Faire coincider les mondes</a></li>
+    <li><a href="#le-protocol-de-loracle">Le protocol de l&rsquo;oracle</a></li>
+    <li><a href="#problème-i--les-parametres-de-la-caméra">Problème I : les parametres de la caméra</a></li>
+    <li><a href="#problème-ii--la-profondeur">Problème II : La profondeur</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#depth-non-linéaire">Depth non linéaire</a></li>
+            <li><a href="#heading"></a></li>
+            <li><a href="#mist--1---depth">Mist != (1 - Depth)</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
     </details>
             <div class="page-content">
-                
+                <h2 id="introduction">Introduction</h2>
+<p>Ce develog est le premier de la série qui documente le POC du projet OpenRE. C&rsquo;est l&rsquo;occation de dire quelque mots sur le mode opératoir que j&rsquo;enviseage. Au cours du dévelopement, je prendrai des notes chaque fois que je rencontrerai un sujet potentiel. Chaque mois (si j&rsquo;arrive à m&rsquo;y tenir), je selectionnerai les plus pertinants et les développerai dans un nouveau develog.</p>
+<p>Etant donné que je développe OpenRE sur mon temps libre, il est probable que le rythme soit irréguliers. Certains numéros seront plus léger que d&rsquo;autres mais ce n&rsquo;est pas bien grave. Au contraire, ce sera interessant de voire comment la cadence se module au fils de l&rsquo;aventure.</p>
+<p>Notez aussi que les premier devlogs de cette serie seront en réalité des &ldquo;rétro-devlogs&rdquo;. En effet, j&rsquo;ai commencé le projet autours d&rsquo;octobre 2024. Je n&rsquo;ai pas la date exacte car j&rsquo;ai perdu l&rsquo;historique du repo dans une sombre histoire de scene blender légèrement volumineuse (shit happens&hellip;). A cette époque, je ne savais pas vraiment si ça menerait quelque part. Et pour tout vous dire, je n&rsquo;envisagais même pas encore la création de ce blog.</p>
+<p>Sans historique git, je ne peux pas remêtre le projet dans un ancien état et me balader dans la code base pour regarder comme c&rsquo;était foutu. Je ne peux pas non plus faire une simple caprutre d&rsquo;écran pour illustrer ce que je raconte. Ces premiers numéros seront donc réalisés entièrement de mémoire et les image qui y figureront seront pour la plupart des reconstition. Evidement, je le préciserai chaque fois que ce sera le cas.</p>
+<p>Avant de vous souhaiter une bonne lecture, j&rsquo;attire votre attention sur le fait qu&rsquo;une vue d&rsquo;ensemble du projet OpenRE est disponnible <a href="/projects/open_re/">ici</a>. Il n&rsquo;est pas nécessaire d&rsquo;avoir lu et digéré l&rsquo;article dans son intégralité mais il est tout de même conseillé de l&rsquo;avoir parcouru pour pouvoir contextualiser ce que je traite dans les devlogs. J&rsquo;y introduit également un peu de terminologie. Mais vous pouvez aussi ignorer ce conseil et y faire un tour si vous vous sentez perdu.</p>
+<h2 id="faire-coincider-les-mondes">Faire coincider les mondes</h2>
+<p>Tout le principe d&rsquo;OpenRE est de fusionner le monde déterministe (modélisé dans Blender) et le monde intéractif (implémenté dans Godot) dans une représentation finale cohérente et homogène. La première chose à faire pour montrer que c&rsquo;est possible et de s&rsquo;assurer que les 2 environnement peuvent produire des données rigoureusement identiques. Sans quoi on ne pourra pas les composer entre elles. Dit autrement, on cherche à valider qu&rsquo;on est capable &ldquo;d&rsquo;étalonner&rdquo; les environnements pour que ce qui en sort s&rsquo;accorde bien.</p>
+<p>La stratégie que j&rsquo;ai utilisé pour ça est inspirée du TDD : Test Driven Development. Je prends quelques pincettes avec ce terme car je ne suis pas du tout expert en la matière. N&rsquo;hésitez donc pas à me corriger dans les commentaire. Mais dans les grande lignes, c&rsquo;est une méthodologie de développement suivant laquelle on se donne des moyens de verifier qu&rsquo;une fonctionnalité marche avant même de commencer là programmer. On appel ces moyen : des tests.</p>
+<p>A mon sens, cette technique n&rsquo;est pas adaptée à toutes les problématique. Dans un jeu vidéo par exemple, c&rsquo;est souvent compliqué d&rsquo;écrire ce genre de tests. En consequence, chercher à tout pris la meilleur couverture possible est souvent contre-productif. Pour moi le TDD est un outil parmis d&rsquo;autres qu&rsquo;il faut savoir utiliser dans le bon context (une scie circulaire c&rsquo;est très puissant, mais n&rsquo;essayez pas de planter un clou avec. C&rsquo;est dangeureux !).</p>
+<p>Mais sans la mettre à toutes les sauces, quelque frappes chirugicales bien placées peuvent en faire une arme redoutable. Et il se trouve que notre problématique s&rsquo;y prète bien. Alors feu à volonté !</p>
+<h2 id="le-protocol-de-loracle">Le protocol de l&rsquo;oracle</h2>
+<p>Ce qui va jouer le rôle de &ldquo;test&rdquo; ici sera plus un protocole experimental qu&rsquo;il faudra dérouler (en partie manuellement) pour avoir notre réponse. L&rsquo;objet de cette section est de décrire ce protocole.</p>
+<p>J&rsquo;ai commencé par créer dans Blender une petite scene de test composées uniquement de quelques primitives très simples et d&rsquo;une caméra. Cette scène à ensuite été scrupuleusement reproduite à l&rsquo;identique dans Godot. L&rsquo;opération fut trivial étant donné que Godot prend en charge le format de scene de Blender. Je n&rsquo;ai eu qu&rsquo;à importer le .blend et à le benner dans une scene Godot vide. And voilà !</p>
+<p>[image de la scene dans les 2 env]</p>
+<p>Les données issues de ces scenes et dont on cherche à verifier l&rsquo;equivalence sont les G-Buffers de chacunes des deux caméra. Pour l&rsquo;instant, on va se contanter de G-Buffers partiels constitués de seulement 2 maps :</p>
+<ul>
+<li>L&rsquo;albédo (la couleur)</li>
+<li>La profondeur</li>
+</ul>
+<p>Pour pouvoir comparer les G-Buffer, on va d&rsquo;abord exporter les maps de la scene déterministe grâce au compositor de Blender. Ensuite il faudra les importer dans Godot sous forme de texture et écrire un post-process &ldquo;oracle.shader&rdquo; qui les prend en parametre elles ainsi qu&rsquo;un entier &ldquo;dataType&rdquo; designant la donné que l&rsquo;on veut verifier.</p>
+<p>[code du shader oracle]</p>
+<p>&ldquo;oracle.shader&rdquo; opère simplement une soustraction des maps désignées par le parametre &ldquo;dataType&rdquo;. Si l&rsquo;écran est totalement noir quelque soit la valeur de &ldquo;dataType&rdquo;, alors les G-Buffers sont equivalents. Si ce n&rsquo;est pas le cas, quelque chose est mal étalonné et le jeu c&rsquo;est de trouver quoi.</p>
+<p>[schema oracle simple]</p>
+<p>Sur le papier, les 2 scenes sont identiques puisqu&rsquo;elles viennent du même fichier .blend. On devrait donc passer le test du premier coup. Qu&rsquo;est-ce qui pourait mal se passer ?</p>
+<p>[test failed avec meme Doh de homer]</p>
+<h2 id="problème-i--les-parametres-de-la-caméra">Problème I : les parametres de la caméra</h2>
+<p>Le premier problème vient de la définition de la caméra. Blender et Godot utilisent des conventions différentes, et malheureusement l&rsquo;importer a l&rsquo;aire d&rsquo;oublier un petit détail.</p>
+<h2 id="problème-ii--la-profondeur">Problème II : La profondeur</h2>
+<p>Après la mise en bouche</p>
+<h4 id="depth-non-linéaire">Depth non linéaire</h4>
+<h4 id="heading"></h4>
+<h4 id="mist--1---depth">Mist != (1 - Depth)</h4>
+<h2 id="conclusion">Conclusion</h2>
+<p>On à donc finalement réussi à faire cohabiter les conventions de Blender et de Godot.</p>
+
             </div>
         </article>
 <hr style="margin-top: 40px; margin-bottom: 40px;" />
