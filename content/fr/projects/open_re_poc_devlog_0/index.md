@@ -6,7 +6,7 @@ title = 'OpenRE devlog 0 : <TODO find name>'
 description = 'devlog 0 du projet OpenRE'
 +++
 ## Introduction
-Ce develog est le premier de la série qui documente le POC du projet OpenRE. C'est l'occation de dire quelque mots sur le mode opératoir que j'enviseage. Au cours du dévelopement, je prendrai des notes chaque fois que je rencontrerai un sujet potentiel. Tous les mois (si j'arrive à m'y tenir), je selectionnerai les plus pertinants pour les développerai dans un nouveau develog. 
+Ce develog est le premier de la série qui documente le POC du projet OpenRE. C'est l'occation de dire quelque mots sur le mode opératoir que j'enviseage. Au cours du dévelopement, je prendrai des notes chaque fois que je rencontrerai un sujet potentiel. Tous les mois (si j'arrive à m'y tenir), je selectionnerai les plus pertinants pour les présenter dans un nouveau develog. 
 
 Etant donné que je développe OpenRE sur mon temps libre, il est probable que le rythme soit irréguliers. Certains numéros seront plus léger que d'autres mais ce n'est pas bien grave. Au contraire, ce sera interessant de voire comment la cadence se module au fils de l'aventure. 
 
@@ -37,9 +37,46 @@ Les données issues de ces scenes et dont on cherche à verifier l'equivalence s
 - L'albédo (la couleur)
 - La profondeur
 
-Pour pouvoir comparer les G-Buffer, on va d'abord exporter les maps de la scene déterministe grâce au compositor de Blender. Ensuite il faudra les importer dans Godot sous forme de texture et écrire un post-process ```oracle.shader``` qui les prendra en parametre ainsi qu'un entier ```dataType``` designant la donné que l'on veut verifier.
+Pour pouvoir comparer les G-Buffer, on va d'abord exporter les maps de la scene déterministe grâce au compositor de Blender. Ensuite il faudra les importer dans Godot sous forme de texture et écrire un post-process ```oracle.gdshader``` qui les prendra en parametre ainsi qu'un entier ```dataType``` designant la donné que l'on veut verifier.
 
-[code du shader oracle]
+```glsl
+shader_type spatial;
+render_mode unshaded, fog_disabled;
+
+// depth map du G-Buffer interactif (injecté par Godot grace au hint_depth_texture)
+uniform sampler2D igbuffer_depth : hint_depth_texture, filter_nearest;
+// albedo map du G-Buffer interactif (injecté par Godot grace au hint_screen_texture)
+uniform sampler2D igbuffer_albedo : hint_screen_texture, filter_nearest;
+
+// Type de data à visualiser
+uniform int data_type = 0;
+// depth map du G-Buffer deterministe
+uniform sampler2D  dgbuffer_depth : filter_nearest;
+// albedo map du G-Buffer deterministe
+uniform sampler2D  dgbuffer_albedo : filter_nearest;
+
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+void fragment() {
+	vec3 dgbuffer_map_frag = vec3(1.0, 1.0, 1.0);
+	vec3 igbuffer_map_frag = vec3(0.0, 0.0, 0.0);
+	
+	if (data_type == 0) {
+		dgbuffer_map_frag = texture(dgbuffer_depth, SCREEN_UV).rgb;
+		igbuffer_map_frag = texture(igbuffer_depth, SCREEN_UV).rgb;
+	}
+	else if (data_type == 1) {
+		dgbuffer_map_frag = texture(dgbuffer_albedo, SCREEN_UV).rgb;
+		igbuffer_map_frag = texture(igbuffer_albedo, SCREEN_UV).rgb;
+	}
+		
+	
+	ALBEDO = dgbuffer_map_frag - igbuffer_map_frag;
+}
+```
+*Code source du shader oracle.gdshader*
 
 ```oracle.gdshader``` opère simplement une soustraction des maps désignées. Si l'écran est totalement noir quelque soit la valeur de ```dataType```, alors les G-Buffers sont equivalents. Si ce n'est pas le cas, quelque chose est mal étalonné et le jeu c'est de trouver quoi.
 

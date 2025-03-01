@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.140.2">
+<meta name="generator" content="Hugo 0.137.0">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re_poc_devlog_0/">
@@ -184,7 +184,7 @@ stroke-linejoin="round" class="feather feather-home">
     </details>
             <div class="page-content">
                 <h2 id="introduction">Introduction</h2>
-<p>Ce develog est le premier de la série qui documente le POC du projet OpenRE. C&rsquo;est l&rsquo;occation de dire quelque mots sur le mode opératoir que j&rsquo;enviseage. Au cours du dévelopement, je prendrai des notes chaque fois que je rencontrerai un sujet potentiel. Tous les mois (si j&rsquo;arrive à m&rsquo;y tenir), je selectionnerai les plus pertinants pour les développerai dans un nouveau develog.</p>
+<p>Ce develog est le premier de la série qui documente le POC du projet OpenRE. C&rsquo;est l&rsquo;occation de dire quelque mots sur le mode opératoir que j&rsquo;enviseage. Au cours du dévelopement, je prendrai des notes chaque fois que je rencontrerai un sujet potentiel. Tous les mois (si j&rsquo;arrive à m&rsquo;y tenir), je selectionnerai les plus pertinants pour les présenter dans un nouveau develog.</p>
 <p>Etant donné que je développe OpenRE sur mon temps libre, il est probable que le rythme soit irréguliers. Certains numéros seront plus léger que d&rsquo;autres mais ce n&rsquo;est pas bien grave. Au contraire, ce sera interessant de voire comment la cadence se module au fils de l&rsquo;aventure.</p>
 <p>Notez aussi que les premier devlogs de cette serie seront en réalité des &ldquo;rétro-devlogs&rdquo;. En effet, j&rsquo;ai commencé le projet autours d&rsquo;octobre 2024. Je n&rsquo;ai pas la date exacte car j&rsquo;ai perdu l&rsquo;historique du repo dans une sombre histoire de scene blender légèrement volumineuse (shit happens&hellip;). A cette époque, je ne savais pas vraiment si ça menerait quelque part. Et pour tout vous dire, je n&rsquo;envisagais même pas encore la création de ce blog.</p>
 <p>Sans historique git, je ne peux pas remêtre le projet dans un ancien état et me balader dans la code base pour regarder comme c&rsquo;était foutu. Je ne peux pas non plus faire une simple caprutre d&rsquo;écran pour illustrer ce que je raconte. Ces premiers numéros seront donc réalisés entièrement de mémoire et les image qui y figureront seront pour la plupart des reconstition. Evidement, je le préciserai chaque fois que ce sera le cas.</p>
@@ -197,17 +197,52 @@ stroke-linejoin="round" class="feather feather-home">
 <h2 id="le-protocol-de-loracle">Le protocol de l&rsquo;oracle</h2>
 <p>Ce qui va jouer le rôle de &ldquo;test&rdquo; ici sera plus un protocole experimental qu&rsquo;il faudra dérouler (en partie manuellement) pour avoir notre réponse. L&rsquo;objet de cette section est de décrire ce protocole.</p>
 <p>J&rsquo;ai commencé par créer dans Blender une petite scene de test composées uniquement de quelques primitives très simples et d&rsquo;une caméra. Cette scène à ensuite été scrupuleusement reproduite dans Godot. L&rsquo;opération est trivial étant donné que Godot prend en charge le format de scene de Blender. Je n&rsquo;ai eu qu&rsquo;à importer le .blend et à le benner dans une scene Godot vide. And voilà !</p>
-<p><img src="/projects/open_re_poc_devlog_0/images/simpleBlend.opti.webp" alt="Illustration représentant la SimpleScene dans Blender">
-<img src="/projects/open_re_poc_devlog_0/images/simpleGodot.opti.webp" alt="Illustration représentant la SimpleScene dans Godot"></p>
+<p><img alt="Illustration représentant la SimpleScene dans Blender" src="/projects/open_re_poc_devlog_0/images/simpleBlend.opti.webp">
+<img alt="Illustration représentant la SimpleScene dans Godot" src="/projects/open_re_poc_devlog_0/images/simpleGodot.opti.webp"></p>
 <p>Les données issues de ces scenes et dont on cherche à verifier l&rsquo;equivalence sont les G-Buffers de chacunes des deux caméra. Pour l&rsquo;instant, on va se contanter de G-Buffers partiels constitués de seulement 2 maps :</p>
 <ul>
 <li>L&rsquo;albédo (la couleur)</li>
 <li>La profondeur</li>
 </ul>
-<p>Pour pouvoir comparer les G-Buffer, on va d&rsquo;abord exporter les maps de la scene déterministe grâce au compositor de Blender. Ensuite il faudra les importer dans Godot sous forme de texture et écrire un post-process <code>oracle.shader</code> qui les prendra en parametre ainsi qu&rsquo;un entier <code>dataType</code> designant la donné que l&rsquo;on veut verifier.</p>
-<p>[code du shader oracle]</p>
+<p>Pour pouvoir comparer les G-Buffer, on va d&rsquo;abord exporter les maps de la scene déterministe grâce au compositor de Blender. Ensuite il faudra les importer dans Godot sous forme de texture et écrire un post-process <code>oracle.gdshader</code> qui les prendra en parametre ainsi qu&rsquo;un entier <code>dataType</code> designant la donné que l&rsquo;on veut verifier.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// depth map du G-Buffer interactif (injecté par Godot grace au hint_depth_texture)</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">igbuffer_depth</span> <span class="o">:</span> <span class="n">hint_depth_texture</span><span class="p">,</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// albedo map du G-Buffer interactif (injecté par Godot grace au hint_screen_texture)</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">igbuffer_albedo</span> <span class="o">:</span> <span class="n">hint_screen_texture</span><span class="p">,</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Type de data à visualiser</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">int</span> <span class="n">data_type</span> <span class="o">=</span> <span class="mo">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// depth map du G-Buffer deterministe</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span>  <span class="n">dgbuffer_depth</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// albedo map du G-Buffer deterministe</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span>  <span class="n">dgbuffer_albedo</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">vertex</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">POSITION</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">VERTEX</span><span class="p">.</span><span class="n">xy</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">dgbuffer_map_frag</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">igbuffer_map_frag</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">data_type</span> <span class="o">==</span> <span class="mo">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">dgbuffer_map_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">dgbuffer_depth</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">igbuffer_map_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">igbuffer_depth</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">data_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">dgbuffer_map_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">dgbuffer_albedo</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">igbuffer_map_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">igbuffer_albedo</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">dgbuffer_map_frag</span> <span class="o">-</span> <span class="n">igbuffer_map_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p><em>Code source du shader oracle.gdshader</em></p>
 <p><code>oracle.gdshader</code> opère simplement une soustraction des maps désignées. Si l&rsquo;écran est totalement noir quelque soit la valeur de <code>dataType</code>, alors les G-Buffers sont equivalents. Si ce n&rsquo;est pas le cas, quelque chose est mal étalonné et le jeu c&rsquo;est de trouver quoi.</p>
-<p><img src="/projects/open_re_poc_devlog_0/images/oracle_schema.opti.webp" alt="Image illustrant le protocol de validation"></p>
+<p><img alt="Image illustrant le protocol de validation" src="/projects/open_re_poc_devlog_0/images/oracle_schema.opti.webp"></p>
 <p>Sur le papier, les 2 scenes sont identiques puisqu&rsquo;elles viennent du même fichier .blend. On devrait donc passer le test du premier coup. Qu&rsquo;est-ce qui pourait mal se passer ?</p>
 <p>[test failed avec meme Doh de homer]</p>
 <h2 id="problème-i--les-parametres-de-la-caméra">Problème I : les parametres de la caméra</h2>
