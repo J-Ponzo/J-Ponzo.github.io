@@ -10,7 +10,7 @@ Bienvenu dans le tout premier devlog d'OpenRE : le develog Zéro ! Cette série 
 
 Étant donné qu’OpenRE est un projet personnel que je développe sur mon temps libre, le rythme de publication risque d’être irrégulier. Certains numéros seront plus légers que d’autres, mais ce n’est pas bien grave. Au contraire, ce sera intéressant de voir comment la cadence évolue au fil du projet.
 
-Avant de démarer, je vous recommande de jeter un oeil à la [présentation générale du projet](/projects/open_re). J'y introduit quelques notions et un peu de terminologie. Il est préférable de l'avoir parcouru pour contextualiser un peu ce ce dont je parle dans les devlogs.
+Avant de démarer, je vous recommande de jeter un oeil à la [présentation générale du projet](/projects/open_re). J'y introduit quelques notions et un peu de terminologie. Il est préférable de l'avoir parcouru pour contextualiser un peu ce dont je parle dans les devlogs.
 
 Sur ce, c'est parti !
 
@@ -32,23 +32,23 @@ Le premier vrai défi de ce POC est de s'assurer que Blender et Godot peuvent pr
 
 Mais ca peut vraiment être tout et n'importe quoi. Chaque logiciel est caractérisé par une liste interminable de parti pris de ce genre dont la cohérence n'est garantie que tant on n'en sors pas. Et pour qu'OpenRE ai une chance de fonctionner, il va falloir faire en sorte que Blender et Godot parlent la même langue.
 
-Pour cela, on va s'appuyer sur une technique que j'aime beaucoup et que j'appele le "Oracle Driven Developpment". C'est comme du "Test Driven Developpement", sauf qu'à la place d'un jeu de test automatiques bien propre et exhaustif, on va faire une grosse moulinette un peu dégeux qu'il faudra lançer à moitier à la main pour verifier qu'on est bon. A la manière d'un oracle, cette moulinette va formuler des profécies parfois un peu cryptiques, mais qui sauront nous guider dans notre périple si on parvient à les annalyser correctement.
+Pour cela, on va s'appuyer sur une technique que j'aime beaucoup et que j'appele le "Oracle Driven Developpment". C'est comme du "Test Driven Developpement", sauf qu'à la place d'un jeu de test automatisés bien propre et exhaustif, on va faire une grosse moulinette un peu dégeux qu'il faudra lançer à moitier à la main pour verifier qu'on est bon. A la manière d'un oracle, cette moulinette va formuler des profécies parfois un peu cryptiques, mais qui sauront nous guider dans notre périple si on parvient à les annalyser correctement.
 
-## Anatomie d'un Oracle
+## Anatomie de l'Oracle
+Dans cette section je vais expliquer de quoi est fait notre Oracle, et décrire le rituel permettant de soliciter sa professie. Si vous avez lu l'article référencé dans l'intro, vous savez qu'OpenRE compose les mondes déterministe et interactif en s'appuyant sur une représentation particulière de ces scenes qu'on appele des G-Buffers. Une façon de verifier que Blender et Godot sont bien sur la même longueure d'onde, c'est de verifier que si on leur donne les même données d'entrées (les scène), ils produisent les mêmes données de sortie (les G-Buffers).
 
-
-Ce qui va jouer le rôle de "test" sera plus un protocole experimental qu'il faudra dérouler (en partie manuellement) pour qu'il nous dise si oui ou non, nos environnement sont bien réglés sur la même fréquence. Dans cette section on va décortiquer un peu ce protocole que j'appel l'Oracle (parce que oui, vous savez, il répond aux question de manière cryptique... et puis c'esrt rigolo... bon d'accord c'est pas ma meilleur).
-
-J'ai commencé par créer dans Blender une petite scene de test composées uniquement de quelques primitives très simples et d'une caméra. Cette scène à ensuite été scrupuleusement reproduite dans Godot. L'opération est trivial étant donné que Godot prend en charge le format de scene de Blender. Je n'ai eu qu'à importer le .blend et à l'ajouter à une scene Godot vide. And voilà !
+J'ai donc commencé par créer dans Blender une petite scene de test composées de quelques primitives très simples et d'une caméra. Cette scène à ensuite été scrupuleusement reproduite dans Godot. L'opération est trivial étant donné que Godot prend en charge le format de scene de Blender. Je n'ai eu qu'à importer le .blend et à l'ajouter à une scene Godot vide. And voilà !
 
 ![Illustration représentant la SimpleScene dans Blender](images/simpleBlend.opti.webp)
 ![Illustration représentant la SimpleScene dans Godot](images/simpleGodot.opti.webp)
 
-Les données issues de ces scenes et dont on cherche à verifier l'equivalence sont les G-Buffers de chacunes des deux caméra. Pour l'instant, on va se contanter de G-Buffers partiels constitués de seulement 2 maps :
-- L'albédo (la couleur)
-- La profondeur
+Les G-Buffers déterministes et interactifs devront à terme contenir les textures suivantes :
+- Albedo
+- Depth
+- Normal
+- ORM
 
-Pour pouvoir comparer les G-Buffer, on va d'abord exporter les maps de la scene déterministe grâce au compositor de Blender. Ensuite il faudra les importer dans Godot sous forme de texture et écrire le fameux post-process ```oracle.gdshader``` qui les prendra en parametre pour les comparer aux maps interactives homologues fournies par Godot (le paramètre ```data_type``` sert juste à désigner quelle donnée on veut comparer).
+Dans une premier temps nous allons nous focaliser sur l'Albedo (et vous allez voir, c'est bien suffisant pour aujourd'hui !). Nous traiterons le reste dans des develogs dédiés mais nous allons d'ors et déjà implémenter un oracle capable de mesurer le degré d'armonie entre toutes ces données. Il se materialisera en ce monde sous la forme du post-process ```oracle.gdshader``` et prendra en entrée chacune des textures des 2 G-Buffers ainsi qu'un entier ```data_type``` designant le type de texture que l'on veut comparer.
 
 ```glsl
 shader_type spatial;
@@ -89,25 +89,16 @@ void fragment() {
 ```
 *Code source du shader oracle.gdshader*
 
-```oracle.gdshader``` calcule simplement la distance entre les couleurs de chaques pixels des maps designées. Si l'écran est totalement noir quelque soit la valeur de ```data_type```, alors les G-Buffers sont equivalents. Si ce n'est pas le cas, quelque chose est mal étalonné et le jeu, c'est de trouver quoi.
+Le fonctionnement de ```oracle.gdshader``` est finalement assez simple. Il calcule la distance entre les couleurs de chaques pixels des textures dont le type correspond à ```data_type```. Si l'écran est noir quelque soit la valeur de ```data_type```, alors les G-Buffers sont equivalents. Sinon, cela s'ignifie que quelque chose est mal réglé. Et biensure, le jeu, c'est de trouver quoi en se basant l'image que l'Oracle nous montre.
 
 ![Image illustrant le protocol de validation](images/oracle_schema.opti.webp)
 
-Sur le papier, les 2 scenes sont identiques puisqu'elles viennent du même fichier .blend. On devrait donc passer le test du premier coup. Qu'est-ce qui pourait mal se passer ?
+Interessons nous maintenant à la création des textures d'albedo. Pour la version deterministe, il suffit d'exporter la ```diffCol pass``` de Cycles et d'importer l'image produite dans Godot pour en faire une texture. De là il n'y a plus qu'à binder cette texture au ```uniform dgbuffer_albedo``` du ```oracle.gdshader``` et le tour est joué.
 
-[test failed avec meme Doh de homer]
+[img compositor => fichier => import => bind]
 
-## Problème I : les parametres de la caméra
-Le premier problème vient de la définition de la caméra. Blender et Godot utilisent des conventions différentes, et malheureusement l'importer a l'aire d'oublier un petit détail.
+Pour la version interactive c'est un peu plus complexe. On va utiliser ...
 
-## Problème II : La profondeur
-Après la mise en bouche
+Sur le papier, les 2 scenes sont identiques puisqu'elles viennent du même fichier. L'importeur de Godot prends soin de traduire toutes les données du .blend selon se propres conventions. On devrait donc passer le test du premier coup. Qu'est-ce qui pourait mal se passer ?
 
-#### Depth non linéaire
-
-#### Gamma
-
-#### Mist != (1 - Depth)
-
-## Conclusion
-On à donc finalement réussi à faire cohabiter les conventions de Blender et de Godot. 
+## Décryptage de la professie
