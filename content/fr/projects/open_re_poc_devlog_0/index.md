@@ -21,14 +21,22 @@ Durant cette période, il se trouve que le dépôt git a pris feu (suite à une 
 
 Résultat : j’ai perdu l’historique du projet. Je ne peux donc  plus réstaurer les premières versions pour analyser ce que j'avais fait. Réaliser des capture d'écran de mes résultats originaux est également impossible. Ces premiers numéros seront donc entièrement rédigés de mémoire, et les images qui y figurent seront des reconstitutions.
 
-## Faire coincider les mondes
-Tout le principe d'OpenRE est de fusionner le monde déterministe (modélisé dans Blender) et le monde intéractif (implémenté dans Godot) dans une représentation finale cohérente et homogène. La première chose à faire est de s'assurer que les 2 environnement produise des données compatibles. Sans quoi on ne pourra pas les composer entre elles. Dit autrement, on cherche à valider qu'on est capable "d'étalonner" les environnements pour que ce qui en sort s'accorde bien.
+## Oracle Driven Development
+Le premier vrai défi de ce POC est de s'assurer que Blender et Godot peuvent produire des données compatibles. En effet tous les logiciels graphiques ont leurs propres conventions. Sont (très) régulièrement concernés :
+- Les unités de mesure
+- Les espaces colorimétriques
+- Le sens des matrices
+- L'ordre des rotations
+- Les axes du repère
+- ...
 
-La stratégie que j'ai utilisé pour ça est inspirée du TDD : Test Driven Development. Je prends quelques pincettes avec ce terme car je ne suis pas du tout expert en la matière. N'hésitez donc pas à me corriger dans les commentaire. Mais dans les grande lignes, c'est une méthodologie de développement suivant laquelle on se donne des moyens de verifier qu'une fonctionnalité marche avant même de commencer à là programmer. On appel ces moyen : des tests. 
+Mais ca peut vraiment être tout et n'importe quoi. Chaque logiciel est caractérisé par une liste interminable de parti pris de ce genre dont la cohérence n'est garantie que tant on n'en sors pas. Et pour qu'OpenRE ai une chance de fonctionner, il va falloir faire en sorte que Blender et Godot parlent la même langue.
 
-Je trouve que cette technique n'est pas adaptée à toutes les problématique. Dans un jeu vidéo par exemple, c'est souvent compliqué d'écrire ce genre de tests et chercher à tout pris la meilleur couverture possible est souvent contre-productif. Cela dit, bien utilisé c'est un outil très puissant et il se trouve que notre problématique s'y prète bien alors pourquoi s'en priver ?
+Pour cela, on va s'appuyer sur une technique que j'aime beaucoup et que j'appele le "Oracle Driven Developpment". C'est comme du "Test Driven Developpement", sauf qu'à la place d'un jeu de test automatiques bien propre et exhaustif, on va faire une grosse moulinette un peu dégeux qu'il faudra lançer à moitier à la main pour verifier qu'on est bon. A la manière d'un oracle, cette moulinette va formuler des profécies parfois un peu cryptiques, mais qui sauront nous guider dans notre périple si on parvient à les annalyser correctement.
 
-## Le protocol de l'oracle
+## Anatomie d'un Oracle
+
+
 Ce qui va jouer le rôle de "test" sera plus un protocole experimental qu'il faudra dérouler (en partie manuellement) pour qu'il nous dise si oui ou non, nos environnement sont bien réglés sur la même fréquence. Dans cette section on va décortiquer un peu ce protocole que j'appel l'Oracle (parce que oui, vous savez, il répond aux question de manière cryptique... et puis c'esrt rigolo... bon d'accord c'est pas ma meilleur).
 
 J'ai commencé par créer dans Blender une petite scene de test composées uniquement de quelques primitives très simples et d'une caméra. Cette scène à ensuite été scrupuleusement reproduite dans Godot. L'opération est trivial étant donné que Godot prend en charge le format de scene de Blender. Je n'ai eu qu'à importer le .blend et à l'ajouter à une scene Godot vide. And voilà !
