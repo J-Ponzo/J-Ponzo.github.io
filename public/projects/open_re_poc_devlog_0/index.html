@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.140.2">
+<meta name="generator" content="Hugo 0.137.0">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re_poc_devlog_0/">
@@ -164,6 +164,7 @@ stroke-linejoin="round" class="feather feather-home">
         <nav id="TableOfContents">
   <ul>
     <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#shit-happens">Shit happens</a></li>
     <li><a href="#faire-coincider-les-mondes">Faire coincider les mondes</a></li>
     <li><a href="#le-protocol-de-loracle">Le protocol de l&rsquo;oracle</a></li>
     <li><a href="#problème-i--les-parametres-de-la-caméra">Problème I : les parametres de la caméra</a></li>
@@ -184,11 +185,14 @@ stroke-linejoin="round" class="feather feather-home">
     </details>
             <div class="page-content">
                 <h2 id="introduction">Introduction</h2>
-<p>Ce develog est le premier de la série qui documente le POC du projet OpenRE. C&rsquo;est l&rsquo;occation de dire quelque mots sur le mode opératoir que j&rsquo;enviseage. Au cours du dévelopement, je prendrai des notes chaque fois que je rencontrerai un sujet potentiel. Tous les mois (si j&rsquo;arrive à m&rsquo;y tenir), je selectionnerai les plus pertinants pour les présenter dans un nouveau develog.</p>
-<p>Etant donné que je développe OpenRE sur mon temps libre, il est probable que le rythme soit irréguliers. Certains numéros seront plus léger que d&rsquo;autres mais ce n&rsquo;est pas bien grave. Au contraire, ce sera interessant de voire comment la cadence se module au fils de l&rsquo;aventure.</p>
-<p>Notez aussi que les premier devlogs de cette serie seront en réalité des &ldquo;rétro-devlogs&rdquo;. En effet, j&rsquo;ai commencé le projet il y a plusieurs mois déjà. Je n&rsquo;ai pas la date exacte car j&rsquo;ai perdu l&rsquo;historique du repo git (shit happens&hellip;). A cette époque, je ne savais pas vraiment si mes expérimentations menerait quelque part. Et pour tout vous dire, je n&rsquo;envisagais même pas encore la création de ce blog alors je suis allé au plus simple (qui était de créer un nouveau dépôt avec ma copie locale).</p>
-<p>Mais maintenant je suis bien embêté, car sans historique, je ne peux pas remêtre le projet dans un état antérieur et me balader dans la code base pour voir ce que j&rsquo;avais fait. Je ne peux pas non plus faire des caprutre des résultats originaux. Ces premiers numéros seront donc réalisés entièrement de mémoire et les image qui y figureront seront des reconstition (évidement, je le préciserai chaque fois que ce sera le cas).</p>
-<p>Avant de vous souhaiter une bonne lecture, j&rsquo;attire votre attention sur le fait qu&rsquo;une vue d&rsquo;ensemble du projet OpenRE est disponnible <a href="/projects/open_re/">ici</a>. Il n&rsquo;est pas nécessaire d&rsquo;avoir lu et digéré l&rsquo;article dans son intégralité mais j&rsquo;y introduit un peu de terminologie et il est tout de même conseillé de l&rsquo;avoir parcouru pour contextualiser un peu ce que je raconte dans les devlogs. Vous pouvez aussi ignorer ce conseil mais si vous vous sentez perdu sachez qu&rsquo;il existe.</p>
+<p>Bienvenu dans le tout premier devlog d&rsquo;OpenRE : le develog Zéro ! Cette série a pour but de documenter la phase de POC (proof of concept) du projet. Le format sera assez simple. Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un nouveau numéro.</p>
+<p>Étant donné qu’OpenRE est un projet personnel que je développe sur mon temps libre, le rythme de publication risque d’être irrégulier. Certains numéros seront plus légers que d’autres, mais ce n’est pas bien grave. Au contraire, ce sera intéressant de voir comment la cadence évolue au fil du projet.</p>
+<p>Avant de démarer, je vous recommande de jeter un oeil à la <a href="/projects/open_re/">présentation générale du projet</a>. J&rsquo;y introduit quelques notions et un peu de terminologie. Il est préférable de l&rsquo;avoir parcouru pour contextualiser un peu ce ce dont je parle dans les devlogs.</p>
+<p>Sur ce, c&rsquo;est parti !</p>
+<h2 id="shit-happens">Shit happens</h2>
+<p>Petite particularité concernant les première articles de la série : il s&rsquo;agira de &ldquo;retro-devlogs&rdquo;. En effet j’ai commencé OpenRE il y a plusieurs mois, sans trop savoir où j’allais. Je n&rsquo;étais pas sûr que mes expérimentations mèneraient quelque part et de toutes façons, l&rsquo;idée même de tenir un blog ne mavais pas encore traversé l&rsquo;esprit.</p>
+<p>Durant cette période, il se trouve que le dépôt git a pris feu (suite à une sombre histoire fichiers blender beaucoup trop volumineux). Je sais qu&rsquo;il existe des methodes douce pour régler ce genre de problème. Mais j&rsquo;avoue que sur le moment je ne voyais pas trop l&rsquo;intérais. J&rsquo;ai donc bêtement supprimé le dépôt pour en recréer un avec ma copie locale (après avoir fait le nécessaire pour gérer un peu mieux mes scenes).</p>
+<p>Résultat : j’ai perdu l’historique du projet. Je ne peux donc  plus réstaurer les premières versions pour analyser ce que j&rsquo;avais fait. Réaliser des capture d&rsquo;écran de mes résultats originaux est également impossible. Ces premiers numéros seront donc entièrement rédigés de mémoire, et les images qui y figurent seront des reconstitutions.</p>
 <h2 id="faire-coincider-les-mondes">Faire coincider les mondes</h2>
 <p>Tout le principe d&rsquo;OpenRE est de fusionner le monde déterministe (modélisé dans Blender) et le monde intéractif (implémenté dans Godot) dans une représentation finale cohérente et homogène. La première chose à faire est de s&rsquo;assurer que les 2 environnement produise des données compatibles. Sans quoi on ne pourra pas les composer entre elles. Dit autrement, on cherche à valider qu&rsquo;on est capable &ldquo;d&rsquo;étalonner&rdquo; les environnements pour que ce qui en sort s&rsquo;accorde bien.</p>
 <p>La stratégie que j&rsquo;ai utilisé pour ça est inspirée du TDD : Test Driven Development. Je prends quelques pincettes avec ce terme car je ne suis pas du tout expert en la matière. N&rsquo;hésitez donc pas à me corriger dans les commentaire. Mais dans les grande lignes, c&rsquo;est une méthodologie de développement suivant laquelle on se donne des moyens de verifier qu&rsquo;une fonctionnalité marche avant même de commencer à là programmer. On appel ces moyen : des tests.</p>
@@ -196,8 +200,8 @@ stroke-linejoin="round" class="feather feather-home">
 <h2 id="le-protocol-de-loracle">Le protocol de l&rsquo;oracle</h2>
 <p>Ce qui va jouer le rôle de &ldquo;test&rdquo; sera plus un protocole experimental qu&rsquo;il faudra dérouler (en partie manuellement) pour qu&rsquo;il nous dise si oui ou non, nos environnement sont bien réglés sur la même fréquence. Dans cette section on va décortiquer un peu ce protocole que j&rsquo;appel l&rsquo;Oracle (parce que oui, vous savez, il répond aux question de manière cryptique&hellip; et puis c&rsquo;esrt rigolo&hellip; bon d&rsquo;accord c&rsquo;est pas ma meilleur).</p>
 <p>J&rsquo;ai commencé par créer dans Blender une petite scene de test composées uniquement de quelques primitives très simples et d&rsquo;une caméra. Cette scène à ensuite été scrupuleusement reproduite dans Godot. L&rsquo;opération est trivial étant donné que Godot prend en charge le format de scene de Blender. Je n&rsquo;ai eu qu&rsquo;à importer le .blend et à l&rsquo;ajouter à une scene Godot vide. And voilà !</p>
-<p><img src="/projects/open_re_poc_devlog_0/images/simpleBlend.opti.webp" alt="Illustration représentant la SimpleScene dans Blender">
-<img src="/projects/open_re_poc_devlog_0/images/simpleGodot.opti.webp" alt="Illustration représentant la SimpleScene dans Godot"></p>
+<p><img alt="Illustration représentant la SimpleScene dans Blender" src="/projects/open_re_poc_devlog_0/images/simpleBlend.opti.webp">
+<img alt="Illustration représentant la SimpleScene dans Godot" src="/projects/open_re_poc_devlog_0/images/simpleGodot.opti.webp"></p>
 <p>Les données issues de ces scenes et dont on cherche à verifier l&rsquo;equivalence sont les G-Buffers de chacunes des deux caméra. Pour l&rsquo;instant, on va se contanter de G-Buffers partiels constitués de seulement 2 maps :</p>
 <ul>
 <li>L&rsquo;albédo (la couleur)</li>
@@ -241,7 +245,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p><em>Code source du shader oracle.gdshader</em></p>
 <p><code>oracle.gdshader</code> calcule simplement la distance entre les couleurs de chaques pixels des maps designées. Si l&rsquo;écran est totalement noir quelque soit la valeur de <code>data_type</code>, alors les G-Buffers sont equivalents. Si ce n&rsquo;est pas le cas, quelque chose est mal étalonné et le jeu, c&rsquo;est de trouver quoi.</p>
-<p><img src="/projects/open_re_poc_devlog_0/images/oracle_schema.opti.webp" alt="Image illustrant le protocol de validation"></p>
+<p><img alt="Image illustrant le protocol de validation" src="/projects/open_re_poc_devlog_0/images/oracle_schema.opti.webp"></p>
 <p>Sur le papier, les 2 scenes sont identiques puisqu&rsquo;elles viennent du même fichier .blend. On devrait donc passer le test du premier coup. Qu&rsquo;est-ce qui pourait mal se passer ?</p>
 <p>[test failed avec meme Doh de homer]</p>
 <h2 id="problème-i--les-parametres-de-la-caméra">Problème I : les parametres de la caméra</h2>

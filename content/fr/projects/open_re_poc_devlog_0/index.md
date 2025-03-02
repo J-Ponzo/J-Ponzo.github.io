@@ -6,15 +6,20 @@ title = 'OpenRE devlog 0 : <TODO find name>'
 description = 'devlog 0 du projet OpenRE'
 +++
 ## Introduction
-Ce develog est le premier de la série qui documente le POC du projet OpenRE. C'est l'occation de dire quelque mots sur le mode opératoir que j'enviseage. Au cours du dévelopement, je prendrai des notes chaque fois que je rencontrerai un sujet potentiel. Tous les mois (si j'arrive à m'y tenir), je selectionnerai les plus pertinants pour les présenter dans un nouveau develog. 
+Bienvenu dans le tout premier devlog d'OpenRE : le develog Zéro ! Cette série a pour but de documenter la phase de POC (proof of concept) du projet. Le format sera assez simple. Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un nouveau numéro.
 
-Etant donné que je développe OpenRE sur mon temps libre, il est probable que le rythme soit irréguliers. Certains numéros seront plus léger que d'autres mais ce n'est pas bien grave. Au contraire, ce sera interessant de voire comment la cadence se module au fils de l'aventure. 
+Étant donné qu’OpenRE est un projet personnel que je développe sur mon temps libre, le rythme de publication risque d’être irrégulier. Certains numéros seront plus légers que d’autres, mais ce n’est pas bien grave. Au contraire, ce sera intéressant de voir comment la cadence évolue au fil du projet.
 
-Notez aussi que les premier devlogs de cette serie seront en réalité des "rétro-devlogs". En effet, j'ai commencé le projet il y a plusieurs mois déjà. Je n'ai pas la date exacte car j'ai perdu l'historique du repo git (shit happens...). A cette époque, je ne savais pas vraiment si mes expérimentations menerait quelque part. Et pour tout vous dire, je n'envisagais même pas encore la création de ce blog alors je suis allé au plus simple (qui était de créer un nouveau dépôt avec ma copie locale).
+Avant de démarer, je vous recommande de jeter un oeil à la [présentation générale du projet](/projects/open_re). J'y introduit quelques notions et un peu de terminologie. Il est préférable de l'avoir parcouru pour contextualiser un peu ce ce dont je parle dans les devlogs.
 
-Mais maintenant je suis bien embêté, car sans historique, je ne peux pas remêtre le projet dans un état antérieur et me balader dans la code base pour voir ce que j'avais fait. Je ne peux pas non plus faire des caprutre des résultats originaux. Ces premiers numéros seront donc réalisés entièrement de mémoire et les image qui y figureront seront des reconstition (évidement, je le préciserai chaque fois que ce sera le cas).
+Sur ce, c'est parti !
 
-Avant de vous souhaiter une bonne lecture, j'attire votre attention sur le fait qu'une vue d'ensemble du projet OpenRE est disponnible [ici](/projects/open_re). Il n'est pas nécessaire d'avoir lu et digéré l'article dans son intégralité mais j'y introduit un peu de terminologie et il est tout de même conseillé de l'avoir parcouru pour contextualiser un peu ce que je raconte dans les devlogs. Vous pouvez aussi ignorer ce conseil mais si vous vous sentez perdu sachez qu'il existe.
+## Shit happens
+Petite particularité concernant les première articles de la série : il s'agira de "retro-devlogs". En effet j’ai commencé OpenRE il y a plusieurs mois, sans trop savoir où j’allais. Je n'étais pas sûr que mes expérimentations mèneraient quelque part et de toutes façons, l'idée même de tenir un blog ne mavais pas encore traversé l'esprit.
+
+Durant cette période, il se trouve que le dépôt git a pris feu (suite à une sombre histoire fichiers blender beaucoup trop volumineux). Je sais qu'il existe des methodes douce pour régler ce genre de problème. Mais j'avoue que sur le moment je ne voyais pas trop l'intérais. J'ai donc bêtement supprimé le dépôt pour en recréer un avec ma copie locale (après avoir fait le nécessaire pour gérer un peu mieux mes scenes).
+
+Résultat : j’ai perdu l’historique du projet. Je ne peux donc  plus réstaurer les premières versions pour analyser ce que j'avais fait. Réaliser des capture d'écran de mes résultats originaux est également impossible. Ces premiers numéros seront donc entièrement rédigés de mémoire, et les images qui y figurent seront des reconstitutions.
 
 ## Faire coincider les mondes
 Tout le principe d'OpenRE est de fusionner le monde déterministe (modélisé dans Blender) et le monde intéractif (implémenté dans Godot) dans une représentation finale cohérente et homogène. La première chose à faire est de s'assurer que les 2 environnement produise des données compatibles. Sans quoi on ne pourra pas les composer entre elles. Dit autrement, on cherche à valider qu'on est capable "d'étalonner" les environnements pour que ce qui en sort s'accorde bien.
