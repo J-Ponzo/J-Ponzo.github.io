@@ -2,24 +2,24 @@
 author = 'Turbo Tartine'
 date = '2025-02-21T12:51:02+01:00'
 draft = true
-title = 'OpenRE devlog 0 : <TODO find name>'
+title = "OpenRE devlog 0 : L'Oracle"
 description = 'devlog 0 du projet OpenRE'
 +++
 ## Introduction
 Bienvenu dans ce tout premier devlog d'OpenRE : le develog Zéro ! Cette série a pour but de documenter la phase de POC (proof of concept) du projet. Le format sera assez simple. Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un nouveau numéro.
 
-Étant donné qu’OpenRE est un projet personnel que je développe sur mon temps libre, le rythme de publication risque d’être irrégulier. Certains numéros seront plus légers que d’autres, mais ce n’est pas bien grave. Au contraire, ce sera intéressant de voir comment la cadence évolue au fil du projet.
+Étant donné qu’OpenRE est un projet personnel que je développe sur mon temps libre, le rythme de publication risque d’être irrégulier. Certains numéros seront plus légers que d’autres, mais ce n’est pas bien grave. Au contraire, ce sera intéressant de voir comment la cadence évolue au fil du temps.
 
 Avant de démarer, je vous recommande de jeter un oeil à la [présentation générale du projet](/projects/open_re). J'y introduit notament quelques notions et un peu de terminologie. Il est préférable de l'avoir parcouru pour contextualiser un peu ce dont je parle dans les devlogs.
 
 Sur ce, c'est parti !
 
 ## Shit happens
-Petite particularité concernant les première articles de la série : il s'agira de "retro-devlogs". En effet j’ai commencé OpenRE il y a plusieurs mois, sans trop savoir où j’allais. Je n'étais pas sûr que mes expérimentations mèneraient quelque part et de toutes façons, l'idée même de tenir un blog ne mavais pas encore traversé l'esprit.
+Petite particularité concernant les première articles de la série : il s'agira de "retro-devlogs". En effet j’ai commencé OpenRE il y a plusieurs mois, sans trop savoir où j’allais. Je n'étais pas sûr que mes expérimentations mèneraient quelque part et de toutes façons, l'idée même de tenir un blog ne m'avais pas encore traversé l'esprit.
 
 Durant cette période, il se trouve que le dépôt git a pris feu (suite à une sombre histoire fichiers blender beaucoup trop volumineux). Je sais qu'il existe des methodes douce pour régler ce genre de problème. Mais j'avoue que sur le moment je ne voyais pas trop l'intérais. J'ai donc bêtement supprimé le dépôt pour en recréer un avec ma copie locale (après avoir fait le nécessaire pour gérer un peu mieux mes scenes).
 
-Résultat : j’ai perdu l’historique du projet. Je ne peux donc  plus réstaurer les premières versions pour analyser ce que j'avais fait. Réaliser des capture d'écran de mes résultats originaux est également impossible. Ces premiers numéros seront donc entièrement rédigés de mémoire, et les images qui y figurent seront des reconstitutions.
+Résultat : j’ai perdu l’historique du projet. Je ne peux donc  plus réstaurer les premières versions pour analyser ce que j'avais fait. Réaliser des capture d'écran de mes résultats originaux est également impossible. Ces premiers numéros seront donc des reconstitutions.
 
 ## Oracle Driven Development
 Le premier vrai défi de ce POC est de s'assurer que Blender et Godot peuvent produire des données compatibles. En effet tous les logiciels graphiques ont leurs propres conventions. Sont (très) régulièrement concernés :
@@ -54,47 +54,84 @@ Mais dans un premier temps nous allons nous focaliser sur l'Albedo (et vous alle
 shader_type spatial;
 render_mode unshaded, fog_disabled;
 
-// depth map du G-Buffer interactif (injecté par Godot grace au hint_depth_texture)
-uniform sampler2D igbuffer_depth : hint_depth_texture, filter_nearest;
-// albedo map du G-Buffer interactif (injecté par Godot grace au hint_screen_texture)
-uniform sampler2D igbuffer_albedo : hint_screen_texture, filter_nearest;
-
-// Type de data à visualiser
+// Data to check
 uniform int data_type = 0;
-// depth map du G-Buffer deterministe
-uniform sampler2D  dgbuffer_depth : filter_nearest;
-// albedo map du G-Buffer deterministe
-uniform sampler2D  dgbuffer_albedo : filter_nearest;
+
+// Interactive G-Buffer
+uniform sampler2D igbuffer_albedo : filter_nearest;
+uniform sampler2D igbuffer_depth : hint_depth_texture, filter_nearest;
+uniform sampler2D igbuffer_normal : filter_nearest;
+uniform sampler2D igbuffer_orm : filter_nearest;
+
+// Determinist G-Buffer
+uniform sampler2D dgbuffer_albedo : filter_nearest;
+uniform sampler2D dgbuffer_depth : filter_nearest;
+uniform sampler2D dgbuffer_normal : filter_nearest;
+uniform sampler2D dgbuffer_orm : filter_nearest;
+
+// Sample the fragment from the determinist G-Buffer according to the given tex_type
+vec3 get_determinist_frag(int tex_type, vec2 coord) {
+	if (tex_type == 0) return texture(dgbuffer_albedo, coord).rgb;
+	else if (tex_type == 1) return texture(dgbuffer_depth, coord).rgb;
+	else if (tex_type == 2) return texture(dgbuffer_normal, coord).rgb;
+	else if (tex_type == 3) return texture(dgbuffer_orm, coord).rgb;
+	else return vec3(1.0, 1.0, 1.0);
+}
+
+// Sample the fragment from the interactive G-Buffer according to the given tex_type
+vec3 get_interactive_frag(int tex_type, vec2 coord) {
+	if (tex_type == 0) return texture(igbuffer_albedo, coord).rgb;
+	else if (tex_type == 1) return texture(igbuffer_depth, coord).rgb;
+	else if (tex_type == 2) return texture(igbuffer_normal, coord).rgb;
+	else if (tex_type == 3) return texture(igbuffer_orm, coord).rgb;
+	else return vec3(0.0, 0.0, 0.0);
+}
+
+// Texture differences impl
+///////////////////////////////////////////////////////////////////////////
+vec3 albedo_difference(vec3 determinist_frag, vec3 interactive_frag) {
+	return abs(determinist_frag - interactive_frag);
+}
+
+vec3 depth_difference(vec3 determinist_frag, vec3 interactive_frag) {
+	return vec3(1.0, 1.0, 1.0);
+}
+
+vec3 normal_difference(vec3 determinist_frag, vec3 interactive_frag) {
+	return vec3(1.0, 1.0, 1.0);
+}
+
+vec3 orm_difference(vec3 determinist_frag, vec3 interactive_frag) {
+	return vec3(1.0, 1.0, 1.0);
+}
+///////////////////////////////////////////////////////////////////////////
 
 void vertex() {
 	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
 }
 
 void fragment() {
-	vec3 dgbuffer_map_frag = vec3(1.0, 1.0, 1.0);
-	vec3 igbuffer_map_frag = vec3(0.0, 0.0, 0.0);
-	
-	if (data_type == 0) {
-		dgbuffer_map_frag = texture(dgbuffer_depth, SCREEN_UV).rgb;
-		igbuffer_map_frag = texture(igbuffer_depth, SCREEN_UV).rgb;
-	}
-	else if (data_type == 1) {
-		dgbuffer_map_frag = texture(dgbuffer_albedo, SCREEN_UV).rgb;
-		igbuffer_map_frag = texture(igbuffer_albedo, SCREEN_UV).rgb;
-	}
-		
-	
-	ALBEDO = abs(dgbuffer_map_frag - igbuffer_map_frag);
+	vec3 determinist_frag = get_determinist_frag(data_type, SCREEN_UV);
+	vec3 interactive_frag = get_interactive_frag(data_type, SCREEN_UV);
+
+	vec3 final_color = vec3(1.0, 1.0, 1.0);
+	if (data_type == 0) final_color = albedo_difference(determinist_frag, interactive_frag);
+	else if (data_type == 1) final_color = depth_difference(determinist_frag, interactive_frag);
+	else if (data_type == 2) final_color = normal_difference(determinist_frag, interactive_frag);
+	else if (data_type == 3) final_color = orm_difference(determinist_frag, interactive_frag);
+	ALBEDO = final_color;
 }
 ```
 *Code source du shader oracle.gdshader*
 
-Le fonctionnement de ```oracle.gdshader``` est finalement assez simple. Il calcule la distance entre les couleurs de chaques pixels des textures dont le type correspond à ```data_type```. Si l'écran est noir quelque soit la valeur de ```data_type```, alors les G-Buffers sont equivalents. Sinon, cela s'ignifie que quelque chose est mal réglé. Et biensure, le jeu, c'est de trouver quoi en se basant sur l'image que l'Oracle nous montre.
+Le fonctionnement de ```oracle.gdshader``` est finalement assez simple. Il calcule la différence entre les couleurs de chaques pixels des textures dont le type correspond à ```data_type```. Si l'écran est noir quelque soit la valeur de ```data_type```, alors les G-Buffers sont equivalents. Sinon, cela s'ignifie que quelque chose est mal réglé. Et biensure, le jeu, c'est de trouver quoi en se basant sur l'image que l'Oracle nous montre.
 
 ![Image illustrant le protocol de validation](images/oracle_schema.opti.webp)
 
-## Notre premier présage
-La question qui nous interesse ici est : "est ce que les textures d'Abledo produites par Blender et Godot sont bien harmonisées". Pour poser cette question à notre oracle, il va falloir binder ces textures aux uniforms correspondants du post-process. Ensuite on s'assurera que le paramètre ```data_type``` est bien réglé sur 0 (qui correspond à l'Albedo). On sera alors prêt à découvrir notre presage en appuyant sur play. Mais un petit problème subsiste : comment on obtien ces textures d'albedo au juste ?
+Comme vous pouvez le remarquer, seule la différence entre les textures d'albedo est implémentée pour l'instant. Les autres differences retournent la couleur blanche en dur. C'est un peu l'équivalent graphique du ```return null;``` par defaut quand on prévois d'implémenter une fonction plus tard.
+
+## La prophétie originelle
+La question qui nous interesse ici est : "est ce que les textures d'Abledo produites par Blender et Godot sont bien harmonisées". Pour poser cette question à notre oracle, il va falloir binder ces textures aux uniforms correspondants du post-process. Ensuite on s'assurera que le paramètre ```data_type``` est bien réglé sur 0 (qui correspond à l'Albedo). On sera alors prêt à recevoir notre prophécie en appuyant sur play. Mais un petit problème subsiste : comment on obtien ces textures d'albedo au juste ?
 
 #### Albedo du G-Buffer déterministe :
 Coté Blender on va activer la ```diffCol pass``` de Cycles (qui correspon à l'Albedo) puis on va effectuer un rendu. Grâce au compositor et au noeud ```File Output```, l'image correspondant à cette passe sera automatiquement exportée à l'emplacement spécifié à la fin du rendu. Il n'y aura plus qu'à importer cette image dans Godot et à la binder au ```uniform dgbuffer_albedo```
@@ -110,7 +147,7 @@ uniform sampler2D texture : hint_<insert_texture_name>_texture;
 La texture qui nous interesse ici est ```hint_screen_texture```. Mais malheureusement il ne s'agit pas directement de l'albedo. C'est un rendu classic depuis la caméra prenant en compte la lumière. On va donc tricher un peu en utilisant une render target (un ```SubViewport en terminologie Godot```) dont on va régler le parametre ```Debug Draw``` sur ```Unshaded```. Il suffit ensuite de binder cette render target au ```uniform igbuffer_albedo```
 
 #### C'est maintenant ! C'est maintenant !
-Nous avons correctement créé et bindé nos textures d'albedo. Ces données en été obtenues à partir de 2 scenes rigoureusement identiques puisqu'elles viennent du même fichier. Donc si l'importer de Godot est bien capable de traduire les données de Blender pour les conformer à ses propres conventions, nous devrions obtenir un présage positif (un écran noir). Qu'est-ce qui pourait mal se passer ?
+Nous avons correctement créé et bindé nos textures d'albedo. Ces données en été obtenues à partir de 2 scenes rigoureusement identiques puisqu'elles viennent du même fichier. Donc si l'importer de Godot est bien capable de traduire les données de Blender pour les conformer à ses propres conventions, nous devrions obtenir un prophécie encourageante (un écran noir). Qu'est-ce qui pourait mal se passer ?
 
 [presage failed]
 
