@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.137.0">
+<meta name="generator" content="Hugo 0.140.2">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re_poc_devlog_0/">
@@ -167,15 +167,26 @@ stroke-linejoin="round" class="feather feather-home">
     <li><a href="#shit-happens">Shit happens</a></li>
     <li><a href="#oracle-driven-development">Oracle Driven Development</a></li>
     <li><a href="#anatomie-de-loracle">Anatomie de l&rsquo;Oracle</a></li>
+    <li><a href="#notre-premier-présage">Notre premier présage</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#albedo-du-g-buffer-déterministe-">Albedo du G-Buffer déterministe :</a></li>
+            <li><a href="#albedo-du-g-buffer-interactif-">Albedo du G-Buffer interactif :</a></li>
+            <li><a href="#cest-maintenant--cest-maintenant-">C&rsquo;est maintenant ! C&rsquo;est maintenant !</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
     <li><a href="#décryptage-de-la-professie">Décryptage de la professie</a></li>
   </ul>
 </nav>
     </details>
             <div class="page-content">
                 <h2 id="introduction">Introduction</h2>
-<p>Bienvenu dans le tout premier devlog d&rsquo;OpenRE : le develog Zéro ! Cette série a pour but de documenter la phase de POC (proof of concept) du projet. Le format sera assez simple. Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un nouveau numéro.</p>
+<p>Bienvenu dans ce tout premier devlog d&rsquo;OpenRE : le develog Zéro ! Cette série a pour but de documenter la phase de POC (proof of concept) du projet. Le format sera assez simple. Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un nouveau numéro.</p>
 <p>Étant donné qu’OpenRE est un projet personnel que je développe sur mon temps libre, le rythme de publication risque d’être irrégulier. Certains numéros seront plus légers que d’autres, mais ce n’est pas bien grave. Au contraire, ce sera intéressant de voir comment la cadence évolue au fil du projet.</p>
-<p>Avant de démarer, je vous recommande de jeter un oeil à la <a href="/projects/open_re/">présentation générale du projet</a>. J&rsquo;y introduit quelques notions et un peu de terminologie. Il est préférable de l&rsquo;avoir parcouru pour contextualiser un peu ce dont je parle dans les devlogs.</p>
+<p>Avant de démarer, je vous recommande de jeter un oeil à la <a href="/projects/open_re/">présentation générale du projet</a>. J&rsquo;y introduit notament quelques notions et un peu de terminologie. Il est préférable de l&rsquo;avoir parcouru pour contextualiser un peu ce dont je parle dans les devlogs.</p>
 <p>Sur ce, c&rsquo;est parti !</p>
 <h2 id="shit-happens">Shit happens</h2>
 <p>Petite particularité concernant les première articles de la série : il s&rsquo;agira de &ldquo;retro-devlogs&rdquo;. En effet j’ai commencé OpenRE il y a plusieurs mois, sans trop savoir où j’allais. Je n&rsquo;étais pas sûr que mes expérimentations mèneraient quelque part et de toutes façons, l&rsquo;idée même de tenir un blog ne mavais pas encore traversé l&rsquo;esprit.</p>
@@ -194,10 +205,10 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Mais ca peut vraiment être tout et n&rsquo;importe quoi. Chaque logiciel est caractérisé par une liste interminable de parti pris de ce genre dont la cohérence n&rsquo;est garantie que tant on n&rsquo;en sors pas. Et pour qu&rsquo;OpenRE ai une chance de fonctionner, il va falloir faire en sorte que Blender et Godot parlent la même langue.</p>
 <p>Pour cela, on va s&rsquo;appuyer sur une technique que j&rsquo;aime beaucoup et que j&rsquo;appele le &ldquo;Oracle Driven Developpment&rdquo;. C&rsquo;est comme du &ldquo;Test Driven Developpement&rdquo;, sauf qu&rsquo;à la place d&rsquo;un jeu de test automatisés bien propre et exhaustif, on va faire une grosse moulinette un peu dégeux qu&rsquo;il faudra lançer à moitier à la main pour verifier qu&rsquo;on est bon. A la manière d&rsquo;un oracle, cette moulinette va formuler des profécies parfois un peu cryptiques, mais qui sauront nous guider dans notre périple si on parvient à les annalyser correctement.</p>
 <h2 id="anatomie-de-loracle">Anatomie de l&rsquo;Oracle</h2>
-<p>Dans cette section je vais expliquer de quoi est fait notre Oracle, et décrire le rituel permettant de soliciter sa professie. Si vous avez lu l&rsquo;article référencé dans l&rsquo;intro, vous savez qu&rsquo;OpenRE compose les mondes déterministe et interactif en s&rsquo;appuyant sur une représentation particulière de ces scenes qu&rsquo;on appele des G-Buffers. Une façon de verifier que Blender et Godot sont bien sur la même longueure d&rsquo;onde, c&rsquo;est de verifier que si on leur donne les même données d&rsquo;entrées (les scène), ils produisent les mêmes données de sortie (les G-Buffers).</p>
+<p>Dans cette section je vais expliquer de quoi est fait notre Oracle. Si vous avez lu l&rsquo;article référencé dans l&rsquo;intro, vous savez qu&rsquo;OpenRE compose les mondes déterministe et interactif en s&rsquo;appuyant sur une représentation particulière de ces scenes qu&rsquo;on appele des G-Buffers. Une façon de verifier que Blender et Godot sont bien sur la même longueure d&rsquo;onde, c&rsquo;est de verifier que si on leur donne les même données d&rsquo;entrées (les scène), ils produisent les mêmes données de sortie (les G-Buffers).</p>
 <p>J&rsquo;ai donc commencé par créer dans Blender une petite scene de test composées de quelques primitives très simples et d&rsquo;une caméra. Cette scène à ensuite été scrupuleusement reproduite dans Godot. L&rsquo;opération est trivial étant donné que Godot prend en charge le format de scene de Blender. Je n&rsquo;ai eu qu&rsquo;à importer le .blend et à l&rsquo;ajouter à une scene Godot vide. And voilà !</p>
-<p><img alt="Illustration représentant la SimpleScene dans Blender" src="/projects/open_re_poc_devlog_0/images/simpleBlend.opti.webp">
-<img alt="Illustration représentant la SimpleScene dans Godot" src="/projects/open_re_poc_devlog_0/images/simpleGodot.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_0/images/simpleBlend.opti.webp" alt="Illustration représentant la SimpleScene dans Blender">
+<img src="/projects/open_re_poc_devlog_0/images/simpleGodot.opti.webp" alt="Illustration représentant la SimpleScene dans Godot"></p>
 <p>Les G-Buffers déterministes et interactifs devront à terme contenir les textures suivantes :</p>
 <ul>
 <li>Albedo</li>
@@ -205,7 +216,7 @@ stroke-linejoin="round" class="feather feather-home">
 <li>Normal</li>
 <li>ORM</li>
 </ul>
-<p>Dans une premier temps nous allons nous focaliser sur l&rsquo;Albedo (et vous allez voir, c&rsquo;est bien suffisant pour aujourd&rsquo;hui !). Nous traiterons le reste dans des develogs dédiés mais nous allons d&rsquo;ors et déjà implémenter un oracle capable de mesurer le degré d&rsquo;armonie entre toutes ces données. Il se materialisera en ce monde sous la forme du post-process <code>oracle.gdshader</code> et prendra en entrée chacune des textures des 2 G-Buffers ainsi qu&rsquo;un entier <code>data_type</code> designant le type de texture que l&rsquo;on veut comparer.</p>
+<p>Mais dans un premier temps nous allons nous focaliser sur l&rsquo;Albedo (et vous allez voir, c&rsquo;est bien suffisant pour aujourd&rsquo;hui !). Nous traiterons le reste dans des develogs dédiés mais nous allons d&rsquo;ors et déjà implémenter un oracle capable de mesurer le degré d&rsquo;armonie entre toutes ces données. Il se materialisera en ce monde sous la forme du post-process <code>oracle.gdshader</code> et prendra en entrée chacune des textures des 2 G-Buffers ainsi qu&rsquo;un entier <code>data_type</code> designant le type de texture que l&rsquo;on veut comparer.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
@@ -242,12 +253,21 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">abs</span><span class="p">(</span><span class="n">dgbuffer_map_frag</span> <span class="o">-</span> <span class="n">igbuffer_map_frag</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p><em>Code source du shader oracle.gdshader</em></p>
-<p>Le fonctionnement de <code>oracle.gdshader</code> est finalement assez simple. Il calcule la distance entre les couleurs de chaques pixels des textures dont le type correspond à <code>data_type</code>. Si l&rsquo;écran est noir quelque soit la valeur de <code>data_type</code>, alors les G-Buffers sont equivalents. Sinon, cela s&rsquo;ignifie que quelque chose est mal réglé. Et biensure, le jeu, c&rsquo;est de trouver quoi en se basant l&rsquo;image que l&rsquo;Oracle nous montre.</p>
-<p><img alt="Image illustrant le protocol de validation" src="/projects/open_re_poc_devlog_0/images/oracle_schema.opti.webp"></p>
-<p>Interessons nous maintenant à la création des textures d&rsquo;albedo. Pour la version deterministe, il suffit d&rsquo;exporter la <code>diffCol pass</code> de Cycles et d&rsquo;importer l&rsquo;image produite dans Godot pour en faire une texture. De là il n&rsquo;y a plus qu&rsquo;à binder cette texture au <code>uniform dgbuffer_albedo</code> du <code>oracle.gdshader</code> et le tour est joué.</p>
-<p>[img compositor =&gt; fichier =&gt; import =&gt; bind]</p>
-<p>Pour la version interactive c&rsquo;est un peu plus complexe. On va utiliser &hellip;</p>
-<p>Sur le papier, les 2 scenes sont identiques puisqu&rsquo;elles viennent du même fichier. L&rsquo;importeur de Godot prends soin de traduire toutes les données du .blend selon se propres conventions. On devrait donc passer le test du premier coup. Qu&rsquo;est-ce qui pourait mal se passer ?</p>
+<p>Le fonctionnement de <code>oracle.gdshader</code> est finalement assez simple. Il calcule la distance entre les couleurs de chaques pixels des textures dont le type correspond à <code>data_type</code>. Si l&rsquo;écran est noir quelque soit la valeur de <code>data_type</code>, alors les G-Buffers sont equivalents. Sinon, cela s&rsquo;ignifie que quelque chose est mal réglé. Et biensure, le jeu, c&rsquo;est de trouver quoi en se basant sur l&rsquo;image que l&rsquo;Oracle nous montre.</p>
+<p><img src="/projects/open_re_poc_devlog_0/images/oracle_schema.opti.webp" alt="Image illustrant le protocol de validation"></p>
+<h2 id="notre-premier-présage">Notre premier présage</h2>
+<p>La question qui nous interesse ici est : &ldquo;est ce que les textures d&rsquo;Abledo produites par Blender et Godot sont bien harmonisées&rdquo;. Pour poser cette question à notre oracle, il va falloir binder ces textures aux uniforms correspondants du post-process. Ensuite on s&rsquo;assurera que le paramètre <code>data_type</code> est bien réglé sur 0 (qui correspond à l&rsquo;Albedo). On sera alors prêt à découvrir notre presage en appuyant sur play. Mais un petit problème subsiste : comment on obtien ces textures d&rsquo;albedo au juste ?</p>
+<h4 id="albedo-du-g-buffer-déterministe-">Albedo du G-Buffer déterministe :</h4>
+<p>Coté Blender on va activer la <code>diffCol pass</code> de Cycles (qui correspon à l&rsquo;Albedo) puis on va effectuer un rendu. Grâce au compositor et au noeud <code>File Output</code>, l&rsquo;image correspondant à cette passe sera automatiquement exportée à l&rsquo;emplacement spécifié à la fin du rendu. Il n&rsquo;y aura plus qu&rsquo;à importer cette image dans Godot et à la binder au <code>uniform dgbuffer_albedo</code></p>
+<p>[Compo =&gt; image =&gt; import =&gt; bind]</p>
+<h4 id="albedo-du-g-buffer-interactif-">Albedo du G-Buffer interactif :</h4>
+<p>Pour la version interactive c&rsquo;est un peu plus complexe. Le shading language de Godot permet d&rsquo;injecter cetraines textures dans un uniform que l&rsquo;on peut ensuite utiliser à souhait dans notre shader. La syntaxe est la suivante :</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">texture</span> <span class="o">:</span> <span class="n">hint_</span><span class="o">&lt;</span><span class="n">insert_texture_name</span><span class="o">&gt;</span><span class="n">_texture</span><span class="p">;</span>
+</span></span></code></pre></div><p>La texture qui nous interesse ici est <code>hint_screen_texture</code>. Mais malheureusement il ne s&rsquo;agit pas directement de l&rsquo;albedo. C&rsquo;est un rendu classic depuis la caméra prenant en compte la lumière. On va donc tricher un peu en utilisant une render target (un <code>SubViewport en terminologie Godot</code>) dont on va régler le parametre <code>Debug Draw</code> sur <code>Unshaded</code>. Il suffit ensuite de binder cette render target au <code>uniform igbuffer_albedo</code></p>
+<h4 id="cest-maintenant--cest-maintenant-">C&rsquo;est maintenant ! C&rsquo;est maintenant !</h4>
+<p>Nous avons correctement créé et bindé nos textures d&rsquo;albedo. Ces données en été obtenues à partir de 2 scenes rigoureusement identiques puisqu&rsquo;elles viennent du même fichier. Donc si l&rsquo;importer de Godot est bien capable de traduire les données de Blender pour les conformer à ses propres conventions, nous devrions obtenir un présage positif (un écran noir). Qu&rsquo;est-ce qui pourait mal se passer ?</p>
+<p>[presage failed]</p>
+<p>Oups&hellip;</p>
 <h2 id="décryptage-de-la-professie">Décryptage de la professie</h2>
 
             </div>
