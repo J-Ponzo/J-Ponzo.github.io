@@ -149,8 +149,64 @@ La texture qui nous interesse ici est ```hint_screen_texture```. Mais malheureus
 #### C'est maintenant ! C'est maintenant !
 Nous avons correctement créé et bindé nos textures d'albedo. Ces données en été obtenues à partir de 2 scenes rigoureusement identiques puisqu'elles viennent du même fichier. Donc si l'importer de Godot est bien capable de traduire les données de Blender pour les conformer à ses propres conventions, nous devrions obtenir un prophécie encourageante (un écran noir). Qu'est-ce qui pourait mal se passer ?
 
-[presage failed]
+![Capture de la première prophétie de l'Oracle](images/first_prophecy.opti.webp)
 
-Oups...
+Oh nooooo !
 
 ## Décryptage de la professie
+Rassurez vous l'importer de Godot fonctionne très bien, le problème n'est pas là. Comme c'est très souvent le cas, la plupart des problème ont été indroduit par la seule étape manuelle de la moulinette : l'export/import de la texture déterministe.
+
+#### Espaces colorimétriques :
+Si observe les textures d'albedo que l'oracle à comparé, le première problème qui saute aux yeux c'est que la texture déterministe apparait une peu "délavée" par rapport à l'autre.
+
+[gif alternance]
+
+Il s'agit d'un problème d'export. J'avais en tête qu'il s'agissait surement d'une histoire d'espace de couleur. MAis Blender porpose un (très, très, très) vaste panel d'options d'export. Trop pour qu'un individu lambda comme moi puisse tout comprendre. J'ai donc expérimenté beaucoup de choses un peu à l'instinct jusqu'à trouver le parametre qui m'interesse.
+
+Il fallait régler champs ```view``` de l'export png sur ```Standard``` :
+
+[set_trandard]
+
+On peut ensuitre relancer un rendu et donner notre nouvelles texture à l'oracle pour un revision de la prophetie. Et on obtien ça :
+
+![Capture de la première prophétie de l'Oracle](images/first_prophecy_revision_1.opti.webp)
+
+Ce qui est déjà beaucoup mieux.
+
+#### Compression de texture en VRAM
+Beaucoup mieux certes, pais pas encore gagné. Continuons !
+
+Si on zoom sur l'image révisée de la prophecie, on peu voire apparetre des petits motifs caracteristiques.
+
+[image du pattern]
+
+Il s'agit d'artefacts de compression. En effet pour économiser la mémoire vidéo et optimiser les echange de données entre le CPU et le GPU, les textures utilisée dans un jeu sont prèsque toujours compréssée. Il est donc normal que le parametre d'import de Godot soient réglés sur ```Compress Mode = VRAM Compressed```. 
+
+Le problème c'est que les algorythmes de compression utilisés par les moteurs ne sont pas vraiment fait pour notre cas d'useage. En effet, la vocation d'une textures la plupart du temps est d'habiller les meshes qui composent la scène, pas d'être affichagées en plein écran comme on le fait ici.
+
+Si on compare l'image source à sa version compressée on voit clairement la perte de qualité.
+
+[img source + img compressées]
+
+Pour régler ça il suffit de desactiver la compression dans les paramettres d'import de la texture :
+
+[set_lossless]
+
+La nouvelle réponse de l'oracle (je vous fais grâce de mon petit montage à partir d'ici) : 
+
+[2_lossless_Distance]
+
+#### Qualité du png exporté
+On a déjà pas mal gagné mais le bruit n'a pas tout à fait disparut :
+
+[image du bruit qui reste]
+
+Il s'agit encore d'un problème de compression, mais cette fois il vient de l'export Blender. En effet, le lecteur attentif aura surement remarqué le champs ```compression = 15%``` de l'export png quand nous avons régler l'espace de couleur au début. Effectivement, le reste des artefacts de compression vien de là et d'un manque de qualité de l'image (réglée par defaut sur 8 bit). On va donc rectifier et relancer un rendu
+
+[set_png_quality]
+
+Victoire ! La compression à totalement disparue. Mais maintenant on peut voire qu'il y a de gros problèmes de banding...
+
+#### Le format EXR
+
+#### Aliazing

@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.137.0">
+<meta name="generator" content="Hugo 0.140.2">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re_poc_devlog_0/">
@@ -178,7 +178,19 @@ stroke-linejoin="round" class="feather feather-home">
         </li>
       </ul>
     </li>
-    <li><a href="#décryptage-de-la-professie">Décryptage de la professie</a></li>
+    <li><a href="#décryptage-de-la-professie">Décryptage de la professie</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#espaces-colorimétriques-">Espaces colorimétriques :</a></li>
+            <li><a href="#compression-de-texture-en-vram">Compression de texture en VRAM</a></li>
+            <li><a href="#qualité-du-png-exporté">Qualité du png exporté</a></li>
+            <li><a href="#le-format-exr">Le format EXR</a></li>
+            <li><a href="#aliazing">Aliazing</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
   </ul>
 </nav>
     </details>
@@ -207,8 +219,8 @@ stroke-linejoin="round" class="feather feather-home">
 <h2 id="anatomie-de-loracle">Anatomie de l&rsquo;Oracle</h2>
 <p>Dans cette section je vais expliquer de quoi est fait notre Oracle. Si vous avez lu l&rsquo;article référencé dans l&rsquo;intro, vous savez qu&rsquo;OpenRE compose les mondes déterministe et interactif en s&rsquo;appuyant sur une représentation particulière de ces scenes qu&rsquo;on appele des G-Buffers. Une façon de verifier que Blender et Godot sont bien sur la même longueure d&rsquo;onde, c&rsquo;est de verifier que si on leur donne les même données d&rsquo;entrées (les scène), ils produisent les mêmes données de sortie (les G-Buffers).</p>
 <p>J&rsquo;ai donc commencé par créer dans Blender une petite scene de test composées de quelques primitives très simples et d&rsquo;une caméra. Cette scène à ensuite été scrupuleusement reproduite dans Godot. L&rsquo;opération est trivial étant donné que Godot prend en charge le format de scene de Blender. Je n&rsquo;ai eu qu&rsquo;à importer le .blend et à l&rsquo;ajouter à une scene Godot vide. And voilà !</p>
-<p><img alt="Illustration représentant la SimpleScene dans Blender" src="/projects/open_re_poc_devlog_0/images/simpleBlend.opti.webp">
-<img alt="Illustration représentant la SimpleScene dans Godot" src="/projects/open_re_poc_devlog_0/images/simpleGodot.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_0/images/simpleBlend.opti.webp" alt="Illustration représentant la SimpleScene dans Blender">
+<img src="/projects/open_re_poc_devlog_0/images/simpleGodot.opti.webp" alt="Illustration représentant la SimpleScene dans Godot"></p>
 <p>Les G-Buffers déterministes et interactifs devront à terme contenir les textures suivantes :</p>
 <ul>
 <li>Albedo</li>
@@ -289,7 +301,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p><em>Code source du shader oracle.gdshader</em></p>
 <p>Le fonctionnement de <code>oracle.gdshader</code> est finalement assez simple. Il calcule la différence entre les couleurs de chaques pixels des textures dont le type correspond à <code>data_type</code>. Si l&rsquo;écran est noir quelque soit la valeur de <code>data_type</code>, alors les G-Buffers sont equivalents. Sinon, cela s&rsquo;ignifie que quelque chose est mal réglé. Et biensure, le jeu, c&rsquo;est de trouver quoi en se basant sur l&rsquo;image que l&rsquo;Oracle nous montre.</p>
-<p><img alt="Image illustrant le protocol de validation" src="/projects/open_re_poc_devlog_0/images/oracle_schema.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_0/images/oracle_schema.opti.webp" alt="Image illustrant le protocol de validation"></p>
 <p>Comme vous pouvez le remarquer, seule la différence entre les textures d&rsquo;albedo est implémentée pour l&rsquo;instant. Les autres differences retournent la couleur blanche en dur. C&rsquo;est un peu l&rsquo;équivalent graphique du <code>return null;</code> par defaut quand on prévois d&rsquo;implémenter une fonction plus tard.</p>
 <h2 id="la-prophétie-originelle">La prophétie originelle</h2>
 <p>La question qui nous interesse ici est : &ldquo;est ce que les textures d&rsquo;Abledo produites par Blender et Godot sont bien harmonisées&rdquo;. Pour poser cette question à notre oracle, il va falloir binder ces textures aux uniforms correspondants du post-process. Ensuite on s&rsquo;assurera que le paramètre <code>data_type</code> est bien réglé sur 0 (qui correspond à l&rsquo;Albedo). On sera alors prêt à recevoir notre prophécie en appuyant sur play. Mais un petit problème subsiste : comment on obtien ces textures d&rsquo;albedo au juste ?</p>
@@ -302,9 +314,39 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span></code></pre></div><p>La texture qui nous interesse ici est <code>hint_screen_texture</code>. Mais malheureusement il ne s&rsquo;agit pas directement de l&rsquo;albedo. C&rsquo;est un rendu classic depuis la caméra prenant en compte la lumière. On va donc tricher un peu en utilisant une render target (un <code>SubViewport en terminologie Godot</code>) dont on va régler le parametre <code>Debug Draw</code> sur <code>Unshaded</code>. Il suffit ensuite de binder cette render target au <code>uniform igbuffer_albedo</code></p>
 <h4 id="cest-maintenant--cest-maintenant-">C&rsquo;est maintenant ! C&rsquo;est maintenant !</h4>
 <p>Nous avons correctement créé et bindé nos textures d&rsquo;albedo. Ces données en été obtenues à partir de 2 scenes rigoureusement identiques puisqu&rsquo;elles viennent du même fichier. Donc si l&rsquo;importer de Godot est bien capable de traduire les données de Blender pour les conformer à ses propres conventions, nous devrions obtenir un prophécie encourageante (un écran noir). Qu&rsquo;est-ce qui pourait mal se passer ?</p>
-<p>[presage failed]</p>
-<p>Oups&hellip;</p>
+<p><img src="/projects/open_re_poc_devlog_0/images/first_prophecy.opti.webp" alt="Capture de la première prophétie de l&rsquo;Oracle"></p>
+<p>Oh nooooo !</p>
 <h2 id="décryptage-de-la-professie">Décryptage de la professie</h2>
+<p>Rassurez vous l&rsquo;importer de Godot fonctionne très bien, le problème n&rsquo;est pas là. Comme c&rsquo;est très souvent le cas, la plupart des problème ont été indroduit par la seule étape manuelle de la moulinette : l&rsquo;export/import de la texture déterministe.</p>
+<h4 id="espaces-colorimétriques-">Espaces colorimétriques :</h4>
+<p>Si observe les textures d&rsquo;albedo que l&rsquo;oracle à comparé, le première problème qui saute aux yeux c&rsquo;est que la texture déterministe apparait une peu &ldquo;délavée&rdquo; par rapport à l&rsquo;autre.</p>
+<p>[gif alternance]</p>
+<p>Il s&rsquo;agit d&rsquo;un problème d&rsquo;export. J&rsquo;avais en tête qu&rsquo;il s&rsquo;agissait surement d&rsquo;une histoire d&rsquo;espace de couleur. MAis Blender porpose un (très, très, très) vaste panel d&rsquo;options d&rsquo;export. Trop pour qu&rsquo;un individu lambda comme moi puisse tout comprendre. J&rsquo;ai donc expérimenté beaucoup de choses un peu à l&rsquo;instinct jusqu&rsquo;à trouver le parametre qui m&rsquo;interesse.</p>
+<p>Il fallait régler champs <code>view</code> de l&rsquo;export png sur <code>Standard</code> :</p>
+<p>[set_trandard]</p>
+<p>On peut ensuitre relancer un rendu et donner notre nouvelles texture à l&rsquo;oracle pour un revision de la prophetie. Et on obtien ça :</p>
+<p><img src="/projects/open_re_poc_devlog_0/images/first_prophecy_revision_1.opti.webp" alt="Capture de la première prophétie de l&rsquo;Oracle"></p>
+<p>Ce qui est déjà beaucoup mieux.</p>
+<h4 id="compression-de-texture-en-vram">Compression de texture en VRAM</h4>
+<p>Beaucoup mieux certes, pais pas encore gagné. Continuons !</p>
+<p>Si on zoom sur l&rsquo;image révisée de la prophecie, on peu voire apparetre des petits motifs caracteristiques.</p>
+<p>[image du pattern]</p>
+<p>Il s&rsquo;agit d&rsquo;artefacts de compression. En effet pour économiser la mémoire vidéo et optimiser les echange de données entre le CPU et le GPU, les textures utilisée dans un jeu sont prèsque toujours compréssée. Il est donc normal que le parametre d&rsquo;import de Godot soient réglés sur <code>Compress Mode = VRAM Compressed</code>.</p>
+<p>Le problème c&rsquo;est que les algorythmes de compression utilisés par les moteurs ne sont pas vraiment fait pour notre cas d&rsquo;useage. En effet, la vocation d&rsquo;une textures la plupart du temps est d&rsquo;habiller les meshes qui composent la scène, pas d&rsquo;être affichagées en plein écran comme on le fait ici.</p>
+<p>Si on compare l&rsquo;image source à sa version compressée on voit clairement la perte de qualité.</p>
+<p>[img source + img compressées]</p>
+<p>Pour régler ça il suffit de desactiver la compression dans les paramettres d&rsquo;import de la texture :</p>
+<p>[set_lossless]</p>
+<p>La nouvelle réponse de l&rsquo;oracle (je vous fais grâce de mon petit montage à partir d&rsquo;ici) :</p>
+<p>[2_lossless_Distance]</p>
+<h4 id="qualité-du-png-exporté">Qualité du png exporté</h4>
+<p>On a déjà pas mal gagné mais le bruit n&rsquo;a pas tout à fait disparut :</p>
+<p>[image du bruit qui reste]</p>
+<p>Il s&rsquo;agit encore d&rsquo;un problème de compression, mais cette fois il vient de l&rsquo;export Blender. En effet, le lecteur attentif aura surement remarqué le champs <code>compression = 15%</code> de l&rsquo;export png quand nous avons régler l&rsquo;espace de couleur au début. Effectivement, le reste des artefacts de compression vien de là et d&rsquo;un manque de qualité de l&rsquo;image (réglée par defaut sur 8 bit). On va donc rectifier et relancer un rendu</p>
+<p>[set_png_quality]</p>
+<p>Victoire ! La compression à totalement disparue. Mais maintenant on peut voire qu&rsquo;il y a de gros problèmes de banding&hellip;</p>
+<h4 id="le-format-exr">Le format EXR</h4>
+<h4 id="aliazing">Aliazing</h4>
 
             </div>
         </article>
