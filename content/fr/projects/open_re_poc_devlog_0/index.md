@@ -47,7 +47,7 @@ Mais trève de métaphore. Concrètement, cet Oracle est un post-process du nom 
 - noir -> les pixels sont identiques
 - blanc -> la différence entre les pixels est maximale
 
-### Implementation de l’Oracle  
+#### Implementation de l’Oracle  
 
 Voici le code source de l'oracle :  
 
@@ -221,7 +221,7 @@ void fragment() {
 ## Préparation des données
 Nous savons desormais comment fonctionne l'oracle. Mais nous n'avons pas de données à lui soumettre. Il faut les construire.
 
-### Mise en place d’une scène test  
+#### Mise en place d’une scène test  
 Pour commencer, j’ai créé une petite scène dans Blender. Elle est composée de quelques primitives basiques et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale, puisque Godot prend en charge le format de scène Blender : il suffit d’importer le fichier `.blend` et de l’ajouter dans une scène vide.
 
 ![Illustration représentant la SimpleScene dans Blender](images/simpleBlend.opti.webp)  

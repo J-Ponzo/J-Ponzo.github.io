@@ -168,8 +168,9 @@ stroke-linejoin="round" class="feather feather-home">
     <li><a href="#problématique-de-lharmonisation-des-données">Problématique de l&rsquo;harmonisation des données</a></li>
     <li><a href="#la-méthode-de-loracle">La méthode de l&rsquo;oracle</a>
       <ul>
-        <li><a href="#implementation-de-loracle">Implementation de l’Oracle</a>
+        <li>
           <ul>
+            <li><a href="#implementation-de-loracle">Implementation de l’Oracle</a></li>
             <li><a href="#1-code-minimal-dun-post-process">1. Code minimal d&rsquo;un Post-Process</a></li>
             <li><a href="#2-les-uniforms-ou-paramettres-dentrée">2. Les uniforms ou paramettres d&rsquo;entrée</a></li>
             <li><a href="#3-utilitaires-de-sampling">3. Utilitaires de sampling</a></li>
@@ -181,8 +182,9 @@ stroke-linejoin="round" class="feather feather-home">
     </li>
     <li><a href="#préparation-des-données">Préparation des données</a>
       <ul>
-        <li><a href="#mise-en-place-dune-scène-test">Mise en place d’une scène test</a>
+        <li>
           <ul>
+            <li><a href="#mise-en-place-dune-scène-test">Mise en place d’une scène test</a></li>
             <li><a href="#albedo-du-g-buffer-déterministe-">Albedo du G-Buffer déterministe :</a></li>
             <li><a href="#albedo-du-g-buffer-interactif-">Albedo du G-Buffer interactif :</a></li>
           </ul>
@@ -238,7 +240,7 @@ stroke-linejoin="round" class="feather feather-home">
 <li>noir -&gt; les pixels sont identiques</li>
 <li>blanc -&gt; la différence entre les pixels est maximale</li>
 </ul>
-<h3 id="implementation-de-loracle">Implementation de l’Oracle</h3>
+<h4 id="implementation-de-loracle">Implementation de l’Oracle</h4>
 <p>Voici le code source de l&rsquo;oracle :</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
@@ -390,7 +392,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h2 id="préparation-des-données">Préparation des données</h2>
 <p>Nous savons desormais comment fonctionne l&rsquo;oracle. Mais nous n&rsquo;avons pas de données à lui soumettre. Il faut les construire.</p>
-<h3 id="mise-en-place-dune-scène-test">Mise en place d’une scène test</h3>
+<h4 id="mise-en-place-dune-scène-test">Mise en place d’une scène test</h4>
 <p>Pour commencer, j’ai créé une petite scène dans Blender. Elle est composée de quelques primitives basiques et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale, puisque Godot prend en charge le format de scène Blender : il suffit d’importer le fichier <code>.blend</code> et de l’ajouter dans une scène vide.</p>
 <p><img alt="Illustration représentant la SimpleScene dans Blender" src="/projects/open_re_poc_devlog_0/images/simpleBlend.opti.webp"><br>
 <img alt="Illustration représentant la SimpleScene dans Godot" src="/projects/open_re_poc_devlog_0/images/simpleGodot.opti.webp"></p>
