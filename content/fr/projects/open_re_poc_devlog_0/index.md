@@ -22,17 +22,18 @@ Durant cette période, il se trouve que le dépôt git a pris feu (suite à une 
 Résultat : j’ai perdu l’historique du projet. Je ne peux donc  plus réstaurer les premières versions pour analyser ce que j'avais fait. Réaliser des capture d'écran de mes résultats originaux est également impossible. Ces premiers numéros seront donc des reconstitutions.
 
 ## Oracle Driven Development
-Le premier vrai défi de ce POC est de s'assurer que Blender et Godot peuvent produire des données compatibles. En effet tous les logiciels graphiques ont leurs propres conventions. Sont (très) régulièrement concernés :
-- Les unités de mesure
-- Les espaces colorimétriques
-- Le sens des matrices
-- L'ordre des rotations
-- Les axes du repère
-- ...
+Le premier vrai défi de ce POC est de s'assurer que Blender et Godot peuvent produire des données compatibles. En effet, tous les logiciels graphiques ont leurs propres conventions. La plupart du temps, les divergences concernent des choses comme :  
 
-Mais ca peut vraiment être tout et n'importe quoi. Chaque logiciel est caractérisé par une liste interminable de parti pris de ce genre dont la cohérence n'est garantie que tant on n'en sors pas. Et pour qu'OpenRE ai une chance de fonctionner, il va falloir faire en sorte que Blender et Godot parlent la même langue.
+- Les unités  
+- Les espaces colorimétriques  
+- Le sens des matrices  
+- L'ordre des rotations  
+- Les axes du repère  
+- …  
 
-Pour cela, on va s'appuyer sur une technique que j'aime beaucoup et que j'appele le "Oracle Driven Developpment". C'est comme du "Test Driven Developpement", sauf qu'à la place d'un jeu de test automatisés bien propre et exhaustif, on va faire une grosse moulinette un peu dégeux qu'il faudra lançer à moitier à la main pour verifier qu'on est bon. A la manière d'un oracle, cette moulinette va formuler des profécies parfois un peu cryptiques, mais qui sauront nous guider dans notre périple si on parvient à les annalyser correctement.
+Mais en réalité, ça peut être absolument n’importe quoi. Chaque logiciel est truffé de petits partis pris techniques cohérents entre eux. Tant qu'on reste à l'intérieur d'un seul, tout se passe bien. Mais dès qu'ils doivent collaborer et s'échanger des données, ça devient vite l'enfer. Pourtant, si on veut qu'OpenRE fonctionne, il va bien falloir que Blender et Godot arrivent à parler la même langue.  
+
+Pour identifier les ajustements à effectuer, je vais utiliser une technique que j’aime bien et que j’appelle le *Oracle Driven Development*. C’est un peu comme du *Test Driven Development*, sauf qu’au lieu d’avoir un jeu de tests automatisés, propre et exhaustif, je vais bricoler une petite moulinette un peu crado qu'il faudra lancer à moitié à la main. Comme le ferait un oracle, cette moulinette va formuler des prophéties parfois cryptiques à partir de données d'entrée. Interprétées correctement, ces présages nous aideront à avancer dans notre périple.  
 
 ## Anatomie de l'Oracle
 Dans cette section je vais expliquer de quoi est fait notre Oracle. Si vous avez lu l'article référencé dans l'intro, vous savez qu'OpenRE compose les mondes déterministe et interactif en s'appuyant sur une représentation particulière de ces scenes qu'on appele des G-Buffers. Une façon de verifier que Blender et Godot sont bien sur la même longueure d'onde, c'est de verifier que si on leur donne les même données d'entrées (les scène), ils produisent les mêmes données de sortie (les G-Buffers).
