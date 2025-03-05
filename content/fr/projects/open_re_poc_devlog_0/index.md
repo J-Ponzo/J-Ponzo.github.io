@@ -157,56 +157,64 @@ Oh nooooo !
 Rassurez vous l'importer de Godot fonctionne très bien, le problème n'est pas là. Comme c'est très souvent le cas, la plupart des problème ont été indroduit par la seule étape manuelle de la moulinette : l'export/import de la texture déterministe.
 
 #### Espaces colorimétriques :
-Si observe les textures d'albedo que l'oracle à comparé, le première problème qui saute aux yeux c'est que la texture déterministe apparait une peu "délavée" par rapport à l'autre.
+Si on observe les textures d'albedo que l'oracle à comparé, le première problème qui saute aux yeux c'est que la texture déterministe apparait une peu "délavée" par rapport à l'autre.
 
-[gif alternance]
+![gif alternant l'albedo interactif et l'aldedo deterministe délavé](images/init_input_alterance.webp)
 
-Il s'agit d'un problème d'export. J'avais en tête qu'il s'agissait surement d'une histoire d'espace de couleur. MAis Blender porpose un (très, très, très) vaste panel d'options d'export. Trop pour qu'un individu lambda comme moi puisse tout comprendre. J'ai donc expérimenté beaucoup de choses un peu à l'instinct jusqu'à trouver le parametre qui m'interesse.
+Il s'agit d'un problème d'export. J'avais bien en tête qu'il s'agissait surement d'une histoire d'espace de couleur. Mais Blender porpose un (très, très, très) vaste panel d'options d'export. Trop pour qu'un individu lambda comme moi puisse tout comprendre. J'ai donc expérimenté beaucoup de choses un peu à l'instinct jusqu'à trouver le parametre qui m'interesse.
 
 Il fallait régler champs ```view``` de l'export png sur ```Standard``` :
 
-[set_trandard]
+![gif montrant comment mettre le champs view de l'export png sur standard](images/set_standar_view.gif)
 
-On peut ensuitre relancer un rendu et donner notre nouvelles texture à l'oracle pour un revision de la prophetie. Et on obtien ça :
+On peut ensuitre relancer un rendu et donner notre nouvelles texture à l'oracle pour un revision de la prophetie. Et on obtien ça (ce qui est déjà beaucoup mieux.) :
 
 ![Capture de la première prophétie de l'Oracle](images/first_prophecy_revision_1.opti.webp)
 
-Ce qui est déjà beaucoup mieux.
-
 #### Compression de texture en VRAM
-Beaucoup mieux certes, pais pas encore gagné. Continuons !
+Beaucoup mieux certes, pais pas encore gagné. Continuons ! Si on zoom sur l'image de la prophecie révisée, on peu voire apparetre des petits motifs caracteristiques.
 
-Si on zoom sur l'image révisée de la prophecie, on peu voire apparetre des petits motifs caracteristiques.
-
-[image du pattern]
+![Zoom sur le pattern](images/1_std_dist_zoom.opti.webp)
 
 Il s'agit d'artefacts de compression. En effet pour économiser la mémoire vidéo et optimiser les echange de données entre le CPU et le GPU, les textures utilisée dans un jeu sont prèsque toujours compréssée. Il est donc normal que le parametre d'import de Godot soient réglés sur ```Compress Mode = VRAM Compressed```. 
 
-Le problème c'est que les algorythmes de compression utilisés par les moteurs ne sont pas vraiment fait pour notre cas d'useage. En effet, la vocation d'une textures la plupart du temps est d'habiller les meshes qui composent la scène, pas d'être affichagées en plein écran comme on le fait ici.
+Le problème c'est que les algorythmes de compression utilisés par les moteurs ne sont pas vraiment fait pour notre cas d'useage. En effet, la vocation d'une textures la plupart du temps est d'habiller les meshes qui composent la scène, pas de représenter un scène compète affichée en plein écran comme on le fait ici.
 
 Si on compare l'image source à sa version compressée on voit clairement la perte de qualité.
 
-[img source + img compressées]
+![gif alternant l'image source et sa version compressée](images/alternate_vram_compression.webp)
 
 Pour régler ça il suffit de desactiver la compression dans les paramettres d'import de la texture :
 
-[set_lossless]
+![gif indiquant comment desactiver la compression des textures dans Godot](images/set_lossless-optimize.gif)
 
-La nouvelle réponse de l'oracle (je vous fais grâce de mon petit montage à partir d'ici) : 
+Et voici nouvelle réponse de l'oracle quand la texture n'est pas compressée (les plaisenteries les plus courtes étant les meilleures, je vous fais grâce de mon petit montage à partir d'ici).
 
-[2_lossless_Distance]
+![Zoom sur le pattern](images/2_lossless_detrminist_zoom.opti.webp)
 
 #### Qualité du png exporté
-On a déjà pas mal gagné mais le bruit n'a pas tout à fait disparut :
+On a déjà pas mal gagné mais l'image est toujours un peu bruitée. Le lecteur attentif aura surement remarqué le champs ```compression = 15%``` de l'export png quand nous avons régler l'espace de couleur au début. J'ai effetivement essayé de le mettre à 0, mais ça n'a rien changé. J'ai donc essayé d'augmenter la qualité du png en montant la ```Color Depth``` à 16 bit. Et là : Victoire ! La compression à totalement disparue. Mais maintenant on peut voire qu'il y a de gros problèmes de banding. Ce qui est pire...
 
-[image du bruit qui reste]
+![Zoom sur le pattern](images/3_png_c0_Distance_ohnooo.opti.webp)
 
-Il s'agit encore d'un problème de compression, mais cette fois il vient de l'export Blender. En effet, le lecteur attentif aura surement remarqué le champs ```compression = 15%``` de l'export png quand nous avons régler l'espace de couleur au début. Effectivement, le reste des artefacts de compression vien de là et d'un manque de qualité de l'image (réglée par defaut sur 8 bit). On va donc rectifier et relancer un rendu
+En effet la documentaion de Godot nous informe que l'import png est limité à 8 bits. Je présume que la couleur de notre image 16 bits est clampée à l'import, ce qui produit les bandes. C'est l'impasse, il va falloir trouver autre chose.
 
-[set_png_quality]
+#### Le format EXR à la rescouse
+A patire de là, j'ai éteint mon cerveau et j'ai commencé à "brute force" les paramètre d'export de blender à la recherche du meilleur alignement de planète. C'était pas vraiment l'autoroute du fun. Je dramatise peut-être un peu, mais dans mon souvenir ça a pris des jours. Des jours à itérer sur les paramêtres, faire des rendu, donner les texture à manger à l'oracle et scruter les retours essayant de déterminer en quoi c'était mieux ou pire que telle ou telle autre réglage. Le meilleur compromis auquel j'ai pu arriver est le suivant :
 
-Victoire ! La compression à totalement disparue. Mais maintenant on peut voire qu'il y a de gros problèmes de banding...
+![Reglage de l'export exr dans blender](images/set_exr_half.opti.webp)
 
-#### Le format EXR
+Je ne connaissais pas le formats .exr. Pour la petite histoire, il aurait été créé par *Industrial Light & Magic* : la société d'effets spéciaux de *George Lucas*. Les valeurs ```float (half)``` et ```float (full)``` du champs ```Color Depth``` donnent des resultats légèrement différent, mais je n'ai pas été capable de determiner lequel était mieux. En revanche la texture en ```float (full)``` pèse 7.13 MB alors que l'autre atteint à peine les 250 KB. J'ai donc choisi de réster en half (pour le moment).
 
-#### Aliazing
+Malheureusement le resultat n'est pas encore parfait, mais c'est le mieux que j'ai pu faire. Si vous avez une idée de comment l'améliorer : je prends ! Cela dit il faut aussi relativiser. Lorsque on compare les texture d'albedo deterministes et interactives actuelles, il est très difficile de trouver des différences. 
+
+![alterance textures finales](images/gifalt_final_textures.webp)
+
+La seule chose que mon oeil arrive à percevoir, c'est un peu d'aliasing au niveau des contours (n'hesitez pas à me dire en commentaire si vous voyez autre chose). Depuis le début les coutours sont en effet très prohiminents. Cela vient du fait que la texture deterministe raytracée par cycle n'est pas aliasée, alors que la version interactive générée par rasterisation dans Godot l'est. On peut donc encore gagner un peu en activant l'aliasing sur la render target.
+
+![Retrospective des différentes étapes](images/gif_alt_goodenough.webp)
+*Désolé. J'ai pas resisté... ^^*
+
+S'il s'agissait d'un autre type de donnée je serais plus inquiet. Mais pour de l'albedo (qui est basiquement la couleur des surface), le "jugé à l'oeil" ne me parait pas bien dangeureux. Si plus tard dans le developpement on a des problèmes de rendu, ce sera le moment de se rappeller qu'on a une source d'erreur potentielle ici. Mais pour le POC, on va va dire que c'est "good enough".
+
+## Conclusion :
