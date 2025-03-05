@@ -21,51 +21,33 @@ Durant cette période, il se trouve que le dépôt git a pris feu (suite à une 
 
 Résultat : j’ai perdu l’historique du projet. Je ne peux donc  plus réstaurer les premières versions pour analyser ce que j'avais fait. Réaliser des capture d'écran de mes résultats originaux est également impossible. Ces premiers numéros seront donc des reconstitutions.
 
-## Oracle Driven Development
-Le premier vrai défi de ce POC est de s'assurer que Blender et Godot peuvent produire des données compatibles. En effet, tous les logiciels graphiques ont leurs propres conventions. La plupart du temps, les divergences concernent des choses comme :  
+## Problématique de l'harmonisation des données
+Si vous avez lu l'article mentionné dans l'introduction, vous savez qu'OpenRE permet de fusionner le rendu de 2 scènes :
+- La scène déterministe : précalculée dans Blender
+- La scène intéractive : rendue en temps réèl dans Godot.
 
-- Les unités  
-- Les espaces colorimétriques  
-- Le sens des matrices  
-- L'ordre des rotations  
-- Les axes du repère  
-- …  
+Pour cela, la technologie s'appuie sur une structure de donnée particulière appelée un G-Buffer. Pour rappel, il s'agit d'une collections de textures encodant diverse données géométriques d'une scène en espace écran. OpenRE fusionne le G-Buffer déterministe précalculé par Blender et le G-Buffer interactif rendu à la volée dans Godot. Mais il n'est pas évident que des données produite par deux logiciels différents soitent directement compatibles. C'est même pas gagné du tout en réalité.
 
-Mais en réalité, ça peut être absolument n’importe quoi. Chaque logiciel est truffé de petits partis pris techniques cohérents entre eux. Tant qu'on reste à l'intérieur d'un seul, tout se passe bien. Mais dès qu'ils doivent collaborer et s'échanger des données, ça devient vite l'enfer. Pourtant, si on veut qu'OpenRE fonctionne, il va bien falloir que Blender et Godot arrivent à parler la même langue.  
+En effet, tous les logiciels graphiques suivent des conventions qui leurs sont propres (unités, espaces colorimétriques, axes du repère ...). Tant qu'on reste à l'interieur d'un système, la cohérence de l'ensemble est plus ou moins garantie. Mais dès lors que deux systèmes doivent s'échanger des données pour collaborer, c'est le début des problèmes.
 
-Pour identifier les ajustements à effectuer, je vais utiliser une technique que j’aime bien et que j’appelle le *Oracle Driven Development*. C’est un peu comme du *Test Driven Development*, sauf qu’au lieu d’avoir un jeu de tests automatisés, propre et exhaustif, je vais bricoler une petite moulinette un peu crado qu'il faudra lancer à moitié à la main. Comme le ferait un oracle, cette moulinette va formuler des prophéties parfois cryptiques à partir de données d'entrée. Interprétées correctement, ces présages nous aideront à avancer dans notre périple.  
+Avant toute choses, il va donc falloir s'arranger pour que Blender et Godot parlent la même langue. Et comme on va le voir, cela va demander un certain nombre d'ajustements.
 
-## Anatomie de l'Oracle
+## La méthode de l'oracle
+Pour identifier ces ajustements, je vais utiliser une technique que j’aime bien et que j’appelle le *Oracle Driven Development*. C’est un peu comme du *Test Driven Development*, sauf qu’au lieu d’avoir un jeu de tests automatisés, propre et exhaustif, je vais bricoler une petite moulinette qu’il faudra lancer à moitié à la main. 
 
-Dans cette section, on va voir comment fonctionne notre Oracle. Si vous avez lu l'article mentionné dans l'introduction, vous savez qu’OpenRE compose les scènes déterministe (les arrière-plans précalculés) et interactive (les éléments rendus en temps réel) en s’appuyant sur une représentation particulière de ces scenes : les **G-Buffers**. 
+A la manière d'un oracle, cette moulinette va formuler des prophéties parfois cryptiques en réponse aux questions qu'on lui pose. Mais interprétées correctement, ces présages nous aideront à avancer dans notre périple.
 
-Pour verifier que Blender et Godot sont bien sur la même longueure d’onde, on va leur donner des données d'entée identiques (une scène de test). Si il produisent des données de sorties elles aussi identiques (les G-Buffers) alors c’est gagné !
-
-### Mise en place d’une scène test  
-Pour commencer, j’ai créé la scène dans Blender. Elle est composée de quelques primitives basiques et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale, puisque Godot prend en charge le format de scène Blender : il suffit d’importer le fichier `.blend` et de l’ajouter dans une scène vide.
-
-![Illustration représentant la SimpleScene dans Blender](images/simpleBlend.opti.webp)  
-![Illustration représentant la SimpleScene dans Godot](images/simpleGodot.opti.webp)  
-
-### Comparaison des G-Buffers    
-Pour mesurer la compatibilité entre les G-Buffers générés par Blender et Godot, on va implémenter un Oracle, chargé de comparer ces données. Concrètement, cet Oracle est un shader de post-process. Il prend en entrée les textures des deux G-Buffers et le type de texture à comparer. 
-
-Lorsqu'il sera executé, ce shader affichera à l'écran la différence entre les deux textures du type choisi (la déterministe et l'interactive). Cette différence aura une implémentation spécifique pour chaque type de donnée. Mais l'echelle de couleur du fragment de sortie sera toujours la même. Elle ira du noir (données idéntiques) au blanc (données très différentes). 
-
-Ainsi, si toutes les textures sont bindées et que l'oracle affiche un écran noir pour chaque type, ça veut dire que les G-Buffer sont bien identiques. Sinon… eh bien, il va falloir enquêter. L'Oracle ne le fera pas à notre place, mais ils nous donnera de précieux indices.
+Si Godot et Blender sont bien sur la même longueure d'ondes, les G-Buffer qu'ils produisent à partir d'une même scène devraient être identiques. C'est donc ce qu'on va leur faire faire. Et le rôle de l'oracle sera de prendre ces G-Buffers en entrée, et de nous fournir en réponse une image. Dans cette image on pourra lire 2 choses :
+- les G-Buffer sont en parfaite harmonie -> C'est gagné, Godot et Blender sont en phase. On va pouvoir passer à la suite
+- les G-Buffer présentent des disonnances -> Dans ce cas, il faudra analyser "l'image réponse" pour essayer de déterminer l'origine de la disonnance et essayer de la résoudre.
 
 ![Image illustrant le protocol de validation](images/oracle_schema.opti.webp)
 
-À terme, les G-Buffers d’OpenRE devront contenir les textures suivantes :  
+Mais trève de métaphore. Concrètement, cet Oracle est un post-process du nom de oracle.gdshader. Il prend en entrée les textures des deux G-Buffers et le type de texture à comparer. Son job est de calculer la différence entre les deux textures du type choisi (la déterministe et l’interactive) et de l'afficher à l'écran. Selon le type de donné, les différences pourron avoir des implémentations spécifiques. Mais chacune de ces implémentaions renveront une nuance de gris à interpréter comme suit :
+- noir -> les pixels sont identiques
+- blanc -> la différence entre les pixels est maximale
 
-- **Albedo** (couleur diffuse)  
-- **Depth** (profondeur)  
-- **Normal** (orientation des surfaces)  
-- **ORM** (Occlusion, Roughness, Metallic)  
-
-Mais pour commencer, on va se concentrer sur l’Albedo. Croyez-moi, c’est bien suffisant pour aujourd’hui ! On traitera les autres types de données dans des devlogs dédiés.
-
-### Le shader de l’Oracle  
+### Implementation de l’Oracle  
 
 Voici le code source de l'oracle :  
 
@@ -142,7 +124,10 @@ void fragment() {
 }
 ```
 
-C'est un petit pavé mais ne vous inquiétez on va le décortiquer ensemble. D'abord on a quelques lignes sur lesquelles on ne s'attardera pas. C'est le code usuel pour créer un post-process dans Godot.
+C'est un petit pavé mais ne vous inquiétez on va le décortiquer ensemble. 
+
+#### 1. Code minimal d'un Post-Process 
+D'abord on a quelques lignes sur lesquelles on ne s'attardera pas. C'est le code usuel pour créer un post-process dans Godot.
  ```glsl
 shader_type spatial;
 render_mode unshaded, fog_disabled;
@@ -152,6 +137,7 @@ void vertex() {
 }
 ```
 
+#### 2. Les uniforms ou paramettres d'entrée
 Ensuite on a les uniforms qui sont les paramettres d'entrée d'un shader. C'est à travers un uniform que le code CPU peut envoyer de la donné au GPU. Une fois valués, ils peuveut être référencés dans le code du shader un peu comme une variable globale. Comme évoqué précédement ces uniform correspondent aux textures des deux G-Buffers (de la forme ```sampler2D [i|d]gbuffer_<type>```) et au type selectionné pour la comparaison (```int data_type```)
 ```glsl
 // Type de données à comparer
@@ -170,6 +156,7 @@ uniform sampler2D dgbuffer_normal : filter_nearest;
 uniform sampler2D dgbuffer_orm : filter_nearest;
 ```
 
+#### 3. Utilitaires de sampling
 Les 2 blocs suivants sont des helpers qui permettent de sampler la texture demandé dans les G-Buffers :
 ```glsl
 // Récupère un pixel du G-Buffer déterministe selon le type spécifié
@@ -191,6 +178,7 @@ vec3 get_interactive_frag(int tex_type, vec2 coord) {
 }
 ```
 
+#### 4. Implémentations spécifiques des différences
 S'en suivent les implémentations de la différence pour chaque type de donnée. Vous remarquerez qu'à part ```vec3 albedo_difference(...)```, tout le monde renvois la couleur blanche. Voyez ça comme le ```return null;``` ou le ```throw Exception();``` qu'on met par defaut quand on prévois d’implémenter une fonction plus tard.
 ```glsl
 // Calcul de la différence entre les textures d'albedo
@@ -212,6 +200,7 @@ vec3 orm_difference(vec3 determinist_frag, vec3 interactive_frag) {
 }
 ```
 
+#### 5. fragment() = post-process.main()
 Et enfin il y a la fonction `void fragment()` qui est l'équivalent du `main()` pour un post process. On vois qu'elle utilise les helpers pour récupérer les pixels deterministes et interactifs en fonction du type de donnée selectionné. Puis elle calcule et affiche la difference entre ces deux pixels (selon l'implementation elle aussi designée par le type). 
 ```glsl
 // Le main du post process
@@ -229,11 +218,25 @@ void fragment() {
 }
 ```
 
-## La prophétie originelle
-La question qui nous interesse ici est : "est ce que les textures d'Abledo produites par Blender et Godot sont bien harmonisées". Pour poser cette question à notre oracle, il va falloir binder ces textures aux uniforms correspondants du post-process. Ensuite on s'assurera que le paramètre ```data_type``` est bien réglé sur 0 (qui correspond à l'Albedo). On sera alors prêt à recevoir notre prophécie en appuyant sur play. Mais un petit problème subsiste : comment on obtien ces textures d'albedo au juste ?
+## Préparation des données
+Nous savons desormais comment fonctionne l'oracle. Mais nous n'avons pas de données à lui soumettre. Il faut les construire.
+
+### Mise en place d’une scène test  
+Pour commencer, j’ai créé une petite scène dans Blender. Elle est composée de quelques primitives basiques et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale, puisque Godot prend en charge le format de scène Blender : il suffit d’importer le fichier `.blend` et de l’ajouter dans une scène vide.
+
+![Illustration représentant la SimpleScene dans Blender](images/simpleBlend.opti.webp)  
+![Illustration représentant la SimpleScene dans Godot](images/simpleGodot.opti.webp)
+
+Vous l'aurez compris, c'est de cette scène que seront issus les G-Buffers déterministes et interaxctifs que nous allons soumettre à l'oracle. À terme, ces G-Buffers devront contenir les textures suivantes :  
+- **Albedo** (couleur diffuse)  
+- **Depth** (profondeur)  
+- **Normal** (orientation des surfaces)  
+- **ORM** (Occlusion, Roughness, Metallic)  
+
+Mais pour commencer, on va se concentrer sur l’Albedo. Croyez-moi, c’est bien suffisant pour aujourd’hui ! On traitera les autres types de données dans des devlogs dédiés.
 
 #### Albedo du G-Buffer déterministe :
-Coté Blender on va activer la ```diffCol pass``` de Cycles (qui correspon à l'Albedo) puis on va effectuer un rendu. Grâce au compositor et au noeud ```File Output```, l'image correspondant à cette passe sera automatiquement exportée à l'emplacement spécifié à la fin du rendu. Il n'y aura plus qu'à importer cette image dans Godot et à la binder au ```uniform dgbuffer_albedo```
+Pour générer la texture d'Albedo déterministe dans Blender, on va activer la ```diffCol pass``` de Cycles (qui correspon à l'Albedo) puis on va effectuer un rendu. Grâce au compositor et au noeud ```File Output```, l'image correspondant à cette passe sera automatiquement exportée à l'emplacement spécifié à la fin du rendu. Il n'y aura plus qu'à importer cette image dans Godot et à la binder au ```uniform dgbuffer_albedo``` de l'oracle.
 
 [Compo => image => import => bind]
 
@@ -243,16 +246,14 @@ Pour la version interactive c'est un peu plus complexe. Le shading language de G
 uniform sampler2D texture : hint_<insert_texture_name>_texture;
 ```
 
-La texture qui nous interesse ici est ```hint_screen_texture```. Mais malheureusement il ne s'agit pas directement de l'albedo. C'est un rendu classic depuis la caméra prenant en compte la lumière. On va donc tricher un peu en utilisant une render target (un ```SubViewport en terminologie Godot```) dont on va régler le parametre ```Debug Draw``` sur ```Unshaded```. Il suffit ensuite de binder cette render target au ```uniform igbuffer_albedo```
+La texture qui nous interesse ici est ```hint_screen_texture```. Mais malheureusement il ne s'agit pas directement de l'albedo. C'est un rendu classic depuis la caméra prenant en compte la lumière. On va donc tricher un peu en utilisant une render target (un ```SubViewport en terminologie Godot```) dont on va régler le parametre ```Debug Draw``` sur ```Unshaded```. Il suffit ensuite de binder cette render target au ```uniform igbuffer_albedo``` de l'oracle.
 
-#### C'est maintenant ! C'est maintenant !
+## Harmonisation de l'albédo :
 Nous avons correctement créé et bindé nos textures d'albedo. Ces données en été obtenues à partir de 2 scenes rigoureusement identiques puisqu'elles viennent du même fichier. Donc si l'importer de Godot est bien capable de traduire les données de Blender pour les conformer à ses propres conventions, nous devrions obtenir un prophécie encourageante (un écran noir). Qu'est-ce qui pourait mal se passer ?
 
 ![Capture de la première prophétie de l'Oracle](images/first_prophecy.opti.webp)
+*Oh noooooo !*
 
-Oh nooooo !
-
-## Décryptage de la professie
 Rassurez vous l'importer de Godot fonctionne très bien, le problème n'est pas là. Comme c'est très souvent le cas, la plupart des problème ont été indroduit par la seule étape manuelle de la moulinette : l'export/import de la texture déterministe.
 
 #### Espaces colorimétriques :
