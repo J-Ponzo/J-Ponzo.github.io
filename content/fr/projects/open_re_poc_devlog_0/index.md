@@ -36,41 +36,63 @@ Mais en réalité, ça peut être absolument n’importe quoi. Chaque logiciel e
 Pour identifier les ajustements à effectuer, je vais utiliser une technique que j’aime bien et que j’appelle le *Oracle Driven Development*. C’est un peu comme du *Test Driven Development*, sauf qu’au lieu d’avoir un jeu de tests automatisés, propre et exhaustif, je vais bricoler une petite moulinette un peu crado qu'il faudra lancer à moitié à la main. Comme le ferait un oracle, cette moulinette va formuler des prophéties parfois cryptiques à partir de données d'entrée. Interprétées correctement, ces présages nous aideront à avancer dans notre périple.  
 
 ## Anatomie de l'Oracle
-Dans cette section je vais expliquer de quoi est fait notre Oracle. Si vous avez lu l'article référencé dans l'intro, vous savez qu'OpenRE compose les mondes déterministe et interactif en s'appuyant sur une représentation particulière de ces scenes qu'on appele des G-Buffers. Une façon de verifier que Blender et Godot sont bien sur la même longueure d'onde, c'est de verifier que si on leur donne les même données d'entrées (les scène), ils produisent les mêmes données de sortie (les G-Buffers).
 
-J'ai donc commencé par créer dans Blender une petite scene de test composées de quelques primitives très simples et d'une caméra. Cette scène à ensuite été scrupuleusement reproduite dans Godot. L'opération est trivial étant donné que Godot prend en charge le format de scene de Blender. Je n'ai eu qu'à importer le .blend et à l'ajouter à une scene Godot vide. And voilà !
+Dans cette section, on va voir comment fonctionne notre Oracle. Si vous avez lu l'article mentionné dans l'introduction, vous savez qu’OpenRE compose les scènes déterministe (les arrière-plans précalculés) et interactive (les éléments rendus en temps réel) en s’appuyant sur une représentation particulière de ces scenes : les **G-Buffers**. 
 
-![Illustration représentant la SimpleScene dans Blender](images/simpleBlend.opti.webp)
-![Illustration représentant la SimpleScene dans Godot](images/simpleGodot.opti.webp)
+Pour verifier que Blender et Godot sont bien sur la même longueure d’onde, on va leur donner des données d'entée identiques (une scène de test). Si il produisent des données de sorties elles aussi identiques (les G-Buffers) alors c’est gagné !
 
-Les G-Buffers déterministes et interactifs devront à terme contenir les textures suivantes :
-- Albedo
-- Depth
-- Normal
-- ORM
+### Mise en place d’une scène test  
+Pour commencer, j’ai créé la scène dans Blender. Elle est composée de quelques primitives basiques et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale, puisque Godot prend en charge le format de scène Blender : il suffit d’importer le fichier `.blend` et de l’ajouter dans une scène vide.
 
-Mais dans un premier temps nous allons nous focaliser sur l'Albedo (et vous allez voir, c'est bien suffisant pour aujourd'hui !). Nous traiterons le reste dans des develogs dédiés mais nous allons d'ors et déjà implémenter un oracle capable de mesurer le degré d'armonie entre toutes ces données. Il se materialisera en ce monde sous la forme du post-process ```oracle.gdshader``` et prendra en entrée chacune des textures des 2 G-Buffers ainsi qu'un entier ```data_type``` designant le type de texture que l'on veut comparer.
+![Illustration représentant la SimpleScene dans Blender](images/simpleBlend.opti.webp)  
+![Illustration représentant la SimpleScene dans Godot](images/simpleGodot.opti.webp)  
+
+### Comparaison des G-Buffers    
+Pour mesurer la compatibilité entre les G-Buffers générés par Blender et Godot, on va implémenter un Oracle, chargé de comparer ces données. Concrètement, cet Oracle est un shader de post-process. Il prend en entrée les textures des deux G-Buffers et le type de texture à comparer. 
+
+Lorsqu'il sera executé, ce shader affichera à l'écran la différence entre les deux textures du type choisi (la déterministe et l'interactive). Cette différence aura une implémentation spécifique pour chaque type de donnée. Mais l'echelle de couleur du fragment de sortie sera toujours la même. Elle ira du noir (données idéntiques) au blanc (données très différentes). 
+
+Ainsi, si toutes les textures sont bindées et que l'oracle affiche un écran noir pour chaque type, ça veut dire que les G-Buffer sont bien identiques. Sinon… eh bien, il va falloir enquêter. L'Oracle ne le fera pas à notre place, mais ils nous donnera de précieux indices.
+
+![Image illustrant le protocol de validation](images/oracle_schema.opti.webp)
+
+À terme, les G-Buffers d’OpenRE devront contenir les textures suivantes :  
+
+- **Albedo** (couleur diffuse)  
+- **Depth** (profondeur)  
+- **Normal** (orientation des surfaces)  
+- **ORM** (Occlusion, Roughness, Metallic)  
+
+Mais pour commencer, on va se concentrer sur l’Albedo. Croyez-moi, c’est bien suffisant pour aujourd’hui ! On traitera les autres types de données dans des devlogs dédiés.
+
+### Le shader de l’Oracle  
+
+Voici le code source de l'oracle :  
 
 ```glsl
 shader_type spatial;
 render_mode unshaded, fog_disabled;
 
-// Data to check
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+// Type de données à comparer
 uniform int data_type = 0;
 
-// Interactive G-Buffer
+// G-Buffer interactif
 uniform sampler2D igbuffer_albedo : filter_nearest;
 uniform sampler2D igbuffer_depth : hint_depth_texture, filter_nearest;
 uniform sampler2D igbuffer_normal : filter_nearest;
 uniform sampler2D igbuffer_orm : filter_nearest;
 
-// Determinist G-Buffer
+// G-Buffer déterministe
 uniform sampler2D dgbuffer_albedo : filter_nearest;
 uniform sampler2D dgbuffer_depth : filter_nearest;
 uniform sampler2D dgbuffer_normal : filter_nearest;
 uniform sampler2D dgbuffer_orm : filter_nearest;
 
-// Sample the fragment from the determinist G-Buffer according to the given tex_type
+// Récupère un pixel du G-Buffer déterministe selon le type spécifié
 vec3 get_determinist_frag(int tex_type, vec2 coord) {
 	if (tex_type == 0) return texture(dgbuffer_albedo, coord).rgb;
 	else if (tex_type == 1) return texture(dgbuffer_depth, coord).rgb;
@@ -79,7 +101,7 @@ vec3 get_determinist_frag(int tex_type, vec2 coord) {
 	else return vec3(1.0, 1.0, 1.0);
 }
 
-// Sample the fragment from the interactive G-Buffer according to the given tex_type
+// Récupère un pixel du G-Buffer interactif selon le type spécifié
 vec3 get_interactive_frag(int tex_type, vec2 coord) {
 	if (tex_type == 0) return texture(igbuffer_albedo, coord).rgb;
 	else if (tex_type == 1) return texture(igbuffer_depth, coord).rgb;
@@ -88,48 +110,124 @@ vec3 get_interactive_frag(int tex_type, vec2 coord) {
 	else return vec3(0.0, 0.0, 0.0);
 }
 
-// Texture differences impl
-///////////////////////////////////////////////////////////////////////////
 vec3 albedo_difference(vec3 determinist_frag, vec3 interactive_frag) {
 	return abs(determinist_frag - interactive_frag);
 }
 
-vec3 depth_difference(vec3 determinist_frag, vec3 interactive_frag) {
-	return vec3(1.0, 1.0, 1.0);
+// Placeholder pour les autres types de différences
+vec3 depth_difference(vec3 determinist_frag, vec3 interactive_frag) { 
+	return vec3(1.0, 1.0, 1.0); 
 }
 
-vec3 normal_difference(vec3 determinist_frag, vec3 interactive_frag) {
-	return vec3(1.0, 1.0, 1.0);
+vec3 normal_difference(vec3 determinist_frag, vec3 interactive_frag) { 
+	return vec3(1.0, 1.0, 1.0); 
 }
 
-vec3 orm_difference(vec3 determinist_frag, vec3 interactive_frag) {
-	return vec3(1.0, 1.0, 1.0);
-}
-///////////////////////////////////////////////////////////////////////////
-
-void vertex() {
-	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+vec3 orm_difference(vec3 determinist_frag, vec3 interactive_frag) { 
+	return vec3(1.0, 1.0, 1.0); 
 }
 
+// Le main du post process
 void fragment() {
 	vec3 determinist_frag = get_determinist_frag(data_type, SCREEN_UV);
 	vec3 interactive_frag = get_interactive_frag(data_type, SCREEN_UV);
-
-	vec3 final_color = vec3(1.0, 1.0, 1.0);
+	
+	vec3 final_color = vec3(1.0);
 	if (data_type == 0) final_color = albedo_difference(determinist_frag, interactive_frag);
 	else if (data_type == 1) final_color = depth_difference(determinist_frag, interactive_frag);
 	else if (data_type == 2) final_color = normal_difference(determinist_frag, interactive_frag);
 	else if (data_type == 3) final_color = orm_difference(determinist_frag, interactive_frag);
+
 	ALBEDO = final_color;
 }
 ```
-*Code source du shader oracle.gdshader*
 
-Le fonctionnement de ```oracle.gdshader``` est finalement assez simple. Il calcule la différence entre les couleurs de chaques pixels des textures dont le type correspond à ```data_type```. Si l'écran est noir quelque soit la valeur de ```data_type```, alors les G-Buffers sont equivalents. Sinon, cela s'ignifie que quelque chose est mal réglé. Et biensure, le jeu, c'est de trouver quoi en se basant sur l'image que l'Oracle nous montre.
+C'est un petit pavé mais ne vous inquiétez on va le décortiquer ensemble. D'abord on a quelques lignes sur lesquelles on ne s'attardera pas. C'est le code usuel pour créer un post-process dans Godot.
+ ```glsl
+shader_type spatial;
+render_mode unshaded, fog_disabled;
 
-![Image illustrant le protocol de validation](images/oracle_schema.opti.webp)
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+```
 
-Comme vous pouvez le remarquer, seule la différence entre les textures d'albedo est implémentée pour l'instant. Les autres differences retournent la couleur blanche en dur. C'est un peu l'équivalent graphique du ```return null;``` par defaut quand on prévois d'implémenter une fonction plus tard.
+Ensuite on a les uniforms qui sont les paramettres d'entrée d'un shader. C'est à travers un uniform que le code CPU peut envoyer de la donné au GPU. Une fois valués, ils peuveut être référencés dans le code du shader un peu comme une variable globale. Comme évoqué précédement ces uniform correspondent aux textures des deux G-Buffers (de la forme ```sampler2D [i|d]gbuffer_<type>```) et au type selectionné pour la comparaison (```int data_type```)
+```glsl
+// Type de données à comparer
+uniform int data_type = 0;
+
+// G-Buffer interactif
+uniform sampler2D igbuffer_albedo : filter_nearest;
+uniform sampler2D igbuffer_depth : hint_depth_texture, filter_nearest;
+uniform sampler2D igbuffer_normal : filter_nearest;
+uniform sampler2D igbuffer_orm : filter_nearest;
+
+// G-Buffer déterministe
+uniform sampler2D dgbuffer_albedo : filter_nearest;
+uniform sampler2D dgbuffer_depth : filter_nearest;
+uniform sampler2D dgbuffer_normal : filter_nearest;
+uniform sampler2D dgbuffer_orm : filter_nearest;
+```
+
+Les 2 blocs suivants sont des helpers qui permettent de sampler la texture demandé dans les G-Buffers :
+```glsl
+// Récupère un pixel du G-Buffer déterministe selon le type spécifié
+vec3 get_determinist_frag(int tex_type, vec2 coord) {
+	if (tex_type == 0) return texture(dgbuffer_albedo, coord).rgb;
+	else if (tex_type == 1) return texture(dgbuffer_depth, coord).rgb;
+	else if (tex_type == 2) return texture(dgbuffer_normal, coord).rgb;
+	else if (tex_type == 3) return texture(dgbuffer_orm, coord).rgb;
+	else return vec3(1.0, 1.0, 1.0);
+}
+
+// Récupère un pixel du G-Buffer interactif selon le type spécifié
+vec3 get_interactive_frag(int tex_type, vec2 coord) {
+	if (tex_type == 0) return texture(igbuffer_albedo, coord).rgb;
+	else if (tex_type == 1) return texture(igbuffer_depth, coord).rgb;
+	else if (tex_type == 2) return texture(igbuffer_normal, coord).rgb;
+	else if (tex_type == 3) return texture(igbuffer_orm, coord).rgb;
+	else return vec3(0.0, 0.0, 0.0);
+}
+```
+
+S'en suivent les implémentations de la différence pour chaque type de donnée. Vous remarquerez qu'à part ```vec3 albedo_difference(...)```, tout le monde renvois la couleur blanche. Voyez ça comme le ```return null;``` ou le ```throw Exception();``` qu'on met par defaut quand on prévois d’implémenter une fonction plus tard.
+```glsl
+// Calcul de la différence entre les textures d'albedo
+vec3 albedo_difference(vec3 determinist_frag, vec3 interactive_frag) {
+	return abs(determinist_frag - interactive_frag);
+}
+
+// Placeholder pour les autres types de différences
+vec3 depth_difference(vec3 determinist_frag, vec3 interactive_frag) { 
+	return vec3(1.0, 1.0, 1.0); 
+}
+
+vec3 normal_difference(vec3 determinist_frag, vec3 interactive_frag) { 
+	return vec3(1.0, 1.0, 1.0); 
+}
+
+vec3 orm_difference(vec3 determinist_frag, vec3 interactive_frag) { 
+	return vec3(1.0, 1.0, 1.0); 
+}
+```
+
+Et enfin il y a la fonction `void fragment()` qui est l'équivalent du `main()` pour un post process. On vois qu'elle utilise les helpers pour récupérer les pixels deterministes et interactifs en fonction du type de donnée selectionné. Puis elle calcule et affiche la difference entre ces deux pixels (selon l'implementation elle aussi designée par le type). 
+```glsl
+// Le main du post process
+void fragment() {
+	vec3 determinist_frag = get_determinist_frag(data_type, SCREEN_UV);
+	vec3 interactive_frag = get_interactive_frag(data_type, SCREEN_UV);
+	
+	vec3 final_color = vec3(1.0);
+	if (data_type == 0) final_color = albedo_difference(determinist_frag, interactive_frag);
+	else if (data_type == 1) final_color = depth_difference(determinist_frag, interactive_frag);
+	else if (data_type == 2) final_color = normal_difference(determinist_frag, interactive_frag);
+	else if (data_type == 3) final_color = orm_difference(determinist_frag, interactive_frag);
+
+	ALBEDO = final_color;
+}
+```
 
 ## La prophétie originelle
 La question qui nous interesse ici est : "est ce que les textures d'Abledo produites par Blender et Godot sont bien harmonisées". Pour poser cette question à notre oracle, il va falloir binder ces textures aux uniforms correspondants du post-process. Ensuite on s'assurera que le paramètre ```data_type``` est bien réglé sur 0 (qui correspond à l'Albedo). On sera alors prêt à recevoir notre prophécie en appuyant sur play. Mais un petit problème subsiste : comment on obtien ces textures d'albedo au juste ?
@@ -219,3 +317,5 @@ La seule chose que mon oeil arrive à percevoir, c'est un peu d'aliasing au nive
 S'il s'agissait d'un autre type de donnée je serais plus inquiet. Mais pour de l'albedo (qui est basiquement la couleur des surface), le "jugé à l'oeil" ne me parait pas bien dangeureux. Si plus tard dans le developpement on a des problèmes de rendu, ce sera le moment de se rappeller qu'on a une source d'erreur potentielle ici. Mais pour le POC, on va va dire que c'est "good enough".
 
 ## Conclusion :
+- Dire qu'il faudra plus de scènes pour être sûr
+- C'était tr-s long ! Ne perdez pas votre historique ! Vraiment !
