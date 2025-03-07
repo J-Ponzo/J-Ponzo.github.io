@@ -2,7 +2,7 @@
 author = 'Turbo Tartine'
 date = '2025-02-21T12:51:02+01:00'
 draft = true
-title = "OpenRE devlog 0 : L'Oracle"
+title = "OpenRE devlog 0 : Oracle, Albédo et Harmonie"
 description = 'devlog 0 du projet OpenRE'
 +++
 ## Introduction
@@ -274,17 +274,15 @@ Les G-Buffers déterministes et interactifs que nous présenteront à l’oracle
 Mais pour le moment, concentrons-nous sur l’Albedo. Croyez-moi, c’est déjà bien suffisant pour aujourd’hui ! Nous traiterons les autres types de données dans des devlogs dédiés.
 
 #### Albedo du G-Buffer déterministe
-Pour générer la texture d’Albedo déterministe dans Blender, nous allons commencer par activer la ```diffCol pass``` de Cycles (qui correspond à l’Albedo)
-
-[active pass]
+Pour générer la texture d’Albedo déterministe dans Blender, nous allons commencer par activer la passe de *Diffuse Color* de Cycles (qui correspond à l’Albedo)
 
 Ensuite il va falloir effectuer un rendu. Grâce au compositor et au nœud ```File Output```, l’image correspondant à cette passe sera automatiquement exportée à l’emplacement spécifié à la fin du rendu. 
 
-[File Output node in compositor]
+![Illustration du processus d'export de la texture d'Albedo déterministe depuis Blender](images/export_albedo_texture.opti.webp)
 
 Il ne restera plus qu’à importer cette image dans Godot et à la "binder" au ```uniform dgbuffer_albedo``` de l'oracle.
 
-[Import / Bind]
+![Association de la texture d'Albedo Déterministe au uniform dbuffer_albedo du shader oracle.gdshader](images/bind_deterministe.opti.webp)
 
 #### Albedo du G-Buffer interactif :
 Pour la version interactive, c’est un peu plus complexe. Godot nous permet d’injecter certaines textures dans un uniform, que l’on peut ensuite utiliser dans le shader. La syntaxe est la suivante :
@@ -294,9 +292,34 @@ uniform sampler2D texture : hint_<insert_texture_name>_texture;
 
 La texture qui nous intéresse ici est `hint_screen_texture`.Malheureusement, ce n’est pas directement l’Albedo, mais un rendu classique depuis la caméra, prenant en compte la lumière. Pour contourner ce problème, nous allons :
 - 1. créer une Render Target (un `SubViewport` en terminologie Godot)
+
+![Albedo_Subviewport dans la scene Godot](images/subviewport.opti.webp)
+<br><br>
 - 2. lui appliquer un post-process simple affichant simplement la `hint_screen_texture`
-- 3. régler le paramètre `Debug Draw` de la Render Target sur `Unshaded`  
+```glsl
+shader_type spatial;
+render_mode unshaded, fog_disabled;
+
+uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;
+
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+void fragment() {
+	ALBEDO = vec3(texture(screen_texture, SCREEN_UV.xy).rgb);
+}
+```
+<br>
+
+- 3. régler le paramètre `Debug Draw` de la Render Target sur `Unshaded` 
+
+![Réglage du paramètre Debug Draw de la REnder Target](images/RT_unshaded.opti.webp) 
+<br><br>
+
 - 4. "binder" cette Render Target au `uniform igbuffer_albedo` de l'oracle
+
+![Association de la Render Target générant la Texture d'Albedo Déterministe au uniform ibuffer_albedo du shader oracle.gdshader](images/bind_interactive.opti.webp)
 
 ## Harmonisation de l'albédo :
 Nos textures d’albédo sont en place, correctement créées et "bindées". Elles proviennent de deux scènes rigoureusement identiques issues du même fichier. Si "l’importer" de Godot fait bien son travail en traduisant les données de Blender, on devrait obtenir une prophétie rassurante… c'est-à-dire un bel écran noir.
