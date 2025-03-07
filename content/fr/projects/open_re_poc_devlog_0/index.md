@@ -26,7 +26,7 @@ Si vous avez lu l'article mentionné dans l'introduction, vous savez qu'OpenRE p
 - La scène déterministe : précalculée dans Blender
 - La scène intéractive : rendue en temps réèl dans Godot.
 
-Pour cela, la technologie s'appuie sur une structure de donnée particulière appelée un G-Buffer. Pour rappel, il s'agit d'une collections de textures encodant diverse données géométriques d'une scène en espace écran. OpenRE fusionne le G-Buffer déterministe précalculé par Blender et le G-Buffer interactif rendu à la volée dans Godot. Mais il n'est pas évident que des données produite par deux logiciels différents soitent directement compatibles. C'est même pas gagné du tout en réalité.
+Pour cela, la technologie s'appuie sur une structure de donnée particulière appelée un G-Buffer. Pour rappel, il s'agit d'une collections de textures encodant diverse données géométriques d'une scène en espace écran. OpenRE fusionne donc le G-Buffer déterministe précalculé par Blender et le G-Buffer interactif rendu à la volée dans Godot. Mais il n'est pas évident que des données produite par deux logiciels différents soitent directement compatibles. C'est même pas gagné du tout en réalité.
 
 En effet, tous les logiciels graphiques suivent des conventions qui leurs sont propres (unités, espaces colorimétriques, axes du repère ...). Tant qu'on reste à l'interieur d'un système, la cohérence de l'ensemble est plus ou moins garantie. Mais dès lors que deux systèmes doivent s'échanger des données pour collaborer, c'est le début des problèmes.
 
@@ -35,7 +35,7 @@ Avant toute choses, il va donc falloir s'arranger pour que Blender et Godot parl
 ## La méthode de l'oracle
 Pour identifier ces ajustements, je vais utiliser une technique que j’aime bien et que j’appelle le *Oracle Driven Development*. C’est un peu comme du *Test Driven Development*, sauf qu’au lieu d’avoir un jeu de tests automatisés, propre et exhaustif, je vais bricoler une petite moulinette qu’il faudra lancer à moitié à la main. 
 
-A la manière d'un oracle, cette moulinette va formuler des prophéties parfois cryptiques en réponse aux questions qu'on lui pose. Mais interprétées correctement, ces présages nous aideront à avancer dans notre périple.
+A la manière d'un oracle, cette moulinette va formuler des prophéties parfois cryptiques en réponse aux questions qu'on lui pose. Mais interprétés correctement, ces présages nous aideront à avancer dans notre périple.
 
 Si Godot et Blender sont bien sur la même longueure d'ondes, les G-Buffer qu'ils produisent à partir d'une même scène devraient être identiques. C'est donc ce qu'on va leur faire faire. Et le rôle de l'oracle sera de prendre ces G-Buffers en entrée, et de nous fournir en réponse une image. Dans cette image on pourra lire 2 choses :
 - les G-Buffer sont en parfaite harmonie -> C'est gagné, Godot et Blender sont en phase. On va pouvoir passer à la suite
@@ -43,7 +43,7 @@ Si Godot et Blender sont bien sur la même longueure d'ondes, les G-Buffer qu'il
 
 ![Image illustrant le protocol de validation](images/oracle_schema.opti.webp)
 
-Mais trève de métaphore. Concrètement, cet Oracle est un post-process du nom de oracle.gdshader. Il prend en entrée les textures des deux G-Buffers et le type de texture à comparer. Son job est de calculer la différence entre les deux textures du type choisi (la déterministe et l’interactive) et de l'afficher à l'écran. Selon le type de donné, les différences pourron avoir des implémentations spécifiques. Mais chacune de ces implémentaions renveront une nuance de gris à interpréter comme suit :
+Mais trève de métaphore. Concrètement, cet Oracle est un post-process du nom de oracle.gdshader. Il prend en entrée les textures des deux G-Buffers et le type de texture à comparer. Son job est de calculer la différence entre les deux textures du type choisi (la déterministe et l’interactive) et de l'afficher à l'écran. Selon le type de donné, les différences pourront avoir des implémentations spécifiques. Mais chacune de ces implémentaions renveront une nuance de gris à interpréter comme suit :
 - noir -> les pixels sont identiques
 - blanc -> la différence entre les pixels est maximale
 
@@ -265,7 +265,7 @@ Pour commencer, j’ai créé une petite scène dans Blender, composée de quelq
 ![Illustration représentant la SimpleScene dans Blender](images/simpleBlend.opti.webp)  
 ![Illustration représentant la SimpleScene dans Godot](images/simpleGodot.opti.webp)
 
-Comme vous l’aurez compris, c’est cette scène qui nous servira à générer les G-Buffers déterministes et interactifs que nous soumettrons à l’oracle. À terme, ces G-Buffers devront contenir les textures suivantes :
+Les G-Buffers déterministes et interactifs que nous présenteront à l’oracle seront issus de ces scènes. À terme, ils devront contenir les textures suivantes :
 - **Albedo** (couleur diffuse)  
 - **Depth** (profondeur)  
 - **Normal** (orientation des surfaces)  
@@ -274,17 +274,29 @@ Comme vous l’aurez compris, c’est cette scène qui nous servira à générer
 Mais pour le moment, concentrons-nous sur l’Albedo. Croyez-moi, c’est déjà bien suffisant pour aujourd’hui ! Nous traiterons les autres types de données dans des devlogs dédiés.
 
 #### Albedo du G-Buffer déterministe
-Pour générer la texture d’Albedo déterministe dans Blender, nous allons activer la ```diffCol pass``` de Cycles (qui correspond à l’Albedo), puis effectuer un rendu. Grâce au compositor et au nœud ```File Output```, l’image correspondant à cette passe sera automatiquement exportée à l’emplacement spécifié à la fin du rendu. Il ne restera plus qu’à importer cette image dans Godot et à la "binder" au ```uniform dgbuffer_albedo``` de l'oracle.
+Pour générer la texture d’Albedo déterministe dans Blender, nous allons commencer par activer la ```diffCol pass``` de Cycles (qui correspond à l’Albedo)
 
-[Compo => image => import => bind]
+[active pass]
+
+Ensuite il va falloir effectuer un rendu. Grâce au compositor et au nœud ```File Output```, l’image correspondant à cette passe sera automatiquement exportée à l’emplacement spécifié à la fin du rendu. 
+
+[File Output node in compositor]
+
+Il ne restera plus qu’à importer cette image dans Godot et à la "binder" au ```uniform dgbuffer_albedo``` de l'oracle.
+
+[Import / Bind]
 
 #### Albedo du G-Buffer interactif :
-Pour la version interactive, c’est un peu plus complexe. Godot nous permet d’injecter certaines textures dans un uniform, que l’on peut ensuite exploiter dans un shader. La syntaxe est la suivante :
+Pour la version interactive, c’est un peu plus complexe. Godot nous permet d’injecter certaines textures dans un uniform, que l’on peut ensuite utiliser dans le shader. La syntaxe est la suivante :
 ``` glsl
 uniform sampler2D texture : hint_<insert_texture_name>_texture;
 ```
 
-La texture qui nous intéresse ici est `hint_screen_texture`.Malheureusement, ce n’est pas directement l’Albedo, mais un rendu classique depuis la caméra, prenant en compte la lumière. Pour contourner ce problème, nous allons utiliser une Render Target (un `SubViewport` en terminologie Godot),  en réglant son paramètre `Debug Draw` sur `Unshaded`.  Il suffira ensuite de "binder" cette Render Target au `uniform igbuffer_albedo` de l'oracle.
+La texture qui nous intéresse ici est `hint_screen_texture`.Malheureusement, ce n’est pas directement l’Albedo, mais un rendu classique depuis la caméra, prenant en compte la lumière. Pour contourner ce problème, nous allons :
+- 1. créer une Render Target (un `SubViewport` en terminologie Godot)
+- 2. lui appliquer un post-process simple affichant simplement la `hint_screen_texture`
+- 3. régler le paramètre `Debug Draw` de la Render Target sur `Unshaded`  
+- 4. "binder" cette Render Target au `uniform igbuffer_albedo` de l'oracle
 
 ## Harmonisation de l'albédo :
 Nos textures d’albédo sont en place, correctement créées et "bindées". Elles proviennent de deux scènes rigoureusement identiques issues du même fichier. Si "l’importer" de Godot fait bien son travail en traduisant les données de Blender, on devrait obtenir une prophétie rassurante… c'est-à-dire un bel écran noir.
@@ -355,28 +367,29 @@ C'était pas vraiment l'autoroute du fun. Pendant plusieurs jours, j'ai fait des
 
 Je ne connaissais pas le format `.exr`. Pour la petite histoire, il a été développé par *Industrial Light & Magic* : la société d'effets spéciaux de *George Lucas*. 
 
-J'ai testé les 2 valeurs du champs `Color Depth` : `float (half)` et `float (full)`. Elles donnent des résultats légèrement différentes, mais je n'ai pas réussi à décider lequel était réellement meilleur. Mais, la texture en `float (full)` pèse 7,13 Mo, contre 250 Ko en `float (half)`. J'ai donc choisi de rester sur du half (au moins pour le moment).
+J'ai testé les 2 valeurs du champs `Color Depth` : `float (half)` et `float (full)`. Elles donnent des résultats légèrement différentes, mais je n'ai pas réussi à décider lequel était réellement meilleur. Cependant, la texture en `float (full)` pèse 7,13 Mo, contre 250 Ko en `float (half)`. J'ai donc choisi de rester sur du half (au moins pour le moment).
 
+#### L'Aliasing
 Le résultat n’est pas encore parfait, mais c’est le mieux que j’ai pu obtenir. Si vous avez une idée de comment l'améliorer : je prends !
 
-Cela dit, lorsqu'on compare les textures déterministes et interactives actuelles, il devient vraiment difficile de percevoir une différence.
+Cela dit, lorsqu'on compare les textures déterministes et interactives actuelles, il devient vraiment difficile de trouver une différence.
 
 ![alterance textures finales](images/gifalt_final_textures.webp)
 
-La seule chose que mon oeil arrive à percevoir, c'est un peu d'aliasing sur les contours (n'hesitez pas à me dire en commentaire si vous voyez autre chose).  Depuis le début, ces contours sont très marqués. Cela vient du fait que la texture deterministe raytracée par Cycles n'est pas aliasée, alors que la version interactive générée par rasterisation dans Godot l'est. 
+La seule chose que mon oeil arrive à percevoir, c'est un peu d'aliasing sur les contours (n'hesitez pas à me dire en commentaire si vous voyez autre chose).  
 
-On peut donc encore grapiller un peu en activant l'aliasing sur la Render Target.
+Depuis le début, les contours sont effectivement très marqués dans les présages de l'oracle. Le phénomène est expliquable : le raytracing de Cycles ne produit pas d'aliasing, alors que la rasterisation de Godot si. Ce qui concentre des différences au niveau des zones sujettes à l'aliasing : les contours.
 
-![Retrospective des différentes étapes](images/gif_alt_goodenough.webp)
-*Oups... j'ai rechuté...*
-
-S’il s’agissait d’un autre type de données, j’aurais été plus inquiet. Mais pour une texture d’albédo (qui est basiquement la couleur des surfaces), le "jugé à l’œil" me semble suffisant.
-
-Si plus tard dans le développement, on tombe sur des incohérences visuelles, il faudra se souvenir qu’une source d’erreur potentielle existe ici.
-
-Mais pour le POC, on va dire que c’est good enough.
+On peut donc encore grapiller un peu en activant l'anti-aliasing sur la Render Target de la texture interactive.
 
 ## Conclusion :
-- Dire qu'il faudra plus de scènes pour être sûr
-- C'était tr-s long ! Ne perdez pas votre historique ! Vraiment !
-- Blague TurboTartine du futur
+Prenons un peu de recul sur nos résultats. D'abord, il faut garder en tête que notre scène de test est très simpliste. Pour être vraiment sûr que Godot et Blender sont bien en phase, il faudra plus de données et surtout des données plus complexes. Ca viendra. Godot comprends les .blend et nous avons desormais un oracle dans l'équipe. Il sera donc relativement facile de mettre à l'épreuve de nouvelles scènes au fur et à mesure qu'on avance. Et si de nouvelles disonances apparaissent, l'enquête sera réouverte.
+
+Ensuite, on pourrait être un peu deçus de ne pas avoir obtenu un présage completement noir. S’il s’agissait d’un autre type de données, j’aurais été plus inquiet. Mais pour une texture d’albédo (qui est basiquement la couleur des surfaces), le "jugé à l’œil" me semble suffisant. Encore une fois si plus tard dans le développement, on tombe sur des incohérences visuelles, on se souviendra qu’une source d’erreur potentielle existe ici. Mais pour le POC, on va dire que c’est good enough.
+
+![Retrospective des différentes étapes](images/gif_alt_goodenough.webp)
+
+Je couclurai en disant que ce devlog à été assez compliqué à écrire. J'ai perdu beaucoup de temps à me remémorer les chose et à les reconstituer (prenez soin de votre git les amis). Mais je reconnais quand même deux avantages à cette expérience :
+- 1. Repasser sur mon travail à été l'occasion d'affiner certains points. En effet, dans ma version originale j'avais plus de réglages de Godot et Blender. Mais je me suis appercus que certains de ces réglages se compensaient l'un l'autre et qu'ils étaient en réalité inutils. Le set d'ajustement que je presente ici est plus minimaliste, ce qui est une très bonne chose. 
+
+- 2. Le TurboTartine du futur, malgré ses problèmes de mémoire, sait à peu près ce qu'il a fait ensuite. Ce qui je pense aide à la structuration. Mais surtout, ça me permets d'annoncer le sujet du prochain numéro : l'harmonisation des textures de profondeur.
