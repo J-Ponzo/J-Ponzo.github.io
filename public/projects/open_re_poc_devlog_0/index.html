@@ -432,7 +432,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Pour commencer, j’ai créé une petite scène dans Blender, composée de quelques primitives basiques et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale car Godot prend en charge le format de scène Blender. il suffit d’importer le fichier .blend et de l’ajouter dans une scène vide.</p>
 <p><img src="/projects/open_re_poc_devlog_0/images/simpleBlend.opti.webp" alt="Illustration représentant la SimpleScene dans Blender"><br>
 <img src="/projects/open_re_poc_devlog_0/images/simpleGodot.opti.webp" alt="Illustration représentant la SimpleScene dans Godot"></p>
-<p>Les G-Buffers déterministes et interactifs que nous présenteront à l’oracle seront issus de ces scènes. À terme, ils devront contenir les textures suivantes :</p>
+<p>Les G-Buffers déterministes et interactifs que nous présenteront à l’oracle seront issus de ces scènes. À terme - comme le code source vous l&rsquo;a certainement spoilé - ils devront contenir les textures suivantes :</p>
 <ul>
 <li><strong>Albedo</strong> (couleur diffuse)</li>
 <li><strong>Depth</strong> (profondeur)</li>
@@ -469,7 +469,7 @@ stroke-linejoin="round" class="feather feather-home">
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">screen_texture</span> <span class="o">:</span> <span class="n">hint_screen_texture</span><span class="p">,</span> <span class="n">repeat_disable</span><span class="p">,</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">screen_texture</span> <span class="o">:</span> <span class="n">hint_screen_texture</span><span class="p">,</span> <span class="n">filter_nearest</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">vertex</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="n">POSITION</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">VERTEX</span><span class="p">.</span><span class="n">xy</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
@@ -497,7 +497,7 @@ stroke-linejoin="round" class="feather feather-home">
 </ul>
 <p><img src="/projects/open_re_poc_devlog_0/images/bind_interactive.opti.webp" alt="Association de la Render Target générant la Texture d&rsquo;Albedo Déterministe au uniform ibuffer_albedo du shader oracle.gdshader"></p>
 <h2 id="harmonisation-de-lalbédo-">Harmonisation de l&rsquo;albédo :</h2>
-<p>Nos textures d’albédo sont en place, correctement créées et &ldquo;bindées&rdquo;. Elles proviennent de deux scènes rigoureusement identiques issues du même fichier. Si &ldquo;l’importer&rdquo; de Godot fait bien son travail en traduisant les données de Blender, on devrait obtenir une prophétie rassurante… c&rsquo;est-à-dire un bel écran noir.</p>
+<p>Nos textures d’albédo sont en place, correctement créées et &ldquo;bindées&rdquo;. Elles proviennent de deux scènes rigoureusement identiques issues du même fichier. Si &ldquo;l’importer&rdquo; de Godot à bien fait son travail en traduisant les données de Blender, on devrait obtenir une prophétie rassurante… c&rsquo;est-à-dire un bel écran noir.</p>
 <p>Qu’est-ce qui pourrait mal se passer ?</p>
 <p><img src="/projects/open_re_poc_devlog_0/images/first_prophecy.opti.webp" alt="Capture de la première prophétie de l&rsquo;Oracle"></p>
 <p>Oh nooo !!!</p>

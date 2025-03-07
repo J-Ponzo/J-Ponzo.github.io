@@ -265,7 +265,7 @@ Pour commencer, j’ai créé une petite scène dans Blender, composée de quelq
 ![Illustration représentant la SimpleScene dans Blender](images/simpleBlend.opti.webp)  
 ![Illustration représentant la SimpleScene dans Godot](images/simpleGodot.opti.webp)
 
-Les G-Buffers déterministes et interactifs que nous présenteront à l’oracle seront issus de ces scènes. À terme, ils devront contenir les textures suivantes :
+Les G-Buffers déterministes et interactifs que nous présenteront à l’oracle seront issus de ces scènes. À terme - comme le code source vous l'a certainement spoilé - ils devront contenir les textures suivantes :
 - **Albedo** (couleur diffuse)  
 - **Depth** (profondeur)  
 - **Normal** (orientation des surfaces)  
@@ -300,7 +300,7 @@ La texture qui nous intéresse ici est `hint_screen_texture`.Malheureusement, ce
 shader_type spatial;
 render_mode unshaded, fog_disabled;
 
-uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;
+uniform sampler2D screen_texture : hint_screen_texture, filter_nearest;
 
 void vertex() {
 	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
@@ -322,7 +322,7 @@ void fragment() {
 ![Association de la Render Target générant la Texture d'Albedo Déterministe au uniform ibuffer_albedo du shader oracle.gdshader](images/bind_interactive.opti.webp)
 
 ## Harmonisation de l'albédo :
-Nos textures d’albédo sont en place, correctement créées et "bindées". Elles proviennent de deux scènes rigoureusement identiques issues du même fichier. Si "l’importer" de Godot fait bien son travail en traduisant les données de Blender, on devrait obtenir une prophétie rassurante… c'est-à-dire un bel écran noir.
+Nos textures d’albédo sont en place, correctement créées et "bindées". Elles proviennent de deux scènes rigoureusement identiques issues du même fichier. Si "l’importer" de Godot à bien fait son travail en traduisant les données de Blender, on devrait obtenir une prophétie rassurante… c'est-à-dire un bel écran noir.
 
 Qu’est-ce qui pourrait mal se passer ?
 
