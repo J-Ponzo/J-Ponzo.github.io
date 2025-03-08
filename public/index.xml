@@ -6,7 +6,18 @@
     <description>Recent content in Home on Turbo Tartine Games</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-fr</language>
-    <lastBuildDate>Fri, 21 Feb 2025 12:51:02 +0100</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 08 Mar 2025 13:45:59 +0100</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Open_re_poc_devlog_1</title>
+      <link>http://localhost:1313/projects/open_re_poc_devlog_1/</link>
+      <pubDate>Sat, 08 Mar 2025 13:45:59 +0100</pubDate>
+      
+      <guid>http://localhost:1313/projects/open_re_poc_devlog_1/</guid>
+      
+      <description></description>
+      
+    </item>
+    
     <item>
       <title>OpenRE devlog 0 : Oracle, Albédo et Harmonie</title>
       <link>http://localhost:1313/projects/open_re_poc_devlog_0/</link>
@@ -63,7 +74,7 @@
       <description>&lt;h2 id=&#34;hello-world-&#34;&gt;Hello World !&lt;/h2&gt;
 &lt;p&gt;Bienvenue sur Turbo Tartine Games, ce petit coin d’Internet dans lequel je partage ma passion pour le développement de jeux vidéo.&lt;/p&gt;
 &lt;h2 id=&#34;qui-suis-je-&#34;&gt;Qui suis-je ?&lt;/h2&gt;
-&lt;p&gt;Je m’appelle Jérémy, je suis passionné de jeux vidéo depuis toujours et j’ai la chance d’avoir pu en fait un métier. Je travaille dans un studio lyonnais du nom de WanadevStudio. Mes journées consistent à développer des jeux (principalement en VR) sous Unreal Engine. Mais lorsque la nuit tombe, je deviens TurboTartine. Sous cette identité pas vraiment secrète, je continue de faire des jeux, mais sur mon temps libre. Cette double vie me permet d’appréhender cette passion sous deux angles très différents :&lt;/p&gt;</description>
+&lt;p&gt;Je m’appelle Jérémy, je suis passionné de jeux vidéo depuis toujours et j’ai la chance d’avoir pu en fair un métier. Je travaille dans un studio lyonnais du nom de WanadevStudio. Mes journées consistent à développer des jeux (principalement en VR) sous Unreal Engine. Mais lorsque la nuit tombe, je deviens TurboTartine. Sous cette identité pas vraiment secrète, je continue de faire des jeux, mais sur mon temps libre. Cette double vie me permet d’appréhender cette passion sous deux angles très différents :&lt;/p&gt;</description>
       
     </item>
     
