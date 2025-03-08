@@ -26,7 +26,7 @@ Si vous avez lu l'article mentionné dans l'introduction, vous savez qu'OpenRE p
 - La scène déterministe : précalculée dans Blender
 - La scène intéractive : rendue en temps réèl dans Godot.
 
-Pour cela, la technologie s'appuie sur une structure de donnée particulière appelée un G-Buffer. Pour rappel, il s'agit d'une collections de textures encodant diverse données géométriques d'une scène en espace écran. OpenRE fusionne donc le G-Buffer déterministe précalculé par Blender et le G-Buffer interactif rendu à la volée dans Godot. Mais il n'est pas évident que des données produite par deux logiciels différents soitent directement compatibles. C'est même pas gagné du tout en réalité.
+Pour cela, la technologie s'appuie sur une structure de donnée particulière appelée un G-Buffer. Pour rappel, il s'agit d'une collections de textures encodant diverse données géométriques relative à un point de vu sur une scène. OpenRE fusionne donc le G-Buffer déterministe précalculé par Blender et le G-Buffer interactif rendu à la volée dans Godot. Mais il n'est pas évident que des données produite par deux logiciels différents soitent directement compatibles. C'est même pas gagné du tout en réalité.
 
 En effet, tous les logiciels graphiques suivent des conventions qui leurs sont propres (unités, espaces colorimétriques, axes du repère ...). Tant qu'on reste à l'interieur d'un système, la cohérence de l'ensemble est plus ou moins garantie. Mais dès lors que deux systèmes doivent s'échanger des données pour collaborer, c'est le début des problèmes.
 
@@ -37,9 +37,7 @@ Pour identifier ces ajustements, je vais utiliser une technique que j’aime bie
 
 A la manière d'un oracle, cette moulinette va formuler des prophéties parfois cryptiques en réponse aux questions qu'on lui pose. Mais interprétés correctement, ces présages nous aideront à avancer dans notre périple.
 
-Si Godot et Blender sont bien sur la même longueure d'ondes, les G-Buffer qu'ils produisent à partir d'une même scène devraient être identiques. C'est donc ce qu'on va leur faire faire. Et le rôle de l'oracle sera de prendre ces G-Buffers en entrée, et de nous fournir en réponse une image. Dans cette image on pourra lire 2 choses :
-- les G-Buffer sont en parfaite harmonie -> C'est gagné, Godot et Blender sont en phase. On va pouvoir passer à la suite
-- les G-Buffer présentent des disonnances -> Dans ce cas, il faudra analyser "l'image réponse" pour essayer de déterminer l'origine de la disonnance et essayer de la résoudre.
+Si Godot et Blender sont bien sur la même longueure d'ondes, les G-Buffer qu'ils produisent à partir d'une même scène devraient être identiques. C'est ce que nous allons chercher à vérifier avec l'aide de l'oracle. Son rôle sera de comparer les G-Buffers, et de nous délivrer son jugement sous la forme d'une image. Il nous faudra alors lire norte réponse dans cette image.
 
 ![Image illustrant le protocol de validation](images/oracle_schema.opti.webp)
 
@@ -49,7 +47,7 @@ Mais trève de métaphore. Concrètement, cet Oracle est un post-process du nom 
 
 #### Implementation de l’Oracle  
 
-Voici le code source de l'oracle :  
+Voici le code source de l'oracle. C'est un petit pavé, mais ne vous inquiétez pas, on va le décortiquer ensemble. 
 
 ```glsl
 shader_type spatial;
@@ -59,92 +57,60 @@ void vertex() {
 	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
 }
 
-// Type de données à comparer
-uniform int data_type = 0;
+// Type de donnée à comparer
+uniform int data_type = -1;
 
-// G-Buffer interactif
-uniform sampler2D igbuffer_albedo : filter_nearest;
-uniform sampler2D igbuffer_depth : filter_nearest;
-uniform sampler2D igbuffer_normal : filter_nearest;
-uniform sampler2D igbuffer_orm : filter_nearest;
+// Determinist & Interactive G-Buffer
+const int NB_GMAPS = 1;
+uniform sampler2D[NB_GMAPS] d_gbuffer : filter_nearest;
+uniform sampler2D[NB_GMAPS] i_gbuffer : filter_nearest;
 
-// G-Buffer déterministe
-uniform sampler2D dgbuffer_albedo : filter_nearest;
-uniform sampler2D dgbuffer_depth : filter_nearest;
-uniform sampler2D dgbuffer_normal : filter_nearest;
-uniform sampler2D dgbuffer_orm : filter_nearest;
+// Choix du mode d'affichage
+#define I_D_DIFFERENCE 0
+#define D_TEXTURE_ONLY 1
+#define I_TEXTURE_ONLY 2
+uniform int view_mode = 0;
 
-// Récupère un pixel du G-Buffer déterministe selon le type de 
-// donnée 'tex_type' spécifié
-vec3 get_determinist_frag(int tex_type, vec2 coord) {
-	if (tex_type == 0) 
-		return texture(dgbuffer_albedo, coord).rgb;
-	else if (tex_type == 1) 
-		return texture(dgbuffer_depth, coord).rgb;
-	else if (tex_type == 2) 
-		return texture(dgbuffer_normal, coord).rgb;
-	else if (tex_type == 3)
-		return texture(dgbuffer_orm, coord).rgb;
-	else return 
-		vec3(1.0, 1.0, 1.0);
+const vec3 ERROR_COLOR = vec3(1.0, 0.0, 1.0);
+
+// Calcule la différence entre 2 pixels 
+vec3 compute_difference(vec3 d_frag, vec3 i_frag) {
+	return ERROR_COLOR;
 }
 
-// Récupère un pixel du G-Buffer interactif selon le type de 
-// donnée 'tex_type' spécifié
-vec3 get_interactive_frag(int tex_type, vec2 coord) {
-	if (tex_type == 0) 
-		return texture(igbuffer_albedo, coord).rgb;
-	else if (tex_type == 1) 
-		return texture(igbuffer_depth, coord).rgb;
-	else if (tex_type == 2) 
-		return texture(igbuffer_normal, coord).rgb;
-	else if (tex_type == 3) 
-		return texture(igbuffer_orm, coord).rgb;
-	else return 
-		vec3(0.0, 0.0, 0.0);
-}
 
-// Calcul de la différence entre les textures d'albedo
-vec3 albedo_difference(vec3 d_frag, vec3 i_frag) {
-	return abs(d_frag - i_frag);
-}
-
-// Placeholder pour les autres types de différences
-vec3 depth_difference(vec3 d_frag, vec3 i_frag) { 
-	return vec3(1.0, 1.0, 1.0); 
-}
-
-vec3 normal_difference(vec3 d_frag, vec3 i_frag) { 
-	return vec3(1.0, 1.0, 1.0); 
-}
-
-vec3 orm_difference(vec3 d_frag, vec3 i_frag) { 
-	return vec3(1.0, 1.0, 1.0); 
-}
-
-// Point d'entrée du post process
+// Point d'entrée du post-process
 void fragment() {
-	vec3 d_frag = get_determinist_frag(data_type, SCREEN_UV);
-	vec3 i_frag = get_interactive_frag(data_type, SCREEN_UV);
+	vec3 out_color = ERROR_COLOR;
 	
-	vec3 final_color = vec3(1.0, 1.0, 1.0);
-	if (data_type == 0) 
-		final_color = albedo_difference(d_frag, i_frag);
-	else if (data_type == 1) 
-		final_color = depth_difference(d_frag, i_frag);
-	else if (data_type == 2) 
-		final_color = normal_difference(d_frag, i_frag);
-	else if (data_type == 3) 
-		final_color = orm_difference(d_frag, i_frag);
-
-	ALBEDO = final_color;
+	if (data_type >= 0 && data_type < NB_GMAPS) {
+		// Récupération des pixels déterministe et interactif
+		vec3 d_frag = texture(d_gbuffer[data_type], SCREEN_UV).rgb;
+		vec3 i_frag = texture(i_gbuffer[data_type], SCREEN_UV).rgb;
+		
+		// Selection de l'affichage
+		switch (view_mode) {
+			case I_D_DIFFERENCE:
+				// Cas nominal : LA PROPHECIE !!!
+				out_color = compute_difference(d_frag, i_frag);
+				break;
+			case D_TEXTURE_ONLY:
+				// Affichage du pixel deterministe brut
+				out_color = d_frag;
+				break;
+			case I_TEXTURE_ONLY:
+				// Affichage du pixel interactif brut
+				out_color = i_frag;
+				break;
+		}
+	}
+	
+	ALBEDO = out_color;
 }
 ```
 
-C'est un petit pavé, mais ne vous inquiétez pas, on va le décortiquer ensemble. 
-
 #### 1. Code minimal d'un Post-Process 
-D'abord, quelques lignes de base qu'on ne détaillera pas trop. C'est la façon usuelle de créer un post-process dans Godot.
+D'abord, quelques lignes de base qu'on ne détaillera pas. C'est la façon usuelle de créer un post-process dans Godot.
  ```glsl
 shader_type spatial;
 render_mode unshaded, fog_disabled;
@@ -157,104 +123,78 @@ void vertex() {
 #### 2. Les uniforms ou paramettres d'entrée
 Les uniforms sont les paramètres d'entrée du shader. C'est à travers eux que le CPU peut envoyer des données au GPU. Une fois initialisés, ils peuvent être référencés comme des variables globales dans le code du shader.
 
-Comme évoqué juste avant, ces uniforms correspondent aux textures des deux G-Buffers ainsi qu'au type de donnée sélectionné pour la comparaison.
+Les uniforms `data_type`, `d_gbuffer` et `i_gbuffer` correspondent aux deux G-Buffers ainsi qu'au type de donnée sélectionné pour la comparaison (évoqués précédement).
 ```glsl
-// Type de données à comparer
-uniform int data_type = 0;
+// Type de donnée à comparer
+uniform int data_type = -1;
 
-// G-Buffer interactif
-uniform sampler2D igbuffer_albedo : filter_nearest;
-uniform sampler2D igbuffer_depth : filter_nearest;
-uniform sampler2D igbuffer_normal : filter_nearest;
-uniform sampler2D igbuffer_orm : filter_nearest;
+// Determinist & Interactive G-Buffer
+const int NB_GMAPS = 1;
+uniform sampler2D[NB_GMAPS] d_gbuffer : filter_nearest;
+uniform sampler2D[NB_GMAPS] i_gbuffer : filter_nearest;
 
-// G-Buffer déterministe
-uniform sampler2D dgbuffer_albedo : filter_nearest;
-uniform sampler2D dgbuffer_depth : filter_nearest;
-uniform sampler2D dgbuffer_normal : filter_nearest;
-uniform sampler2D dgbuffer_orm : filter_nearest;
+// Choix du mode d'affichage
+#define I_D_DIFFERENCE 0
+#define D_TEXTURE_ONLY 1
+#define I_TEXTURE_ONLY 2
+uniform int view_mode = 0;
 ```
 
-#### 3. Utilitaires de sampling
-Les deux fonctions suivantes sont des helpers permettant de récupérer le bon pixel, dans la bonne texture, du bon G-Buffer.
+Le paramètre `view_mode` lui est nouveau. On en a pas encore parlé. C'est un paramettre de debug qui nous permettra d'afficher facilement des images intermédiaires pour nous aider à intérpréter les prophéties de l'oracle. Pour l'instant on ne peut visualiser que les textures interactive et déterministe corespondant au type de donnée sélectionné. Mais au fur et à mesure qu'on avance, on pourra rajouté de nouveaux mode d'affichage.
+
+#### 3. Calcul des différences
+C'est ici qu'on implémentera le calcule de la différence. Ou devrais-je dire DES différences. Comme on le verra dans la suite, on sera amenés à traiter les données différement selon leur type.
 ```glsl
-// Récupère un pixel du G-Buffer déterministe selon le type de 
-// donnée 'tex_type' spécifié
-vec3 get_determinist_frag(int tex_type, vec2 coord) {
-	if (tex_type == 0) 
-		return texture(dgbuffer_albedo, coord).rgb;
-	else if (tex_type == 1) 
-		return texture(dgbuffer_depth, coord).rgb;
-	else if (tex_type == 2) 
-		return texture(dgbuffer_normal, coord).rgb;
-	else if (tex_type == 3)
-		return texture(dgbuffer_orm, coord).rgb;
-	else return 
-		vec3(1.0, 1.0, 1.0);
-}
+const vec3 ERROR_COLOR = vec3(1.0, 0.0, 1.0);
 
-// Récupère un pixel du G-Buffer interactif selon le type de 
-// donnée 'tex_type' spécifié
-vec3 get_interactive_frag(int tex_type, vec2 coord) {
-	if (tex_type == 0) 
-		return texture(igbuffer_albedo, coord).rgb;
-	else if (tex_type == 1) 
-		return texture(igbuffer_depth, coord).rgb;
-	else if (tex_type == 2) 
-		return texture(igbuffer_normal, coord).rgb;
-	else if (tex_type == 3) 
-		return texture(igbuffer_orm, coord).rgb;
-	else return 
-		vec3(0.0, 0.0, 0.0);
-```
-
-#### 4. Calcul des différences
-On définit ici les fonctions de comparaison pour chaque type de donnée.
-
-Seule `albedo_difference(...)` est réellement implémentée. Les autres renvoient la couleur blanche (différence maximale) en attendant de l'être.
-```glsl
-// Calcul de la différence entre les textures d'albedo
-vec3 albedo_difference(vec3 d_frag, vec3 i_frag) {
-	return abs(d_frag - i_frag);
-}
-
-// Placeholder pour les autres types de différences
-vec3 depth_difference(vec3 d_frag, vec3 i_frag) { 
-	return vec3(1.0, 1.0, 1.0); 
-}
-
-vec3 normal_difference(vec3 d_frag, vec3 i_frag) { 
-	return vec3(1.0, 1.0, 1.0); 
-}
-
-vec3 orm_difference(vec3 d_frag, vec3 i_frag) { 
-	return vec3(1.0, 1.0, 1.0); 
+// Calcule la différence entre 2 pixels 
+vec3 compute_difference(vec3 d_frag, vec3 i_frag) {
+	return ERROR_COLOR;
 }
 ```
+Pour l'instant la fonction renvoit simplement la valeur `ERROR_COLOR` qui est un magenta bien dégueu qui nous interpellera si on le voit à l'écran. C'est quelque chose que je fais assez souvent et qui correspondrait à un `throw new Exception();` ou d'un `return -1;` en code CPU.
 
-#### 5. fragment() = post-process.main()
+En effet, les GPU sont assez limités en terme de gestion d'erreur. Il faut donc parfois être un peu créatif. Si vous en avez, n'hésitez pas à paratger vos technique personnelles dans les commentaires.
+
+#### 4. fragment() = post-process.main()
 Et enfin il y a la fonction `void fragment()` qui est le point d'entrée principal du post process.
 
-Elle utilise les utilitaires de sampling pour récupérer les pixels des G-Buffers en fonction du type de donnée sélectionné, puis applique le bon algorithme de calcule de différence pour déterminer la couleur finale du fragment.
-```glsl
-// Point d'entrée du post process
-void fragment() {
-	vec3 d_frag = get_determinist_frag(data_type, SCREEN_UV);
-	vec3 i_frag = get_interactive_frag(data_type, SCREEN_UV);
-	
-	vec3 final_color = vec3(1.0, 1.0, 1.0);
-	if (data_type == 0) 
-		final_color = albedo_difference(d_frag, i_frag);
-	else if (data_type == 1) 
-		final_color = depth_difference(d_frag, i_frag);
-	else if (data_type == 2) 
-		final_color = normal_difference(d_frag, i_frag);
-	else if (data_type == 3) 
-		final_color = orm_difference(d_frag, i_frag);
+La première chose qu'on peut noter, c'est que je réutiliser ma stratégie du `ERROR_COLOR` dans une saveur un peu différente. Ici je verifie les valeurs des uniforms `data_type` et `view_mode` pour m'assurer qu'elles sont valides. **IL NE FAUT JAMAIS FAIRE CA DANS UN SHADER DE PRODUCTION !**
 
-	ALBEDO = final_color;
+J'expliquerai peut être pourquoi dans un article un jour. Mais retenez que pour des raisons de performences, les branchements conditionnels sont à éviter au maximum dans le code GPU. Ici on s'en fout car on est sur un POC et que l'oracle n'est qu'un outil dont on se sert pour le développement. La performence n'est pas critiques, on se permet donc quelque libertées pour se faciliter vie.
+```glsl
+// Point d'entrée du post-process
+void fragment() {
+	vec3 out_color = ERROR_COLOR;
+	
+	if (data_type >= 0 && data_type < NB_GMAPS) {
+		// Récupération des pixels déterministe et interactif
+		vec3 d_frag = texture(d_gbuffer[data_type], SCREEN_UV).rgb;
+		vec3 i_frag = texture(i_gbuffer[data_type], SCREEN_UV).rgb;
+		
+		// Selection de l'affichage
+		switch (view_mode) {
+			case I_D_DIFFERENCE:
+				// Cas nominal : LA PROPHECIE !!!
+				out_color = compute_difference(d_frag, i_frag);
+				break;
+			case D_TEXTURE_ONLY:
+				// Affichage du pixel deterministe brut
+				out_color = d_frag;
+				break;
+			case I_TEXTURE_ONLY:
+				// Affichage du pixel interactif brut
+				out_color = i_frag;
+				break;
+		}
+	}
+	
+	ALBEDO = out_color;
 }
 ```
+Le reste du code est assez trivial. D'abord on sample les pixels que l'on souhaite comparer. Ensuite, dans le cas nominal (`view_mode == I_D_DIFFERENCE`) on invoque `compute_difference(...)` sur ces derniers pour déterminer la couleur à afficher. 
+
+Si un mode d'affichage de debug est actif, on execute les traitements appropriés à la place (ici, on affiche le pixel brut de la texture correspondante).
 
 ## Préparation des données
 Nous savons désormais comment fonctionne l’oracle, mais nous n’avons pas encore de données à lui soumettre. Il faut donc les construire.
@@ -412,7 +352,7 @@ Ensuite, on pourrait être un peu deçus de ne pas avoir obtenu un présage comp
 
 ![Retrospective des différentes étapes](images/gif_alt_goodenough.webp)
 
-Je couclurai en disant que ce devlog à été assez compliqué à écrire. J'ai perdu beaucoup de temps à me remémorer les chose et à les reconstituer (prenez soin de votre git les amis). Mais je reconnais quand même deux avantages à cette expérience :
-- 1. Repasser sur mon travail à été l'occasion d'affiner certains points. En effet, dans ma version originale j'avais plus de réglages de Godot et Blender. Mais je me suis appercus que certains de ces réglages se compensaient l'un l'autre et qu'ils étaient en réalité inutils. Le set d'ajustement que je presente ici est plus minimaliste, ce qui est une très bonne chose. 
+Je couclurai en disant que ce devlog à été assez compliqué à écrire. J'ai perdu beaucoup de temps à me remémorer les chose et à les reconstituer (prenez soin de votre git les amis). Mais je reconnais quand même deux avantages à cette situation :
+- 1. Repasser sur mon travail m'a permis d'affiner certains points. En effet, dans ma version originale j'avais ajusté plus de choses. Mais je me suis appercus que certains de mes réglages se compensaient l'un l'autre et qu'ils étaient en réalité inutils. Le set d'ajustement que je presente ici est plus minimaliste, ce qui est une très bonne chose. 
 
 - 2. Le TurboTartine du futur, malgré ses problèmes de mémoire, sait à peu près ce qu'il a fait ensuite. Ce qui je pense aide à la structuration. Mais surtout, ça me permets d'annoncer le sujet du prochain numéro : l'harmonisation des textures de profondeur.
