@@ -14,19 +14,21 @@
       
       <guid>http://localhost:1313/projects/open_re_poc_devlog_1/</guid>
       
-      <description></description>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Bienvenu dans ce tout premier devlog d&amp;rsquo;OpenRE : le develog Zéro ! Cette série a pour but de documenter la phase de POC (proof of concept) du projet. Le format sera assez simple. Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un nouveau numéro.&lt;/p&gt;</description>
       
     </item>
     
     <item>
-      <title>OpenRE devlog 0 : Oracle, Albédo et Harmonie</title>
+      <title>OpenRE devlog 0 : Oracle Driven Development</title>
       <link>http://localhost:1313/projects/open_re_poc_devlog_0/</link>
       <pubDate>Fri, 21 Feb 2025 12:51:02 +0100</pubDate>
       
       <guid>http://localhost:1313/projects/open_re_poc_devlog_0/</guid>
       
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Bienvenu dans ce tout premier devlog d&amp;rsquo;OpenRE : le develog Zéro ! Cette série a pour but de documenter la phase de POC (proof of concept) du projet. Le format sera assez simple. Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un nouveau numéro.&lt;/p&gt;</description>
+&lt;p&gt;Bienvenue dans ce tout premier devlog d&amp;rsquo;OpenRE : le devlog Zéro ! Cette série a pour but de documenter la phase de POC (proof of concept) du projet.&lt;/p&gt;
+&lt;p&gt;Si ce n&amp;rsquo;est pas déjà fait, je vous recommande de jeter un œil à la &lt;a href=&#34;http://localhost:1313/projects/open_re/&#34;&gt;présentation générale du projet&lt;/a&gt;. J&amp;rsquo;y introduis notamment quelques notions et un peu de terminologie. Il est préférable de l&amp;rsquo;avoir parcourue pour mieux contextualiser ce dont je parle dans les devlogs.&lt;/p&gt;</description>
       
     </item>
     
@@ -74,7 +76,7 @@
       <description>&lt;h2 id=&#34;hello-world-&#34;&gt;Hello World !&lt;/h2&gt;
 &lt;p&gt;Bienvenue sur Turbo Tartine Games, ce petit coin d’Internet dans lequel je partage ma passion pour le développement de jeux vidéo.&lt;/p&gt;
 &lt;h2 id=&#34;qui-suis-je-&#34;&gt;Qui suis-je ?&lt;/h2&gt;
-&lt;p&gt;Je m’appelle Jérémy, je suis passionné de jeux vidéo depuis toujours et j’ai la chance d’avoir pu en fair un métier. Je travaille dans un studio lyonnais du nom de WanadevStudio. Mes journées consistent à développer des jeux (principalement en VR) sous Unreal Engine. Mais lorsque la nuit tombe, je deviens TurboTartine. Sous cette identité pas vraiment secrète, je continue de faire des jeux, mais sur mon temps libre. Cette double vie me permet d’appréhender cette passion sous deux angles très différents :&lt;/p&gt;</description>
+&lt;p&gt;Je m’appelle Jérémy, je suis passionné de jeux vidéo depuis toujours et j’ai la chance d’avoir pu en faire un métier. Je travaille dans un studio lyonnais du nom de WanadevStudio. Mes journées consistent à développer des jeux (principalement en VR) sous Unreal Engine. Mais lorsque la nuit tombe, je deviens TurboTartine. Sous cette identité pas vraiment secrète, je continue de faire des jeux, mais sur mon temps libre. Cette double vie me permet d’appréhender cette passion sous deux angles très différents :&lt;/p&gt;</description>
       
     </item>
     

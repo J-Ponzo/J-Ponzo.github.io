@@ -217,7 +217,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Pour identifier ces ajustements, on va utiliser une technique que j’aime bien et que j’appelle le <em>Oracle Driven Development</em>. C’est un peu comme du <em>Test Driven Development</em>, sauf qu’au lieu d’avoir un jeu de tests automatisés, propre et exhaustif, on va bricoler une petite moulinette qu’il faudra lancer en partie à la main.</p>
 <p>À la manière d&rsquo;un oracle, cette moulinette va formuler des prophéties parfois cryptiques en réponse aux questions qu&rsquo;on lui pose. Mais, interprétées correctement, ces présages nous aideront à avancer dans notre périple.</p>
 <p>Si Godot et Blender sont bien sur la même longueur d&rsquo;onde, les G-Buffers qu&rsquo;ils produisent à partir d&rsquo;une même scène devraient être identiques. C&rsquo;est ce que nous allons chercher à vérifier avec l&rsquo;aide de l&rsquo;oracle. Son rôle sera de comparer les G-Buffers et de nous délivrer son jugement sous la forme d&rsquo;une image. Il nous faudra alors lire notre réponse dans cette image.</p>
-<p><img alt="Image illustrant le protocol de validation" src="/projects/open_re_poc_devlog_0/images/oracle_schema.opti.webp"></p>
+<p><img alt="Image illustrant le protocol de validation" src="/projects/open_re_poc_devlog_0/images/oracle_schema_update.opti.webp"></p>
 <p>Mais trêve de métaphores. Concrètement, cet oracle est un <em>post-process</em> du nom de <code>oracle.gdshader</code>. Il prend en entrée :</p>
 <ul>
 <li>les textures des deux G-Buffers</li>

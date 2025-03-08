@@ -49,7 +49,7 @@ Pour identifier ces ajustements, on va utiliser une technique que j’aime bien 
 
 Si Godot et Blender sont bien sur la même longueur d'onde, les G-Buffers qu'ils produisent à partir d'une même scène devraient être identiques. C'est ce que nous allons chercher à vérifier avec l'aide de l'oracle. Son rôle sera de comparer les G-Buffers et de nous délivrer son jugement sous la forme d'une image. Il nous faudra alors lire notre réponse dans cette image.
 
-![Image illustrant le protocol de validation](images/oracle_schema.opti.webp)
+![Image illustrant le protocol de validation](images/oracle_schema_update.opti.webp)
 
 Mais trêve de métaphores. Concrètement, cet oracle est un *post-process* du nom de `oracle.gdshader`. Il prend en entrée :
 - les textures des deux G-Buffers
