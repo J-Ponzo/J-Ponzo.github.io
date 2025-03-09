@@ -1,6 +1,6 @@
 +++
 author = 'Turbo Tartine'
-date = '2024-11-15T06:26:08+01:00'
+date = '2025-03-09T06:26:08+01:00'
 draft = false
 title = 'Ode à la caméra fixe et aux contrôles du tank'
 description = 'Article dans lequel je parle de caméras fixes'
