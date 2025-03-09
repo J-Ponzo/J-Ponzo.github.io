@@ -232,7 +232,7 @@ Le POC n'étant pas tout à fait terminé, je ne suis pas encore certain de ce q
 
 Contrairement au POC, le SDK sera open-source et disponible sur un dépôt public. Rien ne me ferait plus plaisir que de savoir qu’OpenRE est utilisé dans vos créations. Si vous décidez de l’adopter, n'hésitez pas à me faire savoir sur quoi vous travaillez. Cela m'intéresse au plus haut point !
 
-Dans un premier temps, je n'accepterai probablement pas de contributions spontanées, mais vos retours, suggestions et rapports de bugs seront toujours les bienvenus. N'hésitez pas à les partager sur le [GitHub du projet](). 
+Dans un premier temps, je n'accepterai probablement pas de contributions spontanées, mais vos retours, suggestions et rapports de bugs seront toujours les bienvenus. <!-- TODO : Uncomment when repo exists N'hésitez pas à les partager sur le [GitHub du projet](). -->
 
 ##### Devlogs :
 *Cette phase n'a pas encore commencé.*
