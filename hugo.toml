@@ -214,6 +214,10 @@ name = "itchio"
 url = "https://jponzo.itch.io"
 
 [[params.socialIcons]]
+name = "bluesky"
+url = "https://@turbotartine.bsky.social"
+
+[[params.socialIcons]]
 name = "Rss"
 url = "/index.xml"
 
