@@ -32,14 +32,14 @@ Personne ne peut prétendre connaître tous les jeux vidéo sortis depuis la nai
 
 Nous étions alors au début de l’ère de la 3D. Les machines, impressionnantes pour l’époque, se rapprocheraient d’un **grille-pain** connecté bas de gamme si on les jugeait avec nos standards actuels. Les GPU n’étaient pas programmables, la mémoire disponible ridicule… bref, les développeurs de cette époque étaient de véritables héros. Pour créer des jeux dignes de ce nom, ils devaient composer avec des **limitations matérielles** drastiques et adopter des stratégies d’optimisation parfois extrêmes.
 
-#### Ce qui ne bouge pas, te rend plus fort
+### 1. Ce qui ne bouge pas, te rend plus fort
 De nombreuses techniques d’optimisation dans le jeu vidéo reposent sur un postulat simple : la **majorité de la géométrie** à afficher est **statique**. Certes, il y a les personnages, les véhicules, et les effets de particules qui eux sont dynamiques. Mais la quantité de géométrie que cela représente est relativement faible face à ce qui est nécessaire pour modéliser l’environnement. Et cet environnement, lui, ne bouge pas.
 
 Cette observation reste vraie aujourd’hui. De nombreuses **technologies modernes exploitent toujours ce principe**. On peut citer l'éclairage statique, les "distance fields" ou encore les reflection captures. Ces techniques consistent à *"baker"* (calculer à l’avance) ce qui ne bouge pas, afin de pouvoir réutiliser ces données plus tard, en temps réel et à moindre coût.
 
 Cette philosophie d'optimisation a donc influencé de nombreuses approches, mais comme nous allons le voir, la **caméra fixe élève ça à un autre niveau**.
 
-#### Plus haut ! plus fort ! plus fixe !
+### 2. Plus haut ! plus fort ! plus fixe !
 **Renoncer à la mobilité** du point de vue dans un jeu est un choix de design radical qui vient avec son lot de forces et de contraintes. On y reviendra. Cela dit, d’un point de vue purement technique, ce choix place les développeurs dans un cas particulier intéressant : les **pixels** de l’écran eux-mêmes **deviennent une donnée statique**.
 
 Dans ces conditions, le **décor** peut être **rendu à l’avance** en CGI ("baké") sous forme d’une image 2D. Lors de l’exécution du jeu, il suffit d’afficher cette image en trompe-l’œil, sur laquelle viennent se superposer les éléments dynamiques rendus en temps réel. Résultat : l’environnement, qui monopolise habituellement la majeure partie des ressources, ne coûte plus que deux triangles et une texture. Le **gain en performance** est tout simplement stratosphérique.
@@ -49,7 +49,7 @@ Dans ces conditions, le **décor** peut être **rendu à l’avance** en CGI ("b
 *(2) éléments dynamiques (rendu en temps réèl dans Godot)*\
 *(3) Rendu finale (composé en temps réèl dans Godot avec [OpenRE](/projects/open_re))*
 
-#### La cuillère n'existe pas !
+### 3. La cuillère n'existe pas !
 Cet exemple illustre parfaitement comment une problématique technique en apparence insoluble peut être surmontée grâce à un **choix de design audacieux**. La logique finit toujours par atteindre ses limites, car elle est bâtie sur des normes (c'est pas moi qui le dit, c'est Morpheus dans Matrix. Donc c'est vrai !). La créativité, elle, n'est pas bornée, ce qui lui permet parfois de réussir quand le "gros cerveau" échoue.
 
 Là où je veux en venir, c’est qu’une petite dose d’ouverture d’esprit et de pensée hors du cadre a permis de créer des mondes et de raconter des histoires d’une richesse et d’une sophistication inimaginables pour une PS1. Et on ne le doit pas à un programmeur de génie, mais à la **créativité d’un designer**. Même si, en l'occurrence, Frédérick Raynal, créateur de Alone in the Dark et de cette technique, est sans conteste les deux à la fois.
@@ -61,7 +61,7 @@ Si vous avez déjà eu entre les mains un jeu en caméra fixe, vous savez certai
 
 Ce schéma de contrôle est **impopulaire** car il nécessite un petit temps d’adaptation. Il est fortement lié à la caméra fixe, car c’est le seul à ce jour qui permet de s’abstraire complètement des problématiques liées aux changements de référentiels soudains et répétés, inhérents au genre. Vous avez peut-être déjà une intuition de pourquoi, mais essayons de décortiquer un peu mieux le problème.
 
-#### Le problème sous tous les angles
+### 1. Le problème sous tous les angles
 Si les **caméras regardent dans le même sens**, le problème est moindre. Dans ce cas, les changements de référentiels sont des translations, et la translation **conserve les directions**. L’orientation de l’avatar reste stable d’un écran à l’autre. Cela permet d’implémenter un schéma de contrôles " naïf ", où les mouvements de l’avatar suivent directement ceux du joystick.
 
 ![Illustration d'un changements de plan avec caméra alignées](images/FF8_parallel_cams.opti.webp)
@@ -80,7 +80,7 @@ Si on ne fait rien, le joueur devra adapter sa trajectoire à chaque transition 
 
 Les tank-controls s’imposent alors comme une solution nécessaire. Passée une petite phase d’apprentissage, ils remplissent parfaitement leur rôle. Mais cet investissement imposé au joueur n’était déjà pas du goût de tout le monde à l’époque. Et aujourd’hui, c’est encore pire.
 
-#### Y a-t-il un designer pour sauver la caméra fixe ?
+### 2. Y a-t-il un designer pour sauver la caméra fixe ?
 Nous vivons une époque où **les bibliothèques débordent**. Aujourd'hui, pour un jeu, être installé est déjà un exploit. Et une fois lancé, il dispose d’une quinzaine de minutes pour nous convaincre qu’il ne mérite pas une expulsion sommaire de notre disque dur. Les plus salés d’entre nous agrémenteront même cette sentence d’un *refund* et d’une *bad review* pour faire bonne mesure. Dans ce contexte, **demander au joueur de s’investir** dans quelque chose d’habituellement aussi gratuit que le schéma de contrôle, c’est **rédhibitoire**.
 
 Pour mitiger cela, certains titres plus récents proposent des contrôles dits "modernes". Ils ont le mérite d'exister. Une **option de jouabilité alternative** est toujours la bienvenue. Et si cela suffisait à ramener la caméra fixe sur le devant de la scène, j'applaudirais même des deux mains. Mais ce n’est pas le cas, et pour cause : il s'agit en réalité du schéma de **contrôle "naïf" décrit plus haut** et qui consiste à laisser le joueur se battre avec les changements de plans (... avec un petit sourire en coin parce qu’on est un game designer sadique).
@@ -94,7 +94,7 @@ Si cette problématique vous intrigue, **n’hésitez pas à explorer ce sujet**
 ## Part III : Un joyaux oublié
 Les caméras fixes, souvent perçues comme un vestige du passé, offriraient pourtant des **avantages techniques et artistiques** incomparables, même aujourd'hui. Elles transcendent les limitations matérielles et constituent une manière unique de raconter des histoires dans un jeu vidéo.
 
-#### La puissance à l'état brut
+### 1. La puissance à l'état brut
 Le premier avantage est technique, et on l’a déjà évoqué : les caméras fixes permettent de s’affranchir des limitations matérielles pour tout ce qui est statique. En utilisant des arrière-plans précalculés, les level artists disposent d’un **budget illimité en triangles, lumières et textures** pour créer des environnements d'un niveau de détail exceptionnel.
 
 Dans le même temps, ce procédé permet de libérer des ressources pour tout ce qui est dynamique : personnages, effets visuels ou animations en temps réel. En conséquence, les jeux en caméra fixe offrent souvent des **visuels bien en avance sur leur époque**. Prenons un instant pour illustrer ce point.
@@ -112,7 +112,7 @@ Ce jeu, vieux de 23 ans, tournait sur une console bien moins puissante que le sm
 
 Mais, aussi impressionnant que cela puisse être, ce n’est pas la plus grande force des caméras fixes. Leur véritable atout réside dans le contrôle artistique qu’elles offrent aux créateurs.
 
-#### Tailler des experiences uniques
+### 2. Tailler des experiences uniques
 En retirant au joueur la possibilité de manipuler la caméra, on transfère directement ce pouvoir au créateur. Chaque plan devient alors une véritable composition artistique, pensée avec la précision d'un réalisateur de films. La **grammaire cinématographique peut être exploitée** pour guider l’attention, susciter des émotions, ou installer une ambiance. Ce contrôle permet de décider ce que le joueur voit (ou ne voit pas), comment il le voit, et dans quel ordre. Le tout **sans confisquer l'interactivité**.
 
 Les jeux vidéo se sont toujours inspirés du cinéma, et ce, depuis avant même que l'on fasse de la 3D. On pense naturellement aux cinématiques de ***Metal Gear***, aux QTE de ***Resident Evil 4***, ou plus récemment  au *reboot* de ***God of War***.  Pourtant, aucun de ces jeux ne réalise ce qu'une simple caméra fixe permet : fusionner gameplay et mise en scène dans une expérience homogène et continue. Ces chefs-d'œuvre ont marqué le médium et sont excellents dans ce qu'ils font. Mais ils **ne font qu'alterner entre gameplay et cinématiques**. Les transitions sont parfois subtiles, mais il s’agit toujours d’un ballet entre ces deux formes d’expression. Et même le plan-séquence magistral qu'est *God of War* ne fait que flouter (admirablement bien) la limite. Mais on a bien des séquences de gameplay classiques, et des cinématiques/QTE++ spectaculaires dans lesquelles on peut se battre à main nue contre un dragon en plein ciel.
