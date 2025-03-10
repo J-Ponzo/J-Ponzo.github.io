@@ -56,14 +56,14 @@ Mais trêve de métaphores. Concrètement, cet oracle est un *post-process* du n
 - les textures des deux G-Buffers
 - le type de texture à comparer
 
-Son job est de calculer, deux à deux, les différences entre les textures déterministe et interactive de chaque type et d'afficher à l'écran celle qui correspond au type sélectionné. Le degré de différence sera représenté en niveau de gris. La couleur de chaque pixel porte le sens suivant :
+Son job est de calculer, deux à deux, les différences entre les textures déterministe et interactive de chaque type et d'afficher à l'écran celle qui correspond au type sélectionné. Le degré de différence sera représenté en niveau de gris :
 - Noir → les pixels des textures sources sont identiques
 - Blanc → la différence entre les pixels des textures sources est maximale
 
 Si l'oracle affiche une image noire pour tous les types de textures possibles, alors les G-Buffers sont identiques.
 
 ### 2. Mise en place d’une scène de test
-Pour commencer, j’ai créé une petite scène dans Blender, composée de quelques primitives basiques et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale, car Godot prend en charge le format de scène Blender. Il suffit en réalité d’importer le fichier `.blend` et de l’ajouter dans une scène vide.
+Pour commencer, j’ai créé une petite scène dans Blender, composée de quelques primitives basiques et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale, étant donné que Godot prend en charge le format de scène Blender. Il suffit d’importer le fichier `.blend` et de l’ajouter à une scène vide.
 
 ![Illustration représentant la SimpleScene dans Blender](images/simpleBlend.opti.webp)  
 ![Illustration représentant la SimpleScene dans Godot](images/simpleGodot.opti.webp)
@@ -171,7 +171,7 @@ uniform int view_mode = 0;
 
 Le paramètre `view_mode`, lui, est nouveau. On n'en a pas encore parlé. C'est un paramètre de debug qui nous permettra d'afficher facilement des images intermédiaires pour nous aider à interpréter les prophéties de l'oracle.
 
-Dans un premier temps, on pourra seulement visualiser les textures interactives et déterministes sources correspondant au type de données sélectionné. Mais on pourra ajouter de nouveaux modes d'affichage quand ce sera nécessaire.
+Dans un premier temps, on pourra seulement visualiser les textures interactives et déterministes correspondant au type de données sélectionné. Mais on pourra ajouter de nouveaux modes d'affichage quand ce sera nécessaire.
 
 #### 2.3. Calcul de différence
 C'est ici qu'on implémentera le calcul de la différence. Ou devrais-je dire **des** différences, car comme nous le verrons plus tard, nous serons amenés à traiter les données différemment selon leur type.
@@ -318,7 +318,7 @@ vec3 compute_difference(vec3 d_frag, vec3 i_frag) {
 }
 ```
 
-La fonction `compute_difference(...)` ne renvoie plus systématiquement `ERROR_COLOR`. Lorsque le type de données à comparer est réglé sur `ALBEDO_TYPE`, la fonction `compute_albedo_difference` est invoquée à la place. Elle effectue une simple distance euclidienne entre les deux couleurs.
+La fonction `compute_difference(...)` ne renvoie plus systématiquement `ERROR_COLOR`. Lorsque le type de données à comparer est réglé sur `ALBEDO_TYPE`, la fonction `compute_albedo_difference(...)` est invoquée à la place. Elle effectue une simple distance euclidienne entre les deux couleurs.
 
 ### 2. Assignation des textures
 La génération des textures d'Albedo déterministe et interactive est malheureusement hors scope pour aujourd'hui. On va simplement considérer qu'on les a déjà et qu'elles ont été obtenues à partir d'un Godot et d'un Blender dans leur paramétrage d'usine, sans toucher à plus que le strict nécessaire pour les générer. Les voici :
@@ -337,6 +337,8 @@ Qu’est-ce qui pourrait mal se passer ?
 ![Capture de la première prophétie de l'Oracle](images/first_prophecy.opti.webp)
 
 Oh nooo !!!
+
+Quelle surprise ! L'image n'est pas noire (qui aurait pu s'en douter ?!). Rassurez-vous, l'importeur fonctionne très bien, le problème vient d'ailleurs. Il va falloir trouver ce qui cloche et le corriger. Mais ce sera pour une autre fois, car on arrive à la fin de ce devlog. (Oui... je dois garder un peu de temps pour dev, sinon il n'y aura plus rien à raconter.)
 
 ## Conclusion :
 Nous venons de poser les bases d'un environnement capable de comparer facilement les données produites par Blender et Godot. Jusqu'ici, il ne nous a appris qu'une chose : ces données ne sont **pas** compatibles par défaut (en ce qui concerne l'Albedo au moins).
