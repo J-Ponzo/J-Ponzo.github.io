@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.137.0">
+<meta name="generator" content="Hugo 0.140.2">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re_poc_devlog_1/">
@@ -49,15 +49,15 @@
     
 
     <link rel="canonical" href="http://localhost:1313/projects/open_re_poc_devlog_1/">
-    <link href="http://localhost:1313/style.min.c8a4762fcc61b8002d9c11bb7081f1cea267d579ed5868f4b5e77f79358c57ee.css" rel="stylesheet">
-    <link href="http://localhost:1313/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+    <link href="/style.min.c8a4762fcc61b8002d9c11bb7081f1cea267d579ed5868f4b5e77f79358c57ee.css" rel="stylesheet">
+    <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
 
     
-    <link rel="apple-touch-icon" sizes="180x180" href="http://localhost:1313/icons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/icons/favicon-16x16.png">
-    <link rel="mask-icon" href="http://localhost:1313/icons/safari-pinned-tab.svg">
-    <link rel="shortcut icon" href="http://localhost:1313/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
 
 
 
@@ -69,14 +69,14 @@
 <meta name="theme-color" content="#434648">
 
     
-    <link rel="icon" type="image/svg+xml" href="http://localhost:1313/icons/favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
 
     
     
 </head>
 <body data-theme = "dark" class="notransition">
 
-<script src="http://localhost:1313/js/theme.js"></script>
+<script src="/js/theme.js"></script>
 
 <div class="navbar" role="navigation">
     <nav class="menu" aria-label="Main Navigation">
@@ -101,28 +101,28 @@ stroke-linejoin="round" class="feather feather-home">
                 
                 
                 <li>
-                    <a class="menu-link " href="http://localhost:1313/">
+                    <a class="menu-link " href="/">
                         Accueil
                     </a>
                     
                 </li>
                 
                 <li>
-                    <a class="menu-link active" href="http://localhost:1313/projects/">
+                    <a class="menu-link active" href="/projects/">
                         Projets
                     </a>
                     
                 </li>
                 
                 <li>
-                    <a class="menu-link " href="http://localhost:1313/posts/">
+                    <a class="menu-link " href="/posts/">
                         Articles
                     </a>
                     
                 </li>
                 
                 <li>
-                    <a class="menu-link " href="http://localhost:1313/pages/about/">
+                    <a class="menu-link " href="/pages/about/">
                         À propos
                     </a>
                     
@@ -211,7 +211,7 @@ stroke-linejoin="round" class="feather feather-home">
                 <h2 id="introduction">Introduction</h2>
 <p>Bienvenu dans ce tout premier devlog d&rsquo;OpenRE : le develog Zéro ! Cette série a pour but de documenter la phase de POC (proof of concept) du projet. Le format sera assez simple. Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un nouveau numéro.</p>
 <p>Étant donné qu’OpenRE est un projet personnel que je développe sur mon temps libre, le rythme de publication risque d’être irrégulier. Certains numéros seront plus légers que d’autres, mais ce n’est pas bien grave. Au contraire, ce sera intéressant de voir comment la cadence évolue au fil du temps.</p>
-<p>Avant de démarer, je vous recommande de jeter un oeil à la <a href="http://localhost:1313/projects/open_re/">présentation générale du projet</a>. J&rsquo;y introduit notament quelques notions et un peu de terminologie. Il est préférable de l&rsquo;avoir parcouru pour contextualiser un peu ce dont je parle dans les devlogs.</p>
+<p>Avant de démarer, je vous recommande de jeter un oeil à la <a href="/projects/open_re/">présentation générale du projet</a>. J&rsquo;y introduit notament quelques notions et un peu de terminologie. Il est préférable de l&rsquo;avoir parcouru pour contextualiser un peu ce dont je parle dans les devlogs.</p>
 <p>Sur ce, c&rsquo;est parti !</p>
 <h2 id="shit-happens">Shit happens</h2>
 <p>Petite particularité concernant les première articles de la série : il s&rsquo;agira de &ldquo;retro-devlogs&rdquo;. En effet j’ai commencé OpenRE il y a plusieurs mois, sans trop savoir où j’allais. Je n&rsquo;étais pas sûr que mes expérimentations mèneraient quelque part et de toutes façons, l&rsquo;idée même de tenir un blog ne m&rsquo;avais pas encore traversé l&rsquo;esprit.</p>
@@ -230,7 +230,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Pour identifier ces ajustements, je vais utiliser une technique que j’aime bien et que j’appelle le <em>Oracle Driven Development</em>. C’est un peu comme du <em>Test Driven Development</em>, sauf qu’au lieu d’avoir un jeu de tests automatisés, propre et exhaustif, je vais bricoler une petite moulinette qu’il faudra lancer à moitié à la main.</p>
 <p>A la manière d&rsquo;un oracle, cette moulinette va formuler des prophéties parfois cryptiques en réponse aux questions qu&rsquo;on lui pose. Mais interprétés correctement, ces présages nous aideront à avancer dans notre périple.</p>
 <p>Si Godot et Blender sont bien sur la même longueure d&rsquo;ondes, les G-Buffer qu&rsquo;ils produisent à partir d&rsquo;une même scène devraient être identiques. C&rsquo;est ce que nous allons chercher à vérifier avec l&rsquo;aide de l&rsquo;oracle. Son rôle sera de comparer les G-Buffers, et de nous délivrer son jugement sous la forme d&rsquo;une image. Il nous faudra alors lire norte réponse dans cette image.</p>
-<p><img alt="Image illustrant le protocol de validation" src="images/oracle_schema.opti.webp"></p>
+<p><img src="images/oracle_schema.opti.webp" alt="Image illustrant le protocol de validation"></p>
 <p>Mais trève de métaphore. Concrètement, cet Oracle est un post-process du nom de oracle.gdshader. Il prend en entrée les textures des deux G-Buffers et le type de texture à comparer. Son job est de calculer la différence entre les deux textures du type choisi (la déterministe et l’interactive) et de l&rsquo;afficher à l&rsquo;écran. Selon le type de donné, les différences pourront avoir des implémentations spécifiques. Mais chacune de ces implémentaions renveront une nuance de gris à interpréter comme suit :</p>
 <ul>
 <li>noir -&gt; les pixels sont identiques</li>
@@ -368,8 +368,8 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Nous savons désormais comment fonctionne l’oracle, mais nous n’avons pas encore de données à lui soumettre. Il faut donc les construire.</p>
 <h4 id="mise-en-place-dune-scène-de-test">Mise en place d’une scène de test</h4>
 <p>Pour commencer, j’ai créé une petite scène dans Blender, composée de quelques primitives basiques et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale car Godot prend en charge le format de scène Blender. il suffit d’importer le fichier .blend et de l’ajouter dans une scène vide.</p>
-<p><img alt="Illustration représentant la SimpleScene dans Blender" src="images/simpleBlend.opti.webp"><br>
-<img alt="Illustration représentant la SimpleScene dans Godot" src="images/simpleGodot.opti.webp"></p>
+<p><img src="images/simpleBlend.opti.webp" alt="Illustration représentant la SimpleScene dans Blender"><br>
+<img src="images/simpleGodot.opti.webp" alt="Illustration représentant la SimpleScene dans Godot"></p>
 <p>Les G-Buffers déterministes et interactifs que nous présenteront à l’oracle seront issus de ces scènes. À terme - comme le code source vous l&rsquo;a certainement spoilé - ils devront contenir les textures suivantes :</p>
 <ul>
 <li><strong>Albedo</strong> (couleur diffuse)</li>
@@ -381,9 +381,9 @@ stroke-linejoin="round" class="feather feather-home">
 <h4 id="albedo-du-g-buffer-déterministe">Albedo du G-Buffer déterministe</h4>
 <p>Pour générer la texture d’Albedo déterministe dans Blender, nous allons commencer par activer la passe de <em>Diffuse Color</em> de Cycles (qui correspond à l’Albedo)</p>
 <p>Ensuite il va falloir effectuer un rendu. Grâce au compositor et au nœud <code>File Output</code>, l’image correspondant à cette passe sera automatiquement exportée à l’emplacement spécifié à la fin du rendu.</p>
-<p><img alt="Illustration du processus d&rsquo;export de la texture d&rsquo;Albedo déterministe depuis Blender" src="images/export_albedo_texture.opti.webp"></p>
+<p><img src="images/export_albedo_texture.opti.webp" alt="Illustration du processus d&rsquo;export de la texture d&rsquo;Albedo déterministe depuis Blender"></p>
 <p>Il ne restera plus qu’à importer cette image dans Godot et à la &ldquo;binder&rdquo; au <code>uniform dgbuffer_albedo</code> de l&rsquo;oracle.</p>
-<p><img alt="Association de la texture d&rsquo;Albedo Déterministe au uniform dbuffer_albedo du shader oracle.gdshader" src="images/bind_deterministe.opti.webp"></p>
+<p><img src="images/bind_deterministe.opti.webp" alt="Association de la texture d&rsquo;Albedo Déterministe au uniform dbuffer_albedo du shader oracle.gdshader"></p>
 <h4 id="albedo-du-g-buffer-interactif-">Albedo du G-Buffer interactif :</h4>
 <p>Pour la version interactive, c’est un peu plus complexe. Godot nous permet d’injecter certaines textures dans un uniform, que l’on peut ensuite utiliser dans le shader. La syntaxe est la suivante :</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">texture</span> <span class="o">:</span> <span class="n">hint_</span><span class="o">&lt;</span><span class="n">insert_texture_name</span><span class="o">&gt;</span><span class="n">_texture</span><span class="p">;</span>
@@ -395,7 +395,7 @@ stroke-linejoin="round" class="feather feather-home">
 </ol>
 </li>
 </ul>
-<p><img alt="Albedo_Subviewport dans la scene Godot" src="images/subviewport.opti.webp">
+<p><img src="images/subviewport.opti.webp" alt="Albedo_Subviewport dans la scene Godot">
 <br><br></p>
 <ul>
 <li>
@@ -424,7 +424,7 @@ stroke-linejoin="round" class="feather feather-home">
 </ol>
 </li>
 </ul>
-<p><img alt="Réglage du paramètre Debug Draw de la REnder Target" src="images/RT_unshaded.opti.webp">
+<p><img src="images/RT_unshaded.opti.webp" alt="Réglage du paramètre Debug Draw de la REnder Target">
 <br><br></p>
 <ul>
 <li>
@@ -433,56 +433,56 @@ stroke-linejoin="round" class="feather feather-home">
 </ol>
 </li>
 </ul>
-<p><img alt="Association de la Render Target générant la Texture d&rsquo;Albedo Déterministe au uniform ibuffer_albedo du shader oracle.gdshader" src="images/bind_interactive.opti.webp"></p>
+<p><img src="images/bind_interactive.opti.webp" alt="Association de la Render Target générant la Texture d&rsquo;Albedo Déterministe au uniform ibuffer_albedo du shader oracle.gdshader"></p>
 <h2 id="harmonisation-de-lalbédo-">Harmonisation de l&rsquo;albédo :</h2>
 <p>Nos textures d’albédo sont en place, correctement créées et &ldquo;bindées&rdquo;. Elles proviennent de deux scènes rigoureusement identiques issues du même fichier. Si &ldquo;l’importer&rdquo; de Godot à bien fait son travail en traduisant les données de Blender, on devrait obtenir une prophétie rassurante… c&rsquo;est-à-dire un bel écran noir.</p>
 <p>Qu’est-ce qui pourrait mal se passer ?</p>
-<p><img alt="Capture de la première prophétie de l&rsquo;Oracle" src="images/first_prophecy.opti.webp"></p>
+<p><img src="images/first_prophecy.opti.webp" alt="Capture de la première prophétie de l&rsquo;Oracle"></p>
 <p>Oh nooo !!!</p>
 <p>Pas de panique, Godot fait ce qu’il doit faire, le problème ne vient pas de lui. Comme souvent, ce sont les étapes manuelles de la moulinette qui introduisent les erreurs. A savoirs l’export et l&rsquo;import de la texture déterministe.</p>
 <h4 id="espaces-colorimétriques-">Espaces colorimétriques :</h4>
 <p>En observant nos textures d&rsquo;albedo, un détail saute immédiatement aux yeux : la version déterministe apparait assez délavée.</p>
-<p><img alt="gif alternant l&rsquo;albedo interactif et l&rsquo;aldedo deterministe délavé" src="images/init_input_alterance.webp"></p>
+<p><img src="images/init_input_alterance.webp" alt="gif alternant l&rsquo;albedo interactif et l&rsquo;aldedo deterministe délavé"></p>
 <p>C&rsquo;est un problème d’export. J’avais une intuition sur l’origine du souci : une histoire d’espace de couleur. Il s&rsquo;avère qu&rsquo;il fallait régler champs <code>View</code> de l&rsquo;<em>exporter</em> .png sur <code>Standard</code> :</p>
-<p><img alt="gif montrant comment mettre le champs view de l&rsquo;export png sur standard" src="images/set_standar_view.gif"></p>
+<p><img src="images/set_standar_view.gif" alt="gif montrant comment mettre le champs view de l&rsquo;export png sur standard"></p>
 <p>Un petit rendu plus tard, on peut soumettre cette nouvelle texture à l’Oracle… et cette fois, la prophétie est bien plus rassurante</p>
-<p><img alt="Capture de la première prophétie de l&rsquo;Oracle" src="images/first_prophecy_revision_1.opti.webp"></p>
+<p><img src="images/first_prophecy_revision_1.opti.webp" alt="Capture de la première prophétie de l&rsquo;Oracle"></p>
 <h4 id="compression-de-texture-en-vram">Compression de texture en VRAM</h4>
 <p>On a progressé, mais ce n’est pas encore gagné. En zoomant sur l&rsquo;image de l&rsquo;oracle, on remarque de petits motif caracteristiques.</p>
-<p><img alt="Zoom sur le pattern" src="images/1_std_dist_zoom.opti.webp"></p>
+<p><img src="images/1_std_dist_zoom.opti.webp" alt="Zoom sur le pattern"></p>
 <p>Ce sont des artefacts de compression. Pour économiser de la mémoire vidéo et optimiser les échanges entre le CPU et le GPU, les textures en jeu sont presque toujours compressées. Logique, donc, que Godot compresse par defaut les textures à l&rsquo;import.</p>
 <p>Le problème, c&rsquo;est que les algorithmes de compression des moteurs de jeu ne sont pas conçus pour notre cas d&rsquo;usage. Une texture classique est destinée à habiller un mesh. Un affichage plein écran d&rsquo;une scene entière n&rsquo;est pas vraiment usuel. Si on compare l’image source à sa version compressée, la perte de qualité est flagrante.</p>
-<p><img alt="gif alternant l&rsquo;image source et sa version compressée" src="images/alternate_vram_compression.webp"></p>
+<p><img src="images/alternate_vram_compression.webp" alt="gif alternant l&rsquo;image source et sa version compressée"></p>
 <p>Pour régler ça, il suffit de desactiver la compression dans les paramètres d&rsquo;import de la texture.</p>
-<p><img alt="gif indiquant comment desactiver la compression des textures dans Godot" src="images/set_lossless-optimize.gif"></p>
+<p><img src="images/set_lossless-optimize.gif" alt="gif indiquant comment desactiver la compression des textures dans Godot"></p>
 <p>Nouvelle réponse de l’Oracle, cette fois sans compression. (Et sans le super montage. Parce que les plaisenteries les plus courtes&hellip; tout ça, tout ça&hellip;)</p>
-<p><img alt="Zoom sur le pattern" src="images/2_lossless_detrminist_zoom.opti.webp"></p>
+<p><img src="images/2_lossless_detrminist_zoom.opti.webp" alt="Zoom sur le pattern"></p>
 <h4 id="qualité-du-png-exporté">Qualité du png exporté</h4>
 <p>On a déjà pas mal gagné mais l&rsquo;image est toujours un peu bruitée.</p>
 <p>Le lecteur attentif aura remarqué que l&rsquo;<em>exporter</em> .png de Blender applique par defaut un 15% de compression un peu suspect.</p>
-<p><img alt="Importer png avec 15% de compression" src="images/compression_15.opti.webp"></p>
+<p><img src="images/compression_15.opti.webp" alt="Importer png avec 15% de compression"></p>
 <p>J’ai donc tenté de le régler sur 0%&hellip; mais ça n&rsquo;a rien changé. J’ai alors tenté une autre approche : augmenter la Color Depth à 16 bits. Et là… victoire ! Plus aucune trace de compression.</p>
 <p>… Bon, à la place on a maintenant un gros problème de banding. Ce qui est encore pire.</p>
-<p><img alt="Zoom sur le pattern" src="images/3_png_c0_Distance_ohnooo.opti.webp"></p>
+<p><img src="images/3_png_c0_Distance_ohnooo.opti.webp" alt="Zoom sur le pattern"></p>
 <p>D’après la documentation de Godot, l’import PNG est limité à 8 bits. J’imagine que l’image 16 bits est tronquée à l’import, ce qui crée ces vilaines bandes.</p>
 <p>C’est l’impasse. Il faut trouver une autre solution.</p>
 <h4 id="le-format-exr-à-la-rescouse">Le format EXR à la rescouse</h4>
 <p>A partir de là, je me suis mis à explorer les différents formats de fichier proposés par blender. J&rsquo;ai rangé mon cerveau, et j&rsquo;ai commencé à <em>brut force</em> les paramètres de chacuns des <em>exporters</em>.</p>
 <p>C&rsquo;était pas vraiment l&rsquo;autoroute du fun. Pendant plusieurs jours, j&rsquo;ai fait des rendus, donné les textures à manger à l&rsquo;oracle, et scruté ses préseages essayant de déterminer en quoi ils étaient mieux ou moins bien que tel ou tel autre. Mais j&rsquo;ai fini par trouver un alignement de planètes acceptable.</p>
-<p><img alt="Reglage de l&rsquo;export exr dans blender" src="images/set_exr_half.opti.webp"></p>
+<p><img src="images/set_exr_half.opti.webp" alt="Reglage de l&rsquo;export exr dans blender"></p>
 <p>Je ne connaissais pas le format <code>.exr</code>. Pour la petite histoire, il a été développé par <em>Industrial Light &amp; Magic</em> : la société d&rsquo;effets spéciaux de <em>George Lucas</em>.</p>
 <p>J&rsquo;ai testé les 2 valeurs du champs <code>Color Depth</code> : <code>float (half)</code> et <code>float (full)</code>. Elles donnent des résultats légèrement différentes, mais je n&rsquo;ai pas réussi à décider lequel était réellement meilleur. Cependant, la texture en <code>float (full)</code> pèse 7,13 Mo, contre 250 Ko en <code>float (half)</code>. J&rsquo;ai donc choisi de rester sur du half (au moins pour le moment).</p>
 <h4 id="laliasing">L&rsquo;Aliasing</h4>
 <p>Le résultat n’est pas encore parfait, mais c’est le mieux que j’ai pu obtenir. Si vous avez une idée de comment l&rsquo;améliorer : je prends !</p>
 <p>Cela dit, lorsqu&rsquo;on compare les textures déterministes et interactives actuelles, il devient vraiment difficile de trouver une différence.</p>
-<p><img alt="alterance textures finales" src="images/gifalt_final_textures.webp"></p>
+<p><img src="images/gifalt_final_textures.webp" alt="alterance textures finales"></p>
 <p>La seule chose que mon oeil arrive à percevoir, c&rsquo;est un peu d&rsquo;aliasing sur les contours (n&rsquo;hesitez pas à me dire en commentaire si vous voyez autre chose).</p>
 <p>Depuis le début, les contours sont effectivement très marqués dans les présages de l&rsquo;oracle. Le phénomène est expliquable : le raytracing de Cycles ne produit pas d&rsquo;aliasing, alors que la rasterisation de Godot si. Ce qui concentre des différences au niveau des zones sujettes à l&rsquo;aliasing : les contours.</p>
 <p>On peut donc encore grapiller un peu en activant l&rsquo;anti-aliasing sur la Render Target de la texture interactive.</p>
 <h2 id="conclusion-">Conclusion :</h2>
 <p>Prenons un peu de recul sur nos résultats. D&rsquo;abord, il faut garder en tête que notre scène de test est très simpliste. Pour être vraiment sûr que Godot et Blender sont bien en phase, il faudra plus de données et surtout des données plus complexes. Ca viendra. Godot comprends les .blend et nous avons desormais un oracle dans l&rsquo;équipe. Il sera donc relativement facile de mettre à l&rsquo;épreuve de nouvelles scènes au fur et à mesure qu&rsquo;on avance. Et si de nouvelles disonances apparaissent, l&rsquo;enquête sera réouverte.</p>
 <p>Ensuite, on pourrait être un peu deçus de ne pas avoir obtenu un présage completement noir. S’il s’agissait d’un autre type de données, j’aurais été plus inquiet. Mais pour une texture d’albédo (qui est basiquement la couleur des surfaces), le &ldquo;jugé à l’œil&rdquo; me semble suffisant. Encore une fois si plus tard dans le développement, on tombe sur des incohérences visuelles, on se souviendra qu’une source d’erreur potentielle existe ici. Mais pour le POC, on va dire que c’est good enough.</p>
-<p><img alt="Retrospective des différentes étapes" src="images/gif_alt_goodenough.webp"></p>
+<p><img src="images/gif_alt_goodenough.webp" alt="Retrospective des différentes étapes"></p>
 <p>Je couclurai en disant que ce devlog à été assez compliqué à écrire. J&rsquo;ai perdu beaucoup de temps à me remémorer les chose et à les reconstituer (prenez soin de votre git les amis). Mais je reconnais quand même deux avantages à cette situation :</p>
 <ul>
 <li>
@@ -551,7 +551,7 @@ stroke-linejoin="round" class="feather feather-home">
     d="M11.999,10.236c0.321,-0.524 0.916,-1.507 1.405,-2.376c0.755,-1.344 1.692,-2.852 2.869,-4.028c1.283,-1.281 2.845,-2.171 4.739,-2.171c1.144,-0 1.864,0.585 2.299,1.497c0.486,1.017 0.545,2.551 0.51,3.883c-0.051,1.945 -0.232,3.337 -0.505,4.275c-0.229,0.786 -0.543,1.303 -0.878,1.615c-0.892,0.833 -1.8,1.263 -2.634,1.484c0.029,0.018 0.056,0.036 0.084,0.055c0.528,0.367 0.823,0.79 1.081,1.107c0.648,0.794 0.644,1.795 0.23,2.784c-0.481,1.151 -1.533,2.279 -2.12,2.773c-1.389,1.171 -2.506,1.362 -3.383,1.133c-0.88,-0.23 -1.59,-0.932 -2.156,-1.826c-0.45,-0.71 -0.817,-1.537 -1.176,-2.186c-0.115,-0.208 -0.302,-0.455 -0.406,-0.587c-0.02,0.019 -0.04,0.04 -0.056,0.058c-0.121,0.145 -0.234,0.328 -0.349,0.531c-0.363,0.644 -0.721,1.463 -1.157,2.166c-0.555,0.895 -1.252,1.597 -2.12,1.825c-0.863,0.227 -1.97,0.037 -3.363,-1.136c-0.586,-0.494 -1.638,-1.622 -2.119,-2.773c-0.414,-0.989 -0.418,-1.99 0.229,-2.784c0.258,-0.317 0.554,-0.74 1.082,-1.106c0.027,-0.019 0.055,-0.038 0.084,-0.056c-0.834,-0.221 -1.742,-0.651 -2.634,-1.484c-0.335,-0.312 -0.649,-0.829 -0.878,-1.615c-0.273,-0.938 -0.454,-2.33 -0.505,-4.275c-0.036,-1.332 0.024,-2.866 0.509,-3.883c0.435,-0.912 1.156,-1.497 2.3,-1.497c2.32,0 4.109,1.203 5.494,2.808c1.272,1.474 2.195,3.283 2.9,4.643c0.231,0.447 0.436,0.84 0.624,1.146Zm-0.01,5.653l0.296,0.031l0.271,0.086c0.208,0.088 0.413,0.229 0.607,0.428c0.455,0.467 0.882,1.369 1.36,2.284c0.249,0.477 0.518,0.958 0.841,1.339c0.231,0.274 0.483,0.502 0.805,0.569c0.488,0.103 1.052,-0.157 1.811,-0.797c0.452,-0.38 1.274,-1.239 1.645,-2.126c0.155,-0.371 0.265,-0.75 0.022,-1.048c-0.179,-0.22 -0.366,-0.529 -0.732,-0.783c-0.536,-0.372 -1.356,-0.51 -1.905,-0.654c-0.405,-0.106 -0.715,-0.234 -0.88,-0.355l-0.284,-0.303l-0.135,-0.367l-0.008,-0.211l0.035,-0.196l0.078,-0.195l0.142,-0.209l0.198,-0.181l0.296,-0.154c0.151,-0.055 0.348,-0.092 0.587,-0.104c0.815,-0.042 2.571,0.294 4.235,-1.259c0.171,-0.159 0.288,-0.445 0.404,-0.845c0.246,-0.843 0.391,-2.096 0.438,-3.843c0.024,-0.91 0.026,-1.938 -0.208,-2.738c-0.142,-0.486 -0.367,-0.891 -0.896,-0.891c-1.675,0 -2.974,0.983 -4.031,2.21c-1.179,1.369 -2.058,3.057 -2.752,4.321c-0.483,0.88 -0.902,1.573 -1.25,1.916c-0.088,0.086 -0.174,0.157 -0.257,0.214l-0.221,0.125l-0.228,0.078l-0.267,0.031l-0.274,-0.034l-0.231,-0.083l-0.219,-0.132c-0.081,-0.058 -0.164,-0.131 -0.248,-0.22c-0.327,-0.343 -0.718,-1.037 -1.174,-1.917c-0.654,-1.262 -1.497,-2.948 -2.676,-4.314c-1.067,-1.236 -2.417,-2.217 -4.203,-2.217c-0.53,0 -0.754,0.405 -0.896,0.891c-0.234,0.8 -0.232,1.828 -0.208,2.738c0.046,1.747 0.192,3 0.438,3.843c0.116,0.4 0.233,0.686 0.403,0.845c1.665,1.553 3.421,1.217 4.235,1.259c0.24,0.012 0.437,0.049 0.588,0.104l0.295,0.154l0.199,0.181l0.142,0.209l0.078,0.195l0.035,0.196l-0.009,0.211l-0.135,0.368l-0.283,0.303c-0.165,0.12 -0.476,0.248 -0.88,0.355c-0.549,0.144 -1.369,0.281 -1.905,0.653c-0.366,0.254 -0.554,0.564 -0.732,0.783c-0.243,0.298 -0.133,0.677 0.022,1.048c0.371,0.887 1.193,1.746 1.645,2.127c0.757,0.637 1.311,0.9 1.789,0.8c0.311,-0.066 0.55,-0.29 0.772,-0.557c0.315,-0.381 0.577,-0.86 0.822,-1.337c0.394,-0.763 0.752,-1.521 1.138,-2.01c0.431,-0.544 0.929,-0.815 1.455,-0.815Z" style="fill-rule:nonzero;"/>
 </svg>
 </a>
-<a href="http://localhost:1313/index.xml" target="_blank" rel="noopener noreferrer me"
+<a href="/index.xml" target="_blank" rel="noopener noreferrer me"
     title="Rss">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
     stroke-linecap="round" stroke-linejoin="round">

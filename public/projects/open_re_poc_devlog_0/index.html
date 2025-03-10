@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.137.0">
+<meta name="generator" content="Hugo 0.140.2">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re_poc_devlog_0/">
@@ -49,15 +49,15 @@
     
 
     <link rel="canonical" href="http://localhost:1313/projects/open_re_poc_devlog_0/">
-    <link href="http://localhost:1313/style.min.c8a4762fcc61b8002d9c11bb7081f1cea267d579ed5868f4b5e77f79358c57ee.css" rel="stylesheet">
-    <link href="http://localhost:1313/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+    <link href="/style.min.c8a4762fcc61b8002d9c11bb7081f1cea267d579ed5868f4b5e77f79358c57ee.css" rel="stylesheet">
+    <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
 
     
-    <link rel="apple-touch-icon" sizes="180x180" href="http://localhost:1313/icons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/icons/favicon-16x16.png">
-    <link rel="mask-icon" href="http://localhost:1313/icons/safari-pinned-tab.svg">
-    <link rel="shortcut icon" href="http://localhost:1313/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
 
 
 
@@ -69,14 +69,14 @@
 <meta name="theme-color" content="#434648">
 
     
-    <link rel="icon" type="image/svg+xml" href="http://localhost:1313/icons/favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
 
     
     
 </head>
 <body data-theme = "dark" class="notransition">
 
-<script src="http://localhost:1313/js/theme.js"></script>
+<script src="/js/theme.js"></script>
 
 <div class="navbar" role="navigation">
     <nav class="menu" aria-label="Main Navigation">
@@ -101,28 +101,28 @@ stroke-linejoin="round" class="feather feather-home">
                 
                 
                 <li>
-                    <a class="menu-link " href="http://localhost:1313/">
+                    <a class="menu-link " href="/">
                         Accueil
                     </a>
                     
                 </li>
                 
                 <li>
-                    <a class="menu-link active" href="http://localhost:1313/projects/">
+                    <a class="menu-link active" href="/projects/">
                         Projets
                     </a>
                     
                 </li>
                 
                 <li>
-                    <a class="menu-link " href="http://localhost:1313/posts/">
+                    <a class="menu-link " href="/posts/">
                         Articles
                     </a>
                     
                 </li>
                 
                 <li>
-                    <a class="menu-link " href="http://localhost:1313/pages/about/">
+                    <a class="menu-link " href="/pages/about/">
                         À propos
                     </a>
                     
@@ -199,7 +199,7 @@ stroke-linejoin="round" class="feather feather-home">
             <div class="page-content">
                 <h2 id="introduction">Introduction</h2>
 <p>Bienvenue dans ce tout premier devlog d&rsquo;OpenRE : le devlog Zéro ! Cette série a pour but de documenter la phase de POC (proof of concept) du projet.</p>
-<p>Si ce n&rsquo;est pas déjà fait, je vous recommande de jeter un œil à la <a href="http://localhost:1313/projects/open_re/">présentation générale du projet</a>. J&rsquo;y introduis notamment quelques notions et un peu de terminologie. Il est préférable de l&rsquo;avoir parcourue pour mieux contextualiser ce dont je parle dans les devlogs.</p>
+<p>Si ce n&rsquo;est pas déjà fait, je vous recommande de jeter un œil à la <a href="/projects/open_re/">présentation générale du projet</a>. J&rsquo;y introduis notamment quelques notions et un peu de terminologie. Il est préférable de l&rsquo;avoir parcourue pour mieux contextualiser ce dont je parle dans les devlogs.</p>
 <p>Avant d&rsquo;entrer dans le vif du sujet, laissez-moi introduire un peu de contexte.</p>
 <h3 id="1-format-de-la-série">1. Format de la série</h3>
 <p>Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un ou plusieurs nouveaux numéros, si j&rsquo;estime que la séparation a du sens.</p>
@@ -207,7 +207,7 @@ stroke-linejoin="round" class="feather feather-home">
 <h3 id="2-shit-happens">2. Shit happens</h3>
 <p>Petite particularité concernant les premiers articles de la série : il s&rsquo;agira de &ldquo;rétro-devlogs&rdquo;. En effet, j’ai commencé OpenRE il y a plusieurs mois, sans trop savoir où j’allais. Je n&rsquo;étais pas sûr que mes expérimentations mèneraient quelque part et, de toute façon, l&rsquo;idée même de tenir un blog ne m&rsquo;avait pas encore traversé l&rsquo;esprit.</p>
 <p>Durant cette période, il se trouve que le dépôt Git a pris feu (suite à une sombre histoire de fichiers Blender beaucoup trop volumineux). Je sais qu&rsquo;il existe des méthodes douces pour régler ce genre de problème, mais j&rsquo;avoue que sur le moment, je ne voyais pas trop l&rsquo;intérêt. J&rsquo;ai donc bêtement supprimé le dépôt pour en recréer un avec ma copie locale (après avoir fait le nécessaire pour mieux gérer mes scènes).</p>
-<p><img alt="Image générée par IA d&rsquo;un dépôt Git sinistré par un fichier Blender trop gros" src="http://localhost:1313/projects/open_re_poc_devlog_0/images/shit-happens.opti.webp">
+<p><img src="/projects/open_re_poc_devlog_0/images/shit-happens.opti.webp" alt="Image générée par IA d&rsquo;un dépôt Git sinistré par un fichier Blender trop gros">
 <em>Image générée par IA d&rsquo;un dépôt Git sinistré par un fichier Blender trop gros</em></p>
 <p>Résultat : j’ai perdu l’historique du projet. Je ne peux donc plus restaurer les premières versions pour analyser ce que j&rsquo;avais fait. Réaliser des captures d&rsquo;écran de mes résultats originaux est également impossible. Ces premiers numéros seront donc des reconstitutions.</p>
 <h2 id="part-i--problématique-de-lharmonisation-des-données">Part I : Problématique de l&rsquo;harmonisation des données</h2>
@@ -218,7 +218,7 @@ stroke-linejoin="round" class="feather feather-home">
 </ul>
 <p>Pour cela, la technologie s&rsquo;appuie sur une structure de données particulière appelée un G-Buffer. Pour rappel, il s&rsquo;agit d&rsquo;une collection de textures encodant diverses données géométriques relatives à un point de vue d&rsquo;une scène (profondeur, albédo, normales, etc.).</p>
 <p>Pour fusionner les scènes, OpenRE va donc composer les G-Buffers issus des scènes déterministe et interactive (respectivement générées par Blender et Godot). Mais il n&rsquo;est pas évident que des données produites par deux logiciels différents soient directement compatibles. C&rsquo;est même loin d&rsquo;être gagné.</p>
-<p><img alt="Meme illustrant les différences de conventions entre Blender et Godot" src="http://localhost:1313/projects/open_re_poc_devlog_0/images/meme_ilove_gbuffer.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_0/images/meme_ilove_gbuffer.opti.webp" alt="Meme illustrant les différences de conventions entre Blender et Godot"></p>
 <p>En effet, tous les logiciels graphiques suivent des conventions qui leur sont propres (unités, espaces colorimétriques, axes du repère, etc.). Tant qu&rsquo;on reste à l&rsquo;intérieur d&rsquo;un système, la cohérence de l&rsquo;ensemble est plus ou moins garantie. Mais dès lors que deux systèmes doivent s&rsquo;échanger des données pour collaborer, c&rsquo;est le début des problèmes.</p>
 <p>Avant toute chose, il va donc falloir s&rsquo;arranger pour que Blender et Godot parlent la même langue. Et comme on le verra dans les prochains devlogs, cela va demander un certain nombre d&rsquo;ajustements.</p>
 <h2 id="part-ii--la-méthode-de-loracle">Part II : La méthode de l&rsquo;oracle</h2>
@@ -226,7 +226,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>À la manière d&rsquo;un oracle, cette moulinette va formuler des prophéties parfois cryptiques en réponse aux questions qu&rsquo;on lui pose. Mais, interprétés correctement, ces présages nous aideront à avancer dans notre périple.</p>
 <h3 id="1-comment-ça-marche-">1. Comment ça marche ?</h3>
 <p>Si Godot et Blender sont bien sur la même longueur d&rsquo;onde, les G-Buffers qu&rsquo;ils produisent à partir d&rsquo;une même scène devraient être identiques. C&rsquo;est ce que nous allons chercher à vérifier avec l&rsquo;aide de l&rsquo;oracle. Son rôle sera de comparer les G-Buffers et de nous délivrer son jugement sous la forme d&rsquo;une image. Il nous faudra alors lire notre réponse dans cette image.</p>
-<p><img alt="Image illustrant le protocol de validation" src="http://localhost:1313/projects/open_re_poc_devlog_0/images/oracle_schema_update.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_0/images/oracle_schema_update.opti.webp" alt="Image illustrant le protocol de validation"></p>
 <p>Mais trêve de métaphores. Concrètement, cet oracle est un <em>post-process</em> du nom de <code>oracle.gdshader</code>. Il prend en entrée :</p>
 <ul>
 <li>les textures des deux G-Buffers</li>
@@ -240,8 +240,8 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Si l&rsquo;oracle affiche une image noire pour tous les types de textures possibles, alors les G-Buffers sont identiques.</p>
 <h3 id="2-mise-en-place-dune-scène-de-test">2. Mise en place d’une scène de test</h3>
 <p>Pour commencer, j’ai créé une petite scène dans Blender, composée de quelques primitives basiques et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale, car Godot prend en charge le format de scène Blender. Il suffit en réalité d’importer le fichier <code>.blend</code> et de l’ajouter dans une scène vide.</p>
-<p><img alt="Illustration représentant la SimpleScene dans Blender" src="http://localhost:1313/projects/open_re_poc_devlog_0/images/simpleBlend.opti.webp"><br>
-<img alt="Illustration représentant la SimpleScene dans Godot" src="http://localhost:1313/projects/open_re_poc_devlog_0/images/simpleGodot.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_0/images/simpleBlend.opti.webp" alt="Illustration représentant la SimpleScene dans Blender"><br>
+<img src="/projects/open_re_poc_devlog_0/images/simpleGodot.opti.webp" alt="Illustration représentant la SimpleScene dans Godot"></p>
 <p>Comme vous pouvez le voir sur les captures, la scène est une Cornell box basique avec un petit podium au centre, sur lequel nous pourrons mettre en scène ce dont nous aurons besoin le moment venu. Dans ce devlog, nous allons nous contenter de mettre en place l&rsquo;environnement. Il n&rsquo;y a donc rien sur le podium pour l&rsquo;instant.</p>
 <h3 id="3-implémentation-de-loracle">3. Implémentation de l’Oracle</h3>
 <p>Voyons maintenant de quoi est fait notre oracle. Sans plus de cérémonie, voici son code source. C&rsquo;est un petit pavé, mais ne vous inquiétez pas, nous allons le décortiquer ensemble.</p>
@@ -423,7 +423,6 @@ stroke-linejoin="round" class="feather feather-home">
 <p>D&rsquo;un autre côté, nous venons de mettre en place un super environnement d&rsquo;ODD, et il serait terriblement frustrant de ne pas le tester. (Allez ! Juste une fois! C&rsquo;est dans longtemps la sortie du prochain épisode..).</p>
 <p>On va donc faire ce qu&rsquo;il faut pour recueillir notre première prophétie. Pour garder les choses simples, on ne va considérer que la texture d&rsquo;Albedo (on oublie les autres pour l&rsquo;instant).</p>
 <h3 id="1-préparation-de-loracle">1. Préparation de l&rsquo;Oracle</h3>
-<p>On va devoir enrichire un peu le code de l&rsquo;oracle pour implémenter la comparaison de l&rsquo;Albedo. Le changement va concerner la fonction de calcule la différence.</p>
 <p>On va devoir enrichir un peu le code de l&rsquo;Oracle pour implémenter la comparaison de l&rsquo;Albedo. Le changement concerne la fonction de calcul de la différence.</p>
 <p>Avant :</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// Implémentation par defaut qui retournait ERROR_COLOR quoi qu&#39;il arrive</span>
@@ -450,13 +449,13 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span></code></pre></div><p>La fonction <code>compute_difference(...)</code> ne renvoie plus systématiquement <code>ERROR_COLOR</code>. Lorsque le type de données à comparer est réglé sur <code>ALBEDO_TYPE</code>, la fonction <code>compute_albedo_difference</code> est invoquée à la place. Elle effectue une simple distance euclidienne entre les deux couleurs.</p>
 <h3 id="2-assignation-des-textures">2. Assignation des textures</h3>
 <p>La génération des textures d&rsquo;Albedo déterministe et interactive est malheureusement hors scope pour aujourd&rsquo;hui. On va simplement considérer qu&rsquo;on les a déjà et qu&rsquo;elles ont été obtenues à partir d&rsquo;un Godot et d&rsquo;un Blender dans leur paramétrage d&rsquo;usine, sans toucher à plus que le strict nécessaire pour les générer. Les voici :</p>
-<p><img alt="images du file système contenant les 2 textures" src="http://localhost:1313/projects/open_re_poc_devlog_0/images/fake_textures.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_0/images/fake_textures.opti.webp" alt="images du file système contenant les 2 textures"></p>
 <p>À partir de là, il ne reste plus qu&rsquo;à les assigner aux uniforms correspondants de <code>oracle.gdshader</code> et à régler <code>data_type</code> sur 0 (qui correspond à <code>ALBEDO_TYPE</code>).</p>
-<p><img alt="gif dans lequel les 2 textures sont bindés aux paramètres du shader" src="http://localhost:1313/projects/open_re_poc_devlog_0/images/bind_textures.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_0/images/bind_textures.opti.webp" alt="gif dans lequel les 2 textures sont bindés aux paramètres du shader"></p>
 <h3 id="3-cest-maintenant--cest-maintenant-">3. C&rsquo;est maintenant ! C&rsquo;est maintenant !</h3>
 <p>Le type de données à comparer est bien réglé sur Albedo. Nos textures sont en place, correctement générées (faites-moi confiance…) et associées aux uniforms du shader. Elles proviennent de deux scènes rigoureusement identiques issues du même fichier. Si l’importeur de Godot a bien fait son travail en traduisant les données de Blender, on devrait obtenir une prophétie rassurante… c&rsquo;est-à-dire un bel écran noir.</p>
 <p>Qu’est-ce qui pourrait mal se passer ?</p>
-<p><img alt="Capture de la première prophétie de l&rsquo;Oracle" src="http://localhost:1313/projects/open_re_poc_devlog_0/images/first_prophecy.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_0/images/first_prophecy.opti.webp" alt="Capture de la première prophétie de l&rsquo;Oracle"></p>
 <p>Oh nooo !!!</p>
 <h2 id="conclusion-">Conclusion :</h2>
 <p>Nous venons de poser les bases d&rsquo;un environnement capable de comparer facilement les données produites par Blender et Godot. Jusqu&rsquo;ici, il ne nous a appris qu&rsquo;une chose : ces données ne sont <strong>pas</strong> compatibles par défaut (en ce qui concerne l&rsquo;Albedo au moins).</p>
@@ -523,7 +522,7 @@ stroke-linejoin="round" class="feather feather-home">
     d="M11.999,10.236c0.321,-0.524 0.916,-1.507 1.405,-2.376c0.755,-1.344 1.692,-2.852 2.869,-4.028c1.283,-1.281 2.845,-2.171 4.739,-2.171c1.144,-0 1.864,0.585 2.299,1.497c0.486,1.017 0.545,2.551 0.51,3.883c-0.051,1.945 -0.232,3.337 -0.505,4.275c-0.229,0.786 -0.543,1.303 -0.878,1.615c-0.892,0.833 -1.8,1.263 -2.634,1.484c0.029,0.018 0.056,0.036 0.084,0.055c0.528,0.367 0.823,0.79 1.081,1.107c0.648,0.794 0.644,1.795 0.23,2.784c-0.481,1.151 -1.533,2.279 -2.12,2.773c-1.389,1.171 -2.506,1.362 -3.383,1.133c-0.88,-0.23 -1.59,-0.932 -2.156,-1.826c-0.45,-0.71 -0.817,-1.537 -1.176,-2.186c-0.115,-0.208 -0.302,-0.455 -0.406,-0.587c-0.02,0.019 -0.04,0.04 -0.056,0.058c-0.121,0.145 -0.234,0.328 -0.349,0.531c-0.363,0.644 -0.721,1.463 -1.157,2.166c-0.555,0.895 -1.252,1.597 -2.12,1.825c-0.863,0.227 -1.97,0.037 -3.363,-1.136c-0.586,-0.494 -1.638,-1.622 -2.119,-2.773c-0.414,-0.989 -0.418,-1.99 0.229,-2.784c0.258,-0.317 0.554,-0.74 1.082,-1.106c0.027,-0.019 0.055,-0.038 0.084,-0.056c-0.834,-0.221 -1.742,-0.651 -2.634,-1.484c-0.335,-0.312 -0.649,-0.829 -0.878,-1.615c-0.273,-0.938 -0.454,-2.33 -0.505,-4.275c-0.036,-1.332 0.024,-2.866 0.509,-3.883c0.435,-0.912 1.156,-1.497 2.3,-1.497c2.32,0 4.109,1.203 5.494,2.808c1.272,1.474 2.195,3.283 2.9,4.643c0.231,0.447 0.436,0.84 0.624,1.146Zm-0.01,5.653l0.296,0.031l0.271,0.086c0.208,0.088 0.413,0.229 0.607,0.428c0.455,0.467 0.882,1.369 1.36,2.284c0.249,0.477 0.518,0.958 0.841,1.339c0.231,0.274 0.483,0.502 0.805,0.569c0.488,0.103 1.052,-0.157 1.811,-0.797c0.452,-0.38 1.274,-1.239 1.645,-2.126c0.155,-0.371 0.265,-0.75 0.022,-1.048c-0.179,-0.22 -0.366,-0.529 -0.732,-0.783c-0.536,-0.372 -1.356,-0.51 -1.905,-0.654c-0.405,-0.106 -0.715,-0.234 -0.88,-0.355l-0.284,-0.303l-0.135,-0.367l-0.008,-0.211l0.035,-0.196l0.078,-0.195l0.142,-0.209l0.198,-0.181l0.296,-0.154c0.151,-0.055 0.348,-0.092 0.587,-0.104c0.815,-0.042 2.571,0.294 4.235,-1.259c0.171,-0.159 0.288,-0.445 0.404,-0.845c0.246,-0.843 0.391,-2.096 0.438,-3.843c0.024,-0.91 0.026,-1.938 -0.208,-2.738c-0.142,-0.486 -0.367,-0.891 -0.896,-0.891c-1.675,0 -2.974,0.983 -4.031,2.21c-1.179,1.369 -2.058,3.057 -2.752,4.321c-0.483,0.88 -0.902,1.573 -1.25,1.916c-0.088,0.086 -0.174,0.157 -0.257,0.214l-0.221,0.125l-0.228,0.078l-0.267,0.031l-0.274,-0.034l-0.231,-0.083l-0.219,-0.132c-0.081,-0.058 -0.164,-0.131 -0.248,-0.22c-0.327,-0.343 -0.718,-1.037 -1.174,-1.917c-0.654,-1.262 -1.497,-2.948 -2.676,-4.314c-1.067,-1.236 -2.417,-2.217 -4.203,-2.217c-0.53,0 -0.754,0.405 -0.896,0.891c-0.234,0.8 -0.232,1.828 -0.208,2.738c0.046,1.747 0.192,3 0.438,3.843c0.116,0.4 0.233,0.686 0.403,0.845c1.665,1.553 3.421,1.217 4.235,1.259c0.24,0.012 0.437,0.049 0.588,0.104l0.295,0.154l0.199,0.181l0.142,0.209l0.078,0.195l0.035,0.196l-0.009,0.211l-0.135,0.368l-0.283,0.303c-0.165,0.12 -0.476,0.248 -0.88,0.355c-0.549,0.144 -1.369,0.281 -1.905,0.653c-0.366,0.254 -0.554,0.564 -0.732,0.783c-0.243,0.298 -0.133,0.677 0.022,1.048c0.371,0.887 1.193,1.746 1.645,2.127c0.757,0.637 1.311,0.9 1.789,0.8c0.311,-0.066 0.55,-0.29 0.772,-0.557c0.315,-0.381 0.577,-0.86 0.822,-1.337c0.394,-0.763 0.752,-1.521 1.138,-2.01c0.431,-0.544 0.929,-0.815 1.455,-0.815Z" style="fill-rule:nonzero;"/>
 </svg>
 </a>
-<a href="http://localhost:1313/index.xml" target="_blank" rel="noopener noreferrer me"
+<a href="/index.xml" target="_blank" rel="noopener noreferrer me"
     title="Rss">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
     stroke-linecap="round" stroke-linejoin="round">
