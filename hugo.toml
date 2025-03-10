@@ -1,7 +1,7 @@
 title = "Turbo Tartine Games"
 baseURL = 'https://j-ponzo.github.io/'
 
-canonifyURLs = true
+#canonifyURLs = true
 
 # This is what goes in <html lang="">
 languageCode = 'fr-fr'
