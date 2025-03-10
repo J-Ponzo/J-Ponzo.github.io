@@ -288,8 +288,6 @@ D'un autre côté, nous venons de mettre en place un super environnement d'ODD, 
 On va donc faire ce qu'il faut pour recueillir notre première prophétie. Pour garder les choses simples, on ne va considérer que la texture d'Albedo (on oublie les autres pour l'instant).
 
 ### 1. Préparation de l'Oracle
-On va devoir enrichire un peu le code de l'oracle pour implémenter la comparaison de l'Albedo. Le changement va concerner la fonction de calcule la différence.
-
 On va devoir enrichir un peu le code de l'Oracle pour implémenter la comparaison de l'Albedo. Le changement concerne la fonction de calcul de la différence.
 
 Avant :
