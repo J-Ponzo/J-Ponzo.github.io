@@ -199,8 +199,8 @@ stroke-linejoin="round" class="feather feather-home">
             <div class="page-content">
                 <h2 id="introduction">Introduction</h2>
 <p>Bienvenue dans ce tout premier devlog d&rsquo;OpenRE : le devlog Zéro ! Cette série a pour but de documenter la phase de POC (proof of concept) du projet.</p>
-<p>Si ce n&rsquo;est pas déjà fait, je vous recommande de jeter un œil à la <a href="/projects/open_re/">présentation générale du projet</a>. J&rsquo;y introduis notamment quelques notions et un peu de terminologie. Il est préférable de l&rsquo;avoir parcourue pour mieux contextualiser ce dont je parle dans les devlogs.</p>
-<p>Avant d&rsquo;entrer dans le vif du sujet, laissez-moi introduire un peu de contexte.</p>
+<p>Si ce n&rsquo;est pas déjà fait, je vous recommande de jeter un œil à l&rsquo;article <a href="/projects/open_re/">Les prémices d&rsquo;OpenRE (Open Retro Engine)</a>, qui vous donnera une vision globale du projet. J&rsquo;y introduis notamment quelques notions et un peu de terminologie. Il est préférable de l&rsquo;avoir parcouru pour mieux contextualiser ce dont je parle dans les devlogs.</p>
+<p>Dans ce numéro, je vais parler de méthodologie. Nous allons mettre en place un petit outil qui nous aidera à harmoniser les données dont OpenRE a besoin pour fonctionner. Mais avant d&rsquo;entrer dans le vif du sujet, laissez-moi introduire un peu de contexte.</p>
 <h3 id="1-format-de-la-série">1. Format de la série</h3>
 <p>Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un ou plusieurs nouveaux numéros, si j&rsquo;estime que la séparation a du sens.</p>
 <p>Étant donné qu’OpenRE est un projet personnel que je développe sur mon temps libre, le rythme de publication risque d’être irrégulier. Certains mois seront plus légers que d’autres, mais ce n’est pas bien grave. Au contraire, ce sera intéressant de voir comment la cadence évolue au fil du temps.</p>
@@ -260,12 +260,6 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span><span class="p">[</span><span class="n">NB_GMAPS</span><span class="p">]</span> <span class="n">d_gbuffer</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span><span class="p">[</span><span class="n">NB_GMAPS</span><span class="p">]</span> <span class="n">i_gbuffer</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// Choix du mode d&#39;affichage</span>
-</span></span><span class="line"><span class="cl"><span class="cp">#define I_D_DIFFERENCE 0</span>
-</span></span><span class="line"><span class="cl"><span class="cp">#define D_TEXTURE_ONLY 1</span>
-</span></span><span class="line"><span class="cl"><span class="cp">#define I_TEXTURE_ONLY 2</span>
-</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">int</span> <span class="n">view_mode</span> <span class="o">=</span> <span class="mo">0</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="k">vec3</span> <span class="n">ERROR_COLOR</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c1">// Calcule la différence entre 2 pixels </span>
@@ -278,27 +272,13 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">out_color</span> <span class="o">=</span> <span class="n">ERROR_COLOR</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">	
-</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">data_type</span> <span class="o">&gt;=</span> <span class="mo">0</span> <span class="o">&amp;&amp;</span> <span class="n">data_type</span> <span class="o">&lt;</span> <span class="n">NB_GMAPS</span>
-</span></span><span class="line"><span class="cl">		<span class="o">&amp;&amp;</span> <span class="n">view_mode</span> <span class="o">&gt;=</span> <span class="mo">0</span> <span class="o">&amp;&amp;</span> <span class="n">view_mode</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">data_type</span> <span class="o">&gt;=</span> <span class="mo">0</span> <span class="o">&amp;&amp;</span> <span class="n">data_type</span> <span class="o">&lt;</span> <span class="n">NB_GMAPS</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">		<span class="c1">// Récupération des pixels déterministe et interactif</span>
 </span></span><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">d_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_gbuffer</span><span class="p">[</span><span class="n">data_type</span><span class="p">],</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">i_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_gbuffer</span><span class="p">[</span><span class="n">data_type</span><span class="p">],</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">		
-</span></span><span class="line"><span class="cl">		<span class="c1">// Selection de l&#39;affichage</span>
-</span></span><span class="line"><span class="cl">		<span class="k">switch</span> <span class="p">(</span><span class="n">view_mode</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="n">case</span> <span class="n">I_D_DIFFERENCE</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">				<span class="c1">// Cas nominal : LA PROPHECIE !!!</span>
-</span></span><span class="line"><span class="cl">				<span class="n">out_color</span> <span class="o">=</span> <span class="n">compute_difference</span><span class="p">(</span><span class="n">d_frag</span><span class="p">,</span> <span class="n">i_frag</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">				<span class="k">break</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">			<span class="n">case</span> <span class="n">D_TEXTURE_ONLY</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">				<span class="c1">// Affichage du pixel deterministe brut</span>
-</span></span><span class="line"><span class="cl">				<span class="n">out_color</span> <span class="o">=</span> <span class="n">d_frag</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">				<span class="k">break</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">			<span class="n">case</span> <span class="n">I_TEXTURE_ONLY</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">				<span class="c1">// Affichage du pixel interactif brut</span>
-</span></span><span class="line"><span class="cl">				<span class="n">out_color</span> <span class="o">=</span> <span class="n">i_frag</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">				<span class="k">break</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Calcule de la couleur représentant la différence</span>
+</span></span><span class="line"><span class="cl">		<span class="n">out_color</span> <span class="o">=</span> <span class="n">compute_difference</span><span class="p">(</span><span class="n">d_frag</span><span class="p">,</span> <span class="n">i_frag</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">	<span class="p">}</span>
 </span></span><span class="line"><span class="cl">	
 </span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">out_color</span><span class="p">;</span>
@@ -323,15 +303,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="k">int</span> <span class="n">NB_GMAPS</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span><span class="p">[</span><span class="n">NB_GMAPS</span><span class="p">]</span> <span class="n">d_gbuffer</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span><span class="p">[</span><span class="n">NB_GMAPS</span><span class="p">]</span> <span class="n">i_gbuffer</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// Choix du mode d&#39;affichage</span>
-</span></span><span class="line"><span class="cl"><span class="cp">#define I_D_DIFFERENCE 0</span>
-</span></span><span class="line"><span class="cl"><span class="cp">#define D_TEXTURE_ONLY 1</span>
-</span></span><span class="line"><span class="cl"><span class="cp">#define I_TEXTURE_ONLY 2</span>
-</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">int</span> <span class="n">view_mode</span> <span class="o">=</span> <span class="mo">0</span><span class="p">;</span>
-</span></span></code></pre></div><p>Le paramètre <code>view_mode</code>, lui, est nouveau. On n&rsquo;en a pas encore parlé. C&rsquo;est un paramètre de debug qui nous permettra d&rsquo;afficher facilement des images intermédiaires pour nous aider à interpréter les prophéties de l&rsquo;oracle.</p>
-<p>Dans un premier temps, on pourra seulement visualiser les textures interactives et déterministes correspondant au type de données sélectionné. Mais on pourra ajouter de nouveaux modes d&rsquo;affichage quand ce sera nécessaire.</p>
-<h4 id="23-calcul-de-différence">2.3. Calcul de différence</h4>
+</span></span></code></pre></div><h4 id="23-calcul-de-différence">2.3. Calcul de différence</h4>
 <p>C&rsquo;est ici qu&rsquo;on implémentera le calcul de la différence. Ou devrais-je dire <strong>des</strong> différences, car comme nous le verrons plus tard, nous serons amenés à traiter les données différemment selon leur type.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">const</span> <span class="k">vec3</span> <span class="n">ERROR_COLOR</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
@@ -348,27 +320,13 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">out_color</span> <span class="o">=</span> <span class="n">ERROR_COLOR</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">	
-</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">data_type</span> <span class="o">&gt;=</span> <span class="mo">0</span> <span class="o">&amp;&amp;</span> <span class="n">data_type</span> <span class="o">&lt;</span> <span class="n">NB_GMAPS</span>
-</span></span><span class="line"><span class="cl">		<span class="o">&amp;&amp;</span> <span class="n">view_mode</span> <span class="o">&gt;=</span> <span class="mo">0</span> <span class="o">&amp;&amp;</span> <span class="n">view_mode</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">data_type</span> <span class="o">&gt;=</span> <span class="mo">0</span> <span class="o">&amp;&amp;</span> <span class="n">data_type</span> <span class="o">&lt;</span> <span class="n">NB_GMAPS</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">		<span class="c1">// Récupération des pixels déterministe et interactif</span>
 </span></span><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">d_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_gbuffer</span><span class="p">[</span><span class="n">data_type</span><span class="p">],</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">i_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_gbuffer</span><span class="p">[</span><span class="n">data_type</span><span class="p">],</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">		
-</span></span><span class="line"><span class="cl">		<span class="c1">// Selection de l&#39;affichage</span>
-</span></span><span class="line"><span class="cl">		<span class="k">switch</span> <span class="p">(</span><span class="n">view_mode</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="n">case</span> <span class="n">I_D_DIFFERENCE</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">				<span class="c1">// Cas nominal : LA PROPHECIE !!!</span>
-</span></span><span class="line"><span class="cl">				<span class="n">out_color</span> <span class="o">=</span> <span class="n">compute_difference</span><span class="p">(</span><span class="n">d_frag</span><span class="p">,</span> <span class="n">i_frag</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">				<span class="k">break</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">			<span class="n">case</span> <span class="n">D_TEXTURE_ONLY</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">				<span class="c1">// Affichage du pixel deterministe brut</span>
-</span></span><span class="line"><span class="cl">				<span class="n">out_color</span> <span class="o">=</span> <span class="n">d_frag</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">				<span class="k">break</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">			<span class="n">case</span> <span class="n">I_TEXTURE_ONLY</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">				<span class="c1">// Affichage du pixel interactif brut</span>
-</span></span><span class="line"><span class="cl">				<span class="n">out_color</span> <span class="o">=</span> <span class="n">i_frag</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">				<span class="k">break</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Calcule de la couleur représentant la différence</span>
+</span></span><span class="line"><span class="cl">		<span class="n">out_color</span> <span class="o">=</span> <span class="n">compute_difference</span><span class="p">(</span><span class="n">d_frag</span><span class="p">,</span> <span class="n">i_frag</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">	<span class="p">}</span>
 </span></span><span class="line"><span class="cl">	
 </span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">out_color</span><span class="p">;</span>
@@ -379,8 +337,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">out_color</span> <span class="o">=</span> <span class="n">ERROR_COLOR</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">	
-</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">data_type</span> <span class="o">&gt;=</span> <span class="mo">0</span> <span class="o">&amp;&amp;</span> <span class="n">data_type</span> <span class="o">&lt;</span> <span class="n">NB_GMAPS</span>
-</span></span><span class="line"><span class="cl">		<span class="o">&amp;&amp;</span> <span class="n">view_mode</span> <span class="o">&gt;=</span> <span class="mo">0</span> <span class="o">&amp;&amp;</span> <span class="n">view_mode</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">data_type</span> <span class="o">&gt;=</span> <span class="mo">0</span> <span class="o">&amp;&amp;</span> <span class="n">data_type</span> <span class="o">&lt;</span> <span class="n">NB_GMAPS</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">		<span class="c1">// code protégé du fragment()</span>
 </span></span><span class="line"><span class="cl">		<span class="p">...</span>
 </span></span><span class="line"><span class="cl">	<span class="p">}</span>
@@ -397,31 +354,17 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="c1">// Récupération des pixels déterministe et interactif</span>
 </span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">d_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_gbuffer</span><span class="p">[</span><span class="n">data_type</span><span class="p">],</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_gbuffer</span><span class="p">[</span><span class="n">data_type</span><span class="p">],</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">	
-</span></span><span class="line"><span class="cl">	<span class="c1">// Selection de l&#39;affichage</span>
-</span></span><span class="line"><span class="cl">	<span class="k">switch</span> <span class="p">(</span><span class="n">view_mode</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="n">case</span> <span class="n">I_D_DIFFERENCE</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">			<span class="c1">// Cas nominal : LA PROPHECIE !!!</span>
-</span></span><span class="line"><span class="cl">			<span class="n">out_color</span> <span class="o">=</span> <span class="n">compute_difference</span><span class="p">(</span><span class="n">d_frag</span><span class="p">,</span> <span class="n">i_frag</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">		<span class="n">case</span> <span class="n">D_TEXTURE_ONLY</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">			<span class="c1">// Affichage du pixel deterministe brut</span>
-</span></span><span class="line"><span class="cl">			<span class="n">out_color</span> <span class="o">=</span> <span class="n">d_frag</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">		<span class="n">case</span> <span class="n">I_TEXTURE_ONLY</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">			<span class="c1">// Affichage du pixel interactif brut</span>
-</span></span><span class="line"><span class="cl">			<span class="n">out_color</span> <span class="o">=</span> <span class="n">i_frag</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">	<span class="c1">// Calcule de la couleur représentant la différence</span>
+</span></span><span class="line"><span class="cl">	<span class="n">out_color</span> <span class="o">=</span> <span class="n">compute_difference</span><span class="p">(</span><span class="n">d_frag</span><span class="p">,</span> <span class="n">i_frag</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">	
 </span></span><span class="line"><span class="cl">	<span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>Le reste du code est assez trivial. D&rsquo;abord on sample les textures pour obtenir les pixels que l&rsquo;on souhaite comparer. Ensuite, dans le cas nominal (<code>view_mode == I_D_DIFFERENCE</code>) on invoque <code>compute_difference(...)</code> sur ces pixels pour déterminer la nuance de gris à afficher.</p>
-<p>Si un mode d&rsquo;affichage de debug est actif, on execute les traitements appropriés à la place. Ici, pour les valuers <code>D_TEXTURE_ONLY</code> et <code>I_TEXTURE_ONLY</code> on affiche simplement le pixel brut de la texture correspondante.</p>
+</span></span></code></pre></div><p>Le reste du code est assez trivial. D&rsquo;abord on sample les textures pour obtenir les pixels que l&rsquo;on souhaite comparer. Puis on invoque <code>compute_difference(...)</code> sur ces pixels pour déterminer la nuance de gris à afficher.</p>
 <h2 id="part-iii--notre-première-prophétie">Part III : Notre première prophétie</h2>
 <p>Dans ce numéro, nous n&rsquo;allons pas dérouler le processus d&rsquo;harmonisation des données en intégralité. Ce serait beaucoup trop long. Le sujet va nous occuper pendant encore plusieurs devlogs.</p>
-<p>D&rsquo;un autre côté, nous venons de mettre en place un super environnement d&rsquo;ODD, et il serait terriblement frustrant de ne pas le tester. (Allez ! Juste une fois! C&rsquo;est dans longtemps la sortie du prochain épisode..).</p>
-<p>On va donc faire ce qu&rsquo;il faut pour recueillir notre première prophétie. Pour garder les choses simples, on ne va considérer que la texture d&rsquo;Albedo (on oublie les autres pour l&rsquo;instant).</p>
+<p>D&rsquo;un autre côté, nous venons de mettre en place un super environnement d&rsquo;ODD, et il serait terriblement frustrant de ne pas le tester. (Allez ! Juste une fois! C&rsquo;est dans longtemps le prochain épisode..).</p>
+<p>On va donc faire ce qu&rsquo;il faut pour recueillir notre première prophétie. Pour garder les choses simples, on se limitera à la texture d&rsquo;Albedo (on oublie les autres pour l&rsquo;instant).</p>
 <h3 id="1-préparation-de-loracle">1. Préparation de l&rsquo;Oracle</h3>
 <p>On va devoir enrichir un peu le code de l&rsquo;Oracle pour implémenter la comparaison de l&rsquo;Albedo. Le changement concerne la fonction de calcul de la différence.</p>
 <p>Avant :</p>

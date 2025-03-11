@@ -8,9 +8,9 @@ description = 'devlog 0 du projet OpenRE'
 ## Introduction
 Bienvenue dans ce tout premier devlog d'OpenRE : le devlog Zéro ! Cette série a pour but de documenter la phase de POC (proof of concept) du projet.
 
-Si ce n'est pas déjà fait, je vous recommande de jeter un œil à la [présentation générale du projet](/projects/open_re). J'y introduis notamment quelques notions et un peu de terminologie. Il est préférable de l'avoir parcourue pour mieux contextualiser ce dont je parle dans les devlogs.
+Si ce n'est pas déjà fait, je vous recommande de jeter un œil à l'article [Les prémices d'OpenRE (Open Retro Engine)](/projects/open_re), qui vous donnera une vision globale du projet. J'y introduis notamment quelques notions et un peu de terminologie. Il est préférable de l'avoir parcouru pour mieux contextualiser ce dont je parle dans les devlogs.
 
-Avant d'entrer dans le vif du sujet, laissez-moi introduire un peu de contexte.
+Dans ce numéro, je vais parler de méthodologie. Nous allons mettre en place un petit outil qui nous aidera à harmoniser les données dont OpenRE a besoin pour fonctionner. Mais avant d'entrer dans le vif du sujet, laissez-moi introduire un peu de contexte.
 
 ### 1. Format de la série
 Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un ou plusieurs nouveaux numéros, si j'estime que la séparation a du sens.
@@ -89,12 +89,6 @@ const int NB_GMAPS = 1;
 uniform sampler2D[NB_GMAPS] d_gbuffer : filter_nearest;
 uniform sampler2D[NB_GMAPS] i_gbuffer : filter_nearest;
 
-// Choix du mode d'affichage
-#define I_D_DIFFERENCE 0
-#define D_TEXTURE_ONLY 1
-#define I_TEXTURE_ONLY 2
-uniform int view_mode = 0;
-
 const vec3 ERROR_COLOR = vec3(1.0, 0.0, 1.0);
 
 // Calcule la différence entre 2 pixels 
@@ -107,27 +101,13 @@ vec3 compute_difference(vec3 d_frag, vec3 i_frag) {
 void fragment() {
 	vec3 out_color = ERROR_COLOR;
 	
-	if (data_type >= 0 && data_type < NB_GMAPS
-		&& view_mode >= 0 && view_mode < 3) {
+	if (data_type >= 0 && data_type < NB_GMAPS) {
 		// Récupération des pixels déterministe et interactif
 		vec3 d_frag = texture(d_gbuffer[data_type], SCREEN_UV).rgb;
 		vec3 i_frag = texture(i_gbuffer[data_type], SCREEN_UV).rgb;
 		
-		// Selection de l'affichage
-		switch (view_mode) {
-			case I_D_DIFFERENCE:
-				// Cas nominal : LA PROPHECIE !!!
-				out_color = compute_difference(d_frag, i_frag);
-				break;
-			case D_TEXTURE_ONLY:
-				// Affichage du pixel deterministe brut
-				out_color = d_frag;
-				break;
-			case I_TEXTURE_ONLY:
-				// Affichage du pixel interactif brut
-				out_color = i_frag;
-				break;
-		}
+		// Calcule de la couleur représentant la différence
+		out_color = compute_difference(d_frag, i_frag);
 	}
 	
 	ALBEDO = out_color;
@@ -161,17 +141,7 @@ uniform int data_type = -1;
 const int NB_GMAPS = 1;
 uniform sampler2D[NB_GMAPS] d_gbuffer : filter_nearest;
 uniform sampler2D[NB_GMAPS] i_gbuffer : filter_nearest;
-
-// Choix du mode d'affichage
-#define I_D_DIFFERENCE 0
-#define D_TEXTURE_ONLY 1
-#define I_TEXTURE_ONLY 2
-uniform int view_mode = 0;
 ```
-
-Le paramètre `view_mode`, lui, est nouveau. On n'en a pas encore parlé. C'est un paramètre de debug qui nous permettra d'afficher facilement des images intermédiaires pour nous aider à interpréter les prophéties de l'oracle.
-
-Dans un premier temps, on pourra seulement visualiser les textures interactives et déterministes correspondant au type de données sélectionné. Mais on pourra ajouter de nouveaux modes d'affichage quand ce sera nécessaire.
 
 #### 2.3. Calcul de différence
 C'est ici qu'on implémentera le calcul de la différence. Ou devrais-je dire **des** différences, car comme nous le verrons plus tard, nous serons amenés à traiter les données différemment selon leur type.
@@ -196,27 +166,13 @@ Et enfin, voici la fonction `void fragment()`, le point d'entrée principal du p
 void fragment() {
 	vec3 out_color = ERROR_COLOR;
 	
-	if (data_type >= 0 && data_type < NB_GMAPS
-		&& view_mode >= 0 && view_mode < 3) {
+	if (data_type >= 0 && data_type < NB_GMAPS) {
 		// Récupération des pixels déterministe et interactif
 		vec3 d_frag = texture(d_gbuffer[data_type], SCREEN_UV).rgb;
 		vec3 i_frag = texture(i_gbuffer[data_type], SCREEN_UV).rgb;
 		
-		// Selection de l'affichage
-		switch (view_mode) {
-			case I_D_DIFFERENCE:
-				// Cas nominal : LA PROPHECIE !!!
-				out_color = compute_difference(d_frag, i_frag);
-				break;
-			case D_TEXTURE_ONLY:
-				// Affichage du pixel deterministe brut
-				out_color = d_frag;
-				break;
-			case I_TEXTURE_ONLY:
-				// Affichage du pixel interactif brut
-				out_color = i_frag;
-				break;
-		}
+		// Calcule de la couleur représentant la différence
+		out_color = compute_difference(d_frag, i_frag);
 	}
 	
 	ALBEDO = out_color;
@@ -231,8 +187,7 @@ Si un des paramètres est à la rue → BOOM ! Écran magenta !
 void fragment() {
 	vec3 out_color = ERROR_COLOR;
 	
-	if (data_type >= 0 && data_type < NB_GMAPS
-		&& view_mode >= 0 && view_mode < 3) {
+	if (data_type >= 0 && data_type < NB_GMAPS) {
 		// code protégé du fragment()
 		...
 	}
@@ -255,37 +210,22 @@ void fragment() {
 	// Récupération des pixels déterministe et interactif
 	vec3 d_frag = texture(d_gbuffer[data_type], SCREEN_UV).rgb;
 	vec3 i_frag = texture(i_gbuffer[data_type], SCREEN_UV).rgb;
-	
-	// Selection de l'affichage
-	switch (view_mode) {
-		case I_D_DIFFERENCE:
-			// Cas nominal : LA PROPHECIE !!!
-			out_color = compute_difference(d_frag, i_frag);
-			break;
-		case D_TEXTURE_ONLY:
-			// Affichage du pixel deterministe brut
-			out_color = d_frag;
-			break;
-		case I_TEXTURE_ONLY:
-			// Affichage du pixel interactif brut
-			out_color = i_frag;
-			break;
-	}
+		
+	// Calcule de la couleur représentant la différence
+	out_color = compute_difference(d_frag, i_frag);
 	
 	...
 }
 ```
 
-Le reste du code est assez trivial. D'abord on sample les textures pour obtenir les pixels que l'on souhaite comparer. Ensuite, dans le cas nominal (`view_mode == I_D_DIFFERENCE`) on invoque `compute_difference(...)` sur ces pixels pour déterminer la nuance de gris à afficher. 
-
-Si un mode d'affichage de debug est actif, on execute les traitements appropriés à la place. Ici, pour les valuers `D_TEXTURE_ONLY` et `I_TEXTURE_ONLY` on affiche simplement le pixel brut de la texture correspondante.
+Le reste du code est assez trivial. D'abord on sample les textures pour obtenir les pixels que l'on souhaite comparer. Puis on invoque `compute_difference(...)` sur ces pixels pour déterminer la nuance de gris à afficher.
 
 ## Part III : Notre première prophétie
 Dans ce numéro, nous n'allons pas dérouler le processus d'harmonisation des données en intégralité. Ce serait beaucoup trop long. Le sujet va nous occuper pendant encore plusieurs devlogs.
 
-D'un autre côté, nous venons de mettre en place un super environnement d'ODD, et il serait terriblement frustrant de ne pas le tester. (Allez ! Juste une fois! C'est dans longtemps la sortie du prochain épisode..).
+D'un autre côté, nous venons de mettre en place un super environnement d'ODD, et il serait terriblement frustrant de ne pas le tester. (Allez ! Juste une fois! C'est dans longtemps le prochain épisode..).
 
-On va donc faire ce qu'il faut pour recueillir notre première prophétie. Pour garder les choses simples, on ne va considérer que la texture d'Albedo (on oublie les autres pour l'instant).
+On va donc faire ce qu'il faut pour recueillir notre première prophétie. Pour garder les choses simples, on se limitera à la texture d'Albedo (on oublie les autres pour l'instant).
 
 ### 1. Préparation de l'Oracle
 On va devoir enrichir un peu le code de l'Oracle pour implémenter la comparaison de l'Albedo. Le changement concerne la fonction de calcul de la différence.
