@@ -2,7 +2,7 @@
 author = 'Turbo Tartine'
 date = '2025-03-08T13:45:59+01:00'
 draft = true
-title = 'Open_re_poc_devlog_1'
+title = "Harmonisation de l'Albedo"
 description = 'devlog 1 du projet OpenRE'
 +++
 ## Introduction
