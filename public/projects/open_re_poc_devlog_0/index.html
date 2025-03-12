@@ -176,10 +176,10 @@ stroke-linejoin="round" class="feather feather-home">
         <li><a href="#2-mise-en-place-dune-scène-de-test">2. Mise en place d’une scène de test</a></li>
         <li><a href="#3-implémentation-de-loracle">3. Implémentation de l’Oracle</a>
           <ul>
-            <li><a href="#21-code-minimal-dun-post-process">2.1. Code minimal d&rsquo;un post-process</a></li>
-            <li><a href="#22-les-uniforms-ou-paramètres-dentrée">2.2. Les uniforms ou paramètres d&rsquo;entrée</a></li>
-            <li><a href="#23-calcul-de-différence">2.3. Calcul de différence</a></li>
-            <li><a href="#24-le-point-dentrée-du-post-process">2.4. Le point d&rsquo;entrée du post-process</a></li>
+            <li><a href="#31-code-minimal-dun-post-process">3.1. Code minimal d&rsquo;un post-process</a></li>
+            <li><a href="#32-les-uniforms-ou-paramètres-dentrée">3.2. Les uniforms ou paramètres d&rsquo;entrée</a></li>
+            <li><a href="#33-calcul-de-différence">3.3. Calcul de différence</a></li>
+            <li><a href="#34-le-point-dentrée-du-post-process">3.4. Le point d&rsquo;entrée du post-process</a></li>
           </ul>
         </li>
       </ul>
@@ -198,14 +198,14 @@ stroke-linejoin="round" class="feather feather-home">
     </details>
             <div class="page-content">
                 <h2 id="introduction">Introduction</h2>
-<p>Bienvenue dans ce tout premier devlog d&rsquo;OpenRE : le devlog Zéro ! Cette série a pour but de documenter la phase de POC (proof of concept) du projet.</p>
-<p>Si ce n&rsquo;est pas déjà fait, je vous recommande de jeter un œil à l&rsquo;article <a href="/projects/open_re/">Les prémices d&rsquo;OpenRE (Open Retro Engine)</a>, qui vous donnera une vision globale du projet. J&rsquo;y introduis notamment quelques notions et un peu de terminologie. Il est préférable de l&rsquo;avoir parcouru pour mieux contextualiser ce dont je parle dans les devlogs.</p>
+<p>Bienvenue dans ce tout premier devlog d&rsquo;OpenRE : le devlog Zéro ! Cette série a pour but de documenter la phase de proof of concept (POC) du projet.</p>
+<p>Si vous ne l&rsquo;avez pas encore lu, je vous recommande de consulter l&rsquo;article <a href="/projects/open_re/">Les prémices d&rsquo;OpenRE (Open Retro Engine)</a>, qui vous donnera une vision globale du projet. J&rsquo;y introduis notamment quelques notions et un peu de terminologie. Il est préférable de l&rsquo;avoir parcouru pour mieux contextualiser ce que je raconte dans les devlogs.</p>
 <p>Dans ce numéro, je vais parler de méthodologie. Nous allons mettre en place un petit outil qui nous aidera à harmoniser les données dont OpenRE a besoin pour fonctionner. Mais avant d&rsquo;entrer dans le vif du sujet, laissez-moi introduire un peu de contexte.</p>
 <h3 id="1-format-de-la-série">1. Format de la série</h3>
-<p>Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un ou plusieurs nouveaux numéros, si j&rsquo;estime que la séparation a du sens.</p>
+<p>Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un ou plusieurs nouveaux numéros, si j&rsquo;estime que les séparer à du sens.</p>
 <p>Étant donné qu’OpenRE est un projet personnel que je développe sur mon temps libre, le rythme de publication risque d’être irrégulier. Certains mois seront plus légers que d’autres, mais ce n’est pas bien grave. Au contraire, ce sera intéressant de voir comment la cadence évolue au fil du temps.</p>
 <h3 id="2-shit-happens">2. Shit happens</h3>
-<p>Petite particularité concernant les premiers articles de la série : il s&rsquo;agira de &ldquo;rétro-devlogs&rdquo;. En effet, j’ai commencé OpenRE il y a plusieurs mois, sans trop savoir où j’allais. Je n&rsquo;étais pas sûr que mes expérimentations mèneraient quelque part et, de toute façon, l&rsquo;idée même de tenir un blog ne m&rsquo;avait pas encore traversé l&rsquo;esprit.</p>
+<p>Petite particularité concernant les premiers articles de la série : il s&rsquo;agira de &ldquo;rétro-devlogs&rdquo;. En effet, j’ai démarré ce projet il y a déjà plusieurs mois, sans trop savoir où j’allais. Je n&rsquo;étais pas sûr que mes expérimentations mèneraient quelque part et, de toute façon, l&rsquo;idée même de tenir un blog ne m&rsquo;avait pas encore traversé l&rsquo;esprit.</p>
 <p>Durant cette période, il se trouve que le dépôt Git a pris feu (suite à une sombre histoire de fichiers Blender beaucoup trop volumineux). Je sais qu&rsquo;il existe des méthodes douces pour régler ce genre de problème, mais j&rsquo;avoue que sur le moment, je ne voyais pas trop l&rsquo;intérêt. J&rsquo;ai donc bêtement supprimé le dépôt pour en recréer un avec ma copie locale (après avoir fait le nécessaire pour mieux gérer mes scènes).</p>
 <p><img alt="Image générée par IA d&rsquo;un dépôt Git sinistré par un fichier Blender trop gros" src="/projects/open_re_poc_devlog_0/images/shit-happens.opti.webp">
 <em>Image générée par IA d&rsquo;un dépôt Git sinistré par un fichier Blender trop gros</em></p>
@@ -217,7 +217,7 @@ stroke-linejoin="round" class="feather feather-home">
 <li><strong>La scène interactive</strong> : rendue en temps réel dans Godot</li>
 </ul>
 <p>Pour cela, la technologie s&rsquo;appuie sur une structure de données particulière appelée un G-Buffer. Pour rappel, il s&rsquo;agit d&rsquo;une collection de textures encodant diverses données géométriques relatives à un point de vue d&rsquo;une scène (profondeur, albédo, normales, etc.).</p>
-<p>Pour fusionner les scènes, OpenRE va donc composer les G-Buffers issus des scènes déterministe et interactive (respectivement générées par Blender et Godot). Mais il n&rsquo;est pas évident que des données produites par deux logiciels différents soient directement compatibles. C&rsquo;est même loin d&rsquo;être gagné.</p>
+<p>Pour fusionner les scènes, OpenRE va donc composer les G-Buffers déterministe et interactif (respectivement générées par Blender et Godot). Mais il n&rsquo;est pas évident que des données produites par deux logiciels différents soient directement compatibles. C&rsquo;est même loin d&rsquo;être gagné.</p>
 <p><img alt="Meme illustrant les différences de conventions entre Blender et Godot" src="/projects/open_re_poc_devlog_0/images/meme_ilove_gbuffer.opti.webp"></p>
 <p>En effet, tous les logiciels graphiques suivent des conventions qui leur sont propres (unités, espaces colorimétriques, axes du repère, etc.). Tant qu&rsquo;on reste à l&rsquo;intérieur d&rsquo;un système, la cohérence de l&rsquo;ensemble est plus ou moins garantie. Mais dès lors que deux systèmes doivent s&rsquo;échanger des données pour collaborer, c&rsquo;est le début des problèmes.</p>
 <p>Avant toute chose, il va donc falloir s&rsquo;arranger pour que Blender et Godot parlent la même langue. Et comme on le verra dans les prochains devlogs, cela va demander un certain nombre d&rsquo;ajustements.</p>
@@ -225,7 +225,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Pour identifier ces ajustements, on va utiliser une technique que j’aime bien et que j’appelle le <em>Oracle Driven Development</em>. C’est un peu comme du <em>Test Driven Development</em>, sauf qu’au lieu d’avoir un jeu de tests automatisés, propre et exhaustif, on va bricoler une petite moulinette qu’il faudra lancer en partie à la main.</p>
 <p>À la manière d&rsquo;un oracle, cette moulinette va formuler des prophéties parfois cryptiques en réponse aux questions qu&rsquo;on lui pose. Mais, interprétés correctement, ces présages nous aideront à avancer dans notre périple.</p>
 <h3 id="1-comment-ça-marche-">1. Comment ça marche ?</h3>
-<p>Si Godot et Blender sont bien sur la même longueur d&rsquo;onde, les G-Buffers qu&rsquo;ils produisent à partir d&rsquo;une même scène devraient être identiques. C&rsquo;est ce que nous allons chercher à vérifier avec l&rsquo;aide de l&rsquo;oracle. Son rôle sera de comparer les G-Buffers et de nous délivrer son jugement sous la forme d&rsquo;une image. Il nous faudra alors lire notre réponse dans cette image.</p>
+<p>Si Godot et Blender sont bien sur la même longueur d&rsquo;onde, les G-Buffers qu&rsquo;ils produisent à partir d&rsquo;une même scène devraient être identiques. C&rsquo;est ce que nous allons chercher à vérifier avec l&rsquo;aide de l&rsquo;oracle. Son rôle sera de comparer les G-Buffers qu&rsquo;on lui donne et de nous délivrer une image de laquelle on devra déduire son verdicte.</p>
 <p><img alt="Image illustrant le protocol de validation" src="/projects/open_re_poc_devlog_0/images/oracle_schema_update.opti.webp"></p>
 <p>Mais trêve de métaphores. Concrètement, cet oracle est un <em>post-process</em> du nom de <code>oracle.gdshader</code>. Il prend en entrée :</p>
 <ul>
@@ -239,10 +239,10 @@ stroke-linejoin="round" class="feather feather-home">
 </ul>
 <p>Si l&rsquo;oracle affiche une image noire pour tous les types de textures possibles, alors les G-Buffers sont identiques.</p>
 <h3 id="2-mise-en-place-dune-scène-de-test">2. Mise en place d’une scène de test</h3>
-<p>Pour commencer, j’ai créé une petite scène dans Blender, composée de quelques primitives basiques et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale, étant donné que Godot prend en charge le format de scène Blender. Il suffit d’importer le fichier <code>.blend</code> et de l’ajouter à une scène vide.</p>
+<p>Pour commencer, j’ai créé une petite scène dans Blender, composée de quelques primitives et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale, étant donné que Godot prend en charge le format de scène Blender. Il suffit d’importer le fichier <code>.blend</code> et de l’ajouter à une scène vide.</p>
 <p><img alt="Illustration représentant la SimpleScene dans Blender" src="/projects/open_re_poc_devlog_0/images/simpleBlend.opti.webp"><br>
 <img alt="Illustration représentant la SimpleScene dans Godot" src="/projects/open_re_poc_devlog_0/images/simpleGodot.opti.webp"></p>
-<p>Comme vous pouvez le voir sur les captures, la scène est une Cornell box basique avec un petit podium au centre, sur lequel nous pourrons mettre en scène ce dont nous aurons besoin le moment venu. Dans ce devlog, nous allons nous contenter de mettre en place l&rsquo;environnement. Il n&rsquo;y a donc rien sur le podium pour l&rsquo;instant.</p>
+<p>Comme vous pouvez le voir sur les captures, il s&rsquo;agit d&rsquo;une Cornell box basique avec un petit podium au centre, sur lequel nous pourrons mettre en scène ce dont nous aurons besoin le moment venu. Dans ce devlog, nous allons nous contenter de mettre en place l&rsquo;environnement. Il n&rsquo;y a donc rien sur le podium pour l&rsquo;instant.</p>
 <h3 id="3-implémentation-de-loracle">3. Implémentation de l’Oracle</h3>
 <p>Voyons maintenant de quoi est fait notre oracle. Sans plus de cérémonie, voici son code source. C&rsquo;est un petit pavé, mais ne vous inquiétez pas, nous allons le décortiquer ensemble.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
@@ -285,7 +285,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>En l&rsquo;état, il ne fait pas grand-chose. Voyez ça comme un squelette de base que nous allons habiller petit à petit au fil des devlogs.</p>
 <p>Sans transition, commençons le tour du propriétaire.</p>
-<h4 id="21-code-minimal-dun-post-process">2.1. Code minimal d&rsquo;un post-process</h4>
+<h4 id="31-code-minimal-dun-post-process">3.1. Code minimal d&rsquo;un post-process</h4>
 <p>D&rsquo;abord, quelques lignes de base qu&rsquo;on ne détaillera pas. C&rsquo;est la façon usuelle de créer un post-process dans Godot.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
@@ -293,7 +293,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">vertex</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">   <span class="n">POSITION</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">VERTEX</span><span class="p">.</span><span class="n">xy</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><h4 id="22-les-uniforms-ou-paramètres-dentrée">2.2. Les uniforms ou paramètres d&rsquo;entrée</h4>
+</span></span></code></pre></div><h4 id="32-les-uniforms-ou-paramètres-dentrée">3.2. Les uniforms ou paramètres d&rsquo;entrée</h4>
 <p>Les uniforms sont les paramètres d&rsquo;entrée du shader. C&rsquo;est à travers eux que le CPU peut envoyer des données au GPU. Une fois initialisés, ils peuvent être référencés comme des variables globales dans le code du shader.</p>
 <p>Les uniforms <code>data_type</code>, <code>d_gbuffer</code> et <code>i_gbuffer</code> correspondent aux deux G-Buffers ainsi qu&rsquo;au type de données sélectionné pour la comparaison (évoqués précédemment).</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// Type de donnée à comparer</span>
@@ -303,7 +303,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="k">int</span> <span class="n">NB_GMAPS</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span><span class="p">[</span><span class="n">NB_GMAPS</span><span class="p">]</span> <span class="n">d_gbuffer</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span><span class="p">[</span><span class="n">NB_GMAPS</span><span class="p">]</span> <span class="n">i_gbuffer</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
-</span></span></code></pre></div><h4 id="23-calcul-de-différence">2.3. Calcul de différence</h4>
+</span></span></code></pre></div><h4 id="33-calcul-de-différence">3.3. Calcul de différence</h4>
 <p>C&rsquo;est ici qu&rsquo;on implémentera le calcul de la différence. Ou devrais-je dire <strong>des</strong> différences, car comme nous le verrons plus tard, nous serons amenés à traiter les données différemment selon leur type.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">const</span> <span class="k">vec3</span> <span class="n">ERROR_COLOR</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
@@ -314,7 +314,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span></code></pre></div><p>Pour l&rsquo;instant, la fonction renvoie simplement <code>ERROR_COLOR</code>, une couleur magenta bien dégueu qui attirera immédiatement l&rsquo;attention si on la voit à l&rsquo;écran.</p>
 <p>C&rsquo;est quelque chose que je fais assez souvent et qui correspondrait à un <code>throw new Exception();</code> ou un <code>return -1;</code> en code CPU.</p>
 <p>Dans un GPU, nous sommes assez limités en termes de gestion d&rsquo;erreurs, il faut donc parfois être un peu créatif. N’hésitez pas à partager vos petites techniques personnelles dans les commentaires si vous en avez !</p>
-<h4 id="24-le-point-dentrée-du-post-process">2.4. Le point d&rsquo;entrée du post-process</h4>
+<h4 id="34-le-point-dentrée-du-post-process">3.4. Le point d&rsquo;entrée du post-process</h4>
 <p>Et enfin, voici la fonction <code>void fragment()</code>, le point d&rsquo;entrée principal du post-process.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// Point d&#39;entrée du post-process</span>
 </span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
@@ -331,8 +331,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	
 </span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">out_color</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>La première chose à noter, c&rsquo;est que je réutilise ma technique du ERROR_COLOR d&rsquo;une manière un peu différente. Ici, je vérifie les valeurs des uniforms data_type et view_mode pour m&rsquo;assurer qu&rsquo;elles sont valides.</p>
-<p>Si un des paramètres est à la rue → BOOM ! Écran magenta !</p>
+</span></span></code></pre></div><p>La première chose à noter, c&rsquo;est que je réutilise ma technique du ERROR_COLOR d&rsquo;une manière un peu différente. Ici, je m&rsquo;assure de la validité du uniforms <code>data_type</code>. Si sa valeur n&rsquo;est pas définie → BOOM ! Écran magenta !</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// Point d&#39;entrée du post-process</span>
 </span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">out_color</span> <span class="o">=</span> <span class="n">ERROR_COLOR</span><span class="p">;</span>
@@ -391,7 +390,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>La fonction <code>compute_difference(...)</code> ne renvoie plus systématiquement <code>ERROR_COLOR</code>. Lorsque le type de données à comparer est réglé sur <code>ALBEDO_TYPE</code>, la fonction <code>compute_albedo_difference(...)</code> est invoquée à la place. Elle effectue une simple distance euclidienne entre les deux couleurs.</p>
 <h3 id="2-assignation-des-textures">2. Assignation des textures</h3>
-<p>La génération des textures d&rsquo;Albedo déterministe et interactive est malheureusement hors scope pour aujourd&rsquo;hui. On va simplement considérer qu&rsquo;on les a déjà et qu&rsquo;elles ont été obtenues à partir d&rsquo;un Godot et d&rsquo;un Blender dans leur paramétrage d&rsquo;usine, sans toucher à plus que le strict nécessaire pour les générer. Les voici :</p>
+<p>La génération des textures d&rsquo;Albedo déterministe et interactive est malheureusement hors scope pour aujourd&rsquo;hui. On va simplement considérer qu&rsquo;on les a déjà et qu&rsquo;elles ont été obtenues à partir d&rsquo;un Godot et d&rsquo;un Blender dans leur paramétrage d&rsquo;usine, sans toucher à plus que le strict nécessaire. Les voici :</p>
 <p><img alt="images du file système contenant les 2 textures" src="/projects/open_re_poc_devlog_0/images/fake_textures.opti.webp"></p>
 <p>À partir de là, il ne reste plus qu&rsquo;à les assigner aux uniforms correspondants de <code>oracle.gdshader</code> et à régler <code>data_type</code> sur 0 (qui correspond à <code>ALBEDO_TYPE</code>).</p>
 <p><img alt="gif dans lequel les 2 textures sont bindés aux paramètres du shader" src="/projects/open_re_poc_devlog_0/images/bind_textures.opti.webp"></p>

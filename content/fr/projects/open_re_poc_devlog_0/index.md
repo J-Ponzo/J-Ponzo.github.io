@@ -6,19 +6,19 @@ title = "OpenRE devlog 0 : Oracle Driven Development"
 description = 'devlog 0 du projet OpenRE'
 +++
 ## Introduction
-Bienvenue dans ce tout premier devlog d'OpenRE : le devlog Zéro ! Cette série a pour but de documenter la phase de POC (proof of concept) du projet.
+Bienvenue dans ce tout premier devlog d'OpenRE : le devlog Zéro ! Cette série a pour but de documenter la phase de proof of concept (POC) du projet.
 
-Si ce n'est pas déjà fait, je vous recommande de jeter un œil à l'article [Les prémices d'OpenRE (Open Retro Engine)](/projects/open_re), qui vous donnera une vision globale du projet. J'y introduis notamment quelques notions et un peu de terminologie. Il est préférable de l'avoir parcouru pour mieux contextualiser ce dont je parle dans les devlogs.
+Si vous ne l'avez pas encore lu, je vous recommande de consulter l'article [Les prémices d'OpenRE (Open Retro Engine)](/projects/open_re), qui vous donnera une vision globale du projet. J'y introduis notamment quelques notions et un peu de terminologie. Il est préférable de l'avoir parcouru pour mieux contextualiser ce que je raconte dans les devlogs.
 
 Dans ce numéro, je vais parler de méthodologie. Nous allons mettre en place un petit outil qui nous aidera à harmoniser les données dont OpenRE a besoin pour fonctionner. Mais avant d'entrer dans le vif du sujet, laissez-moi introduire un peu de contexte.
 
 ### 1. Format de la série
-Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un ou plusieurs nouveaux numéros, si j'estime que la séparation a du sens.
+Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un ou plusieurs nouveaux numéros, si j'estime que les séparer à du sens.
 
 Étant donné qu’OpenRE est un projet personnel que je développe sur mon temps libre, le rythme de publication risque d’être irrégulier. Certains mois seront plus légers que d’autres, mais ce n’est pas bien grave. Au contraire, ce sera intéressant de voir comment la cadence évolue au fil du temps.
 
 ### 2. Shit happens
-Petite particularité concernant les premiers articles de la série : il s'agira de "rétro-devlogs". En effet, j’ai commencé OpenRE il y a plusieurs mois, sans trop savoir où j’allais. Je n'étais pas sûr que mes expérimentations mèneraient quelque part et, de toute façon, l'idée même de tenir un blog ne m'avait pas encore traversé l'esprit.
+Petite particularité concernant les premiers articles de la série : il s'agira de "rétro-devlogs". En effet, j’ai démarré ce projet il y a déjà plusieurs mois, sans trop savoir où j’allais. Je n'étais pas sûr que mes expérimentations mèneraient quelque part et, de toute façon, l'idée même de tenir un blog ne m'avait pas encore traversé l'esprit.
 
 Durant cette période, il se trouve que le dépôt Git a pris feu (suite à une sombre histoire de fichiers Blender beaucoup trop volumineux). Je sais qu'il existe des méthodes douces pour régler ce genre de problème, mais j'avoue que sur le moment, je ne voyais pas trop l'intérêt. J'ai donc bêtement supprimé le dépôt pour en recréer un avec ma copie locale (après avoir fait le nécessaire pour mieux gérer mes scènes).
 
@@ -34,7 +34,7 @@ Si vous avez lu l'article mentionné dans l'introduction, vous savez qu'OpenRE p
 
 Pour cela, la technologie s'appuie sur une structure de données particulière appelée un G-Buffer. Pour rappel, il s'agit d'une collection de textures encodant diverses données géométriques relatives à un point de vue d'une scène (profondeur, albédo, normales, etc.).
 
-Pour fusionner les scènes, OpenRE va donc composer les G-Buffers issus des scènes déterministe et interactive (respectivement générées par Blender et Godot). Mais il n'est pas évident que des données produites par deux logiciels différents soient directement compatibles. C'est même loin d'être gagné.
+Pour fusionner les scènes, OpenRE va donc composer les G-Buffers déterministe et interactif (respectivement générées par Blender et Godot). Mais il n'est pas évident que des données produites par deux logiciels différents soient directement compatibles. C'est même loin d'être gagné.
 
 ![Meme illustrant les différences de conventions entre Blender et Godot](images/meme_ilove_gbuffer.opti.webp)
 
@@ -48,7 +48,7 @@ Pour identifier ces ajustements, on va utiliser une technique que j’aime bien 
 À la manière d'un oracle, cette moulinette va formuler des prophéties parfois cryptiques en réponse aux questions qu'on lui pose. Mais, interprétés correctement, ces présages nous aideront à avancer dans notre périple.
 
 ### 1. Comment ça marche ?
-Si Godot et Blender sont bien sur la même longueur d'onde, les G-Buffers qu'ils produisent à partir d'une même scène devraient être identiques. C'est ce que nous allons chercher à vérifier avec l'aide de l'oracle. Son rôle sera de comparer les G-Buffers et de nous délivrer son jugement sous la forme d'une image. Il nous faudra alors lire notre réponse dans cette image.
+Si Godot et Blender sont bien sur la même longueur d'onde, les G-Buffers qu'ils produisent à partir d'une même scène devraient être identiques. C'est ce que nous allons chercher à vérifier avec l'aide de l'oracle. Son rôle sera de comparer les G-Buffers qu'on lui donne et de nous délivrer une image de laquelle on devra déduire son verdicte.
 
 ![Image illustrant le protocol de validation](images/oracle_schema_update.opti.webp)
 
@@ -63,12 +63,12 @@ Son job est de calculer, deux à deux, les différences entre les textures déte
 Si l'oracle affiche une image noire pour tous les types de textures possibles, alors les G-Buffers sont identiques.
 
 ### 2. Mise en place d’une scène de test
-Pour commencer, j’ai créé une petite scène dans Blender, composée de quelques primitives basiques et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale, étant donné que Godot prend en charge le format de scène Blender. Il suffit d’importer le fichier `.blend` et de l’ajouter à une scène vide.
+Pour commencer, j’ai créé une petite scène dans Blender, composée de quelques primitives et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale, étant donné que Godot prend en charge le format de scène Blender. Il suffit d’importer le fichier `.blend` et de l’ajouter à une scène vide.
 
 ![Illustration représentant la SimpleScene dans Blender](images/simpleBlend.opti.webp)  
 ![Illustration représentant la SimpleScene dans Godot](images/simpleGodot.opti.webp)
 
-Comme vous pouvez le voir sur les captures, la scène est une Cornell box basique avec un petit podium au centre, sur lequel nous pourrons mettre en scène ce dont nous aurons besoin le moment venu. Dans ce devlog, nous allons nous contenter de mettre en place l'environnement. Il n'y a donc rien sur le podium pour l'instant.
+Comme vous pouvez le voir sur les captures, il s'agit d'une Cornell box basique avec un petit podium au centre, sur lequel nous pourrons mettre en scène ce dont nous aurons besoin le moment venu. Dans ce devlog, nous allons nous contenter de mettre en place l'environnement. Il n'y a donc rien sur le podium pour l'instant.
 
 ### 3. Implémentation de l’Oracle
 Voyons maintenant de quoi est fait notre oracle. Sans plus de cérémonie, voici son code source. C'est un petit pavé, mais ne vous inquiétez pas, nous allons le décortiquer ensemble.
@@ -118,7 +118,7 @@ En l'état, il ne fait pas grand-chose. Voyez ça comme un squelette de base que
 
 Sans transition, commençons le tour du propriétaire.
 
-#### 2.1. Code minimal d'un post-process
+#### 3.1. Code minimal d'un post-process
 D'abord, quelques lignes de base qu'on ne détaillera pas. C'est la façon usuelle de créer un post-process dans Godot.
  ```glsl
 shader_type spatial;
@@ -129,7 +129,7 @@ void vertex() {
 }
 ```
 
-#### 2.2. Les uniforms ou paramètres d'entrée
+#### 3.2. Les uniforms ou paramètres d'entrée
 Les uniforms sont les paramètres d'entrée du shader. C'est à travers eux que le CPU peut envoyer des données au GPU. Une fois initialisés, ils peuvent être référencés comme des variables globales dans le code du shader.
 
 Les uniforms `data_type`, `d_gbuffer` et `i_gbuffer` correspondent aux deux G-Buffers ainsi qu'au type de données sélectionné pour la comparaison (évoqués précédemment).
@@ -143,7 +143,7 @@ uniform sampler2D[NB_GMAPS] d_gbuffer : filter_nearest;
 uniform sampler2D[NB_GMAPS] i_gbuffer : filter_nearest;
 ```
 
-#### 2.3. Calcul de différence
+#### 3.3. Calcul de différence
 C'est ici qu'on implémentera le calcul de la différence. Ou devrais-je dire **des** différences, car comme nous le verrons plus tard, nous serons amenés à traiter les données différemment selon leur type.
 ```glsl
 const vec3 ERROR_COLOR = vec3(1.0, 0.0, 1.0);
@@ -159,7 +159,7 @@ C'est quelque chose que je fais assez souvent et qui correspondrait à un `throw
 
 Dans un GPU, nous sommes assez limités en termes de gestion d'erreurs, il faut donc parfois être un peu créatif. N’hésitez pas à partager vos petites techniques personnelles dans les commentaires si vous en avez !
 
-#### 2.4. Le point d'entrée du post-process
+#### 3.4. Le point d'entrée du post-process
 Et enfin, voici la fonction `void fragment()`, le point d'entrée principal du post-process.
 ```glsl
 // Point d'entrée du post-process
@@ -178,9 +178,7 @@ void fragment() {
 	ALBEDO = out_color;
 }
 ```
-La première chose à noter, c'est que je réutilise ma technique du ERROR_COLOR d'une manière un peu différente. Ici, je vérifie les valeurs des uniforms data_type et view_mode pour m'assurer qu'elles sont valides.
-
-Si un des paramètres est à la rue → BOOM ! Écran magenta !
+La première chose à noter, c'est que je réutilise ma technique du ERROR_COLOR d'une manière un peu différente. Ici, je m'assure de la validité du uniforms `data_type`. Si sa valeur n'est pas définie → BOOM ! Écran magenta !
 
 ```glsl
 // Point d'entrée du post-process
@@ -261,7 +259,7 @@ vec3 compute_difference(vec3 d_frag, vec3 i_frag) {
 La fonction `compute_difference(...)` ne renvoie plus systématiquement `ERROR_COLOR`. Lorsque le type de données à comparer est réglé sur `ALBEDO_TYPE`, la fonction `compute_albedo_difference(...)` est invoquée à la place. Elle effectue une simple distance euclidienne entre les deux couleurs.
 
 ### 2. Assignation des textures
-La génération des textures d'Albedo déterministe et interactive est malheureusement hors scope pour aujourd'hui. On va simplement considérer qu'on les a déjà et qu'elles ont été obtenues à partir d'un Godot et d'un Blender dans leur paramétrage d'usine, sans toucher à plus que le strict nécessaire pour les générer. Les voici :
+La génération des textures d'Albedo déterministe et interactive est malheureusement hors scope pour aujourd'hui. On va simplement considérer qu'on les a déjà et qu'elles ont été obtenues à partir d'un Godot et d'un Blender dans leur paramétrage d'usine, sans toucher à plus que le strict nécessaire. Les voici :
 
 ![images du file système contenant les 2 textures](images/fake_textures.opti.webp)
 
