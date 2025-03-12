@@ -6,7 +6,18 @@
     <description>Recent content in Home on Turbo Tartine Games</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-fr</language>
-    <lastBuildDate>Sun, 09 Mar 2025 06:28:42 +0100</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 12 Mar 2025 10:20:34 +0100</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dis donc Jamy : Comment ça marche un shader ?</title>
+      <link>http://localhost:1313/posts/ddj_shaders/</link>
+      <pubDate>Wed, 12 Mar 2025 10:20:34 +0100</pubDate>
+      
+      <guid>http://localhost:1313/posts/ddj_shaders/</guid>
+      
+      <description></description>
+      
+    </item>
+    
     <item>
       <title>Les prémices d&#39;OpenRE (Open Retro Engine)</title>
       <link>http://localhost:1313/projects/open_re/</link>
