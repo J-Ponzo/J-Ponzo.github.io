@@ -2,7 +2,7 @@
 author = 'Turbo Tartine'
 date = '2025-02-21T12:51:02+01:00'
 draft = true
-title = "OpenRE devlog 0 : Oracle Driven Development"
+title = 'OpenRE devlog 0 : Oracle Driven Development'
 description = 'devlog 0 du projet OpenRE'
 +++
 ## Introduction
