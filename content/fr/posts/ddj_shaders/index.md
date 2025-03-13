@@ -38,11 +38,11 @@ void main(elt, i) {
 }
 ```
 
-En effet, quand on implémente un shader, on n'a pas access au tableau lui même. On doit raisonner sur chaque élement pris indivisuellement, en isolation de tous les autres. Tout ce qu'on connait en plus de l'élement lui même, c'est sa position dans le tableau (J'avais bien dit que c'était bizare !).
+En effet, quand on écrit un shader, on n'a pas access au tableau lui même. On doit raisonner sur chaque élement pris indivisuellement, en isolation de tous les autres. Tout ce qu'on connait c'est l'élement lui même, et eventuellement sa position dans le tableau si on a de la chance (J'avais bien dit que c'était bizare !).
 
 Croyez le ou non, la couleur de chaque pixel de votre écran est calculée de cette manière. C'est une gymnastique un peu particulière, mais on s'y fait assez vite. Maintent, pourquoi est ce qu'on a besoin de faire un truc aussi tordu ?
 
-## II. CPU vs GPU ?
+## II. CPU vs GPU
 Pour répondre à cette question, on va devoir se pencher sur les différences d'architecture entre les 2 types unité de calcule.
 
 Un CPU contient relativement peu de coeurs (entre 2 et 10 la plupart du temps). Mais ce sont des coeurs extrèmement puissant et surtout très agiles car intédpendants les un des autres. Chacun est capable de dérouler sa propre séquence d'instructions dans son coin. Un CPU sera donc très bon pour effectuer plusieurs tâches complexe et différentes en même temps.
@@ -55,20 +55,20 @@ Et bien non Fred ! Les coeurs executent bien tous la même instruction, mais ils
 
 "Je vois ! Mais dans le cas d'un branchement conditiannel (un if/then/else), on est d'accord que les coeurs qui passent côté *true* ne peuvent pas pointer sur la meme instruction que ceux qui passent côté *false*. Ca marche pas ton truc !". 
 
-Tu as raison Fred, mais il y a une astuce ! En réalité les 2 cotés du if sont exécutées l'un après l'autre. Et que font les coeurs qui ne sont pas concernés par la branche courante ? Et bien ils attandent. C'est la raison pour laquelle il faut à tout prix éviter les branches dans le code source d'un shader. Car à chaque fois qu'on le fait, on met des coeurs au chômage.
+Tu as raison Fred, mais il y a une astuce ! En réalité les 2 cotés du if sont exécutées l'un après l'autre par tous les coeurs. Et que font les coeurs qui ne sont pas concernés par la branche courante ? Et bien c'est simple... **RIEN**... ils attandent... Et c'est la raison pour laquelle il faut à tout prix éviter les branches dans un shader.
 
-Cette architecture est donc assez contrainante, mais elle permet au GPU de faire enormement d'optimisation qu'un CPU ne peut pas faire, car il gère un cas plus général. Mais surtout, cela permet de gérer facilement non pas 8, non pas 32, non pas 256, mais plusieurs milliers de coeurs au sein de la même unité de calcule.
+Cette architecture est donc assez contrainante, mais elle permet au GPU de faire des optimisations qu'un CPU, plus généraliste, ne pourrait pas faire. Mais surtout, cela permet de gérer facilement non pas 8, non pas 32, non pas 128... mais bien plusieurs milliers de coeurs au sein de la même unité de calcule.
 
-En consequence, la ou le CPU est bon le multitasking, le GPU excelle ...
+En consequence, là où le CPU est bon sur du multitasking, le GPU lui excelle dans l'art d'executer en parallele un nombre astronomique de petites opérations similaires. Et il se trouve que c'est exactement ce dont on a besoin pour traiter des images.
 
 ## III. Le pipeline graphique
-En pratique, il existe plusieurs types de shaders. Chacun intervenant à une étape précise de ce qu'on appelle le pipeline graphique. A chaque drawcall, c'est à dire (plus ou moins) pour chaque mesh visible dans une frame, ce pipeline va être traversé. La géométrie est injectée en entrée sous forme de triplets de vertex (des triangles donc), qui vont être traités étape par étape jusqu'à devenir des pixels affichés à l'écran.
+En pratique, il existe plusieurs types de shaders. Chacun intervenant à une étape précise de ce qu'on appelle le pipeline graphique. A chaque drawcall, c'est à dire (plus ou moins) pour chaque mesh visible dans une frame, ce pipeline va être traversé. La géométrie est injectée en entrée sous forme de triplets de vertex (des triangles donc). Ils vont être traités étape par étape jusqu'à devenir des pixels affichés à l'écran.
 
 ![Diagramme représentant le pipline graphique](images/gfx_pipeline.opti.webp)
 
 Dans ce pipeline, il y a 2 types d'étapes :
 - Les fixed function en jaune pâle : cablées en dur dans le GPU (et donc **très** efficaces)
-- Les étapes programmables : les fameux shaders
+- Les étapes programmables en vert : les fameux shaders
 
 Ca fait beaucoup, et encore, dites vous qu'il en manque. Mais dans l'infini majorité des cas on utilisera que le Vertex Shader et le Fragment Shader (notés respectivement Vertex Program et Fragment Program sur le schéma mais c'est la même chose)
 
@@ -82,7 +82,7 @@ Les élements traités par le vertex shader sont les vertex du mesh qui traverse
 
 Imaginez que la caméra, c'est la navette de futurama. Ce n'est pas elle qui bouge, mais le vertex shader qui s'arange pour déplacer le monde autour d'elle et l'aligner dans le bon axe. Une fois que c'est fait, le monde est "applati" dans le plan de l'écran.
 
-Je ne vais pas détailler les mathématiques engagés dans la maneuvre parce que c'est un article de vulgarisation (ouai c'est ça... dit plutôt que t'as peur de te planter et de passer pour un glandu !). Mais retenez que ce sont des multiplications de matrice et qu'il s'agit d'une opération hautement paralellisable. Un GPU peut donc en avaler des caisses entière sans soursiller.
+Je ne vais pas détailler les mathématiques engagés dans la maneuvre parce que c'est un article de vulgarisation (ouai c'est ça... dit plutôt que t'as peur de te planter et de passer pour un glandu !). Mais retenez que ce sont des multiplications de matrice : une opération qui peut être découpée en une multitude de petites opérations identiques. Et comme on vient de le voire, un GPU est taillé pour en avaler des caisses entière sans soursiller.
 
 Notez qu'au dela de ces changements d'espace, le Vertex Shader est l'endroit parfait pour implémenter des effets du type :
 - inflation/retractation
@@ -103,7 +103,7 @@ Il s'agit d'un procédé qui consiste à discrétiser une image vectoriel. Dit a
 
 ![illustration du procédé de rasterisation](images/)
 
-Ces fragments sont ensuite injectés au Fragment Shader (vous commencez à comprendre le pattern de nomage). 
+Ces fragments sont ensuite injectés en entrée du Fragment Shader (vous commencez à comprendre le pattern de nomage). 
 
 Mais ce n'est pas tout. Il y a un petit détail que j'ai omis de mentionner dans la partie précédente. Les vertex protent des attributs en plus de leur coordonnée : une couleur et ce qu'on appele des uv (qu'on utilise notament pour appliquer les textures mais c'est completement hors scope pour cet article).
 
@@ -112,7 +112,7 @@ Il est important de noter que lors de la rasterisation, une interpolation de ces
 ![illustration de l'interpolation des attributs](images/)
 
 ### 3. Fragment Shader
-
+Le fragment shader c'est la dernière étape avant que le pixel soit imprimé à l'écran. Son job est de déterminer la couleur finale de ce pixel.
 
 ## IV. Blue Screen of Welcome
 
@@ -120,3 +120,10 @@ Il est important de noter que lors de la rasterisation, une interpolation de ces
 <Hello world>
 
 ## Conclusion
+Dans cet article je fais pas mal de racourcis et d'approximations. Je fais également l'impasse sur des sujets importants (les uniforms, les varyings ...). L'objectif n'étant pas de vous apprendre à écrire des shaders, mais de vous donner une vision global de ce que c'est.
+
+Si vous souhaitez approfondir le sujet, je vous conseille [Learn OpenGL](https://learnopengl.com/). C'est très complet et bien expliqué. Quand je cherche une information, c'est le premier endroit où je regarde. Et très souvent je n'ai pas besoin d'aller ailleurs. 
+
+Vous pouvez aussi apprendre directement dans un moteur de jeu. Ainsi vous pourrez vous concentrer sur vos shaders sans avoir à vous occuper de la partie CPU du *renderer* (qui sera déjà implémentée par le moteur). Je n'ai pas de ressource à vous pointer car je n'ai pas appris comme ça, mais je suis sur qu'elles existent. Et c'est souvent plus simple de prendre les problèmes un par un.
+
+Sur ce, j'éspère que vous aurez trouvé ces explications utiles et qu'elles vous aideront à aborder plus facilement certains passages de mes futurs articles.
