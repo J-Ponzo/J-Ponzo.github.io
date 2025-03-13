@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.137.0">
+<meta name="generator" content="Hugo 0.140.2">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re/">
@@ -214,11 +214,8 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Lorsque j&rsquo;ai cherché à développer mon propre jeu en caméra fixe, j’ai rapidement réalisé une chose : les outils et ressources disponibles sur le sujet sont rares. Certes, on trouve quelques tutoriels pour gérer les caméras ou implémenter les déplacements du joueur. Mais je n&rsquo;ai pas trouvé de réponse à la question qui m&rsquo;intéresse réellement : <em>&ldquo;Comment intégrer des éléments interactifs dans des décors précalculés ?&rdquo;</em></p>
 <p>J&rsquo;ai donc commencé à bricoler de mon côté pour trouver une solution à ce problème et je pense avoir un début de réponse :
 
-
-    
     <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-      <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="allowfullscreen" loading="eager" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/ok0o0HhgfeY?autoplay=0&controls=1&end=0&loop=0&mute=0&start=0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" title="YouTube video"
-      ></iframe>
+      <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="allowfullscreen" loading="eager" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/ok0o0HhgfeY?autoplay=0&amp;controls=1&amp;end=0&amp;loop=0&amp;mute=0&amp;start=0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" title="YouTube video"></iframe>
     </div>
 </p>
 <p>Bon, je sais, cette scène n&rsquo;a aucun sens. Mais soyez indulgents, j&rsquo;ai dit que c&rsquo;était un début. Et puis, je trouve ces T-poses magnifiques (pas vous ?). Plus sérieusement, ce qui est important dans cette vidéo, c&rsquo;est que les seuls modèles 3D rendus en temps réel sont les personnages. Tout le reste — plancher, murs, plafond, mobilier, props en tout genre — est en réalité une image précalculée.</p>
@@ -232,19 +229,19 @@ stroke-linejoin="round" class="feather feather-home">
 </ul>
 <p>La maturité et la popularité de ces deux logiciels en font des choix solides. Ils sont aussi open-source, ce qui s&rsquo;aligne parfaitement avec la philosophie d&rsquo;OpenRE : promouvoir une technologie accessible et ouverte à tous. L’open-source offre également une certaine sécurité qu&rsquo;il est impossible d&rsquo;avoir avec des solutions propriétaires. En effet, comme le rappellent certains événements récents, placer son capital technologique entre les mains d&rsquo;une entreprise à but lucratif n&rsquo;est pas sans risques.</p>
 <p>Sur le plan pratique, Blender et Godot se complètent très bien. Godot prend en charge nativement les scènes créées dans Blender, ce qui simplifie la synchronisation entre les deux environnements. Cette compatibilité devrait nous aider à limiter les manipulations fastidieuses et sources d&rsquo;erreur.</p>
-<p><img alt="Même &ldquo;Epic Handshake&rdquo; illustrant que Godot + Blender = un monde meilleur" src="/projects/open_re/images/handshake.opti.webp"></p>
+<p><img src="/projects/open_re/images/handshake.opti.webp" alt="Même &ldquo;Epic Handshake&rdquo; illustrant que Godot &#43; Blender = un monde meilleur"></p>
 <p>Côté scripting, j’ai choisi de bousculer mes habitudes en optant pour GDScript plutôt que C#. Pourquoi ce choix ? Tout simplement parce que GDScript est supporté par toutes les versions de Godot, contrairement à C#, qui nécessite la version .NET. Cette flexibilité permettra à OpenRE de rester accessible au plus grand nombre. Et ce sera l’occasion pour moi d&rsquo;apprendre un nouveau langage.</p>
 <p>Si, comme moi, vous préférez le C#, soyez rassurés ! Vous n&rsquo;aurez besoin de GDScript que si vous souhaitez modifier le plugin OpenRE lui-même. Pour développer votre jeu, vous pourrez utiliser le langage de votre choix.</p>
 <h2 id="part-ii--principe-général">Part II : Principe général</h2>
 <p>OpenRE repose sur une séparation du monde en deux parties bien distinctes. Et par &ldquo;bien distinctes&rdquo;, j’entends que chacune d&rsquo;elles nécessitera un logiciel dédié.</p>
 <h3 id="1-le-monde-déterministe-blender-">1. Le monde déterministe (Blender) :</h3>
 <p>Le monde <em>déterministe</em> est créé dans Blender. C&rsquo;est de lui que seront tirés les arrière-plans précalculés. On pourrait, de manière un peu réductrice, dire qu’il représente la partie <em>statique</em> de la scène. Je préfère éviter ce terme, car il est déjà utilisé par les moteurs de jeu, ce qui prête à confusion. De plus, il n&rsquo;est pas tout à fait exact en l&rsquo;occurrence.</p>
-<p><img alt="Monde déterministe édité dans Blender" src="/projects/open_re/images/blender-det-world.opti.webp"></p>
+<p><img src="/projects/open_re/images/blender-det-world.opti.webp" alt="Monde déterministe édité dans Blender"></p>
 <p>En effet, c&rsquo;est totalement hors scope pour une V1. Mais il se pourrait qu&rsquo;un jour, OpenRE supporte des arrière-plans animés. On pourrait alors imaginer des petites boucles dans lesquelles le vent agite des rideaux ou de la végétation. Ou encore des voitures qui circulent dans les rues la nuit, illuminant les alentours à chaque passage. Parler d&rsquo;éléments &ldquo;statiques&rdquo; dans ce contexte serait tout simplement incorrect.</p>
 <p>Pour l&rsquo;heure, le terme <em>déterministe</em> désigne effectivement ce que l&rsquo;on qualifie de &ldquo;statique&rdquo; dans un moteur de jeu (architectures, meubles, objets inanimés, etc.). Mais cela pourrait englober bien plus dans le futur. La seule limite réellement infranchissable, c&rsquo;est que ce monde ne pourra jamais dépendre des actions du joueur ou d&rsquo;éléments de gameplay aléatoires. Car, bien entendu, au moment de générer les arrière-plans, ces événements ne sont pas encore connus.</p>
 <h3 id="2-le-monde-interactif-godot-">2. Le monde interactif (Godot) :</h3>
 <p>De son côté, le monde interactif est implémenté dans Godot. Il comprend tout ce qui relève du gameplay : personnages, véhicules contrôlables, objets manipulables, etc. Là encore, j’évite de le qualifier de <em>dynamique</em> pour éviter la confusion avec la terminologie des moteurs de jeu.</p>
-<p><img alt="Monde interactif édité dans Godot" src="/projects/open_re/images/godot-int-world.opti.webp"></p>
+<p><img src="/projects/open_re/images/godot-int-world.opti.webp" alt="Monde interactif édité dans Godot"></p>
 <p>En pratique, ce monde sera relativement vide comparé au monde déterministe. En effet, dans la plupart des jeux, les éléments interactifs représentent une quantité de géométrie beaucoup moins importante que les environnements. Cela signifie que, dans le cas général, les ressources graphiques sont majoritairement consommées par le monde déterministe.</p>
 <p>OpenRE s&rsquo;abstrait en grande partie de cette charge de calcul en précalculant la partie déterministe dans Blender (c&rsquo;est là tout le principe). Cela devrait libérer pas mal de ressources pour la partie interactive. Théoriquement, nous pourrons donc être plus généreux en détails, lumières et effets visuels.</p>
 <h3 id="3-la-fusion-des-mondes-">3. La fusion des mondes :</h3>
@@ -261,7 +258,7 @@ stroke-linejoin="round" class="feather feather-home">
 <li>Importer l&rsquo;arrière-plan dans Godot et l&rsquo;associer à la caméra interactive correspondante.</li>
 </ol>
 <p>Notez que le « s » à &ldquo;images&rdquo; n&rsquo;est pas une faute de frappe. Nous n&rsquo;exporterons pas directement le rendu final en un seul bloc. En effet, ce dernier sera décomposé en une série d&rsquo;images représentant chacune des données spécifiques : profondeur, normales, couleur, etc. Sous cette forme, il sera possible de composer l&rsquo;arrière-plan avec ce que la caméra filme en temps réel. Sans intervention supplémentaire de la part de l&rsquo;utilisateur, les deux mondes seront alors fusionnés de manière quasi-indiscernable : ils s&rsquo;occulteront l&rsquo;un l&rsquo;autre naturellement et leur éclairage sera uniforme et cohérent.</p>
-<p><img alt="Diagramme illustrant le fonctionnement général de OpenRE" src="/projects/open_re/images/OpenRE_diagram.webp"></p>
+<p><img src="/projects/open_re/images/OpenRE_diagram.webp" alt="Diagramme illustrant le fonctionnement général de OpenRE"></p>
 <p>Évidemment, il serait trop fastidieux d&rsquo;effectuer toutes ces étapes à la main pour tout point de vue à chaque fois qu&rsquo;on bouge un fauteil ou qu&rsquo;on change la couleur du tapis. Pour que la technologie soit exploitable, OpenRE devra être capable d&rsquo;automatiser tout cela.</p>
 <h3 id="4-limitations-">4. Limitations :</h3>
 <p>L&rsquo;implémentation actuelle présente malheureusement des limitations assez lourdes. En effet, je bypass presque complètement le système de rendu de Godot en m&rsquo;appuyant sur un post-process custom pour incorporer l&rsquo;arrière-plan et rendre les lumières. Cela signifie qu&rsquo;en l&rsquo;état, les fonctionnalités graphiques natives ne sont pas utilisables. Tout doit être réimplémenté dans le shader du post-process. En conséquence, le monde interactif ne bénéficie pour l&rsquo;instant que de :</p>
@@ -287,7 +284,7 @@ stroke-linejoin="round" class="feather feather-home">
 <li><strong>1. Geometry pass :</strong> cette première étape vise à produire une collection de textures qu&rsquo;on appelle le G-Buffer (Geometry Buffer). Ces textures encodent dans leurs canaux RGB des données décrivant les propriétés géométriques de la scène en <em>screen space</em> (position, normal, couleur, etc.).</li>
 <li><strong>2. Deferred shading pass :</strong> pour obtenir l&rsquo;image finale, il suffit alors d&rsquo;accumuler les contributions lumineuses de la scène sur chaque pixel. Ce qui n&rsquo;est pas très compliqué puisque le G-Buffer nous fournit toutes les données nécessaires au calcul en chaque point de l&rsquo;écran.</li>
 </ul>
-<p><img alt="Schéma illustrant le fonctionnement d&rsquo;un deferred renderer" src="/projects/open_re/images/deferred_schema_arrows.opti.webp"></p>
+<p><img src="/projects/open_re/images/deferred_schema_arrows.opti.webp" alt="Schéma illustrant le fonctionnement d&rsquo;un deferred renderer"></p>
 <p>Comme évoqué dans la partie précédente, OpenRE sépare la scène en deux parties distinctes. Pour rendre une frame, on aura donc besoin d&rsquo;un G-Buffer pour chacune de ces parties :</p>
 <ul>
 <li>Le G-Buffer interactif sera construit à la volée dans Godot.</li>
@@ -324,27 +321,27 @@ table th:nth-of-type(3) {
       <tr>
           <td style="text-align: center"><strong>Depth</strong></td>
           <td style="text-align: left">Encode la profondeur de chaque pixel. Permet d&rsquo;assurer une occlusion correcte entre les mondes. La position du pixel dans le monde pourra être déduite de cette donnée et de la position de la caméra. On en aura besoin pour calculer la lumière temps réel.</td>
-          <td style="text-align: center"><img alt="Depth map" src="/projects/open_re/images/D_Depth_square.opti.webp"></td>
+          <td style="text-align: center"><img src="/projects/open_re/images/D_Depth_square.opti.webp" alt="Depth map"></td>
       </tr>
       <tr>
           <td style="text-align: center"><strong>Normal</strong></td>
           <td style="text-align: left">Décrit l&rsquo;orientation des surfaces. Cette donnée interviendra également dans le calcul de l&rsquo;éclairage temps réel.</td>
-          <td style="text-align: center"><img alt="Normal map" src="/projects/open_re/images/D_Normal_square.opti.webp"></td>
+          <td style="text-align: center"><img src="/projects/open_re/images/D_Normal_square.opti.webp" alt="Normal map"></td>
       </tr>
       <tr>
           <td style="text-align: center"><strong>ORM</strong></td>
           <td style="text-align: left">Regroupe des données additionnelles nécessaires au rendu PBR (Ambient Occlusion, Roughness, Metalness).</td>
-          <td style="text-align: center"><img alt="ORM map" src="/projects/open_re/images/D_ORM_square.opti.webp"></td>
+          <td style="text-align: center"><img src="/projects/open_re/images/D_ORM_square.opti.webp" alt="ORM map"></td>
       </tr>
       <tr>
           <td style="text-align: center"><strong>Diverses maps d&rsquo;illumination</strong></td>
           <td style="text-align: left">Informations relatives à la lumière précalculée.</td>
-          <td style="text-align: center"><img alt="Collection de maps d&rsquo;illumination" src="/projects/open_re/images/illuminationMaps.opti.webp"></td>
+          <td style="text-align: center"><img src="/projects/open_re/images/illuminationMaps.opti.webp" alt="Collection de maps d&rsquo;illumination"></td>
       </tr>
   </tbody>
 </table>
 <p>Si vous mangez du G-Buffer tous les matins au p&rsquo;tit dej&rsquo;, vous vous demandez peut-être où est passée la map d&rsquo;albedo ? Ou à quoi correspondent ces fameuses <em>diverses maps d&rsquo;illumination</em> ? Il faut savoir que le modèle de Cycles est plus complexe que ce à quoi le temps réel nous a habitués. La lumière précalculée par path-tracing se compose de neuf maps d&rsquo;illumination différentes. En réalité, l’une de ces maps correspond à l’albedo (un mot compliqué pour dire &ldquo;la couleur d&rsquo;une surface&rdquo;). Mais pour recomposer l’image finale, nous aurons besoin des neuf.</p>
-<p><img alt="Formule de recomposition de l&rsquo;image générée par Cycles" src="/projects/open_re/images/cycle_recompose.opti.webp"></p>
+<p><img src="/projects/open_re/images/cycle_recompose.opti.webp" alt="Formule de recomposition de l&rsquo;image générée par Cycles"></p>
 <p>On pourrait se contenter de n&rsquo;intégrer que l&rsquo;albedo au DG-Buffer. Mais il faudrait alors recalculer tout l&rsquo;éclairage en temps réel côté Godot, ce qui n&rsquo;est pas toujours nécessaire. Les neuf maps sont donc exportées pour permettre une recomposition directe de certaines parties de l&rsquo;image. De cette manière, on conserve la qualité visuelle de Cycles sur ces zones, et on économise (beaucoup) de temps de calcul.</p>
 <h3 id="3-ig-buffer--le-g-buffer-du-monde-interactif">3. IG-Buffer : le G-Buffer du monde interactif</h3>
 <p>Si Godot implémentait un deferred renderer, on pourrait piocher les maps qui nous intéressent directement dans son G-Buffer. Mais malheureusement pour nous, le renderer officiel de Godot est un forward. Il n&rsquo;y a donc pas de G-Buffer.</p>
@@ -374,22 +371,22 @@ table th:nth-of-type(3) {
       <tr>
           <td style="text-align: center"><strong>Depth</strong></td>
           <td style="text-align: left">On utilise la <em>depth_texture</em> fournie par Godot. Elle n&rsquo;est pas rouge comme dans le DG-Buffer, car la valeur est dupliquée dans les 3 canaux. Par contre, elle n&rsquo;a pas l&rsquo;air encodée de la même façon : le clair est proche et le sombre éloigné. Là, c&rsquo;est déjà plus gênant, et on verra dans un devlog dédié que c&rsquo;est en réalité encore pire.</td>
-          <td style="text-align: center"><img alt="Depth map" src="/projects/open_re/images/I_depth_squared.opti.webp"></td>
+          <td style="text-align: center"><img src="/projects/open_re/images/I_depth_squared.opti.webp" alt="Depth map"></td>
       </tr>
       <tr>
           <td style="text-align: center"><strong>Normal</strong></td>
           <td style="text-align: left">Ici, c&rsquo;est la <em>normal_roughness_texture</em> qu&rsquo;on utilise (en ignorant simplement la roughness). Là encore, l&rsquo;encodage est différent. On y reviendra aussi dans un devlog, mais c&rsquo;est moins complexe que pour la depth.</td>
-          <td style="text-align: center"><img alt="Normal map" src="/projects/open_re/images/I_normal_squared.opti.webp"></td>
+          <td style="text-align: center"><img src="/projects/open_re/images/I_normal_squared.opti.webp" alt="Normal map"></td>
       </tr>
       <tr>
           <td style="text-align: center"><strong>ORM</strong></td>
           <td style="text-align: left">Pour celle-ci, Godot ne nous fournit pas ce qu&rsquo;il faut. Un focus sur le bricolage associé aura lui aussi son devlog.</td>
-          <td style="text-align: center"><img alt="ORM map" src="/projects/open_re/images/I_ORM_squared.opti.webp"></td>
+          <td style="text-align: center"><img src="/projects/open_re/images/I_ORM_squared.opti.webp" alt="ORM map"></td>
       </tr>
       <tr>
           <td style="text-align: center"><strong>Albedo</strong></td>
           <td style="text-align: left">Celle-là, c&rsquo;est la plus facile. On affiche directement la <em>screen_texture</em> de Godot.</td>
-          <td style="text-align: center"><img alt="Albedo" src="/projects/open_re/images/I_albedo_squared.opti.webp"></td>
+          <td style="text-align: center"><img src="/projects/open_re/images/I_albedo_squared.opti.webp" alt="Albedo"></td>
       </tr>
   </tbody>
 </table>

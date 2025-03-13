@@ -40,14 +40,28 @@ void main(elt, i) {
 
 En effet, quand on implémente un shader, on n'a pas access au tableau lui même. On doit raisonner sur chaque élement pris indivisuellement, en isolation de tous les autres. Tout ce qu'on connait en plus de l'élement lui même, c'est sa position dans le tableau (J'avais bien dit que c'était bizare !).
 
-Croyez le ou non, la couleur de chaque pixel de votre écran est calculée de cette manière. C'est une gymnastique un peu particulière, mais on s'y fait assez vite. Maintent, pourquoi est ce qu'on a besoin de faire un truc aussi tordu ? On va voire ça dans la section suivante.
+Croyez le ou non, la couleur de chaque pixel de votre écran est calculée de cette manière. C'est une gymnastique un peu particulière, mais on s'y fait assez vite. Maintent, pourquoi est ce qu'on a besoin de faire un truc aussi tordu ?
 
-## II. CPU vs GPU, pourquoi tant de haine ?
+## II. CPU vs GPU ?
+Pour répondre à cette question, on va devoir se pencher sur les différences d'architecture entre les 2 types unité de calcule.
 
+Un CPU contient relativement peu de coeurs (entre 2 et 10 la plupart du temps). Mais ce sont des coeurs extrèmement puissant et surtout très agiles car intédpendants les un des autres. Chacun est capable de dérouler sa propre séquence d'instructions dans son coin. Un CPU sera donc très bon pour effectuer plusieurs tâches complexe et différentes en même temps.
 
-<explication de comment le GPU fonctionnent>
+En comparaison, un coeur de GPU est con comme une pelle. Non seulement il est beaucoup moin puissant, mais surtout il fonctionne sur le model SIMT (Single Instrcuction, Multiple Threads). Ca veut dire que les coeurs d'un GPU ne sont pas capable d'executer simultanement des instructions différentes. A chaque tick d'horloge, tout le monde tape dans la même.
 
-## III.Le pipeline graphique
+"Mais dit donc Jamy ! Si tous les coeurs executent la même instruction, ils vont tous trouver la même chose ! Ca n'a aucun sens !" 
+
+Et bien non Fred ! Les coeurs executent bien tous la même instruction, mais ils le font sur des données différentes (les élements du tableau vous vous rappelez ?). Ils peuvent donc quand même trouver des résultats différents.
+
+"Je vois ! Mais dans le cas d'un branchement conditiannel (un if/then/else), on est d'accord que les coeurs qui passent côté *true* ne peuvent pas pointer sur la meme instruction que ceux qui passent côté *false*. Ca marche pas ton truc !". 
+
+Tu as raison Fred, mais il y a une astuce ! En réalité les 2 cotés du if sont exécutées l'un après l'autre. Et que font les coeurs qui ne sont pas concernés par la branche courante ? Et bien ils attandent. C'est la raison pour laquelle il faut à tout prix éviter les branches dans le code source d'un shader. Car à chaque fois qu'on le fait, on met des coeurs au chômage.
+
+Cette architecture est donc assez contrainante, mais elle permet au GPU de faire enormement d'optimisation qu'un CPU ne peut pas faire, car il gère un cas plus général. Mais surtout, cela permet de gérer facilement non pas 8, non pas 32, non pas 256, mais plusieurs milliers de coeurs au sein de la même unité de calcule.
+
+En consequence, la ou le CPU est bon le multitasking, le GPU excelle ...
+
+## III. Le pipeline graphique
 En pratique, il existe plusieurs types de shaders. Chacun intervenant à une étape précise de ce qu'on appelle le pipeline graphique. A chaque drawcall, c'est à dire (plus ou moins) pour chaque mesh visible dans une frame, ce pipeline va être traversé. La géométrie est injectée en entrée sous forme de triplets de vertex (des triangles donc), qui vont être traités étape par étape jusqu'à devenir des pixels affichés à l'écran.
 
 ![Diagramme représentant le pipline graphique](images/gfx_pipeline.opti.webp)
@@ -68,7 +82,7 @@ Les élements traités par le vertex shader sont les vertex du mesh qui traverse
 
 Imaginez que la caméra, c'est la navette de futurama. Ce n'est pas elle qui bouge, mais le vertex shader qui s'arange pour déplacer le monde autour d'elle et l'aligner dans le bon axe. Une fois que c'est fait, le monde est "applati" dans le plan de l'écran.
 
-Je ne vais pas détailler les mathématiques engagés dans la maneuvre parce que c'est un article de vulgarisation (ouai c'est ça... dit plutôt que t'as peur de te planter et de passer pour un glandu !). Mais retenez que ce sont des multiplications de matrice et qu'il s'agit d'une opération hautement paralellisable. Un GPU peut en avaler des caisses entière sans soursiller.
+Je ne vais pas détailler les mathématiques engagés dans la maneuvre parce que c'est un article de vulgarisation (ouai c'est ça... dit plutôt que t'as peur de te planter et de passer pour un glandu !). Mais retenez que ce sont des multiplications de matrice et qu'il s'agit d'une opération hautement paralellisable. Un GPU peut donc en avaler des caisses entière sans soursiller.
 
 Notez qu'au dela de ces changements d'espace, le Vertex Shader est l'endroit parfait pour implémenter des effets du type :
 - inflation/retractation
@@ -83,13 +97,17 @@ A une époque la lumière aussi était calculé dans le Vertex Shader pour des q
 ![Comparaison du Vertex Lighting et du Pixel Lighting](images/)
 
 ### 2. La rasterisation
-La rasterisation est une étape non programable du pipeline. Mais il est quand même important de comprendre ce que c'est car elle se place entre le Vertex Shader et le Fragment Shader. Il s'agit d'un procédé qui consiste à discrétiser une image vectoriel. Dit autrement, on va prendre nos joli triangle tout lisses, dont les vertex viennent d'être projetés dans l'espace écran (par le Vertex Shader), et on va en faire un amas de pixels qu'on appelle des fragments. 
+La rasterisation est une étape non programable du pipeline. Mais il est quand même important de comprendre ce que c'est car elle se place entre le Vertex Shader et le Fragment Shader.
+
+Il s'agit d'un procédé qui consiste à discrétiser une image vectoriel. Dit autrement, on va prendre nos joli triangle tout lisses, dont les vertex viennent d'être projetés dans l'espace écran (par le Vertex Shader), et on va en faire un amas de pixels qu'on appelle des fragments. 
 
 ![illustration du procédé de rasterisation](images/)
 
-Ces fragments sont ensuite injectés au Fragment Shader (vous commencez à comprendre le pattern de nomage). Mais ce n'est pas tout. Il y a un petit détail que j'ai omis de mentionner dans la partie précédente. Les vertex protent des attributs en plus de leur coordonnée : une couleur et ce qu'on appele des uv (qu'on utilise notament pour appliquer les textures mais c'est completement hors scope pour cet article).
+Ces fragments sont ensuite injectés au Fragment Shader (vous commencez à comprendre le pattern de nomage). 
 
-Il est important de noter que lors de la rasterisation, une interpolation de ces attributs est affectée aux framents générés.
+Mais ce n'est pas tout. Il y a un petit détail que j'ai omis de mentionner dans la partie précédente. Les vertex protent des attributs en plus de leur coordonnée : une couleur et ce qu'on appele des uv (qu'on utilise notament pour appliquer les textures mais c'est completement hors scope pour cet article).
+
+Il est important de noter que lors de la rasterisation, une interpolation de ces attributs est effectuée pour chaque frament généré.
 
 ![illustration de l'interpolation des attributs](images/)
 
