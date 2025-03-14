@@ -53,7 +53,7 @@
         },
         "datePublished": "2025-03-12",
         "description": "Article de vulgarisation expliquant ce qu'est un shader",
-        "wordCount":  1682 ,
+        "wordCount":  1842 ,
         "mainEntityOfPage": "True",
         "dateModified": "2025-03-12",
         "image": {
@@ -216,7 +216,6 @@ stroke-linejoin="round" class="feather feather-home">
         <li><a href="#3-fragment-shader">3. Fragment Shader</a></li>
       </ul>
     </li>
-    <li><a href="#iv-blue-screen-of-welcome">IV. Blue Screen of Welcome</a></li>
     <li><a href="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
@@ -296,14 +295,19 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Il est important de noter que lors de la rasterisation, une interpolation de ces attributs est effectuée pour chaque frament généré.</p>
 <p><img alt="illustration de l&rsquo;interpolation des attributs" src="images/"></p>
 <h3 id="3-fragment-shader">3. Fragment Shader</h3>
-<p>Le fragment shader c&rsquo;est la dernière étape avant que le pixel soit imprimé à l&rsquo;écran. Son job est de déterminer la couleur finale de ce pixel.</p>
-<h2 id="iv-blue-screen-of-welcome">IV. Blue Screen of Welcome</h2>
-<Hello world>
+<p>Le fragment shader c&rsquo;est la dernière étape avant que le pixel soit imprimé à l&rsquo;écran. Son job est de déterminer la couleur finale de ce pixel à partir des attributs des vertex interpolés lors de la rasterisation :</p>
+<ul>
+<li>coordonée : simplement l&rsquo;endroit où se trouve le pixel sur l&rsquo;écran</li>
+<li>normales : l&rsquo;orientation de la face associées au vertex</li>
+<li>vertex couleur : je pense que cet attribut est le relicat d&rsquo;une aire ou la puissance ne permetait pas de sampler des textures pour chaque pixels. Aujourd&rsquo;hui, c&rsquo;est un attribut qu&rsquo;on utilise ne manière détournée pour que les artistes encodent d&rsquo;autres informations dans leurs models.</li>
+<li>uv : c&rsquo;est une coordonée 2D utilisée la plupart du temps pour sampler une texture. On en a généralement plusieurs (l&rsquo;uv0, l&rsquo;uv1, l&rsquo;uv2&hellip;). Comme le vertex color, ils sont aussi utilisé de manière détournée parfois.</li>
+</ul>
+<p>Dans ce shader on peut implémenter différentes de chose. Notament le calcule de la lumière et des post-process. Mais c&rsquo;est un sujet un peu avancé. Si j&rsquo;écris une suite à cet article, je les traiterai certainement. Mais pour l&rsquo;instant retenez que c&rsquo;est dans ce shader que ça se passe.</p>
 <h2 id="conclusion">Conclusion</h2>
-<p>Dans cet article je fais pas mal de racourcis et d&rsquo;approximations. Je fais également l&rsquo;impasse sur des sujets importants (les uniforms, les varyings &hellip;). L&rsquo;objectif n&rsquo;étant pas de vous apprendre à écrire des shaders, mais de vous donner une vision global de ce que c&rsquo;est.</p>
+<p>Dans cet article je fais pas mal de racourcis et d&rsquo;approximations. Je fais également l&rsquo;impasse sur des sujets importants (les uniforms, les varyings &hellip;). L&rsquo;objectif n&rsquo;étant pas de vous apprendre à écrire des shaders, mais de vous donner une vision global et rapide de ce que c&rsquo;est.</p>
 <p>Si vous souhaitez approfondir le sujet, je vous conseille <a href="https://learnopengl.com/">Learn OpenGL</a>. C&rsquo;est très complet et bien expliqué. Quand je cherche une information, c&rsquo;est le premier endroit où je regarde. Et très souvent je n&rsquo;ai pas besoin d&rsquo;aller ailleurs.</p>
-<p>Vous pouvez aussi apprendre directement dans un moteur de jeu. Ainsi vous pourrez vous concentrer sur vos shaders sans avoir à vous occuper de la partie CPU du <em>renderer</em> (qui sera déjà implémentée par le moteur). Je n&rsquo;ai pas de ressource à vous pointer car je n&rsquo;ai pas appris comme ça, mais je suis sur qu&rsquo;elles existent. Et c&rsquo;est souvent plus simple de prendre les problèmes un par un.</p>
-<p>Sur ce, j&rsquo;éspère que vous aurez trouvé ces explications utiles et qu&rsquo;elles vous aideront à aborder plus facilement certains passages de mes futurs articles.</p>
+<p>Vous pouvez aussi apprendre directement dans un moteur de jeu. Ainsi vous pourrez vous concentrer sur vos shaders sans avoir à vous occuper de la partie CPU du <em>renderer</em> (qui sera déjà implémentée par le moteur). Je n&rsquo;ai pas de ressource à vous pointer car je n&rsquo;ai pas appris comme ça, mais je suis sur qu&rsquo;elles existent. Et c&rsquo;est souvent plus simple de considérer les problèmes un par un.</p>
+<p>Sur ce, j&rsquo;éspère que vous aurez trouvé ces explications utiles et qu&rsquo;elles vous aideront à aborder plus facilement certains passages de mes futurs articles. A bientôt.</p>
 
             </div>
         </article>

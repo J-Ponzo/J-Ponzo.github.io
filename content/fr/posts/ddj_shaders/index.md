@@ -112,18 +112,20 @@ Il est important de noter que lors de la rasterisation, une interpolation de ces
 ![illustration de l'interpolation des attributs](images/)
 
 ### 3. Fragment Shader
-Le fragment shader c'est la dernière étape avant que le pixel soit imprimé à l'écran. Son job est de déterminer la couleur finale de ce pixel.
+Le fragment shader c'est la dernière étape avant que le pixel soit imprimé à l'écran. Son job est de déterminer la couleur finale de ce pixel à partir des attributs des vertex interpolés lors de la rasterisation :
 
-## IV. Blue Screen of Welcome
+- coordonée : simplement l'endroit où se trouve le pixel sur l'écran
+- normales : l'orientation de la face associées au vertex
+- vertex couleur : je pense que cet attribut est le relicat d'une aire ou la puissance ne permetait pas de sampler des textures pour chaque pixels. Aujourd'hui, c'est un attribut qu'on utilise ne manière détournée pour que les artistes encodent d'autres informations dans leurs models.
+- uv : c'est une coordonée 2D utilisée la plupart du temps pour sampler une texture. On en a généralement plusieurs (l'uv0, l'uv1, l'uv2...). Comme le vertex color, ils sont aussi utilisé de manière détournée parfois.
 
-
-<Hello world>
+Dans ce shader on peut implémenter différentes de chose. Notament le calcule de la lumière et des post-process. Mais c'est un sujet un peu avancé. Si j'écris une suite à cet article, je les traiterai certainement. Mais pour l'instant retenez que c'est dans ce shader que ça se passe.
 
 ## Conclusion
-Dans cet article je fais pas mal de racourcis et d'approximations. Je fais également l'impasse sur des sujets importants (les uniforms, les varyings ...). L'objectif n'étant pas de vous apprendre à écrire des shaders, mais de vous donner une vision global de ce que c'est.
+Dans cet article je fais pas mal de racourcis et d'approximations. Je fais également l'impasse sur des sujets importants (les uniforms, les varyings ...). L'objectif n'étant pas de vous apprendre à écrire des shaders, mais de vous donner une vision global et rapide de ce que c'est.
 
 Si vous souhaitez approfondir le sujet, je vous conseille [Learn OpenGL](https://learnopengl.com/). C'est très complet et bien expliqué. Quand je cherche une information, c'est le premier endroit où je regarde. Et très souvent je n'ai pas besoin d'aller ailleurs. 
 
-Vous pouvez aussi apprendre directement dans un moteur de jeu. Ainsi vous pourrez vous concentrer sur vos shaders sans avoir à vous occuper de la partie CPU du *renderer* (qui sera déjà implémentée par le moteur). Je n'ai pas de ressource à vous pointer car je n'ai pas appris comme ça, mais je suis sur qu'elles existent. Et c'est souvent plus simple de prendre les problèmes un par un.
+Vous pouvez aussi apprendre directement dans un moteur de jeu. Ainsi vous pourrez vous concentrer sur vos shaders sans avoir à vous occuper de la partie CPU du *renderer* (qui sera déjà implémentée par le moteur). Je n'ai pas de ressource à vous pointer car je n'ai pas appris comme ça, mais je suis sur qu'elles existent. Et c'est souvent plus simple de considérer les problèmes un par un.
 
-Sur ce, j'éspère que vous aurez trouvé ces explications utiles et qu'elles vous aideront à aborder plus facilement certains passages de mes futurs articles.
+Sur ce, j'éspère que vous aurez trouvé ces explications utiles et qu'elles vous aideront à aborder plus facilement certains passages de mes futurs articles. A bientôt.
