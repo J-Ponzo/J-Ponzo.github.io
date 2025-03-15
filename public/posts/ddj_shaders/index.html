@@ -53,7 +53,7 @@
         },
         "datePublished": "2025-03-12",
         "description": "Article de vulgarisation expliquant ce qu'est un shader",
-        "wordCount":  1842 ,
+        "wordCount":  2084 ,
         "mainEntityOfPage": "True",
         "dateModified": "2025-03-12",
         "image": {
@@ -214,6 +214,7 @@ stroke-linejoin="round" class="feather feather-home">
         <li><a href="#1-vertex-shader">1. Vertex Shader</a></li>
         <li><a href="#2-la-rasterisation">2. La rasterisation</a></li>
         <li><a href="#3-fragment-shader">3. Fragment Shader</a></li>
+        <li><a href="#4-post-process">4. Post-Process</a></li>
       </ul>
     </li>
     <li><a href="#conclusion">Conclusion</a></li>
@@ -222,12 +223,12 @@ stroke-linejoin="round" class="feather feather-home">
     </details>
             <div class="page-content">
                 <h2 id="introduction">Introduction</h2>
-<p>Dans ce lightning article je vais essayer de demistifier un peu le concepte de Shader. En effet, j&rsquo;ai quelques amis qui ont l&rsquo;extrème gentillesse de crash-tester mes brouillons pour me faire des retours avant que je ne les publient (Salut à vous ! Et merci pour ce que vous faites, ça m&rsquo;aide beaucoup !). La plupart sont d&rsquo;exellents programmeurs. Pourtant, quand je mets un bout de code en <code>glsl</code> dans un article, bien souvent ça coince.</p>
-<p>En réalité , programmer un shader n&rsquo;est pas plus difficile que de programmer n&rsquo;importe quoi d&rsquo;autre. C&rsquo;est juste : &ldquo;bizare quand on a pas l&rsquo;habitude&rdquo;. Dans ce blog je cherche à m&rsquo;adresser à un publique assez large. Pas uniquement à des programmeurs, et encore moins à des programmeurs graphiques spécifiquement. J&rsquo;aimerais donc que cet asspect ne soit plus un freint.</p>
-<p>Pour cela, je vais tanter de vous donner quelques armes pour que vous soyez pas déroutés par le concepte. Ca ne fera pas de vous un Gourou du shading (je n&rsquo;en suis d&rsquo;ailleurs pas un moi même), mais j&rsquo;espère que ça contribura à rendre mes articles plus accessibles.</p>
+<p>Avant de publier mes articles, je fais des crash tests de mes brouillons sur des amis (Salut à vous ! Et merci pour ce que vous faites, ça m&rsquo;aide enormement !). La plupart sont des programmeurs aguerris. Pourtant, quand je glisse un bout de glsl quelque part pour illustrer un propos, j&rsquo;ai pu remarquer que ceux qui n&rsquo;on jamais manipuler de shaders ne sont pas très à l&rsquo;aise. J&rsquo;ai donc jugé approprié d&rsquo;écrire un petit article dans le but de demistifier le sujet.</p>
+<p>Programmer un shader, ce n&rsquo;est pas plus difficile que de programmer n&rsquo;importe quoi d&rsquo;autre. Mais il est vrai que ça peut être assez déroutant quand on a pas le contexte. Dans ce blog je cherche à m&rsquo;adresser à un publique assez large. Pas uniquement à des programmeurs professionnels, et encore moins à des programmeurs graphiques spécifiquement. J&rsquo;aimerais donc qu&rsquo;on arrive à casser ce mur ensemble (promis, il est vraiment pas si épais).</p>
+<p>Pour cela, je vais vous donner quelques armes pour que vous ne soyez plus intimidés par le concepte. Ca ne fera pas de vous un Gourou du shading (je suis d&rsquo;ailleurs loin d&rsquo;en être un), mais j&rsquo;espère que ça contribura à rendre mes articles plus accessibles.</p>
 <h2 id="i-quest-ce-quun-shader-">I. Qu&rsquo;est ce qu&rsquo;un shader ?</h2>
-<p>Un shader c&rsquo;est tout simplement un programme. Il existe plusieurs langages haut-niveau pour les écrire. Les principaux sont glsl et hlsl (mais on peut trouver des choses plus exotiques). Une fois compilé, le shader peut être exécuté par une unité de calcule. Sauf que cette fois, cette unité de calcule, ce n&rsquo;est pas un CPU, mais un GPU.</p>
-<p>Jusqu&rsquo;ici on est pas trop dépaysé. Mais enfillez vos gants et allumez votre frontale, c&rsquo;est maintenant qu&rsquo;on descents au fond du gouffre. Immaginez un programme CPU dont la mission est de traiter les éléments d&rsquo;un tableau. On aurait quelque chose qui ressemble à ça :</p>
+<p>Un shader c&rsquo;est tout simplement un programme. Il existe plusieurs langages haut-niveau pour les écrire. Les principaux sont glsl et hlsl (mais on peut trouver des choses plus exotiques). Une fois compilé, le shader peut être exécuté par une unité de calcule. Sauf que dans notre cas, cette unité de calcule, ce n&rsquo;est pas un CPU, mais un GPU.</p>
+<p>Jusqu&rsquo;ici on est pas trop dépaysé. Mais ça va bientôt changer. Immaginez un programme CPU dont la mission est de traiter les éléments d&rsquo;un tableau. On aurait quelque chose qui ressemble à ça :</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="c1">// Point d&#39;entrée du programme
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">array</span><span class="p">[])</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="nf">foreach</span> <span class="p">(</span><span class="n">elt</span> <span class="n">in</span> <span class="n">array</span><span class="p">)</span> <span class="p">{</span>
@@ -245,21 +246,40 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">elt</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="c1">// Traitement de elt
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
-</span></span></code></pre></div><p>En effet, quand on écrit un shader, on n&rsquo;a pas access au tableau lui même. On doit raisonner sur chaque élement pris indivisuellement, en isolation de tous les autres. Tout ce qu&rsquo;on connait c&rsquo;est l&rsquo;élement lui même, et eventuellement sa position dans le tableau si on a de la chance (J&rsquo;avais bien dit que c&rsquo;était bizare !).</p>
-<p>Croyez le ou non, la couleur de chaque pixel de votre écran est calculée de cette manière. C&rsquo;est une gymnastique un peu particulière, mais on s&rsquo;y fait assez vite. Maintent, pourquoi est ce qu&rsquo;on a besoin de faire un truc aussi tordu ?</p>
+</span></span></code></pre></div><p>En effet, quand on écrit un shader, on n&rsquo;a pas access au tableau lui même. On doit raisonner sur chaque élement pris indivisuellement, en isolation de tous les autres. Tout ce qu&rsquo;on connait c&rsquo;est l&rsquo;élement courrant, et eventuellement sa position dans le tableau si on a de la chance.</p>
+<p>Croyez le ou non, la couleur de chaque pixel de votre écran est calculée selon ce paradigme. C&rsquo;est une gymnastique un peu particulière, mais on s&rsquo;y fait assez vite. Maintenant, pourquoi est ce qu&rsquo;on a eu besoin d&rsquo;inventer un truc aussi tordu ?</p>
 <h2 id="ii-cpu-vs-gpu">II. CPU vs GPU</h2>
-<p>Pour répondre à cette question, on va devoir se pencher sur les différences d&rsquo;architecture entre les 2 types unité de calcule.</p>
-<p>Un CPU contient relativement peu de coeurs (entre 2 et 10 la plupart du temps). Mais ce sont des coeurs extrèmement puissant et surtout très agiles car intédpendants les un des autres. Chacun est capable de dérouler sa propre séquence d&rsquo;instructions dans son coin. Un CPU sera donc très bon pour effectuer plusieurs tâches complexe et différentes en même temps.</p>
-<p>En comparaison, un coeur de GPU est con comme une pelle. Non seulement il est beaucoup moin puissant, mais surtout il fonctionne sur le model SIMT (Single Instrcuction, Multiple Threads). Ca veut dire que les coeurs d&rsquo;un GPU ne sont pas capable d&rsquo;executer simultanement des instructions différentes. A chaque tick d&rsquo;horloge, tout le monde tape dans la même.</p>
-<p>&ldquo;Mais dit donc Jamy ! Si tous les coeurs executent la même instruction, ils vont tous trouver la même chose ! Ca n&rsquo;a aucun sens !&rdquo;</p>
-<p>Et bien non Fred ! Les coeurs executent bien tous la même instruction, mais ils le font sur des données différentes (les élements du tableau vous vous rappelez ?). Ils peuvent donc quand même trouver des résultats différents.</p>
-<p>&ldquo;Je vois ! Mais dans le cas d&rsquo;un branchement conditiannel (un if/then/else), on est d&rsquo;accord que les coeurs qui passent côté <em>true</em> ne peuvent pas pointer sur la meme instruction que ceux qui passent côté <em>false</em>. Ca marche pas ton truc !&rdquo;.</p>
-<p>Tu as raison Fred, mais il y a une astuce ! En réalité les 2 cotés du if sont exécutées l&rsquo;un après l&rsquo;autre par tous les coeurs. Et que font les coeurs qui ne sont pas concernés par la branche courante ? Et bien c&rsquo;est simple&hellip; <strong>RIEN</strong>&hellip; ils attandent&hellip; Et c&rsquo;est la raison pour laquelle il faut à tout prix éviter les branches dans un shader.</p>
-<p>Cette architecture est donc assez contrainante, mais elle permet au GPU de faire des optimisations qu&rsquo;un CPU, plus généraliste, ne pourrait pas faire. Mais surtout, cela permet de gérer facilement non pas 8, non pas 32, non pas 128&hellip; mais bien plusieurs milliers de coeurs au sein de la même unité de calcule.</p>
-<p>En consequence, là où le CPU est bon sur du multitasking, le GPU lui excelle dans l&rsquo;art d&rsquo;executer en parallele un nombre astronomique de petites opérations similaires. Et il se trouve que c&rsquo;est exactement ce dont on a besoin pour traiter des images.</p>
+<p>Pour répondre à cette question, on va devoir se pencher sur les différences architecturelles entre ces 2 types d&rsquo;unités de calcule.</p>
+<p>Un CPU contient relativement peu de coeurs (entre 4 et 10 la plupart du temps). Mais ce sont des coeurs extrèmement puissant et surtout très agiles car indépendants les un des autres. Chacun est capable de dérouler sa propre séquence d&rsquo;instructions dans son coin. C&rsquo;est le modèle MIMD (Multiple Instrtuction, Multiple Data). Un CPU est donc très bon pour effectuer plusieurs tâches complexe et différentes en même temps.</p>
+<p><img alt="Même illustrant de manière humoristique les difference entre les coeurs CPU et GPU" src="/posts/ddj_shaders/images/meme_winnie_cpu_vs_gpu.opti.webp">
+<em>Même illustrant de manière humoristique les difference entre les coeurs CPU et GPU</em></p>
+<p>En comparaison, un coeur de GPU est con comme une pelle. Non seulement il est beaucoup moin puissant, mais surtout il fonctionne sur le model SIMD (Single Instrcuction, Multiple Data). Ca veut dire que les coeurs d&rsquo;un GPU ne sont pas capable d&rsquo;executer simultanement des instructions différentes. A chaque tick d&rsquo;horloge, tout le monde tape dans la même.</p>
+<img alt="Portrait de Fred de c'est pas sorcier" src="./images/Fred.opti.webp" style="float: right; margin-left: 20px; max-width: 128px;" />
+<p>
+Mais dit donc Jamy ! Si tous les coeurs executent les même instruction, ils vont tous fournir le même résultat ! Ca n'a aucun sens !
+</p>
+<br>
+<img alt="Portrait de Jamy de c'est pas sorcier" src="./images/Jamy.opti.webp" style="float: left; margin-right: 20px; max-width: 128px; clear: both;" />
+<p>
+Et bien, pas tout à fait ! Les coeurs executent bien tous la même instruction, mais ils le font sur des données différentes (les élements du tableau vous vous rappelez ?). Ils peuvent donc quand même avoir des sorties différentes.
+</p>
+<br>
+<img alt="Portrait de Fred de c'est pas sorcier" src="./images/Fred.opti.webp" style="float: right; margin-left: 20px; max-width: 128px;" />
+<p>
+D'accord ! Mais comment ça marche pour les branchement conditiannel ? les coeurs qui passent dans le if ne peuvent pas pointer sur la meme instruction que ceux qui passent dans le else. Ca marche pas ton truc !
+</p>
+<br>
+<img alt="Portrait de Jamy de c'est pas sorcier" src="./images/Jamy.opti.webp" style="float: left; margin-right: 20px; max-width: 128px; clear: both;" />
+<p>
+Tu as raison Fred, mais il y a une astuce ! En réalité les 2 cotés sont évalués sequenciellement par tous les coeurs. Et les coeurs non concernés par l'instruction courante ? Et bien c'est simple... ils ne font rien... ils attandent...
+</p>
+<br>
+<p>Voilà pourquoi on dit qu&rsquo;il faut à tout prix éviter les branches dans le code d&rsquo;un shader. A chaque fois qu&rsquo;on en fait une, on met des coeurs au chômage. Cette architecture est donc assez contrainante, mais elle permet à un GPU de gérer non pas 8, mais plusieurs milliers de coeurs.</p>
+<p>En résumé, là où le CPU est bon pour gérer un petit nombre de tâches complexes et différentes, le GPU lui excelle dans l&rsquo;art d&rsquo;executer en parallele un très grand nombre de petites opérations similaires. Et il se trouve que c&rsquo;est exactement ce dont on a besoin pour traiter des images.</p>
 <h2 id="iii-le-pipeline-graphique">III. Le pipeline graphique</h2>
-<p>En pratique, il existe plusieurs types de shaders. Chacun intervenant à une étape précise de ce qu&rsquo;on appelle le pipeline graphique. A chaque drawcall, c&rsquo;est à dire (plus ou moins) pour chaque mesh visible dans une frame, ce pipeline va être traversé. La géométrie est injectée en entrée sous forme de triplets de vertex (des triangles donc). Ils vont être traités étape par étape jusqu&rsquo;à devenir des pixels affichés à l&rsquo;écran.</p>
-<p><img alt="Diagramme représentant le pipline graphique" src="/posts/ddj_shaders/images/gfx_pipeline.opti.webp"></p>
+<p>En pratique, il existe plusieurs types de shaders. Chacun intervenant à une étape précise de ce qu&rsquo;on appelle le pipeline graphique. A chaque drawcall, c&rsquo;est à dire (plus ou moins) pour chaque mesh visible dans une frame, ce pipeline va être traversé. La géométrie est injectée en entrée sous forme de triplets de vertex (des triangles donc). Ces dernier vont ensuite être traités étape par étape jusqu&rsquo;à devenir des pixels affichés à l&rsquo;écran.</p>
+<p><img alt="Diagramme représentant le pipline graphique" src="/posts/ddj_shaders/images/gfx_pipeline.opti.webp">
+<em>Diagramme du pipline graphique</em></p>
 <p>Dans ce pipeline, il y a 2 types d&rsquo;étapes :</p>
 <ul>
 <li>Les fixed function en jaune pâle : cablées en dur dans le GPU (et donc <strong>très</strong> efficaces)</li>
@@ -269,44 +289,77 @@ stroke-linejoin="round" class="feather feather-home">
 <h3 id="1-vertex-shader">1. Vertex Shader</h3>
 <p>Les élements traités par le vertex shader sont les vertex du mesh qui traverse le pipeline. Ils sont exprimés dans le référentiel local du mesh. L&rsquo;utilité première du vertex shader c&rsquo;est d&rsquo;appliquer des  changements d&rsquo;espace au vertex pour qu&rsquo;il se retrouve tour à tour dans :</p>
 <ul>
+<li>
+<ol>
 <li>le referentiel du monde</li>
+</ol>
+</li>
+<li>
+<ol start="2">
 <li>le reférentiel de la caméra</li>
+</ol>
+</li>
+<li>
+<ol start="3">
 <li>l&rsquo;espace écran.</li>
+</ol>
+</li>
 </ul>
-<p><img alt="Schéma des différents changements d&rsquo;espace" src="images/"></p>
 <p>Imaginez que la caméra, c&rsquo;est la navette de futurama. Ce n&rsquo;est pas elle qui bouge, mais le vertex shader qui s&rsquo;arange pour déplacer le monde autour d&rsquo;elle et l&rsquo;aligner dans le bon axe. Une fois que c&rsquo;est fait, le monde est &ldquo;applati&rdquo; dans le plan de l&rsquo;écran.</p>
-<p>Je ne vais pas détailler les mathématiques engagés dans la maneuvre parce que c&rsquo;est un article de vulgarisation (ouai c&rsquo;est ça&hellip; dit plutôt que t&rsquo;as peur de te planter et de passer pour un glandu !). Mais retenez que ce sont des multiplications de matrice : une opération qui peut être découpée en une multitude de petites opérations identiques. Et comme on vient de le voire, un GPU est taillé pour en avaler des caisses entière sans soursiller.</p>
-<p>Notez qu&rsquo;au dela de ces changements d&rsquo;espace, le Vertex Shader est l&rsquo;endroit parfait pour implémenter des effets du type :</p>
-<ul>
-<li>inflation/retractation</li>
-<li>morphing</li>
-<li>distortion</li>
-<li>vertex animation</li>
-</ul>
-<p><img alt="Illustration de differents effets" src="images/"></p>
+<p>Je ne vais pas détailler les mathématiques engagés dans la maneuvre parce que c&rsquo;est un article de vulgarisation (ouai c&rsquo;est ça&hellip; dit plutôt que t&rsquo;as peur de te planter et de passer pour un imbécile !). Mais retenez que ce sont des multiplications de matrice : une grosse opération qui peut être découpée en une multitude de petites opérations identiques. Et comme on l&rsquo;a vu dans la partie précédente, le GPU et son model SIMD sont taillés pour en avaler des caisses entière sans soursiller.</p>
+<p>Notez qu&rsquo;au dela de ces changements d&rsquo;espace, le Vertex Shader est l&rsquo;endroit parfait pour appliquer des déformations au mesh. Il intervient donc logiquement dans l&rsquo;implémentation de techniques comme le morph target ou le skeletal animation.</p>
+<video width="50%" controls muted loop playsinline autoplay>
+    <source src="videos/morph_skeletal.mp4" type="video/mp4">
+    Your browser does not support the video tag.  
+</video>
+<p><em>Animation d&rsquo;un viseage à base de morph targets et d&rsquo;animation squeletale dans JMonkeyEngine</em></p>
 <p>A une époque la lumière aussi était calculé dans le Vertex Shader pour des questions de performences. On appel ça le Vertex Lighting. Aujourd&rsquo;hui les GPU sont largement assez puissant pour calculer la lumière au niveau du pixel. Mais le Vertex Lighting est toujours utilisé en tant que parti pris artistique (ou si on fait un portage grille-pain).</p>
-<p><img alt="Comparaison du Vertex Lighting et du Pixel Lighting" src="images/"></p>
+<p><img alt="Comparaison du Vertex Lighting et du Pixel Lighting" src="/posts/ddj_shaders/images/gif_vertex_vs_p%C3%AExel_lighting.webp">
+<em>Screen de Sillent Hill 2 illustrant la difference visuelle entre le Vertex Lighting (PS2) et le Pixel Lighting (XBox)</em></p>
 <h3 id="2-la-rasterisation">2. La rasterisation</h3>
 <p>La rasterisation est une étape non programable du pipeline. Mais il est quand même important de comprendre ce que c&rsquo;est car elle se place entre le Vertex Shader et le Fragment Shader.</p>
-<p>Il s&rsquo;agit d&rsquo;un procédé qui consiste à discrétiser une image vectoriel. Dit autrement, on va prendre nos joli triangle tout lisses, dont les vertex viennent d&rsquo;être projetés dans l&rsquo;espace écran (par le Vertex Shader), et on va en faire un amas de pixels qu&rsquo;on appelle des fragments.</p>
-<p><img alt="illustration du procédé de rasterisation" src="images/"></p>
-<p>Ces fragments sont ensuite injectés en entrée du Fragment Shader (vous commencez à comprendre le pattern de nomage).</p>
-<p>Mais ce n&rsquo;est pas tout. Il y a un petit détail que j&rsquo;ai omis de mentionner dans la partie précédente. Les vertex protent des attributs en plus de leur coordonnée : une couleur et ce qu&rsquo;on appele des uv (qu&rsquo;on utilise notament pour appliquer les textures mais c&rsquo;est completement hors scope pour cet article).</p>
-<p>Il est important de noter que lors de la rasterisation, une interpolation de ces attributs est effectuée pour chaque frament généré.</p>
-<p><img alt="illustration de l&rsquo;interpolation des attributs" src="images/"></p>
+<p>Il s&rsquo;agit d&rsquo;un procédé qui consiste à discrétiser une image vectoriel. Dit autrement, on va prendre nos joli triangle tout lisses, dont les vertex viennent d&rsquo;être projetés dans l&rsquo;espace écran (par le Vertex Shader), et on va en faire un amas de pixels qu&rsquo;on appelle des fragments. Ces fragments sont ensuite injectés en entrée du Fragment Shader (vous commencez à comprendre le pattern de nomage).</p>
+<p><img alt="illustration de l&rsquo;interpolation de la couleur des vertex via la rasteriasation" src="/posts/ddj_shaders/images/rasterisation.opti.webp">
+<em>Rasterisation avec interpolation de l&rsquo;attribut vertex color</em></p>
+<p>Je ne l&rsquo;ai pas mentionné jusqu&rsquo;ici, mais en réalité les vertex portent des attributs en plus de leur coordonnée. Il est important de noter que lors de la rasterisation, une interpolation de ces attributs est effectuée pour chaque frament généré. L&rsquo;image ci-dessus illustre cela avec l&rsquo;attribut vertex color.</p>
 <h3 id="3-fragment-shader">3. Fragment Shader</h3>
 <p>Le fragment shader c&rsquo;est la dernière étape avant que le pixel soit imprimé à l&rsquo;écran. Son job est de déterminer la couleur finale de ce pixel à partir des attributs des vertex interpolés lors de la rasterisation :</p>
 <ul>
-<li>coordonée : simplement l&rsquo;endroit où se trouve le pixel sur l&rsquo;écran</li>
-<li>normales : l&rsquo;orientation de la face associées au vertex</li>
-<li>vertex couleur : je pense que cet attribut est le relicat d&rsquo;une aire ou la puissance ne permetait pas de sampler des textures pour chaque pixels. Aujourd&rsquo;hui, c&rsquo;est un attribut qu&rsquo;on utilise ne manière détournée pour que les artistes encodent d&rsquo;autres informations dans leurs models.</li>
-<li>uv : c&rsquo;est une coordonée 2D utilisée la plupart du temps pour sampler une texture. On en a généralement plusieurs (l&rsquo;uv0, l&rsquo;uv1, l&rsquo;uv2&hellip;). Comme le vertex color, ils sont aussi utilisé de manière détournée parfois.</li>
+<li>coordonée : l&rsquo;endroit où se trouve le pixel sur l&rsquo;écran</li>
+<li>normal : l&rsquo;orientation de la face associées au vertex</li>
+<li>vertex color : je pense que cet attribut est le relicat d&rsquo;une aire ou la puissance ne permetait pas de sampler des textures pour chaque pixels. Aujourd&rsquo;hui, c&rsquo;est un attribut qu&rsquo;on utilise ne manière détournée pour encoder d&rsquo;autres informations dans les models 3D.</li>
+<li>uv : c&rsquo;est une coordonée 2D utilisée la plupart du temps pour sampler une texture. On en a généralement plusieurs (l&rsquo;uv0, l&rsquo;uv1, l&rsquo;uv2&hellip;). Comme le vertex color, ils peuvent être utilisés de manière détournée parfois.</li>
 </ul>
-<p>Dans ce shader on peut implémenter différentes de chose. Notament le calcule de la lumière et des post-process. Mais c&rsquo;est un sujet un peu avancé. Si j&rsquo;écris une suite à cet article, je les traiterai certainement. Mais pour l&rsquo;instant retenez que c&rsquo;est dans ce shader que ça se passe.</p>
+<p>C&rsquo;est notament dans ce shader que l&rsquo;on va pouvoir :</p>
+<ul>
+<li>rendre la lumière (Per Pixel Lighting)</li>
+<li>appliquer les textures</li>
+<li>implémenter divers effets de surface (disolve etc&hellip;)</li>
+</ul>
+<p><img alt="illustration d&rsquo;un effet de dissolve" src="/posts/ddj_shaders/images/dissolve-optimize.gif">
+<em>Effet de dissolve</em></p>
+<h3 id="4-post-process">4. Post-Process</h3>
+<p>Techniquement, ce sont des fragement shader. Mais je ne voulais pas les traiter dans la partie précédente pour éviter la confusion, car c&rsquo;est un cas assez spécifique : les post process sont une forme de rendu multipass.</p>
+<p>En effet, nous n&rsquo;allons pas rendre la scène directement à l&rsquo;écran mais dans une render target. Il s&rsquo;agit d&rsquo;une texture classique, mis à par qu&rsquo;elle n&rsquo;est pas issue d&rsquo;une image sur votre disque. Elle est générée à la volée lors de l&rsquo;execution. Dans notre cas, cette render target contient donc un rendu off-screen de la scene : c&rsquo;est notre première pass.</p>
+<p>Ensuite, nous allons rendre un quad devant la caméra en nous arrangeant pour que ses coins cohincident parfaitement avec ceux de l&rsquo;écran. C&rsquo;est à ce quad que sera assigné notre fragment shader de post process. Lors de cette deuxieme pass, le post process va pouvoir récupérer les pixels de la pass précédente (dans la render target) et lui appliquer ce qu&rsquo;il veut.</p>
+<p>Enormement d&rsquo;effets que vous connaissez sont implémentés par des post process. Pour n&rsquo;en citer que quelques uns, on retrouve :</p>
+<ul>
+<li>Le bloom</li>
+<li>Le fog</li>
+<li>Le SSAO</li>
+<li>Tous les anti aliasing sauf le MSAA</li>
+<li>Le motion blur</li>
+<li>Divers effets de flou (depth of field, motion blur&hellip;)</li>
+<li>Des effets stylistiques (Cel Shading, Pixelisation&hellip;)</li>
+<li>L&rsquo;abération chromatique</li>
+<li>&hellip;</li>
+</ul>
+<p><img alt="gif alterant divers effets de style en post process" src="/posts/ddj_shaders/images/style_post_process.webp">
+<em>Divers effets de style en post process</em></p>
 <h2 id="conclusion">Conclusion</h2>
-<p>Dans cet article je fais pas mal de racourcis et d&rsquo;approximations. Je fais également l&rsquo;impasse sur des sujets importants (les uniforms, les varyings &hellip;). L&rsquo;objectif n&rsquo;étant pas de vous apprendre à écrire des shaders, mais de vous donner une vision global et rapide de ce que c&rsquo;est.</p>
+<p>Dans cet article je fais pas mal de racourcis et d&rsquo;approximations. L&rsquo;objectif n&rsquo;étant pas de vous apprendre à écrire des shaders, mais de vous donner une vision global de ce qu&rsquo;ils sont et à quoi ils servent.</p>
 <p>Si vous souhaitez approfondir le sujet, je vous conseille <a href="https://learnopengl.com/">Learn OpenGL</a>. C&rsquo;est très complet et bien expliqué. Quand je cherche une information, c&rsquo;est le premier endroit où je regarde. Et très souvent je n&rsquo;ai pas besoin d&rsquo;aller ailleurs.</p>
-<p>Vous pouvez aussi apprendre directement dans un moteur de jeu. Ainsi vous pourrez vous concentrer sur vos shaders sans avoir à vous occuper de la partie CPU du <em>renderer</em> (qui sera déjà implémentée par le moteur). Je n&rsquo;ai pas de ressource à vous pointer car je n&rsquo;ai pas appris comme ça, mais je suis sur qu&rsquo;elles existent. Et c&rsquo;est souvent plus simple de considérer les problèmes un par un.</p>
+<p>Vous pouvez aussi apprendre directement dans un moteur de jeu. Ainsi vous pourrez vous concentrer sur vos shaders sans avoir à vous occuper de la partie CPU du <em>renderer</em> (qui sera déjà implémentée par le moteur). Je n&rsquo;ai pas de ressource à vous pointer car je n&rsquo;ai pas appris comme ça, mais je suis sur qu&rsquo;elles existent. Et c&rsquo;est souvent plus simple de découper un sujet pour se confronter aux problèmes les uns après les autres.</p>
 <p>Sur ce, j&rsquo;éspère que vous aurez trouvé ces explications utiles et qu&rsquo;elles vous aideront à aborder plus facilement certains passages de mes futurs articles. A bientôt.</p>
 
             </div>
