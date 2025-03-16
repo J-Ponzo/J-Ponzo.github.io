@@ -15,7 +15,7 @@
       <guid>http://localhost:1313/posts/ddj_shaders/</guid>
       
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Programmer un shader n&amp;rsquo;est pas plus difficile que de programmer n&amp;rsquo;importe quoi d&amp;rsquo;autre. Mais il est vrai que le formalisme peut être un peu déroutant la première fois qu&amp;rsquo;on s&amp;rsquo;y frotte. Dans ce blog, je cherche à m&amp;rsquo;adresser à un public assez large. Pas uniquement à des programmeurs professionnels, et encore moins à des programmeurs graphiques spécifiquement. J&amp;rsquo;aimerais donc démystifier un peu le concept pour que cela ne devienne pas un point de blocage.&lt;/p&gt;</description>
+&lt;p&gt;Programmer un &lt;em&gt;shader&lt;/em&gt; n&amp;rsquo;est pas plus difficile que de programmer n&amp;rsquo;importe quoi d&amp;rsquo;autre. Mais il est vrai que le formalisme peut être un peu déroutant la première fois qu&amp;rsquo;on s&amp;rsquo;y frotte. Dans ce blog, je cherche à m&amp;rsquo;adresser à un public assez large. Pas uniquement à des programmeurs professionnels, et encore moins à des programmeurs graphiques spécifiquement. J&amp;rsquo;aimerais donc démystifier un peu le concept pour que cela ne devienne pas un point de blocage.&lt;/p&gt;</description>
       
     </item>
     
