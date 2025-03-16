@@ -17,7 +17,13 @@
     <loc>http://localhost:1313/projects/</loc>
     <lastmod>2025-03-09T06:28:42+01:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/pages/about/</loc>
+    <lastmod>2025-03-09T06:26:08+01:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/posts/i_love_fixed_cams/</loc>
+    <lastmod>2025-03-09T06:26:08+01:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/pages/</loc>
     <lastmod>2025-03-09T06:26:08+01:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/projects/open_re_poc_devlog_1/</loc>
@@ -26,15 +32,11 @@
     <loc>http://localhost:1313/projects/open_re_poc_devlog_0/</loc>
     <lastmod>2025-02-21T12:51:02+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/pages/about/</loc>
-  </url><url>
     <loc>http://localhost:1313/categories/</loc>
   </url><url>
     <loc>http://localhost:1313/misc/distance_field/</loc>
   </url><url>
     <loc>http://localhost:1313/misc/</loc>
-  </url><url>
-    <loc>http://localhost:1313/pages/</loc>
   </url><url>
     <loc>http://localhost:1313/misc/reflection_capture/</loc>
   </url><url>
