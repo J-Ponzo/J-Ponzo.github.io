@@ -15,7 +15,7 @@
       <guid>http://localhost:1313/posts/ddj_shaders/</guid>
       
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Dans ce lightning article je vais essayer de demistifier un peu le concepte de Shader. En effet, j&amp;rsquo;ai quelques amis qui ont l&amp;rsquo;extrème gentillesse de crash-tester mes brouillons pour me faire des retours avant que je ne les publient (Salut à vous ! Et merci pour ce que vous faites, ça m&amp;rsquo;aide beaucoup !). La plupart sont d&amp;rsquo;exellents programmeurs. Pourtant, quand je mets un bout de code en &lt;code&gt;glsl&lt;/code&gt; dans un article, bien souvent ça coince.&lt;/p&gt;</description>
+&lt;p&gt;Avant de publier mes articles, je fais des crash tests de mes brouillons sur des amis (Salut à vous ! Et merci pour ce que vous faites, ça m&amp;rsquo;aide enormement !). La plupart sont des programmeurs aguerris. Pourtant, quand je glisse un bout de glsl quelque part pour illustrer un propos, j&amp;rsquo;ai pu remarquer que ceux qui n&amp;rsquo;on jamais manipuler de shaders ne sont pas très à l&amp;rsquo;aise. J&amp;rsquo;ai donc jugé approprié d&amp;rsquo;écrire un petit article dans le but de demistifier le sujet.&lt;/p&gt;</description>
       
     </item>
     

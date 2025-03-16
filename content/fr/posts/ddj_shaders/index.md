@@ -5,16 +5,14 @@ title = 'Dis donc Jamy : Comment ça marche un shader ?'
 description = "Article de vulgarisation expliquant ce qu'est un shader"
 +++
 ## Introduction
-Avant de publier mes articles, je fais des crash tests de mes brouillons sur des amis (Salut à vous ! Et merci pour ce que vous faites, ça m'aide enormement !). La plupart sont des programmeurs aguerris. Pourtant, quand je glisse un bout de glsl quelque part pour illustrer un propos, j'ai pu remarquer que ceux qui n'on jamais manipuler de shaders ne sont pas très à l'aise. J'ai donc jugé approprié d'écrire un petit article dans le but de demistifier le sujet.
+Programmer un shader n'est pas plus difficile que de programmer n'importe quoi d'autre. Mais il est vrai que le formalisme peut être un peu déroutant la première fois qu'on s'y frotte. Dans ce blog je cherche à m'adresser à un publique assez large. Pas uniquement à des programmeurs professionnels, et encore moins à des programmeurs graphiques spécifiquement. J'aimerai donc demistifier un peu le concepte pour ça ne devienne pas un point de bloquage.
 
-Programmer un shader, ce n'est pas plus difficile que de programmer n'importe quoi d'autre. Mais il est vrai que ça peut être assez déroutant quand on a pas le contexte. Dans ce blog je cherche à m'adresser à un publique assez large. Pas uniquement à des programmeurs professionnels, et encore moins à des programmeurs graphiques spécifiquement. J'aimerais donc qu'on arrive à casser ce mur ensemble (promis, il est vraiment pas si épais).
-
-Pour cela, je vais vous donner quelques armes pour que vous ne soyez plus intimidés par le concepte. Ca ne fera pas de vous un Gourou du shading (je suis d'ailleurs loin d'en être un), mais j'espère que ça contribura à rendre mes articles plus accessibles.
+Aujourd'hui nous allons donc nous intereser à ce que sont les shaders, pourquoi ils sont si bizare et à quoi ils servent exactement. Ca ne fera pas de vous des Gourous du shading (je suis d'ailleurs loin d'en être un), mais j'espère que ça contribura à rendre mes articles plus accessibles.
 
 ## I. Qu'est ce qu'un shader ?
 Un shader c'est tout simplement un programme. Il existe plusieurs langages haut-niveau pour les écrire. Les principaux sont glsl et hlsl (mais on peut trouver des choses plus exotiques). Une fois compilé, le shader peut être exécuté par une unité de calcule. Sauf que dans notre cas, cette unité de calcule, ce n'est pas un CPU, mais un GPU.
 
-Jusqu'ici on est pas trop dépaysé. Mais ça va bientôt changer. Immaginez un programme CPU dont la mission est de traiter les éléments d'un tableau. On aurait quelque chose qui ressemble à ça :
+Jusqu'ici on est pas trop dépaysé. Mais ça va bientôt changer. Immaginez un programme CPU dont la mission serait de traiter les éléments d'un tableau. On aurait quelque chose qui ressemble à ça :
 ```c
 // Point d'entrée du programme
 void main(array[]) {
@@ -27,7 +25,7 @@ void main(array[]) {
 Pour un shader, ce serait plutôt ça :
 ```c
 ///// CODE INACCESSIBLE AU DEVELOPPEUR ! (car en amont du point d'entrée)
-for (i = 0; i < array.lengt; i++) {
+for (i = 0; i < array.lenght; i++) {
 	main(elt, i);
 }
 ///// ENDOF CODE INACCESSIBLE AU DEVELOPPEUR
@@ -45,7 +43,7 @@ Croyez le ou non, la couleur de chaque pixel de votre écran est calculée selon
 ## II. CPU vs GPU
 Pour répondre à cette question, on va devoir se pencher sur les différences architecturelles entre ces 2 types d'unités de calcule.
 
-Un CPU contient relativement peu de coeurs (entre 4 et 10 la plupart du temps). Mais ce sont des coeurs extrèmement puissant et surtout très agiles car indépendants les un des autres. Chacun est capable de dérouler sa propre séquence d'instructions dans son coin. C'est le modèle MIMD (Multiple Instrtuction, Multiple Data). Un CPU est donc très bon pour effectuer plusieurs tâches complexe et différentes en même temps.
+Un CPU contient relativement peu de coeurs (entre 4 et 16 la plupart du temps). Mais ce sont des coeurs extrèmement puissant et surtout très agiles car indépendants les un des autres. Chacun est capable de dérouler sa propre séquence d'instructions dans son coin. C'est le modèle MIMD (Multiple Instrtuction, Multiple Data). Un CPU est donc très bon pour effectuer plusieurs tâches complexe et différentes en même temps.
 
 ![Même illustrant de manière humoristique les difference entre les coeurs CPU et GPU](images/meme_winnie_cpu_vs_gpu.opti.webp)
 *Même illustrant de manière humoristique les difference entre les coeurs CPU et GPU*
@@ -73,7 +71,7 @@ Tu as raison Fred, mais il y a une astuce ! En réalité les 2 cotés sont éval
 </p>
 <br>
 
-Voilà pourquoi on dit qu'il faut à tout prix éviter les branches dans le code d'un shader. A chaque fois qu'on en fait une, on met des coeurs au chômage. Cette architecture est donc assez contrainante, mais elle permet à un GPU de gérer non pas 8, mais plusieurs milliers de coeurs.
+Voilà pourquoi on dit qu'il faut à tout prix éviter les branches dans le code d'un shader. A chaque fois qu'on en fait une, on met des coeurs au chômage. Cette architecture est donc assez contrainante, mais elle permet à un GPU de gérer non pas 8 ou 16 coeurs, mais plusieurs milliers.
 
 En résumé, là où le CPU est bon pour gérer un petit nombre de tâches complexes et différentes, le GPU lui excelle dans l'art d'executer en parallele un très grand nombre de petites opérations similaires. Et il se trouve que c'est exactement ce dont on a besoin pour traiter des images.
 
@@ -144,7 +142,7 @@ Techniquement, ce sont des fragement shader. Mais je ne voulais pas les traiter 
 
 En effet, nous n'allons pas rendre la scène directement à l'écran mais dans une render target. Il s'agit d'une texture classique, mis à par qu'elle n'est pas issue d'une image sur votre disque. Elle est générée à la volée lors de l'execution. Dans notre cas, cette render target contient donc un rendu off-screen de la scene : c'est notre première pass.
 
-Ensuite, nous allons rendre un quad devant la caméra en nous arrangeant pour que ses coins cohincident parfaitement avec ceux de l'écran. C'est à ce quad que sera assigné notre fragment shader de post process. Lors de cette deuxieme pass, le post process va pouvoir récupérer les pixels de la pass précédente (dans la render target) et lui appliquer ce qu'il veut.
+Ensuite, nous allons rendre un quad devant la caméra en nous arrangeant pour que ses coins cohincident parfaitement avec ceux de l'écran. C'est à ce quad que sera assigné notre fragment shader de post process. Lors de cette deuxieme pass, le post process va pouvoir récupérer chaque pixel de la pass précédente (dans la render target) et lui appliquer le traitement qu'il souhaite avant de l'afficher à l'écran.
 
 Enormement d'effets que vous connaissez sont implémentés par des post process. Pour n'en citer que quelques uns, on retrouve :
 - Le bloom
