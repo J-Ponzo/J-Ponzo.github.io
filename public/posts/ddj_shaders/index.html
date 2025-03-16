@@ -53,7 +53,7 @@
         },
         "datePublished": "2025-03-12",
         "description": "Article de vulgarisation expliquant ce qu'est un shader",
-        "wordCount":  2009 ,
+        "wordCount":  2052 ,
         "mainEntityOfPage": "True",
         "dateModified": "2025-03-12",
         "image": {
@@ -223,10 +223,10 @@ stroke-linejoin="round" class="feather feather-home">
     </details>
             <div class="page-content">
                 <h2 id="introduction">Introduction</h2>
-<p>Programmer un <em>shader</em> n&rsquo;est pas plus difficile que de programmer n&rsquo;importe quoi d&rsquo;autre. Mais il est vrai que le formalisme peut être un peu déroutant la première fois qu&rsquo;on s&rsquo;y frotte. Dans ce blog, je cherche à m&rsquo;adresser à un public assez large. Pas uniquement à des programmeurs professionnels, et encore moins à des programmeurs graphiques spécifiquement. J&rsquo;aimerais donc démystifier un peu le concept pour que cela ne devienne pas un point de blocage.</p>
-<p>Aujourd&rsquo;hui, nous allons donc nous intéresser à ce que sont les <em>shaders</em>, pourquoi ils sont si bizarres et à quoi ils servent exactement. Ça ne fera pas de vous des gourous du <em>shading</em> (je suis d&rsquo;ailleurs loin d&rsquo;en être un), mais j&rsquo;espère que cela contribuera à rendre mes articles plus accessibles.</p>
+<p><strong>Programmer un <em>shader</em></strong> n&rsquo;est pas plus difficile que de programmer n&rsquo;importe quoi d&rsquo;autre. Mais il est vrai que le formalisme peut être un peu <strong>déroutant la première fois</strong> qu&rsquo;on s&rsquo;y frotte. Dans ce blog, je cherche à m&rsquo;adresser à un public assez large. Pas uniquement à des programmeurs professionnels, et encore moins à des programmeurs graphiques spécifiquement. J&rsquo;aimerais donc <strong>démystifier un peu le concept</strong> pour que cela ne devienne pas un point de blocage.</p>
+<p>Aujourd&rsquo;hui, nous allons donc nous intéresser à ce que sont les <em>shaders</em>, pourquoi ils sont si bizarres et à quoi ils servent exactement. Ça ne fera pas de vous des gourous du <em>shading</em> (je suis d&rsquo;ailleurs loin d&rsquo;en être un), mais j&rsquo;espère que cela contribuera à <strong>rendre mes articles plus accessibles</strong>.</p>
 <h2 id="i-quest-ce-quun-shader-">I. Qu&rsquo;est ce qu&rsquo;un shader ?</h2>
-<p>Un <em>shader</em>, c&rsquo;est tout simplement un programme. Il existe plusieurs langages haut niveau pour les écrire. Les principaux sont <em>GLSL</em> et <em>HLSL</em> (mais on peut trouver des choses plus exotiques). Une fois compilé, le <em>shader</em> peut être exécuté par une unité de calcul. Sauf que dans notre cas, cette unité de calcul, ce n&rsquo;est pas un <em>CPU</em>, mais un <em>GPU</em>.</p>
+<p>Un <em>shader</em>, c&rsquo;est tout simplement <strong>un programme</strong>. Il existe plusieurs langages haut niveau pour les écrire. Les principaux sont <em>GLSL</em> et <em>HLSL</em> (mais on peut trouver des choses plus exotiques). Une fois compilé, le <em>shader</em> peut être <strong>exécuté</strong> par une unité de calcul. Sauf que dans notre cas, cette unité de calcul, ce n&rsquo;est pas un <em>CPU</em>, mais un <em><strong>GPU</strong></em>.</p>
 <p>Jusqu&rsquo;ici, on n&rsquo;est pas trop dépaysé mais ça va bientôt changer. Imaginez un programme <em>CPU</em> dont la mission serait de traiter les éléments d&rsquo;un tableau. On aurait quelque chose qui ressemble à ça :</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="c1">// Point d&#39;entrée du programme
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">array</span><span class="p">[])</span> <span class="p">{</span>
@@ -245,44 +245,44 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">elt</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="c1">// Traitement de elt
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
-</span></span></code></pre></div><p>En effet, quand on écrit un <em>shader</em>, on n&rsquo;a pas accès au tableau lui-même. On doit raisonner sur chaque élément pris individuellement, en isolation de tous les autres. Tout ce qu&rsquo;on connaît, c&rsquo;est l&rsquo;élément courant, et éventuellement sa position dans le tableau si on a de la chance.</p>
+</span></span></code></pre></div><p>En effet, quand on écrit un <em>shader</em>, on n&rsquo;a <strong>pas accès au tableau</strong> lui-même. On doit raisonner sur chaque <strong>élément pris individuellement</strong>, en isolation de tous les autres. Tout ce qu&rsquo;on connaît, c&rsquo;est l&rsquo;élément courant, et éventuellement sa position dans le tableau si on a de la chance.</p>
 <p>Croyez-le ou non, la couleur de chaque pixel de votre écran est calculée selon ce paradigme. C&rsquo;est une gymnastique un peu particulière, mais on s&rsquo;y fait assez vite. Maintenant, pourquoi a-t-on eu besoin d&rsquo;inventer un truc aussi tordu ?</p>
 <h2 id="ii-cpu-vs-gpu">II. CPU vs GPU</h2>
-<p>Pour répondre à cette question, on va devoir se pencher sur les différences architecturales entre ces deux types d&rsquo;unités de calcul.</p>
-<p>Un <em>CPU</em> contient relativement peu de cœurs (entre 4 et 16 la plupart du temps). Mais ce sont des cœurs extrêmement puissants et surtout très agiles, car indépendants les uns des autres. Chacun est capable de dérouler sa propre séquence d&rsquo;instructions dans son coin. C&rsquo;est le modèle <em>MIMD</em> (Multiple Instruction, Multiple Data). Un <em>CPU</em> est donc très bon pour effectuer plusieurs tâches complexes et différentes en même temps.</p>
+<p>Pour répondre à cette question, on va devoir se pencher sur les <strong>différences architecturales</strong> entre ces deux types d&rsquo;unités de calcul.</p>
+<p>Un <em><strong>CPU</strong></em> contient relativement peu de cœurs (entre 4 et 16 la plupart du temps). Mais ce sont des cœurs extrêmement puissants et surtout très agiles, car indépendants les uns des autres. Chacun est capable de dérouler sa propre séquence d&rsquo;instructions dans son coin. C&rsquo;est le modèle <strong><em>MIMD</em> (Multiple Instruction, Multiple Data)</strong>. Un <em>CPU</em> est donc très bon pour effectuer plusieurs tâches complexes et différentes en même temps.</p>
 <p><img alt="Même illustrant de manière humoristique les differences entre les coeurs CPU et GPU" src="/posts/ddj_shaders/images/meme_winnie_cpu_vs_gpu.opti.webp">
 <em>Même illustrant de manière humoristique les differences entre les coeurs CPU et GPU</em></p>
-<p>En comparaison, un cœur de <em>GPU</em> est con comme une pelle. Non seulement il est beaucoup moins puissant, mais surtout il fonctionne sur le modèle <em>SIMD</em> (Single Instruction, Multiple Data). Ça veut dire que les cœurs d&rsquo;un <em>GPU</em> ne sont pas capables d&rsquo;exécuter simultanément des instructions différentes. À chaque tick d&rsquo;horloge, tout le monde tape dans la même.</p>
+<p>En comparaison, un cœur de <em><strong>GPU</strong></em> est con comme une pelle. Non seulement il est beaucoup moins puissant, mais surtout il fonctionne sur le modèle <strong><em>SIMD</em> (Single Instruction, Multiple Data)</strong>. Ça veut dire que les cœurs d&rsquo;un <em>GPU</em> ne sont pas capables d&rsquo;exécuter simultanément des instructions différentes. À chaque tick d&rsquo;horloge, tout le monde tape dans la même.</p>
 <img alt="Portrait de Fred de C'est pas sorcier" src="./images/Fred.opti.webp" style="float: right; margin-left: 20px; max-width: 128px;" /> 
 <p> 
 Mais dis donc, Jamy ! Si tous les cœurs exécutent la même instruction, ils vont tous fournir le même résultat ! Ça n'a aucun sens ! 
 </p> 
 <br> 
 <img alt="Portrait de Jamy de C'est pas sorcier" src="./images/Jamy.opti.webp" style="float: left; margin-right: 20px; max-width: 128px; clear: both;" />
-<p> Eh bien, pas tout à fait ! Les cœurs exécutent bien tous la même instruction, mais ils le font sur des données différentes (les éléments du tableau, vous vous rappelez ?). Ils peuvent donc quand même avoir des sorties différentes. 
+<p> Eh bien, pas tout à fait ! Les cœurs exécutent bien tous la même instruction, mais ils le font sur <strong>des données différentes</strong> (les éléments du tableau, vous vous rappelez ?). Ils peuvent donc quand même avoir des sorties différentes. 
 </p> 
 <br> 
 <img alt="Portrait de Fred de C'est pas sorcier" src="./images/Fred.opti.webp" style="float: right; margin-left: 20px; max-width: 128px;" /> 
-<p> D'accord ! Mais comment ça marche pour les *branchements conditionnels* ? Les cœurs qui passent dans le *if* ne peuvent pas pointer sur la même instruction que ceux qui passent dans le *else*. Ça ne marche pas, ton truc ! 
+<p> D'accord ! Mais comment ça marche pour les <strong><i>branchements conditionnels</i> ?</strong> Les cœurs qui passent dans le <i>if</i> ne peuvent pas pointer sur la même instruction que ceux qui passent dans le <i>else</i>. <strong>Ça ne marche pas, ton truc !</strong>
 </p> 
 <br> 
-<img alt="Portrait de Jamy de C'est pas sorcier" src="./images/Jamy.opti.webp" style="float: left; margin-right: 20px; max-width: 128px; clear: both;" /> <p> Tu as raison, Fred, mais il y a une astuce ! En réalité, les deux côtés sont évalués séquentiellement par tous les cœurs. Et les cœurs non concernés par l'instruction courante ? Eh bien, c'est simple... ils ne font rien... ils attendent... 
+<img alt="Portrait de Jamy de C'est pas sorcier" src="./images/Jamy.opti.webp" style="float: left; margin-right: 20px; max-width: 128px; clear: both;" /> <p> Tu as raison, Fred, mais il y a une astuce ! En réalité, les deux côtés sont évalués séquentiellement par tous les cœurs. Et les cœurs non concernés par l'instruction courante ? Eh bien, c'est simple... ils ne font rien... <strong>ils attendent...</strong> 
 </p> 
 <br> 
-<p>Voilà pourquoi on dit qu&rsquo;il faut à tout prix éviter les <em>branches</em> dans le code d&rsquo;un <em>shader</em>. À chaque fois qu&rsquo;on en fait une, on met des cœurs au chômage. Cette architecture est donc assez contraignante, mais elle permet à un <em>GPU</em> de gérer non pas 8 ou 16 cœurs, mais plusieurs milliers.</p>
-<p>En résumé, là où le <em>CPU</em> est bon pour gérer un petit nombre de tâches complexes et différentes, le <em>GPU</em>, lui, excelle dans l&rsquo;art d&rsquo;exécuter en parallèle un très grand nombre de petites opérations similaires. Et il se trouve que c&rsquo;est exactement ce dont on a besoin pour traiter des images.</p>
+<p>Voilà pourquoi on dit qu&rsquo;il faut à tout prix <strong>éviter les <em>branches</em></strong> dans le code d&rsquo;un <em>shader</em>. À chaque fois qu&rsquo;on en fait une, on met des cœurs au chômage. Cette architecture est donc assez contraignante, mais elle permet à un <em>GPU</em> de gérer non pas 8 ou 16, mais plusieurs <strong>milliers de cœurs.</strong></p>
+<p>En résumé, là où le <em>CPU</em> est bon pour gérer un petit nombre de tâches complexes et différentes, le GPU, lui, excelle dans l&rsquo;art d&rsquo;exécuter en parallèle un très grand nombre de petites opérations similaires. Et il se trouve que c&rsquo;est exactement ce dont on a besoin pour traiter des images.</p>
 <h2 id="iii-le-pipeline-graphique">III. Le pipeline graphique</h2>
-<p>En pratique, il existe plusieurs types de <em>shaders</em>, chacun intervenant à une étape précise de ce qu&rsquo;on appelle le <em>pipeline graphique</em>. À chaque <em>draw call</em>, c&rsquo;est-à-dire (plus ou moins) pour chaque <em>mesh</em> visible dans une <em>frame</em>, ce <em>pipeline</em> va être traversé. La géométrie du <em>mesh</em> est injectée en entrée sous la forme de triplets de <em>vertex</em> (des triangles, donc). Ces derniers vont ensuite être traités étape par étape jusqu&rsquo;à devenir des pixels affichés à l&rsquo;écran.</p>
+<p>En pratique, il existe <strong>plusieurs types de <em>shaders</em></strong>, chacun intervenant à une étape précise de ce qu&rsquo;on appelle le <em>pipeline graphique</em>. À chaque <em>draw call</em>, c&rsquo;est-à-dire (plus ou moins) pour chaque <em>mesh</em> visible dans une <em>frame</em>, ce <em>pipeline</em> va être traversé. La géométrie du <em>mesh</em> est injectée en entrée sous la forme de triplets de <em>vertex</em> (des triangles, donc). Ces derniers vont ensuite être traités étape par étape jusqu&rsquo;à devenir des pixels affichés à l&rsquo;écran.</p>
 <p><img alt="Diagramme représentant le pipeline graphique" src="/posts/ddj_shaders/images/gfx_pipeline.opti.webp">
 <em>Diagramme du pipeline graphique</em></p>
 <p>Dans ce <em>pipeline</em>, il y a 2 types d&rsquo;étapes :</p>
 <ul>
-<li>Les <em>fixed function</em> en jaune pâle : cablées en dur dans le <em>GPU</em> (et donc <strong>très</strong> efficaces)</li>
+<li>Les <em>fixed function</em> en jaune pâle : cablées en dur dans le <em>GPU</em> (et donc très efficaces)</li>
 <li>Les étapes programmables en vert : les fameux <em>shaders</em></li>
 </ul>
-<p>Ça fait beaucoup, et encore, dites-vous qu&rsquo;il en manque. Mais dans l&rsquo;immense majorité des cas, on n&rsquo;utilisera que le <em>Vertex Shader</em> et le <em>Fragment Shader</em> (notés respectivement <em>Vertex Program</em> et <em>Fragment Program</em> sur le schéma, mais c&rsquo;est la même chose).</p>
+<p>Ça fait beaucoup, et encore, dites-vous qu&rsquo;il en manque. Mais dans l&rsquo;immense majorité des cas, on n&rsquo;utilisera <strong>que le <em>Vertex Shader</em> et le <em>Fragment Shader</em></strong> (notés respectivement <em>Vertex Program</em> et <em>Fragment Program</em> sur le schéma, mais c&rsquo;est la même chose).</p>
 <h3 id="1-vertex-shader">1. Vertex Shader</h3>
-<p>Les éléments traités par le <em>vertex shader</em> sont les <em>vertex</em> du <em>mesh</em> qui traverse le <em>pipeline</em>. Ils sont exprimés dans le référentiel local du <em>mesh</em>. L&rsquo;utilité première du <em>vertex shader</em>, c&rsquo;est d&rsquo;appliquer des changements d&rsquo;espace au <em>vertex</em> pour qu&rsquo;il se retrouve tour à tour dans :</p>
+<p>Les éléments traités par le <em>vertex shader</em> sont les <em>vertex</em> du <em>mesh</em> qui traverse le <em>pipeline</em>. Ils sont exprimés dans le référentiel local du <em>mesh</em>. L&rsquo;utilité première du <em>vertex shader</em>, c&rsquo;est d&rsquo;appliquer des <strong>changements d&rsquo;espace</strong> au <em>vertex</em> pour qu&rsquo;il se retrouve tour à tour dans :</p>
 <ul>
 <li>
 <ol>
@@ -301,24 +301,24 @@ Mais dis donc, Jamy ! Si tous les cœurs exécutent la même instruction, ils vo
 </li>
 </ul>
 <p>Imaginez que la caméra, c&rsquo;est la navette de Futurama. Ce n&rsquo;est pas elle qui bouge, mais le <em>vertex shader</em> qui s&rsquo;arrange pour déplacer le monde autour d&rsquo;elle et l&rsquo;aligner dans le bon axe. Une fois que c&rsquo;est fait, le monde est &ldquo;aplati&rdquo; dans le plan de l&rsquo;écran.</p>
-<p>Je ne vais pas détailler les mathématiques engagées dans la manœuvre parce que c&rsquo;est un article de vulgarisation (ouais c&rsquo;est ça&hellip; dis plutôt que t&rsquo;as peur de te planter et de passer pour un imbécile !). Mais retenez que ce sont des multiplications de matrices : une grosse opération qui peut être découpée en une multitude de petites opérations identiques. Et comme on l&rsquo;a vu dans la partie précédente, le <em>GPU</em> et son modèle <em>SIMD</em> sont taillés pour en avaler des caisses entières sans sourciller.</p>
-<p>Notez qu&rsquo;au-delà de ces changements d&rsquo;espace, le <em>vertex shader</em> est l&rsquo;endroit parfait pour appliquer des déformations au <em>mesh</em>. Il intervient donc logiquement dans l&rsquo;implémentation de techniques comme le <em>morph target</em> ou le <em>skeletal animation</em>.</p>
+<p>Je ne vais pas détailler les mathématiques engagées dans la manœuvre parce que c&rsquo;est un article de vulgarisation (ouais c&rsquo;est ça&hellip; dis plutôt que t&rsquo;as peur de te planter et de passer pour un imbécile !). Mais retenez que ce sont des <strong>multiplications de matrices</strong> : une grosse opération qui peut être découpée en une multitude de petites opérations identiques. Et comme on l&rsquo;a vu dans la partie précédente, le <em>GPU</em> et son modèle <em>SIMD</em> sont taillés pour en avaler des caisses entières sans sourciller.</p>
+<p>Notez qu&rsquo;au-delà de ces changements d&rsquo;espace, le <em>vertex shader</em> est l&rsquo;endroit parfait pour appliquer des <strong>déformations au <em>mesh</em></strong>. Il intervient donc logiquement dans l&rsquo;implémentation de techniques comme le <em>morph target</em> ou le <em>skeletal animation</em>.</p>
 <video width="50%" controls muted loop playsinline autoplay>
     <source src="videos/morph_skeletal.mp4" type="video/mp4">
     Your browser does not support the video tag.  
 </video>
 <p><em>Animation d&rsquo;un visage à base de morph targets et d&rsquo;animation squelettale dans JMonkeyEngine.</em></p>
-<p>À une époque, la lumière était aussi calculée dans le <em>vertex shader</em> pour des questions de performances. On appelle ça le <em>vertex lighting</em>. Aujourd&rsquo;hui, les <em>GPU</em> sont largement assez puissants pour calculer la lumière au niveau du pixel. Mais le <em>vertex lighting</em> est toujours utilisé en tant que parti pris artistique (ou si on fait un portage grille-pain).</p>
+<p>À une époque, la lumière était aussi calculée dans le <em>vertex shader</em> pour des questions de performances. On appelle ça le <em><strong>vertex lighting</strong></em>. Aujourd&rsquo;hui, les <em>GPU</em> sont largement assez puissants pour calculer la lumière au niveau du pixel. Mais le <em>vertex lighting</em> est toujours utilisé en tant que parti pris artistique (ou si on fait un portage grille-pain).</p>
 <p><img alt="Comparaison du Vertex Lighting et du Pixel Lighting" src="/posts/ddj_shaders/images/gif_vertex_vs_p%C3%AExel_lighting.webp">
 <em>Screenshots de Silent Hill 2 illustrant la différence visuelle entre le Vertex Lighting (PS2) et le Pixel Lighting (Xbox).</em></p>
 <h3 id="2-la-rasterisation">2. La rasterisation</h3>
 <p>La <em>rasterisation</em> est une étape non programmable du <em>pipeline</em>. Mais il est quand même important de comprendre ce que c&rsquo;est, car elle se place entre le <em>vertex shader</em> et le <em>fragment shader</em>.</p>
-<p>Il s&rsquo;agit d&rsquo;un procédé qui consiste à discrétiser une image vectorielle. Dit autrement, on va prendre nos jolis triangles tout lisses, dont les <em>vertex</em> viennent d&rsquo;être projetés dans l&rsquo;espace écran (par le <em>vertex shader</em>), et on va en faire un amas de pixels qu&rsquo;on appelle des <em>fragments</em>. Ces <em>fragments</em> sont ensuite injectés en entrée du <em>fragment shader</em> (vous commencez à comprendre le pattern de nommage ?).</p>
+<p>Il s&rsquo;agit d&rsquo;un procédé qui consiste à <strong>discrétiser une image vectorielle</strong>. Dit autrement, on va prendre nos jolis triangles tout lisses, dont les <em>vertex</em> viennent d&rsquo;être projetés dans l&rsquo;espace écran (par le <em>vertex shader</em>), et on va en faire un amas de pixels qu&rsquo;on appelle des <em>fragments</em>. Ces <em>fragments</em> sont ensuite injectés en entrée du <em>fragment shader</em> (vous commencez à comprendre le pattern de nommage ?).</p>
 <p><img alt="illustration de l&rsquo;interpolation de la couleur des vertex via la rasteriasation" src="/posts/ddj_shaders/images/rasterisation.opti.webp">
 <em>Rasterisation avec interpolation de l&rsquo;attribut vertex color.</em></p>
-<p>Je ne l&rsquo;ai pas mentionné jusqu&rsquo;ici, mais en réalité, les <em>vertex</em> portent des attributs en plus de leurs coordonnées. Il est important de noter que lors de la <em>rasterisation</em>, une <em>interpolation</em> de ces attributs est effectuée pour chaque <em>fragment</em> généré. L&rsquo;image ci-dessus illustre cela avec l&rsquo;attribut vertex color.</p>
+<p>Je ne l&rsquo;ai pas mentionné jusqu&rsquo;ici, mais en réalité, les <em>vertex</em> portent des attributs en plus de leurs coordonnées. Il est important de noter que lors de la <em>rasterisation</em>, une <strong><em>interpolation</em> de ces attributs</strong> est effectuée pour chaque <em>fragment</em> généré. L&rsquo;image ci-dessus illustre cela avec l&rsquo;attribut vertex color.</p>
 <h3 id="3-fragment-shader">3. Fragment Shader</h3>
-<p>Le <em>fragment shader</em>, c&rsquo;est la dernière étape avant que le pixel soit imprimé à l&rsquo;écran. Son job est de déterminer la couleur finale de ce pixel à partir des attributs des <em>vertex interpolés</em> lors de la <em>rasterisation</em> :</p>
+<p>Le <em>fragment shader</em>, c&rsquo;est la dernière étape avant que le pixel soit imprimé à l&rsquo;écran. Son job est de déterminer la <strong>couleur finale de ce pixel</strong> à partir des attributs des <em>vertex interpolés</em> lors de la <em>rasterisation</em> :</p>
 <ul>
 <li>Coordonnées : l&rsquo;endroit où se trouve le pixel sur l&rsquo;écran.</li>
 <li><em>Normal</em> : l&rsquo;orientation de la face associée au <em>vertex</em>.</li>
@@ -334,10 +334,10 @@ Mais dis donc, Jamy ! Si tous les cœurs exécutent la même instruction, ils vo
 <p><img alt="illustration d&rsquo;un effet de dissolve" src="/posts/ddj_shaders/images/dissolve-optimize.gif">
 <em>Effet de dissolve</em></p>
 <h3 id="4-post-process">4. Post-Process</h3>
-<p>Techniquement, ce sont des <em>fragment shaders</em>. Mais je ne voulais pas les traiter dans la partie précédente pour éviter la confusion, car c&rsquo;est un cas assez spécifique : les <em>post-process</em> sont une forme de <em>rendu multipass</em>.</p>
-<p>En effet, nous n&rsquo;allons pas rendre la scène directement à l&rsquo;écran, mais dans une <em>render target</em>. Il s&rsquo;agit d&rsquo;une texture classique, mis à part qu&rsquo;elle n&rsquo;est pas issue d&rsquo;une image sur votre disque. Elle est générée à la volée lors de l&rsquo;exécution. Dans notre cas, cette <em>render target</em> contient donc un <em>rendu off-screen</em> de la scène : c&rsquo;est notre première pass.</p>
-<p>Ensuite, nous allons rendre un <em>quad</em> devant la caméra en nous arrangeant pour que les coins coïncident parfaitement avec ceux de l&rsquo;écran. C&rsquo;est ce <em>quad</em> qui va être traité par notre <em>fragment shader</em> de <em>post-process</em> en traversant le <em>pipeline</em>. Lors de cette deuxième pass, on va pouvoir récupérer chaque pixel de la pass précédente (dans la <em>render target</em>) et lui appliquer le traitement qu&rsquo;on souhaite avant qu&rsquo;il ne soit affiché à l&rsquo;écran.</p>
-<p>Énormément d&rsquo;effets que vous connaissez sont implémentés par des post-process. Pour n&rsquo;en citer que quelques-uns, on retrouve :</p>
+<p>Techniquement, <strong>ce sont des <em>fragment shaders</em></strong>. Mais je ne voulais pas les traiter dans la partie précédente pour éviter la confusion, car c&rsquo;est un cas assez spécifique : les <em>post-process</em> sont une forme de <em>rendu multipass</em>.</p>
+<p>En effet, nous n&rsquo;allons pas rendre la scène directement à l&rsquo;écran, mais dans une <em>render target</em>. Il s&rsquo;agit d&rsquo;une texture classique, mis à part qu&rsquo;elle n&rsquo;est pas issue d&rsquo;une image stoquée sur le disque. Elle est générée à la volée lors de l&rsquo;exécution. On peut donc y dessiner un peu ce qu&rsquo;on veut de manière dynamique et s&rsquo;en servir comme resultat intermédiaire dans toute sortes d&rsquo;algorithmes. Dans le cas d&rsquo;un post-process, cette <em>render target</em> va contenir un <em>rendu off-screen</em> de la scène : c&rsquo;est notre <strong>première <em>pass</em></strong>.</p>
+<p>Ensuite, nous allons rendre un <em>quad</em> devant la caméra en nous arrangeant pour que les coins coïncident parfaitement avec ceux de l&rsquo;écran. C&rsquo;est ce <em>quad</em> qui va être traité par notre <em>fragment shader</em> de <em>post-process</em> en traversant le <em>pipeline</em>. Lors de cette <strong>seconde pass</strong>, on va pouvoir récupérer chaque pixel de la pass précédente (dans la <em>render target</em>) et lui appliquer le traitement qu&rsquo;on souhaite avant qu&rsquo;il ne soit imprimé sur le <em>quad</em> (que vous ne pouvez pas dicerner de l&rsquo;écran puisqu&rsquo;il est parfaitement superposé à ce dernier).</p>
+<p>Énormément d&rsquo;effets que vous connaissez sont implémentés via des post-process. Pour n&rsquo;en citer que quelques-uns, on retrouve :</p>
 <ul>
 <li>Le bloom</li>
 <li>Le fog</li>
@@ -351,9 +351,9 @@ Mais dis donc, Jamy ! Si tous les cœurs exécutent la même instruction, ils vo
 <p><img alt="gif alterant divers effets de style en post process" src="/posts/ddj_shaders/images/style_post_process.webp">
 <em>Divers effets de style en post-process.</em></p>
 <h2 id="conclusion">Conclusion</h2>
-<p>Dans cet article, je fais pas mal de raccourcis et d&rsquo;approximations. L&rsquo;objectif n&rsquo;est pas de vous apprendre à écrire des <em>shaders</em>, mais de vous donner une vision globale de ce qu&rsquo;ils sont et à quoi ils servent.</p>
+<p>Dans cet article, je fais pas mal de raccourcis et d&rsquo;approximations. L&rsquo;objectif n&rsquo;est pas de vous apprendre à écrire des <em>shaders</em>, mais de vous <strong>donner une vision globale</strong> de ce qu&rsquo;ils sont et à quoi ils servent.</p>
 <p>Si vous souhaitez approfondir le sujet, je vous conseille <a href="https://learnopengl.com/">Learn OpenGL</a>. C&rsquo;est très complet et bien expliqué. Quand je cherche une information, c&rsquo;est le premier endroit où je regarde. Et très souvent, je n&rsquo;ai pas besoin d&rsquo;aller ailleurs.</p>
-<p>Vous pouvez aussi apprendre directement dans un moteur de jeu. Ainsi, vous pourrez vous concentrer sur vos <em>shaders</em> sans avoir à vous occuper de la partie <em>CPU</em> du <em>renderer</em> (qui sera déjà implémentée par le moteur). Je n&rsquo;ai pas de ressource à vous pointer, car je n&rsquo;ai pas appris comme ça, mais je suis sûr qu&rsquo;elles existent. Et c&rsquo;est souvent plus simple de découper un sujet pour se confronter aux problèmes les uns après les autres.</p>
+<p>Vous pouvez aussi <strong>apprendre directement dans un moteur</strong> de jeu. Ainsi, vous pourrez vous concentrer sur vos <em>shaders</em> sans avoir à vous occuper de la partie <em>CPU</em> du <em>renderer</em> (qui sera déjà implémentée par le moteur). Je n&rsquo;ai pas de ressource à vous pointer, car je n&rsquo;ai pas appris comme ça, mais je suis sûr qu&rsquo;elles existent. Et c&rsquo;est souvent plus simple de découper un sujet pour se confronter aux problèmes les uns après les autres.</p>
 <p>Sur ce, j&rsquo;espère que vous aurez trouvé ces explications utiles et qu&rsquo;elles vous aideront à aborder plus facilement certains passages de mes futurs articles. À bientôt.</p>
 
             </div>
