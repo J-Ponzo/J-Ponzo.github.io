@@ -14,7 +14,17 @@
       
       <guid>http://localhost:1313/posts/ddj_shaders/</guid>
       
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;style&gt;
+a[href^=&#34;/misc/glossary&#34;] {
+    color: rgb(20, 130, 20) !important;
+	font-weight: bold;
+}
+
+a[href^=&#34;/misc/glossary&#34;]:after {
+    content: &#34;🎓&#34;;
+}
+&lt;/style&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;Programmer un &lt;em&gt;shader&lt;/em&gt;&lt;/strong&gt; n&amp;rsquo;est pas plus difficile que de programmer n&amp;rsquo;importe quoi d&amp;rsquo;autre. Mais il est vrai que le formalisme peut être un peu &lt;strong&gt;déroutant la première fois&lt;/strong&gt; qu&amp;rsquo;on s&amp;rsquo;y frotte. Dans ce blog, je cherche à m&amp;rsquo;adresser à un public assez large. Pas uniquement à des programmeurs professionnels, et encore moins à des programmeurs graphiques spécifiquement. J&amp;rsquo;aimerais donc &lt;strong&gt;démystifier un peu le concept&lt;/strong&gt; pour que cela ne devienne pas un point de blocage.&lt;/p&gt;</description>
       
     </item>
@@ -100,6 +110,45 @@
       <guid>http://localhost:1313/misc/distance_field/</guid>
       
       <description>&lt;p&gt;Puisque la géométrie ne bouge pas, on peut pré-calculer en tout point de l’espace la distance qui le sépare de l’objet le plus proche. On appel cette donnée un distance field et on l’utilise comme structure acceleratrice dans plusieurs algorithmes (différentes techniques de ray tracing et d’ombrage, simulation de fluides…). On peut anisi faire fonctionner en temps réèl des effets dont une implémentation naïve sans structure acceleratrice serait beaucoup trop coûteuse pour être utilisée en temps réèl dans un jeu même avec du hardware moderne.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Glossaire</title>
+      <link>http://localhost:1313/misc/glossary/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/misc/glossary/</guid>
+      
+      <description>&lt;h2 id=&#34;anti-aliasing&#34;&gt;Anti-Aliasing&lt;/h2&gt;
+&lt;p&gt;[Décrire ici tous les types d&amp;rsquo;anti-aliasing MSAA, FXAA, TAA &amp;hellip;]&lt;/p&gt;
+&lt;h2 id=&#34;bloom&#34;&gt;Bloom&lt;/h2&gt;
+&lt;h2 id=&#34;cel-shading&#34;&gt;Cel Shading&lt;/h2&gt;
+&lt;h2 id=&#34;depth-of-field&#34;&gt;Depth of Field&lt;/h2&gt;
+&lt;h2 id=&#34;draw-call&#34;&gt;Draw Call&lt;/h2&gt;
+&lt;h2 id=&#34;fixed-function&#34;&gt;Fixed Function&lt;/h2&gt;
+&lt;h2 id=&#34;fragment-shader&#34;&gt;Fragment-Shader&lt;/h2&gt;
+&lt;h2 id=&#34;frame&#34;&gt;Frame&lt;/h2&gt;
+&lt;h2 id=&#34;mesh&#34;&gt;Mesh&lt;/h2&gt;
+&lt;h2 id=&#34;morph-target&#34;&gt;Morph Target&lt;/h2&gt;
+&lt;h2 id=&#34;motion-blur&#34;&gt;Motion Blur&lt;/h2&gt;
+&lt;h2 id=&#34;niveau-dabstraction&#34;&gt;Niveau d&amp;rsquo;Abstraction&lt;/h2&gt;
+&lt;h2 id=&#34;pipeline-graphique&#34;&gt;Pipeline Graphique&lt;/h2&gt;
+&lt;h2 id=&#34;pixel-lighting&#34;&gt;Pixel Lighting&lt;/h2&gt;
+&lt;h2 id=&#34;post-process&#34;&gt;Post-Process&lt;/h2&gt;
+&lt;h2 id=&#34;quad&#34;&gt;Quad&lt;/h2&gt;
+&lt;h2 id=&#34;rasterisation&#34;&gt;Rasterisation&lt;/h2&gt;
+&lt;h2 id=&#34;render-target&#34;&gt;Render Target&lt;/h2&gt;
+&lt;h2 id=&#34;shader&#34;&gt;Shader&lt;/h2&gt;
+&lt;p&gt;Un shader est un programme qui s&amp;rsquo;execute sur le GPU.&lt;/p&gt;
+&lt;p&gt;Plus de détails dans cet article : &lt;a href=&#34;http://localhost:1313/posts/ddj_shaders/&#34;&gt;Dis donc Jamy : Comment ça marche un shader ?&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;skeletal-animation&#34;&gt;Skeletal Animation&lt;/h2&gt;
+&lt;h2 id=&#34;ssao&#34;&gt;SSAO&lt;/h2&gt;
+&lt;h2 id=&#34;uv&#34;&gt;UV&lt;/h2&gt;
+&lt;h2 id=&#34;vertex&#34;&gt;Vertex&lt;/h2&gt;
+&lt;h2 id=&#34;vertex-color&#34;&gt;Vertex Color&lt;/h2&gt;
+&lt;h2 id=&#34;vertex-lighting&#34;&gt;Vertex Lighting&lt;/h2&gt;
+&lt;h2 id=&#34;vertex-shader&#34;&gt;Vertex Shader&lt;/h2&gt;</description>
       
     </item>
     
