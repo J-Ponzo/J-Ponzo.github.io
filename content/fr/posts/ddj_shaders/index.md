@@ -4,17 +4,6 @@ draft = true
 title = 'Dis donc Jamy : Comment ça marche un shader ?'
 description = "Article de vulgarisation expliquant ce qu'est un shader"
 +++
-<style>
-a[href^="/misc/glossary"] {
-    color: rgb(20, 130, 20) !important;
-	font-weight: bold;
-}
-
-a[href^="/misc/glossary"]:after {
-    content: "🎓";
-}
-</style>
-
 ## Introduction
 **Programmer un *shader*** n'est pas plus difficile que de programmer n'importe quoi d'autre. Mais il est vrai que le formalisme peut être un peu **déroutant la première fois** qu'on s'y frotte. Dans ce blog, je cherche à m'adresser à un public assez large. Pas uniquement à des programmeurs professionnels, et encore moins à des programmeurs graphiques spécifiquement. J'aimerais donc **démystifier un peu le concept** pour que cela ne devienne pas un point de blocage.
 
