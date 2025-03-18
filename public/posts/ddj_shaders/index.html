@@ -53,7 +53,7 @@
         },
         "datePublished": "2025-03-12",
         "description": "Article de vulgarisation expliquant ce qu'est un shader",
-        "wordCount":  2052 ,
+        "wordCount":  2067 ,
         "mainEntityOfPage": "True",
         "dateModified": "2025-03-12",
         "image": {
@@ -230,13 +230,16 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Jusqu&rsquo;ici, on n&rsquo;est pas trop dépaysé mais ça va bientôt changer. Imaginez un programme <em>CPU</em> dont la mission serait de traiter les éléments d&rsquo;un tableau. On aurait quelque chose qui ressemble à ça :</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="c1">// Point d&#39;entrée du programme
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">array</span><span class="p">[])</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nf">foreach</span> <span class="p">(</span><span class="n">elt</span> <span class="n">in</span> <span class="n">array</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">array</span><span class="p">.</span><span class="n">lenght</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">var</span> <span class="n">elt</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
 </span></span><span class="line"><span class="cl">		<span class="c1">// Traitement de elt
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>Pour un <em>shader</em>, ce serait plutôt ça :</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="c1">///// CODE INACCESSIBLE AU DEVELOPPEUR ! (car en amont du point d&#39;entrée)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">array</span><span class="p">.</span><span class="n">lenght</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="c1">///// CODE INACCESSIBLE AU DEVELOPPEUR ! 
+</span></span></span><span class="line"><span class="cl"><span class="c1">///// (car en amont du point d&#39;entrée)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">var</span> <span class="n">array</span><span class="p">[];</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">array</span><span class="p">.</span><span class="n">lenght</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="nf">main</span><span class="p">(</span><span class="n">elt</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="c1">///// ENDOF CODE INACCESSIBLE AU DEVELOPPEUR
@@ -250,25 +253,31 @@ stroke-linejoin="round" class="feather feather-home">
 <h2 id="ii-cpu-vs-gpu">II. CPU vs GPU</h2>
 <p>Pour répondre à cette question, on va devoir se pencher sur les <strong>différences architecturales</strong> entre ces deux types d&rsquo;unités de calcul.</p>
 <p>Un <em><strong>CPU</strong></em> contient relativement peu de cœurs (entre 4 et 16 la plupart du temps). Mais ce sont des cœurs extrêmement puissants et surtout très agiles, car indépendants les uns des autres. Chacun est capable de dérouler sa propre séquence d&rsquo;instructions dans son coin. C&rsquo;est le modèle <strong><em>MIMD</em> (Multiple Instruction, Multiple Data)</strong>. Un <em>CPU</em> est donc très bon pour effectuer plusieurs tâches complexes et différentes en même temps.</p>
+<p>En comparaison, un cœur de <em><strong>GPU</strong></em> est con comme une pelle. Non seulement il est beaucoup moins puissant, mais surtout il fonctionne sur le modèle <strong><em>SIMD</em> (Single Instruction, Multiple Data)</strong>. Ça veut dire que les cœurs d&rsquo;un <em>GPU</em> ne sont pas capables d&rsquo;exécuter simultanément des instructions différentes. À chaque tick d&rsquo;horloge, tout le monde tape dans la même.</p>
 <p><img src="/posts/ddj_shaders/images/meme_winnie_cpu_vs_gpu.opti.webp" alt="Même illustrant de manière humoristique les differences entre les coeurs CPU et GPU">
 <em>Même illustrant de manière humoristique les differences entre les coeurs CPU et GPU</em></p>
-<p>En comparaison, un cœur de <em><strong>GPU</strong></em> est con comme une pelle. Non seulement il est beaucoup moins puissant, mais surtout il fonctionne sur le modèle <strong><em>SIMD</em> (Single Instruction, Multiple Data)</strong>. Ça veut dire que les cœurs d&rsquo;un <em>GPU</em> ne sont pas capables d&rsquo;exécuter simultanément des instructions différentes. À chaque tick d&rsquo;horloge, tout le monde tape dans la même.</p>
-<img alt="Portrait de Fred de C'est pas sorcier" src="./images/Fred.opti.webp" style="float: right; margin-left: 20px; max-width: 128px;" /> 
-<p> 
-Mais dis donc, Jamy ! Si tous les cœurs exécutent la même instruction, ils vont tous fournir le même résultat ! Ça n'a aucun sens ! 
-</p> 
 <br> 
+<img alt="Portrait de Fred de C'est pas sorcier" src="./images/Fred.opti.webp" style="float: right; margin-left: 20px; max-width: 128px;" /> 
+<p align = right> 
+Mais dis donc, Jamy ! Si tous les cœurs exécutent la même instruction, ils vont tous fournir le même résultat ! 
+<br>Ça n'a aucun sens ! 
+</p> 
+<br> <br> 
 <img alt="Portrait de Jamy de C'est pas sorcier" src="./images/Jamy.opti.webp" style="float: left; margin-right: 20px; max-width: 128px; clear: both;" />
-<p> Eh bien, pas tout à fait ! Les cœurs exécutent bien tous la même instruction, mais ils le font sur <strong>des données différentes</strong> (les éléments du tableau, vous vous rappelez ?). Ils peuvent donc quand même avoir des sorties différentes. 
+<p align = left> Eh bien, pas tout à fait ! Les cœurs exécutent bien tous la même instruction, mais ils le font sur <strong>des données différentes</strong> (les éléments du tableau, vous vous rappelez ?). Ils peuvent donc quand même avoir des sorties différentes. 
 </p> 
 <br> 
 <img alt="Portrait de Fred de C'est pas sorcier" src="./images/Fred.opti.webp" style="float: right; margin-left: 20px; max-width: 128px;" /> 
-<p> D'accord ! Mais comment ça marche pour les <strong><i>branchements conditionnels</i> ?</strong> Les cœurs qui passent dans le <i>if</i> ne peuvent pas pointer sur la même instruction que ceux qui passent dans le <i>else</i>. <strong>Ça ne marche pas, ton truc !</strong>
+<p align = right> D'accord ! Mais comment ça marche pour les <strong><i>branchements conditionnels</i> ?</strong> Les cœurs qui passent dans le <i>if</i> ne peuvent pas pointer sur la même instruction que ceux qui passent dans le <i>else</i>. 
+<br><strong>Ça ne marche pas, ton truc !</strong>
 </p> 
 <br> 
-<img alt="Portrait de Jamy de C'est pas sorcier" src="./images/Jamy.opti.webp" style="float: left; margin-right: 20px; max-width: 128px; clear: both;" /> <p> Tu as raison, Fred, mais il y a une astuce ! En réalité, les deux côtés sont évalués séquentiellement par tous les cœurs. Et les cœurs non concernés par l'instruction courante ? Eh bien, c'est simple... ils ne font rien... <strong>ils attendent...</strong> 
+<img alt="Portrait de Jamy de C'est pas sorcier" src="./images/Jamy.opti.webp" style="float: left; margin-right: 20px; max-width: 128px; clear: both;" /> 
+<p align = left> Tu as raison, Fred, mais il y a une astuce ! En réalité, les deux côtés sont évalués séquentiellement par tous les cœurs. Et les cœurs non concernés par l'instruction courante ? Eh bien, c'est simple... ils ne font rien... <strong>ils attendent...</strong> 
 </p> 
 <br> 
+<p><img src="/posts/ddj_shaders/images/gpu_simd.opti.webp" alt="Schema d&rsquo;execution d&rsquo;un programme dans un GPU">
+<em>Illustration du modèle SIMD</em></p>
 <p>Voilà pourquoi on dit qu&rsquo;il faut à tout prix <strong>éviter les <em>branches</em></strong> dans le code d&rsquo;un <em>shader</em>. À chaque fois qu&rsquo;on en fait une, on met des cœurs au chômage. Cette architecture est donc assez contraignante, mais elle permet à un <em>GPU</em> de gérer non pas 8 ou 16, mais plusieurs <strong>milliers de cœurs.</strong></p>
 <p>En résumé, là où le <em>CPU</em> est bon pour gérer un petit nombre de tâches complexes et différentes, le GPU, lui, excelle dans l&rsquo;art d&rsquo;exécuter en parallèle un très grand nombre de petites opérations similaires. Et il se trouve que c&rsquo;est exactement ce dont on a besoin pour traiter des images.</p>
 <h2 id="iii-le-pipeline-graphique">III. Le pipeline graphique</h2>
@@ -303,10 +312,12 @@ Mais dis donc, Jamy ! Si tous les cœurs exécutent la même instruction, ils vo
 <p>Imaginez que la caméra, c&rsquo;est la navette de Futurama. Ce n&rsquo;est pas elle qui bouge, mais le <em>vertex shader</em> qui s&rsquo;arrange pour déplacer le monde autour d&rsquo;elle et l&rsquo;aligner dans le bon axe. Une fois que c&rsquo;est fait, le monde est &ldquo;aplati&rdquo; dans le plan de l&rsquo;écran.</p>
 <p>Je ne vais pas détailler les mathématiques engagées dans la manœuvre parce que c&rsquo;est un article de vulgarisation (ouais c&rsquo;est ça&hellip; dis plutôt que t&rsquo;as peur de te planter et de passer pour un imbécile !). Mais retenez que ce sont des <strong>multiplications de matrices</strong> : une grosse opération qui peut être découpée en une multitude de petites opérations identiques. Et comme on l&rsquo;a vu dans la partie précédente, le <em>GPU</em> et son modèle <em>SIMD</em> sont taillés pour en avaler des caisses entières sans sourciller.</p>
 <p>Notez qu&rsquo;au-delà de ces changements d&rsquo;espace, le <em>vertex shader</em> est l&rsquo;endroit parfait pour appliquer des <strong>déformations au <em>mesh</em></strong>. Il intervient donc logiquement dans l&rsquo;implémentation de techniques comme le <a href="/misc/glossary/#morph-target"><em>morph target</em></a> ou le <a href="/misc/glossary/#skeletal-animation"><em>skeletal animation</em></a>.</p>
-<video width="50%" controls muted loop playsinline autoplay>
-    <source src="videos/morph_skeletal.mp4" type="video/mp4">
-    Your browser does not support the video tag.  
-</video>
+<div style="text-align: center;">
+	<video width="50%" controls muted loop playsinline autoplay>
+		<source src="videos/morph_skeletal.mp4" type="video/mp4">
+		Your browser does not support the video tag.  
+	</video>
+</div>
 <p><em>Animation d&rsquo;un visage à base de morph targets et d&rsquo;animation squelettale dans JMonkeyEngine.</em></p>
 <p>À une époque, la lumière était aussi calculée dans le <em>vertex shader</em> pour des questions de performances. On appelle ça le <a href="/misc/glossary/#vertex-lighting"><em>vertex lighting</em></a>. Aujourd&rsquo;hui, les <em>GPU</em> sont largement assez puissants pour calculer la lumière au niveau du pixel. Mais le <em>vertex lighting</em> est toujours utilisé en tant que parti pris artistique (ou si on fait un portage grille-pain).</p>
 <p><img src="/posts/ddj_shaders/images/gif_vertex_vs_p%C3%AExel_lighting.webp" alt="Comparaison du Vertex Lighting et du Pixel Lighting">
