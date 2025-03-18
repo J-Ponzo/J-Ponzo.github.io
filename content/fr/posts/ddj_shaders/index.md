@@ -29,7 +29,7 @@ Pour un *shader*, ce serait plutôt ça :
 ///// (car en amont du point d'entrée)
 var array[];
 for (i = 0; i < array.lenght; i++) {
-	main(elt, i);
+	main(array[i], i);
 }
 ///// ENDOF CODE INACCESSIBLE AU DEVELOPPEUR
 
