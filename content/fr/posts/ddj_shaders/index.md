@@ -16,7 +16,8 @@ Jusqu'ici, on n'est pas trop dépaysé mais ça va bientôt changer. Imaginez un
 ```c
 // Point d'entrée du programme
 void main(array[]) {
-	foreach (elt in array) {
+	for (i = 0; i < array.lenght; i++) {
+		var elt = array[i];
 		// Traitement de elt
 	}
 }
@@ -24,9 +25,11 @@ void main(array[]) {
 
 Pour un *shader*, ce serait plutôt ça :
 ```c
-///// CODE INACCESSIBLE AU DEVELOPPEUR ! (car en amont du point d'entrée)
+///// CODE INACCESSIBLE AU DEVELOPPEUR ! 
+///// (car en amont du point d'entrée)
+var array[];
 for (i = 0; i < array.lenght; i++) {
-	main(elt, i);
+	main(array[i], i);
 }
 ///// ENDOF CODE INACCESSIBLE AU DEVELOPPEUR
 
@@ -45,27 +48,34 @@ Pour répondre à cette question, on va devoir se pencher sur les **différences
 
 Un ***CPU*** contient relativement peu de cœurs (entre 4 et 16 la plupart du temps). Mais ce sont des cœurs extrêmement puissants et surtout très agiles, car indépendants les uns des autres. Chacun est capable de dérouler sa propre séquence d'instructions dans son coin. C'est le modèle ***MIMD* (Multiple Instruction, Multiple Data)**. Un *CPU* est donc très bon pour effectuer plusieurs tâches complexes et différentes en même temps.
 
+En comparaison, un cœur de ***GPU*** est con comme une pelle. Non seulement il est beaucoup moins puissant, mais surtout il fonctionne sur le modèle ***SIMD* (Single Instruction, Multiple Data)**. Ça veut dire que les cœurs d'un *GPU* ne sont pas capables d'exécuter simultanément des instructions différentes. À chaque tick d'horloge, tout le monde tape dans la même.
+
 ![Même illustrant de manière humoristique les differences entre les coeurs CPU et GPU](images/meme_winnie_cpu_vs_gpu.opti.webp)
 *Même illustrant de manière humoristique les differences entre les coeurs CPU et GPU*
 
-En comparaison, un cœur de ***GPU*** est con comme une pelle. Non seulement il est beaucoup moins puissant, mais surtout il fonctionne sur le modèle ***SIMD* (Single Instruction, Multiple Data)**. Ça veut dire que les cœurs d'un *GPU* ne sont pas capables d'exécuter simultanément des instructions différentes. À chaque tick d'horloge, tout le monde tape dans la même.
-
-<img alt="Portrait de Fred de C'est pas sorcier" src="./images/Fred.opti.webp" style="float: right; margin-left: 20px; max-width: 128px;" /> 
-<p> 
-Mais dis donc, Jamy ! Si tous les cœurs exécutent la même instruction, ils vont tous fournir le même résultat ! Ça n'a aucun sens ! 
-</p> 
 <br> 
+<img alt="Portrait de Fred de C'est pas sorcier" src="./images/Fred.opti.webp" style="float: right; margin-left: 20px; max-width: 128px;" /> 
+<p align = right> 
+Mais dis donc, Jamy ! Si tous les cœurs exécutent la même instruction, ils vont tous fournir le même résultat ! 
+<br>Ça n'a aucun sens ! 
+</p> 
+<br> <br> 
 <img alt="Portrait de Jamy de C'est pas sorcier" src="./images/Jamy.opti.webp" style="float: left; margin-right: 20px; max-width: 128px; clear: both;" />
-<p> Eh bien, pas tout à fait ! Les cœurs exécutent bien tous la même instruction, mais ils le font sur <strong>des données différentes</strong> (les éléments du tableau, vous vous rappelez ?). Ils peuvent donc quand même avoir des sorties différentes. 
+<p align = left> Eh bien, pas tout à fait ! Les cœurs exécutent bien tous la même instruction, mais ils le font sur <strong>des données différentes</strong> (les éléments du tableau, vous vous rappelez ?). Ils peuvent donc quand même avoir des sorties différentes. 
 </p> 
 <br> 
 <img alt="Portrait de Fred de C'est pas sorcier" src="./images/Fred.opti.webp" style="float: right; margin-left: 20px; max-width: 128px;" /> 
-<p> D'accord ! Mais comment ça marche pour les <strong><i>branchements conditionnels</i> ?</strong> Les cœurs qui passent dans le <i>if</i> ne peuvent pas pointer sur la même instruction que ceux qui passent dans le <i>else</i>. <strong>Ça ne marche pas, ton truc !</strong>
+<p align = right> D'accord ! Mais comment ça marche pour les <strong><i>branchements conditionnels</i> ?</strong> Les cœurs qui passent dans le <i>if</i> ne peuvent pas pointer sur la même instruction que ceux qui passent dans le <i>else</i>. 
+<br><strong>Ça ne marche pas, ton truc !</strong>
 </p> 
 <br> 
-<img alt="Portrait de Jamy de C'est pas sorcier" src="./images/Jamy.opti.webp" style="float: left; margin-right: 20px; max-width: 128px; clear: both;" /> <p> Tu as raison, Fred, mais il y a une astuce ! En réalité, les deux côtés sont évalués séquentiellement par tous les cœurs. Et les cœurs non concernés par l'instruction courante ? Eh bien, c'est simple... ils ne font rien... <strong>ils attendent...</strong> 
+<img alt="Portrait de Jamy de C'est pas sorcier" src="./images/Jamy.opti.webp" style="float: left; margin-right: 20px; max-width: 128px; clear: both;" /> 
+<p align = left> Tu as raison, Fred, mais il y a une astuce ! En réalité, les deux côtés sont évalués séquentiellement par tous les cœurs. Et les cœurs non concernés par l'instruction courante ? Eh bien, c'est simple... ils ne font rien... <strong>ils attendent...</strong> 
 </p> 
 <br> 
+
+![Schema d'execution d'un programme dans un GPU](images/gpu_simd.opti.webp)
+*Illustration du modèle SIMD*
 
 Voilà pourquoi on dit qu'il faut à tout prix **éviter les *branches*** dans le code d'un *shader*. À chaque fois qu'on en fait une, on met des cœurs au chômage. Cette architecture est donc assez contraignante, mais elle permet à un *GPU* de gérer non pas 8 ou 16, mais plusieurs **milliers de cœurs.**
 
@@ -95,10 +105,12 @@ Je ne vais pas détailler les mathématiques engagées dans la manœuvre parce q
 
 Notez qu'au-delà de ces changements d'espace, le *vertex shader* est l'endroit parfait pour appliquer des **déformations au *mesh***. Il intervient donc logiquement dans l'implémentation de techniques comme le [*morph target*](/misc/glossary/#morph-target) ou le [*skeletal animation*](/misc/glossary/#skeletal-animation).
 
-<video width="50%" controls muted loop playsinline autoplay>
-    <source src="videos/morph_skeletal.mp4" type="video/mp4">
-    Your browser does not support the video tag.  
-</video>
+<div style="text-align: center;">
+	<video width="50%" controls muted loop playsinline autoplay>
+		<source src="videos/morph_skeletal.mp4" type="video/mp4">
+		Your browser does not support the video tag.  
+	</video>
+</div>
 
 *Animation d'un visage à base de morph targets et d'animation squelettale dans JMonkeyEngine.*
 
