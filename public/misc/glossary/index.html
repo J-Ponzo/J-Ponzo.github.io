@@ -187,6 +187,16 @@ stroke-linejoin="round" class="feather feather-home">
 <h2 id="gpu">GPU</h2>
 <p>C&rsquo;est l&rsquo;acronyme de Graphics Processing Unit : l&rsquo;unité de calcule d&rsquo;un ordinateur, destinée aux calculs graphiques. Il s&rsquo;agit tout simplement de votre carte graphique.</p>
 <h2 id="mesh">Mesh</h2>
+<p>Les objets 3d qui compose une scène sont composés d&rsquo;un ou pluieurs meshes (ou maillage en français). Il s&rsquo;agit d&rsquo;un enssemble de <em>vertex</em> (ou sommets) reliés entre eux par des edges (arètes). Si on s&rsquo;arrête là, on est plus ou moins sur la définition d&rsquo;un graphe (non-orienté). Mais il y a deux grandes différences :</p>
+<ul>
+<li>les vertex d&rsquo;un mesh portent une coordonnée 2d (ou 3d) qui les fixe en un point de l&rsquo;espace (ou du plan)</li>
+<li>les cycles fermés d&rsquo;arrêtes peuvent (ou non) definire des faces. Donnant ainsi au mesh une surface.</li>
+</ul>
+<p>Les meshes utilisés dans les moteurs de jeu ont une spécificité supplémentaires : leurs faces doivent imperativement être des triangles car les cartes graphiques ne comprennent que ça. Il faut donc trianguler les quads et les N-Gones avant de les intégrer à une scène. Cette opération peut être effectuée :</p>
+<ul>
+<li>A l&rsquo;export du logiciel de modélisation.</li>
+<li>A l&rsquo;import dans le moteur</li>
+</ul>
 <h2 id="morph-target">Morph Target</h2>
 <h2 id="motion-blur">Motion Blur</h2>
 <h2 id="niveau-dabstraction">Niveau d&rsquo;Abstraction</h2>
@@ -234,7 +244,8 @@ stroke-linejoin="round" class="feather feather-home">
 <h2 id="pixel-lighting">Pixel Lighting</h2>
 <h2 id="post-process">Post-Process</h2>
 <h2 id="quad">Quad</h2>
-<p>Un quad est un mesh composé de 2 triangles qui partagent 2 de leurs vertex.</p>
+<p>Un quad est une face d&rsquo;un mesh composée de 4 edges et de 4 vertex. Contrairement au triangle, il n&rsquo;est pas forcement planaire (contenu dans un seul plan).</p>
+<p>Dans un moteur de jeu qui ne comprend que les triangles, il s&rsquo;agit d&rsquo;une primitive géométrique composée de 2 triangles qui partagent 2 de leurs vertex (pour un total de 4 vertex donc). Ces 2 triangles sont dans le même plan.</p>
 <p>[mettre une image]</p>
 <h2 id="rasterisation">Rasterisation</h2>
 <h2 id="render-target">Render Target</h2>

@@ -47,6 +47,13 @@ Une frame, c'est une image de la scène générée à un instant donné par le m
 C'est l'acronyme de Graphics Processing Unit : l'unité de calcule d'un ordinateur, destinée aux calculs graphiques. Il s'agit tout simplement de votre carte graphique.
 
 ## Mesh
+Les objets 3d qui compose une scène sont composés d'un ou pluieurs meshes (ou maillage en français). Il s'agit d'un enssemble de *vertex* (ou sommets) reliés entre eux par des edges (arètes). Si on s'arrête là, on est plus ou moins sur la définition d'un graphe (non-orienté). Mais il y a deux grandes différences :
+- les vertex d'un mesh portent une coordonnée 2d (ou 3d) qui les fixe en un point de l'espace (ou du plan)
+- les cycles fermés d'arrêtes peuvent (ou non) definire des faces. Donnant ainsi au mesh une surface.
+
+Les meshes utilisés dans les moteurs de jeu ont une spécificité supplémentaires : leurs faces doivent imperativement être des triangles car les cartes graphiques ne comprennent que ça. Il faut donc trianguler les quads et les N-Gones avant de les intégrer à une scène. Cette opération peut être effectuée :
+- A l'export du logiciel de modélisation.
+- A l'import dans le moteur
 
 ## Morph Target
 
@@ -113,7 +120,9 @@ Notez que tous les "langages traditionnels" ne se placent pas exactement au mêm
 ## Post-Process
 
 ## Quad
-Un quad est un mesh composé de 2 triangles qui partagent 2 de leurs vertex.
+Un quad est une face d'un mesh composée de 4 edges et de 4 vertex. Contrairement au triangle, il n'est pas forcement planaire (contenu dans un seul plan).
+
+Dans un moteur de jeu qui ne comprend que les triangles, il s'agit d'une primitive géométrique composée de 2 triangles qui partagent 2 de leurs vertex (pour un total de 4 vertex donc). Ces 2 triangles sont dans le même plan.
 
 [mettre une image]
 

@@ -32,12 +32,7 @@
 &lt;p&gt;C&amp;rsquo;est l&amp;rsquo;acronyme de Central Processing Unit : l&amp;rsquo;unité de calcule principale d&amp;rsquo;un ordinateur. Il s&amp;rsquo;agit tout simplement de votre processeur.&lt;/p&gt;
 &lt;h2 id=&#34;depth-of-field&#34;&gt;Depth of Field&lt;/h2&gt;
 &lt;h2 id=&#34;draw-call&#34;&gt;Draw Call&lt;/h2&gt;
-&lt;h2 id=&#34;fixed-function&#34;&gt;Fixed Function&lt;/h2&gt;
-&lt;p&gt;Fut un temps, les &lt;a href=&#34;http://localhost:1313/misc/glossary/#gpu&#34;&gt;&lt;em&gt;GPU&lt;/em&gt;&lt;/a&gt; n&amp;rsquo;était pas programmables. L&amp;rsquo;intégralité du pipeline graphiques était préconfiguré et le programmeur ne pouvait agire dessu que par un ensemble de fonctions prédéfinies.&lt;/p&gt;
-&lt;h2 id=&#34;fragment-shader&#34;&gt;Fragment-Shader&lt;/h2&gt;
-&lt;h2 id=&#34;frame&#34;&gt;Frame&lt;/h2&gt;
-&lt;h2 id=&#34;gpu&#34;&gt;GPU&lt;/h2&gt;
-&lt;p&gt;C&amp;rsquo;est l&amp;rsquo;acronyme de Graphics Processing Unit : l&amp;rsquo;unité de calcule d&amp;rsquo;un ordinateur, destinée aux calculs graphiques. Il s&amp;rsquo;agit tout simplement de votre carte graphique.&lt;/p&gt;</description>
+&lt;p&gt;Un draw call est une commande envoyée au GPU pour lui demander de traiter un ensemble de primitives géométriques (généralement des triangles) afin de les rendre à l&amp;rsquo;écran (ou sur une &lt;em&gt;render target&lt;/em&gt;).&lt;/p&gt;</description>
       
     </item>
     
