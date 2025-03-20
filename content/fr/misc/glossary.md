@@ -16,7 +16,28 @@ C'est l'acronyme de Central Processing Unit : l'unité de calcule principale d'u
 ## Depth of Field
 
 ## Draw Call
-Un draw call est une commande envoyée au GPU pour lui demander de traiter un ensemble de primitives géométriques (généralement des triangles) afin de les rendre à l'écran (ou sur une *render target*).
+Un draw call est une commande envoyée au GPU pour lui demander de traiter un ensemble de primitives géométriques (généralement des triangles) afin de les rendre à l'écran (ou dans une *render target*).
+
+## Edge :
+Une edge (ou arrète) est un élement constituant du mesh (ou maillage). Elle lie 2 vertex appartenant au mesh. Elle n'est explicitement représentée que dans les logiciels de modélisation 3d. Côté moteur, elles ne sont présentes qu'implicitement via la definition des triangles.
+
+[mettre une image]
+
+## Face :
+La face est un élement constituant du mesh (ou maillage). Elle est definie par un cycle d'edges fermé appartenant au mesh et constitue la plus petite unité de surface visible de ce dernier. En effet un mesh dépourvu de face est invisible.
+
+[mettre une image]
+
+On distingue 3 types de faces :
+- les triangles : unique type pris en charge par les moteurs de jeu (une carte graphique ne sait pas afficher autre chose)
+- les quads : Faces composées de 4 vertex. Très utiles en modélisation car ils sont très facile à subdiviser et permetent d'insérer de loops facilement
+- les n-gones : Composés de plus de 4 vertex. Ils sont généralement à proscrir car leur propriété géométriques les rendent difficile à manipuler. 
+
+[mettre une image]
+
+Note : Les face sont orientées. Sauf configuration particulière, elle ne sont visibles que si on les regarde du bon côté. Le côté visible est déterminé par l'ordre des vertex
+
+[mettre un gif]
 
 ## Fixed Function
 Fut un temps, les [*GPU*](/misc/glossary/#gpu) n'était pas programmables. L'intégralité du pipeline graphiques était "gravé en dur" directement dans le carte. Ca veut dire qu'il y avait des circuits dédiés pour chacune des étapes / fonctionnalités :
@@ -47,17 +68,29 @@ Une frame, c'est une image de la scène générée à un instant donné par le m
 C'est l'acronyme de Graphics Processing Unit : l'unité de calcule d'un ordinateur, destinée aux calculs graphiques. Il s'agit tout simplement de votre carte graphique.
 
 ## Mesh
-Les objets 3d qui compose une scène sont composés d'un ou pluieurs meshes (ou maillage en français). Il s'agit d'un enssemble de *vertex* (ou sommets) reliés entre eux par des edges (arètes). Si on s'arrête là, on est plus ou moins sur la définition d'un graphe (non-orienté). Mais il y a deux grandes différences :
-- les vertex d'un mesh portent une coordonnée 2d (ou 3d) qui les fixe en un point de l'espace (ou du plan)
+Les objets 3d qui compose une scène sont composés d'un ou pluieurs meshes (ou maillage en français). Il s'agit d'un enssemble de *vertex* (ou sommets) reliés entre eux par des edges (arètes). Si on s'arrête là, on est plus ou moins sur la définition d'un graphe. Mais il y a deux grandes différences :
+- les vertex d'un mesh portent une coordonnée 3d (ou 2d) qui les fixe en un point de l'espace (ou du plan)
 - les cycles fermés d'arrêtes peuvent (ou non) definire des faces. Donnant ainsi au mesh une surface.
+
+[mettre une image]
 
 Les meshes utilisés dans les moteurs de jeu ont une spécificité supplémentaires : leurs faces doivent imperativement être des triangles car les cartes graphiques ne comprennent que ça. Il faut donc trianguler les quads et les N-Gones avant de les intégrer à une scène. Cette opération peut être effectuée :
 - A l'export du logiciel de modélisation.
 - A l'import dans le moteur
 
+[même image triangulée]
+
 ## Morph Target
 
 ## Motion Blur
+
+## N-Gone
+Dans un logiciel de modélisation 3d, un N-Gone designe une face composée de plus de 4 vertex. Ils sont à éviter, en particulier si le model est destiné à être importé dans un moteur de jeu. Et ce pour les raisons suivantes :
+- La triangultaion automatique est plus compliquée. Les resultats sont difficile à prévoire
+- Si le modele est animé, les deformation des n-gone peuvent être incorrectes
+- Ils ont des propriété géométrique qui fond qu'il généralement difficile de travailler avec (compliqués à subdiviser, insertion ambigue des edge loops...)
+
+Note : Si on est rigoureux, un n-gone designe un polygone composé de n edges. Le triangle et le quad sont donc techniquement des n-gone au sens mathématique du terme. Mais dans le contexte de la modélisation 3d, on considère un poligone comme un n-gone qu'à partir de 5 edges (car c'est à partir de ce nombre que la géometrie pose problème).
 
 ## Niveau d'Abstraction
 Le niveau d'abstraction d'un langage informatique designe sa proximité avec la logique humaine. Plus un langage est haut niveau, plus il va être lisible et compréhensible "facilement". Plus il est bas niveau, plus les briques de base qui le composent vont être primitives. Ce qui se traduira par des programmes long et complexes même pour faire des choses très simples.
@@ -122,7 +155,9 @@ Notez que tous les "langages traditionnels" ne se placent pas exactement au mêm
 ## Quad
 Un quad est une face d'un mesh composée de 4 edges et de 4 vertex. Contrairement au triangle, il n'est pas forcement planaire (contenu dans un seul plan).
 
-Dans un moteur de jeu qui ne comprend que les triangles, il s'agit d'une primitive géométrique composée de 2 triangles qui partagent 2 de leurs vertex (pour un total de 4 vertex donc). Ces 2 triangles sont dans le même plan.
+[mettre une image]
+
+Dans un moteur de jeu qui ne comprend que les triangles, il s'agit d'une primitive géométrique prédéfinie, composée de 2 triangles qui partagent 2 de leurs vertex (pour un total de 4 vertex donc). Dans ce contexte, le quad est planaire. C'est même un carré.
 
 [mettre une image]
 
@@ -149,6 +184,14 @@ Plus d'élements ici :
 ## UV
 
 ## Vertex
+Le vertex (ou sommet) est un élement constituant du mesh (ou maillage). Il représente un point fixe de l'espace (3d) ou du plan (2d). Il peut porter un certain nombre d'attributs dont les plus courants sont :
+- vertex color
+- normal
+- UVs
+
+D'autres attributs moins frequents, comme les poids du skinning, peuvent s'ajouter à cette liste. Retenez juste que c'est une coordonnée de l'espace ou du plan qui porte de l'information.
+
+Note : Le pluriel correcte de vertex est vertices (ne soyez pas surpris de le voir écrit sous cette forme). Mais je l'entand très peu à l'oral (en tout cas en France) et je trouve que c'est une source de confusion innutile. J'utilise donc très souvent le terme vetex même au pluriel (désolé pour pour vos oreilles et vos yeux).
 
 ## Vertex Color
 
