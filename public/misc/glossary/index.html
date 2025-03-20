@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.140.2">
+<meta name="generator" content="Hugo 0.137.0">
 
     
     <meta property="og:url" content="http://localhost:1313/misc/glossary/">
@@ -166,15 +166,16 @@ stroke-linejoin="round" class="feather feather-home">
 <h2 id="draw-call">Draw Call</h2>
 <p>Un draw call est une commande envoyée au GPU pour lui demander de traiter un ensemble de primitives géométriques (généralement des triangles) afin de les rendre à l&rsquo;écran (ou dans une <em>render target</em>).</p>
 <h2 id="edge-">Edge :</h2>
-<p>Une edge (ou arrète) est un élement constituant du mesh (ou maillage). Elle lie 2 vertex appartenant au mesh. Elle n&rsquo;est explicitement représentée que dans les logiciels de modélisation 3d. Côté moteur, elles ne sont présentes qu&rsquo;implicitement via la definition des triangles.</p>
+<p>Une edge (ou arrète) est un élement constituant du mesh (ou maillage). Elle lie 2 vertex appartenant au mesh.</p>
+<p>Elle ne sont explicitement représentée que dans les logiciels de modélisation 3d. Côté moteur, elles ne sont présentes qu&rsquo;implicitement via la definition des triangles.</p>
 <p>[mettre une image]</p>
 <h2 id="face-">Face :</h2>
-<p>La face est un élement constituant du mesh (ou maillage). Elle est definie par un cycle d&rsquo;edges fermé appartenant au mesh et constitue la plus petite unité de surface visible de ce dernier. En effet un mesh dépourvu de face est invisible.</p>
+<p>La face est un élement constituant du mesh (ou maillage). Elle est definie par un cycle d&rsquo;edges fermé appartenant au mesh et constitue la plus petite unité de surface visible de ce dernier. En effet, un mesh dépourvu de face est invisible.</p>
 <p>[mettre une image]</p>
 <p>On distingue 3 types de faces :</p>
 <ul>
 <li>les triangles : unique type pris en charge par les moteurs de jeu (une carte graphique ne sait pas afficher autre chose)</li>
-<li>les quads : Faces composées de 4 vertex. Très utiles en modélisation car ils sont très facile à subdiviser et permetent d&rsquo;insérer de loops facilement</li>
+<li>les quads : Faces composées de 4 vertex. Très utiles en modélisation car ils sont très facile à subdiviser et permetent d&rsquo;insérer des loops facilement</li>
 <li>les n-gones : Composés de plus de 4 vertex. Ils sont généralement à proscrir car leur propriété géométriques les rendent difficile à manipuler.</li>
 </ul>
 <p>[mettre une image]</p>
@@ -265,16 +266,40 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">EXIT_SUCCESS</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>Notez que tous les &ldquo;langages traditionnels&rdquo; ne se placent pas exactement au même niveau d&rsquo;abstraction. Le C est par exemple plus bas niveau que le Java. Mais les différences sont plus subtiles que pour les exemples précédent.</p>
+<h2 id="normal">Normal</h2>
 <h2 id="pipeline-graphique">Pipeline Graphique</h2>
+<p>Le pipeline graphique est une sequence d&rsquo;étape executées par le GPU lors d&rsquo;un draw call. Son rôle est de transformer les vertex 3D qui le traversent en  pixels affichés à l&rsquo;écran.</p>
+<p>Certaines de ces étapes sont directement gravées dans les circuits du GPU (les fixed function stages), d&rsquo;autres sont programmable (les shader stages).</p>
 <h2 id="pixel-lighting">Pixel Lighting</h2>
 <h2 id="post-process">Post-Process</h2>
+<p>Un post-process est une passe de rendu au cours de laquelle on applique un traitement à un rendu intermédiaire de la scène. Ce rendu intermédiaire est stoqué dans une render target qui a été imprimée lors d&rsquo;une passe précédente.</p>
+<p>Enormement d&rsquo;effets visuels sont obtenus de cette manière (Depth of field, Color Grading, Film Grain, Vignetting &hellip;)</p>
 <h2 id="quad">Quad</h2>
 <p>Un quad est une face d&rsquo;un mesh composée de 4 edges et de 4 vertex. Contrairement au triangle, il n&rsquo;est pas forcement planaire (contenu dans un seul plan).</p>
 <p>[mettre une image]</p>
 <p>Dans un moteur de jeu qui ne comprend que les triangles, il s&rsquo;agit d&rsquo;une primitive géométrique prédéfinie, composée de 2 triangles qui partagent 2 de leurs vertex (pour un total de 4 vertex donc). Dans ce contexte, le quad est planaire. C&rsquo;est même un carré.</p>
 <p>[mettre une image]</p>
 <h2 id="rasterisation">Rasterisation</h2>
+<p>La rasterisation, c&rsquo;est l&rsquo;action de transformer une image vectorielle (définie par des primitives géométriques) en un image matricielle (constituée de pixels).</p>
+<p>Dans le cadre du pipline graphique, il s&rsquo;agit du fixed function stage qui se place entre le vertex shader et le fragment shader. Cette étape rasterise des triangles spécifiquement. Ces derniers sont definis par les vertex en espace écran issus du vertex shader. Les pixels générés, aussi appelés fragment, sont ensuite envoyé en entrée du fragment shader.</p>
+<p>Les attributs portés par les vertex sont également interpolés et associés aux fragement correspondant.</p>
+<p>Note : Le terme rasterisation est parfois employé pour designer la totalité du processus de rendu temps réèl classique. Dans ce cas il fait référence à la methode de rendu dans sont intégralité par oposition à la methode de rendu par Ray Tracing.</p>
 <h2 id="render-target">Render Target</h2>
+<p>Une render target, c&rsquo;est une toile sur laquelle le pipline graphique va peindre une sequence de draw calls. A la fin de la squence (appelée une passe de rendu), cette toile peut être soit :</p>
+<ul>
+<li>
+<ol>
+<li>affichée à l&rsquo;écran</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>stoqué comme resultat intermédiaire et utilisée lors de la passe de rendu suivante</li>
+</ol>
+</li>
+</ul>
+<p>Le second cas permet d&rsquo;implémenter des effets avancés comme les ombres dynamiques, les plannar reflections, et toute une palanquée de post-process (Bloom, Cel Shading, SSAO, Anti-Aliasing etc&hellip;).</p>
+<p>Note : Dans le contexte d&rsquo;un moteur de jeu, le terme designe implicitement le 2eme cas (un résultat intermédiaire utilisé pour implémenter des effets avancés).</p>
 <h2 id="shader">Shader</h2>
 <p>Un shader est un programme qui s&rsquo;execute sur le GPU. Le terme fait l&rsquo;objet d&rsquo;une légère ambiguité. Suivant le contexte, il designe :</p>
 <ul>

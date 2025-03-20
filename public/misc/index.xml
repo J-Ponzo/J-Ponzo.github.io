@@ -32,7 +32,7 @@
 &lt;p&gt;C&amp;rsquo;est l&amp;rsquo;acronyme de Central Processing Unit : l&amp;rsquo;unité de calcule principale d&amp;rsquo;un ordinateur. Il s&amp;rsquo;agit tout simplement de votre processeur.&lt;/p&gt;
 &lt;h2 id=&#34;depth-of-field&#34;&gt;Depth of Field&lt;/h2&gt;
 &lt;h2 id=&#34;draw-call&#34;&gt;Draw Call&lt;/h2&gt;
-&lt;p&gt;Un draw call est une commande envoyée au GPU pour lui demander de traiter un ensemble de primitives géométriques (généralement des triangles) afin de les rendre à l&amp;rsquo;écran (ou sur une &lt;em&gt;render target&lt;/em&gt;).&lt;/p&gt;</description>
+&lt;p&gt;Un draw call est une commande envoyée au GPU pour lui demander de traiter un ensemble de primitives géométriques (généralement des triangles) afin de les rendre à l&amp;rsquo;écran (ou dans une &lt;em&gt;render target&lt;/em&gt;).&lt;/p&gt;</description>
       
     </item>
     

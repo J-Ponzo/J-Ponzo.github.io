@@ -19,18 +19,20 @@ C'est l'acronyme de Central Processing Unit : l'unité de calcule principale d'u
 Un draw call est une commande envoyée au GPU pour lui demander de traiter un ensemble de primitives géométriques (généralement des triangles) afin de les rendre à l'écran (ou dans une *render target*).
 
 ## Edge :
-Une edge (ou arrète) est un élement constituant du mesh (ou maillage). Elle lie 2 vertex appartenant au mesh. Elle n'est explicitement représentée que dans les logiciels de modélisation 3d. Côté moteur, elles ne sont présentes qu'implicitement via la definition des triangles.
+Une edge (ou arrète) est un élement constituant du mesh (ou maillage). Elle lie 2 vertex appartenant au mesh. 
+
+Elle ne sont explicitement représentée que dans les logiciels de modélisation 3d. Côté moteur, elles ne sont présentes qu'implicitement via la definition des triangles.
 
 [mettre une image]
 
 ## Face :
-La face est un élement constituant du mesh (ou maillage). Elle est definie par un cycle d'edges fermé appartenant au mesh et constitue la plus petite unité de surface visible de ce dernier. En effet un mesh dépourvu de face est invisible.
+La face est un élement constituant du mesh (ou maillage). Elle est definie par un cycle d'edges fermé appartenant au mesh et constitue la plus petite unité de surface visible de ce dernier. En effet, un mesh dépourvu de face est invisible.
 
 [mettre une image]
 
 On distingue 3 types de faces :
 - les triangles : unique type pris en charge par les moteurs de jeu (une carte graphique ne sait pas afficher autre chose)
-- les quads : Faces composées de 4 vertex. Très utiles en modélisation car ils sont très facile à subdiviser et permetent d'insérer de loops facilement
+- les quads : Faces composées de 4 vertex. Très utiles en modélisation car ils sont très facile à subdiviser et permetent d'insérer des loops facilement
 - les n-gones : Composés de plus de 4 vertex. Ils sont généralement à proscrir car leur propriété géométriques les rendent difficile à manipuler. 
 
 [mettre une image]
@@ -146,11 +148,19 @@ int main()
 
 Notez que tous les "langages traditionnels" ne se placent pas exactement au même niveau d'abstraction. Le C est par exemple plus bas niveau que le Java. Mais les différences sont plus subtiles que pour les exemples précédent.
 
+## Normal
+
 ## Pipeline Graphique
+Le pipeline graphique est une sequence d'étape executées par le GPU lors d'un draw call. Son rôle est de transformer les vertex 3D qui le traversent en  pixels affichés à l'écran.
+
+Certaines de ces étapes sont directement gravées dans les circuits du GPU (les fixed function stages), d'autres sont programmable (les shader stages).
 
 ## Pixel Lighting
 
 ## Post-Process
+Un post-process est une passe de rendu au cours de laquelle on applique un traitement à un rendu intermédiaire de la scène. Ce rendu intermédiaire est stoqué dans une render target qui a été imprimée lors d'une passe précédente.
+
+Enormement d'effets visuels sont obtenus de cette manière (Depth of field, Color Grading, Film Grain, Vignetting ...)
 
 ## Quad
 Un quad est une face d'un mesh composée de 4 edges et de 4 vertex. Contrairement au triangle, il n'est pas forcement planaire (contenu dans un seul plan).
@@ -162,8 +172,22 @@ Dans un moteur de jeu qui ne comprend que les triangles, il s'agit d'une primiti
 [mettre une image]
 
 ## Rasterisation
+La rasterisation, c'est l'action de transformer une image vectorielle (définie par des primitives géométriques) en un image matricielle (constituée de pixels).
+
+Dans le cadre du pipline graphique, il s'agit du fixed function stage qui se place entre le vertex shader et le fragment shader. Cette étape rasterise des triangles spécifiquement. Ces derniers sont definis par les vertex en espace écran issus du vertex shader. Les pixels générés, aussi appelés fragment, sont ensuite envoyé en entrée du fragment shader.
+
+Les attributs portés par les vertex sont également interpolés et associés aux fragement correspondant.
+
+Note : Le terme rasterisation est parfois employé pour designer la totalité du processus de rendu temps réèl classique. Dans ce cas il fait référence à la methode de rendu dans sont intégralité par oposition à la methode de rendu par Ray Tracing.
 
 ## Render Target
+Une render target, c'est une toile sur laquelle le pipline graphique va peindre une sequence de draw calls. A la fin de la squence (appelée une passe de rendu), cette toile peut être soit :
+- 1. affichée à l'écran
+- 2. stoqué comme resultat intermédiaire et utilisée lors de la passe de rendu suivante
+
+Le second cas permet d'implémenter des effets avancés comme les ombres dynamiques, les plannar reflections, et toute une palanquée de post-process (Bloom, Cel Shading, SSAO, Anti-Aliasing etc...).
+
+Note : Dans le contexte d'un moteur de jeu, le terme designe implicitement le 2eme cas (un résultat intermédiaire utilisé pour implémenter des effets avancés). 
 
 ## Shader
 Un shader est un programme qui s'execute sur le GPU. Le terme fait l'objet d'une légère ambiguité. Suivant le contexte, il designe :
