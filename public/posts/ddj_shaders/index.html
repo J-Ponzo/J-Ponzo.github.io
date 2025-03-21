@@ -327,14 +327,14 @@ Mais dis donc, Jamy ! Si tous les cœurs exécutent la même instruction, ils vo
 <p>Il s&rsquo;agit d&rsquo;un procédé qui consiste à <strong>discrétiser une image vectorielle</strong>. Dit autrement, on va prendre nos jolis triangles tout lisses, dont les <em>vertex</em> viennent d&rsquo;être projetés dans l&rsquo;espace écran (par le <em>vertex shader</em>), et on va en faire un amas de pixels qu&rsquo;on appelle des <em>fragments</em>. Ces <em>fragments</em> sont ensuite injectés en entrée du <em>fragment shader</em> (vous commencez à comprendre le pattern de nommage ?).</p>
 <p><img alt="illustration de l&rsquo;interpolation de la couleur des vertex via la rasteriasation" src="/posts/ddj_shaders/images/rasterisation.opti.webp">
 <em>Rasterisation avec interpolation de l&rsquo;attribut vertex color.</em></p>
-<p>Je ne l&rsquo;ai pas mentionné jusqu&rsquo;ici, mais en réalité, les <em>vertex</em> portent des attributs en plus de leurs coordonnées. Il est important de noter que lors de la <em>rasterisation</em>, une <strong><em>interpolation</em> de ces attributs</strong> est effectuée pour chaque <em>fragment</em> généré. L&rsquo;image ci-dessus illustre cela avec l&rsquo;attribut <a href="/misc/glossary/#vertex-color">vertex color</a>.</p>
+<p>Je ne l&rsquo;ai pas mentionné jusqu&rsquo;ici, mais en réalité, les <em>vertex</em> portent des attributs en plus de leurs coordonnées. Il est important de noter que lors de la <em>rasterisation</em>, une <strong><em>interpolation</em> de ces attributs</strong> est effectuée pour chaque <em>fragment</em> généré. L&rsquo;image ci-dessus illustre cela avec l&rsquo;attribut <a href="/misc/glossary/#vertex-color-attribute">vertex color</a>.</p>
 <h3 id="3-fragment-shader">3. Fragment Shader</h3>
 <p>Le <em>fragment shader</em>, c&rsquo;est la dernière étape avant que le pixel soit imprimé à l&rsquo;écran. Son job est de déterminer la <strong>couleur finale de ce pixel</strong> à partir des attributs des <em>vertex interpolés</em> lors de la <em>rasterisation</em> :</p>
 <ul>
 <li>Coordonnées : l&rsquo;endroit où se trouve le pixel sur l&rsquo;écran.</li>
-<li><em>Normal</em> : l&rsquo;orientation de la face associée au <em>vertex</em>.</li>
+<li><a href="/misc/glossary/#normal-attribute"><em>Normal</em></a> : l&rsquo;orientation de la face associée au <em>vertex</em>.</li>
 <li><em>Vertex Color</em> : je pense que cet attribut est le reliquat d&rsquo;une ère où la puissance ne permettait pas de <em>sampler</em> des textures pour chaque pixel. Aujourd&rsquo;hui, c&rsquo;est un attribut qu&rsquo;on utilise de manière détournée pour encoder d&rsquo;autres informations dans les modèles 3D.</li>
-<li><a href="/misc/glossary/#uv"><em>UV</em></a> : c&rsquo;est une coordonnée 2D utilisée la plupart du temps pour <em>sampler</em> une texture. On en a généralement plusieurs (<em>uv0, uv1, uv2</em>…). Comme le <em>vertex color</em>, ils peuvent être utilisés de manière détournée parfois.</li>
+<li><a href="/misc/glossary/#uv-attribute"><em>UV</em></a> : c&rsquo;est une coordonnée 2D utilisée la plupart du temps pour <em>sampler</em> une texture. On en a généralement plusieurs (<em>uv0, uv1, uv2</em>…). Comme le <em>vertex color</em>, ils peuvent être utilisés de manière détournée parfois.</li>
 </ul>
 <p>C&rsquo;est notamment dans ce <em>shader</em> que l&rsquo;on va pouvoir :</p>
 <ul>

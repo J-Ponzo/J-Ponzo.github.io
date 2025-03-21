@@ -266,7 +266,19 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">EXIT_SUCCESS</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>Notez que tous les &ldquo;langages traditionnels&rdquo; ne se placent pas exactement au même niveau d&rsquo;abstraction. Le C est par exemple plus bas niveau que le Java. Mais les différences sont plus subtiles que pour les exemples précédent.</p>
-<h2 id="normal">Normal</h2>
+<h2 id="normal-attribute">Normal Attribute</h2>
+<p>C&rsquo;est un type d&rsquo;attribut courament associé aux vertex. Il décrit l&rsquo;orientation de la surface au niveau des sommets du mesh. C&rsquo;est une moyenne  pondérée des normales des triangles adjacents au sommet. Differents types de pondération sont possibles :</p>
+<ul>
+<li>pondération par l&rsquo;aire des triangles</li>
+<li>pondération par l&rsquo;angle au vertex</li>
+<li>pondération selon le materiau</li>
+<li>mélange de tout ça</li>
+</ul>
+<p>Les normales interviennent principalement dans le calcule de l&rsquo;éclairage. Le fait que les normales soient des moyennes donne un aspect lisse à la surface lorsqu&rsquo;elle est éclairée.</p>
+<p>[mettre une image smooth]</p>
+<p>C&rsquo;est bien la plupart du temps mais parfois on veut que certaines arrêtes soient saillantes. Pour cela il faut dupliquer les vertex de l&rsquo;arrête et donner à chacun la normale d&rsquo;une des face adjacente.</p>
+<p>[mettre une image sharp]</p>
+<p>Cet attribut est le plus souvent calculé automatiquement par le logiciel de modélisation 3D en fonction de l&rsquo;agencement des vertex, edges et faces du mesh. Les arrêtes saillantes peuvent être détectées automatiquement selon l&rsquo;angle entre les 2 faces adjacentes, ou annotés manuellement par l&rsquo;artiste en déclarant des arrêtes comme soft ou sharp ou en créant des smoothing groups.</p>
 <h2 id="pipeline-graphique">Pipeline Graphique</h2>
 <p>Le pipeline graphique est une sequence d&rsquo;étape executées par le GPU lors d&rsquo;un draw call. Son rôle est de transformer les vertex 3D qui le traversent en  pixels affichés à l&rsquo;écran.</p>
 <p>Certaines de ces étapes sont directement gravées dans les circuits du GPU (les fixed function stages), d&rsquo;autres sont programmable (les shader stages).</p>
@@ -312,7 +324,7 @@ stroke-linejoin="round" class="feather feather-home">
 <a href="/posts/ddj_shaders/">Dis donc Jamy : Comment ça marche un shader ?</a></p>
 <h2 id="skeletal-animation">Skeletal Animation</h2>
 <h2 id="ssao">SSAO</h2>
-<h2 id="uv">UV</h2>
+<h2 id="uv-attribute">UV Attribute</h2>
 <h2 id="vertex">Vertex</h2>
 <p>Le vertex (ou sommet) est un élement constituant du mesh (ou maillage). Il représente un point fixe de l&rsquo;espace (3d) ou du plan (2d). Il peut porter un certain nombre d&rsquo;attributs dont les plus courants sont :</p>
 <ul>
@@ -322,7 +334,9 @@ stroke-linejoin="round" class="feather feather-home">
 </ul>
 <p>D&rsquo;autres attributs moins frequents, comme les poids du skinning, peuvent s&rsquo;ajouter à cette liste. Retenez juste que c&rsquo;est une coordonnée de l&rsquo;espace ou du plan qui porte de l&rsquo;information.</p>
 <p>Note : Le pluriel correcte de vertex est vertices (ne soyez pas surpris de le voir écrit sous cette forme). Mais je l&rsquo;entand très peu à l&rsquo;oral (en tout cas en France) et je trouve que c&rsquo;est une source de confusion innutile. J&rsquo;utilise donc très souvent le terme vetex même au pluriel (désolé pour pour vos oreilles et vos yeux).</p>
-<h2 id="vertex-color">Vertex Color</h2>
+<h2 id="vertex-color-attribute">Vertex Color Attribute</h2>
+<p>C&rsquo;est un type d&rsquo;attribut courament associé aux vertex. Il stocke une couleur au niveau des sommets du mesh qui va devenir un dégradé après interpolation lors de la rasterisation.</p>
+<p>Il est peu utilisé de cette façon dans les jeux modernes. Mais on s&rsquo;en sert souvent de manière détournée pour encoder des informations utilse à certains effets ou techniques. Le plus utilisé est surement le vertex painting qui consiste à peindre les vertex pour appliquer un effet localisé (salisures, sang, mousse sur un rochet). Mais il y en a d&rsquo;autres.</p>
 <h2 id="vertex-lighting">Vertex Lighting</h2>
 <h2 id="vertex-shader">Vertex Shader</h2>
 <p>Le vertex shader, est la première étape programmable du pipeline graphique. Traditionnellement, la mission de ce shader stage est d&rsquo;opérer une succession de transformation géométriques aux vertex qui le traversent, afin de les transférer de leur coordonnée locale en 3d à l&rsquo;espace 2d de l&rsquo;écran.</p>

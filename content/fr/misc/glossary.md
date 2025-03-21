@@ -148,7 +148,22 @@ int main()
 
 Notez que tous les "langages traditionnels" ne se placent pas exactement au même niveau d'abstraction. Le C est par exemple plus bas niveau que le Java. Mais les différences sont plus subtiles que pour les exemples précédent.
 
-## Normal
+## Normal Attribute
+C'est un type d'attribut courament associé aux vertex. Il décrit l'orientation de la surface au niveau des sommets du mesh. C'est une moyenne  pondérée des normales des triangles adjacents au sommet. Differents types de pondération sont possibles :
+- pondération par l'aire des triangles
+- pondération par l'angle au vertex
+- pondération selon le materiau
+- mélange de tout ça
+
+Les normales interviennent principalement dans le calcule de l'éclairage. Le fait que les normales soient des moyennes donne un aspect lisse à la surface lorsqu'elle est éclairée. 
+
+[mettre une image smooth]
+
+C'est bien la plupart du temps mais parfois on veut que certaines arrêtes soient saillantes. Pour cela il faut dupliquer les vertex de l'arrête et donner à chacun la normale d'une des face adjacente.
+
+[mettre une image sharp]
+
+Cet attribut est le plus souvent calculé automatiquement par le logiciel de modélisation 3D en fonction de l'agencement des vertex, edges et faces du mesh. Les arrêtes saillantes peuvent être détectées automatiquement selon l'angle entre les 2 faces adjacentes, ou annotés manuellement par l'artiste en déclarant des arrêtes comme soft ou sharp ou en créant des smoothing groups.
 
 ## Pipeline Graphique
 Le pipeline graphique est une sequence d'étape executées par le GPU lors d'un draw call. Son rôle est de transformer les vertex 3D qui le traversent en  pixels affichés à l'écran.
@@ -205,7 +220,7 @@ Plus d'élements ici :
 
 ## SSAO
 
-## UV
+## UV Attribute
 
 ## Vertex
 Le vertex (ou sommet) est un élement constituant du mesh (ou maillage). Il représente un point fixe de l'espace (3d) ou du plan (2d). Il peut porter un certain nombre d'attributs dont les plus courants sont :
@@ -217,7 +232,10 @@ D'autres attributs moins frequents, comme les poids du skinning, peuvent s'ajout
 
 Note : Le pluriel correcte de vertex est vertices (ne soyez pas surpris de le voir écrit sous cette forme). Mais je l'entand très peu à l'oral (en tout cas en France) et je trouve que c'est une source de confusion innutile. J'utilise donc très souvent le terme vetex même au pluriel (désolé pour pour vos oreilles et vos yeux).
 
-## Vertex Color
+## Vertex Color Attribute
+C'est un type d'attribut courament associé aux vertex. Il stocke une couleur au niveau des sommets du mesh qui va devenir un dégradé après interpolation lors de la rasterisation.
+
+Il est peu utilisé de cette façon dans les jeux modernes. Mais on s'en sert souvent de manière détournée pour encoder des informations utilse à certains effets ou techniques. Le plus utilisé est surement le vertex painting qui consiste à peindre les vertex pour appliquer un effet localisé (salisures, sang, mousse sur un rochet). Mais il y en a d'autres.
 
 ## Vertex Lighting
 

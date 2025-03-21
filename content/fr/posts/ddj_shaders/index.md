@@ -127,14 +127,14 @@ Il s'agit d'un procédé qui consiste à **discrétiser une image vectorielle**.
 ![illustration de l'interpolation de la couleur des vertex via la rasteriasation](images/rasterisation.opti.webp) 
 *Rasterisation avec interpolation de l'attribut vertex color.*
 
-Je ne l'ai pas mentionné jusqu'ici, mais en réalité, les *vertex* portent des attributs en plus de leurs coordonnées. Il est important de noter que lors de la *rasterisation*, une ***interpolation* de ces attributs** est effectuée pour chaque *fragment* généré. L'image ci-dessus illustre cela avec l'attribut [vertex color](/misc/glossary/#vertex-color).
+Je ne l'ai pas mentionné jusqu'ici, mais en réalité, les *vertex* portent des attributs en plus de leurs coordonnées. Il est important de noter que lors de la *rasterisation*, une ***interpolation* de ces attributs** est effectuée pour chaque *fragment* généré. L'image ci-dessus illustre cela avec l'attribut [vertex color](/misc/glossary/#vertex-color-attribute).
 
 ### 3. Fragment Shader
 Le *fragment shader*, c'est la dernière étape avant que le pixel soit imprimé à l'écran. Son job est de déterminer la **couleur finale de ce pixel** à partir des attributs des *vertex interpolés* lors de la *rasterisation* :
 - Coordonnées : l'endroit où se trouve le pixel sur l'écran.
-- *Normal* : l'orientation de la face associée au *vertex*.
+- [*Normal*](/misc/glossary/#normal-attribute) : l'orientation de la face associée au *vertex*.
 - *Vertex Color* : je pense que cet attribut est le reliquat d'une ère où la puissance ne permettait pas de *sampler* des textures pour chaque pixel. Aujourd'hui, c'est un attribut qu'on utilise de manière détournée pour encoder d'autres informations dans les modèles 3D.
-- [*UV*](/misc/glossary/#uv) : c'est une coordonnée 2D utilisée la plupart du temps pour *sampler* une texture. On en a généralement plusieurs (*uv0, uv1, uv2*…). Comme le *vertex color*, ils peuvent être utilisés de manière détournée parfois.
+- [*UV*](/misc/glossary/#uv-attribute) : c'est une coordonnée 2D utilisée la plupart du temps pour *sampler* une texture. On en a généralement plusieurs (*uv0, uv1, uv2*…). Comme le *vertex color*, ils peuvent être utilisés de manière détournée parfois.
 
 C'est notamment dans ce *shader* que l'on va pouvoir :
 - Rendre la lumière ([*Per Pixel Lighting*](/misc/glossary/#pixel-lighting)).
