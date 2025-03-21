@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.137.0">
+<meta name="generator" content="Hugo 0.140.2">
 
     
     <meta property="og:url" content="http://localhost:1313/misc/glossary/">
@@ -33,7 +33,7 @@
   <meta property="og:title" content="Glossaire">
   <meta property="og:description" content="Anti-Aliasing [Décrire ici tous les types d’anti-aliasing MSAA, FXAA, TAA …]
 Bloom Cel Shading CPU C’est l’acronyme de Central Processing Unit : l’unité de calcule principale d’un ordinateur. Il s’agit tout simplement de votre processeur.
-Depth of Field Draw Call Un draw call est une commande envoyée au GPU pour lui demander de traiter un ensemble de primitives géométriques (généralement des triangles) afin de les rendre à l’écran (ou dans une render target).">
+Deferred Lighting C’est une technique qui consiste à calculer l’éclairage non plus à chaque drawcall, mais dans une seconde passe juste après la passe principale. En ce sens, je l’assimile souvent à un calcule de lumière en post-process (j’avoue ne pas être sur que cette appelation soit bien rigoureuse).">
   <meta property="og:locale" content="fr_fr">
   <meta property="og:type" content="article">
     <meta property="article:section" content="misc">
@@ -45,7 +45,7 @@ Depth of Field Draw Call Un draw call est une commande envoyée au GPU pour lui 
   <meta name="twitter:title" content="Glossaire">
   <meta name="twitter:description" content="Anti-Aliasing [Décrire ici tous les types d’anti-aliasing MSAA, FXAA, TAA …]
 Bloom Cel Shading CPU C’est l’acronyme de Central Processing Unit : l’unité de calcule principale d’un ordinateur. Il s’agit tout simplement de votre processeur.
-Depth of Field Draw Call Un draw call est une commande envoyée au GPU pour lui demander de traiter un ensemble de primitives géométriques (généralement des triangles) afin de les rendre à l’écran (ou dans une render target).">
+Deferred Lighting C’est une technique qui consiste à calculer l’éclairage non plus à chaque drawcall, mais dans une seconde passe juste après la passe principale. En ce sens, je l’assimile souvent à un calcule de lumière en post-process (j’avoue ne pas être sur que cette appelation soit bien rigoureuse).">
 
 
     
@@ -162,6 +162,13 @@ stroke-linejoin="round" class="feather feather-home">
 <h2 id="cel-shading">Cel Shading</h2>
 <h2 id="cpu">CPU</h2>
 <p>C&rsquo;est l&rsquo;acronyme de Central Processing Unit : l&rsquo;unité de calcule principale d&rsquo;un ordinateur. Il s&rsquo;agit tout simplement de votre processeur.</p>
+<h2 id="deferred-lighting">Deferred Lighting</h2>
+<p>C&rsquo;est une technique qui consiste à calculer l&rsquo;éclairage non plus à chaque drawcall, mais dans une seconde passe juste après la passe principale. En ce sens, je l&rsquo;assimile souvent à un calcule de lumière en post-process (j&rsquo;avoue ne pas être sur que cette appelation soit bien rigoureuse).</p>
+<p>L&rsquo;avantage de cette technique par rapport au vertex lighting et au pixel lighting, c&rsquo;est que l&rsquo;illumination n&rsquo;est plus calculée à chaque drawcalls mais une seule fois à la fin. Il dépend donc uniquement de la résolution et s&rsquo;affranchi de l&rsquo;overdraw (sur-impression des drawcall qui se recouvrent les uns les autres sur la render target et sont donc partiellement calculés pour rien).</p>
+<p>On est donc aussi précis qu&rsquo;avec du pixel lighting, mais pour beaucoup moins cher. Le problème, c&rsquo;est qu&rsquo;avec cette technique, on n&rsquo;est plus capable de rendre la transparence correctement. Les moteurs utilisant du deferred lighting n&rsquo;utilisent donc jamais que ça. Ce sont en réalité des hybrides.</p>
+<p>Termes connexes :
+<a href="/misc/glossary/#pixel-lighting">Vertex Lighting</a>
+<a href="/misc/glossary/#deferred-lighting">Deferred Lighting</a></p>
 <h2 id="depth-of-field">Depth of Field</h2>
 <h2 id="draw-call">Draw Call</h2>
 <p>Un draw call est une commande envoyée au GPU pour lui demander de traiter un ensemble de primitives géométriques (généralement des triangles) afin de les rendre à l&rsquo;écran (ou dans une <em>render target</em>).</p>
@@ -283,6 +290,12 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Le pipeline graphique est une sequence d&rsquo;étape executées par le GPU lors d&rsquo;un draw call. Son rôle est de transformer les vertex 3D qui le traversent en  pixels affichés à l&rsquo;écran.</p>
 <p>Certaines de ces étapes sont directement gravées dans les circuits du GPU (les fixed function stages), d&rsquo;autres sont programmable (les shader stages).</p>
 <h2 id="pixel-lighting">Pixel Lighting</h2>
+<p>C&rsquo;est une technique qui consiste à calculer l&rsquo;éclairage au niveau du fragment shader pour chaque drawcall de la passe principale.</p>
+<p>Avec cette technique on est plus dépendant de la densité de vertex de la surface éclairée, l&rsquo;illumination étant calculée directement au niveau du pixel. Mais elle coûte beaucoup plus cher étant donné que le calcul n&rsquo;est pas effetué pour chaque vertex, mais pour chaque pixel (et il y en a en principe beaucoup plus)</p>
+<p>[Mettre une image]</p>
+<p>Termes connexes :
+<a href="/misc/glossary/#pixel-lighting">Vertex Lighting</a>
+<a href="/misc/glossary/#deferred-lighting">Deferred Lighting</a></p>
 <h2 id="post-process">Post-Process</h2>
 <p>Un post-process est une passe de rendu au cours de laquelle on applique un traitement à un rendu intermédiaire de la scène. Ce rendu intermédiaire est stoqué dans une render target qui a été imprimée lors d&rsquo;une passe précédente.</p>
 <p>Enormement d&rsquo;effets visuels sont obtenus de cette manière (Depth of field, Color Grading, Film Grain, Vignetting &hellip;)</p>
@@ -325,6 +338,10 @@ stroke-linejoin="round" class="feather feather-home">
 <h2 id="skeletal-animation">Skeletal Animation</h2>
 <h2 id="ssao">SSAO</h2>
 <h2 id="uv-attribute">UV Attribute</h2>
+<p>C&rsquo;est un type d&rsquo;attribut courrament associé aux vertex. Il représente généralement une coordonnée 2d qui correspont à une position dans une texture. C&rsquo;est grâce à cette information qu&rsquo;on va pouvoir appliquer la texture au mesh. On appele ça le texture mapping. Mais comment ça marche dans le détail ?</p>
+<p>Par la magie de l&rsquo;interpolation (opérée par lors de la rasterization), les coordonnées sont déclinés et associées à chaque fragment. Le fragment shader ayant acces à l&rsquo;UV interpolé peut aors échantillonner (ou sampler) la texture à l&rsquo;endroit indiqué pour déterminer la couleur du pixel à l&rsquo;écran.</p>
+<p>[mettre une image]</p>
+<p>Les vertex peuvent porter plusieurs jeux d&rsquo;UV différents car on paeut avoir plusieurs textures à mapper sur un mesh (par exemple la lumière statique précalculée et stoqué dans une texture appelée ube lightmap).</p>
 <h2 id="vertex">Vertex</h2>
 <p>Le vertex (ou sommet) est un élement constituant du mesh (ou maillage). Il représente un point fixe de l&rsquo;espace (3d) ou du plan (2d). Il peut porter un certain nombre d&rsquo;attributs dont les plus courants sont :</p>
 <ul>
@@ -338,6 +355,12 @@ stroke-linejoin="round" class="feather feather-home">
 <p>C&rsquo;est un type d&rsquo;attribut courament associé aux vertex. Il stocke une couleur au niveau des sommets du mesh qui va devenir un dégradé après interpolation lors de la rasterisation.</p>
 <p>Il est peu utilisé de cette façon dans les jeux modernes. Mais on s&rsquo;en sert souvent de manière détournée pour encoder des informations utilse à certains effets ou techniques. Le plus utilisé est surement le vertex painting qui consiste à peindre les vertex pour appliquer un effet localisé (salisures, sang, mousse sur un rochet). Mais il y en a d&rsquo;autres.</p>
 <h2 id="vertex-lighting">Vertex Lighting</h2>
+<p>C&rsquo;est une technique qui consiste à calculer l&rsquo;éclairage au niveau du vertex shader pour chaque drawcall de la passe principale. La valeur d&rsquo;illumination obtenue est ensuite interpolée par le rasterizer et transmise à chaque fragment. Le fragment shader peut alors appliquer cette valeur d&rsquo;illumination interpolée à la couleur du pixel pour déterminer sa couleur finale.</p>
+<p>L&rsquo;avantage de cette technique c&rsquo;est qu&rsquo;elle est très peu coûteuse. Mais la qualité du résultat obtenu dépend de la dansité de vertex de la surface éclairée.</p>
+<p>[Mettre une image]</p>
+<p>Termes connexes :
+<a href="/misc/glossary/#pixel-lighting">Pixel Lighting</a>
+<a href="/misc/glossary/#deferred-lighting">Deferred Lighting</a></p>
 <h2 id="vertex-shader">Vertex Shader</h2>
 <p>Le vertex shader, est la première étape programmable du pipeline graphique. Traditionnellement, la mission de ce shader stage est d&rsquo;opérer une succession de transformation géométriques aux vertex qui le traversent, afin de les transférer de leur coordonnée locale en 3d à l&rsquo;espace 2d de l&rsquo;écran.</p>
 <p>Après cette étape, on peut dire que les vertex forment une sorte d&rsquo;image vectorielle prète à être rasterisée. Cela dit, certaines étapes optionnelles du pipeline peuvent eventuellement s&rsquo;apliquer avant la rasterisation (geometry shader et tessellation).</p>

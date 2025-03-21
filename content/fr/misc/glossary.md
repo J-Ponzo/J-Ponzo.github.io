@@ -13,6 +13,17 @@ toc = false
 ## CPU
 C'est l'acronyme de Central Processing Unit : l'unité de calcule principale d'un ordinateur. Il s'agit tout simplement de votre processeur.
 
+## Deferred Lighting
+C'est une technique qui consiste à calculer l'éclairage non plus à chaque drawcall, mais dans une seconde passe juste après la passe principale. En ce sens, je l'assimile souvent à un calcule de lumière en post-process (j'avoue ne pas être sur que cette appelation soit bien rigoureuse).
+
+L'avantage de cette technique par rapport au vertex lighting et au pixel lighting, c'est que l'illumination n'est plus calculée à chaque drawcalls mais une seule fois à la fin. Il dépend donc uniquement de la résolution et s'affranchi de l'overdraw (sur-impression des drawcall qui se recouvrent les uns les autres sur la render target et sont donc partiellement calculés pour rien).
+
+On est donc aussi précis qu'avec du pixel lighting, mais pour beaucoup moins cher. Le problème, c'est qu'avec cette technique, on n'est plus capable de rendre la transparence correctement. Les moteurs utilisant du deferred lighting n'utilisent donc jamais que ça. Ce sont en réalité des hybrides.
+
+Termes connexes :
+[Vertex Lighting](/misc/glossary/#pixel-lighting)
+[Deferred Lighting](/misc/glossary/#deferred-lighting)
+
 ## Depth of Field
 
 ## Draw Call
@@ -171,6 +182,15 @@ Le pipeline graphique est une sequence d'étape executées par le GPU lors d'un 
 Certaines de ces étapes sont directement gravées dans les circuits du GPU (les fixed function stages), d'autres sont programmable (les shader stages).
 
 ## Pixel Lighting
+C'est une technique qui consiste à calculer l'éclairage au niveau du fragment shader pour chaque drawcall de la passe principale. 
+
+Avec cette technique on est plus dépendant de la densité de vertex de la surface éclairée, l'illumination étant calculée directement au niveau du pixel. Mais elle coûte beaucoup plus cher étant donné que le calcul n'est pas effetué pour chaque vertex, mais pour chaque pixel (et il y en a en principe beaucoup plus)
+
+[Mettre une image]
+
+Termes connexes :
+[Vertex Lighting](/misc/glossary/#pixel-lighting)
+[Deferred Lighting](/misc/glossary/#deferred-lighting)
 
 ## Post-Process
 Un post-process est une passe de rendu au cours de laquelle on applique un traitement à un rendu intermédiaire de la scène. Ce rendu intermédiaire est stoqué dans une render target qui a été imprimée lors d'une passe précédente.
@@ -221,6 +241,13 @@ Plus d'élements ici :
 ## SSAO
 
 ## UV Attribute
+C'est un type d'attribut courrament associé aux vertex. Il représente généralement une coordonnée 2d qui correspont à une position dans une texture. C'est grâce à cette information qu'on va pouvoir appliquer la texture au mesh. On appele ça le texture mapping. Mais comment ça marche dans le détail ?
+
+ Par la magie de l'interpolation (opérée par lors de la rasterization), les coordonnées sont déclinés et associées à chaque fragment. Le fragment shader ayant acces à l'UV interpolé peut aors échantillonner (ou sampler) la texture à l'endroit indiqué pour déterminer la couleur du pixel à l'écran.
+
+[mettre une image]
+
+Les vertex peuvent porter plusieurs jeux d'UV différents car on paeut avoir plusieurs textures à mapper sur un mesh (par exemple la lumière statique précalculée et stoqué dans une texture appelée ube lightmap).
 
 ## Vertex
 Le vertex (ou sommet) est un élement constituant du mesh (ou maillage). Il représente un point fixe de l'espace (3d) ou du plan (2d). Il peut porter un certain nombre d'attributs dont les plus courants sont :
@@ -238,6 +265,15 @@ C'est un type d'attribut courament associé aux vertex. Il stocke une couleur au
 Il est peu utilisé de cette façon dans les jeux modernes. Mais on s'en sert souvent de manière détournée pour encoder des informations utilse à certains effets ou techniques. Le plus utilisé est surement le vertex painting qui consiste à peindre les vertex pour appliquer un effet localisé (salisures, sang, mousse sur un rochet). Mais il y en a d'autres.
 
 ## Vertex Lighting
+C'est une technique qui consiste à calculer l'éclairage au niveau du vertex shader pour chaque drawcall de la passe principale. La valeur d'illumination obtenue est ensuite interpolée par le rasterizer et transmise à chaque fragment. Le fragment shader peut alors appliquer cette valeur d'illumination interpolée à la couleur du pixel pour déterminer sa couleur finale.
+
+L'avantage de cette technique c'est qu'elle est très peu coûteuse. Mais la qualité du résultat obtenu dépend de la dansité de vertex de la surface éclairée.
+
+[Mettre une image]
+
+Termes connexes :
+[Pixel Lighting](/misc/glossary/#pixel-lighting)
+[Deferred Lighting](/misc/glossary/#deferred-lighting)
 
 ## Vertex Shader
 Le vertex shader, est la première étape programmable du pipeline graphique. Traditionnellement, la mission de ce shader stage est d'opérer une succession de transformation géométriques aux vertex qui le traversent, afin de les transférer de leur coordonnée locale en 3d à l'espace 2d de l'écran.

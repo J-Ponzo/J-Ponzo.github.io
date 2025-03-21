@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.137.0">
+<meta name="generator" content="Hugo 0.140.2">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re_poc_devlog_1/">
@@ -230,7 +230,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Pour identifier ces ajustements, je vais utiliser une technique que j’aime bien et que j’appelle le <em>Oracle Driven Development</em>. C’est un peu comme du <em>Test Driven Development</em>, sauf qu’au lieu d’avoir un jeu de tests automatisés, propre et exhaustif, je vais bricoler une petite moulinette qu’il faudra lancer à moitié à la main.</p>
 <p>A la manière d&rsquo;un oracle, cette moulinette va formuler des prophéties parfois cryptiques en réponse aux questions qu&rsquo;on lui pose. Mais interprétés correctement, ces présages nous aideront à avancer dans notre périple.</p>
 <p>Si Godot et Blender sont bien sur la même longueure d&rsquo;ondes, les G-Buffer qu&rsquo;ils produisent à partir d&rsquo;une même scène devraient être identiques. C&rsquo;est ce que nous allons chercher à vérifier avec l&rsquo;aide de l&rsquo;oracle. Son rôle sera de comparer les G-Buffers, et de nous délivrer son jugement sous la forme d&rsquo;une image. Il nous faudra alors lire norte réponse dans cette image.</p>
-<p><img alt="Image illustrant le protocol de validation" src="images/oracle_schema.opti.webp"></p>
+<p><img src="images/oracle_schema.opti.webp" alt="Image illustrant le protocol de validation"></p>
 <p>Mais trève de métaphore. Concrètement, cet Oracle est un post-process du nom de oracle.gdshader. Il prend en entrée les textures des deux G-Buffers et le type de texture à comparer. Son job est de calculer la différence entre les deux textures du type choisi (la déterministe et l’interactive) et de l&rsquo;afficher à l&rsquo;écran. Selon le type de donné, les différences pourront avoir des implémentations spécifiques. Mais chacune de ces implémentaions renveront une nuance de gris à interpréter comme suit :</p>
 <ul>
 <li>noir -&gt; les pixels sont identiques</li>
@@ -368,8 +368,8 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Nous savons désormais comment fonctionne l’oracle, mais nous n’avons pas encore de données à lui soumettre. Il faut donc les construire.</p>
 <h4 id="mise-en-place-dune-scène-de-test">Mise en place d’une scène de test</h4>
 <p>Pour commencer, j’ai créé une petite scène dans Blender, composée de quelques primitives basiques et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale car Godot prend en charge le format de scène Blender. il suffit d’importer le fichier .blend et de l’ajouter dans une scène vide.</p>
-<p><img alt="Illustration représentant la SimpleScene dans Blender" src="images/simpleBlend.opti.webp"><br>
-<img alt="Illustration représentant la SimpleScene dans Godot" src="images/simpleGodot.opti.webp"></p>
+<p><img src="images/simpleBlend.opti.webp" alt="Illustration représentant la SimpleScene dans Blender"><br>
+<img src="images/simpleGodot.opti.webp" alt="Illustration représentant la SimpleScene dans Godot"></p>
 <p>Les G-Buffers déterministes et interactifs que nous présenteront à l’oracle seront issus de ces scènes. À terme - comme le code source vous l&rsquo;a certainement spoilé - ils devront contenir les textures suivantes :</p>
 <ul>
 <li><strong>Albedo</strong> (couleur diffuse)</li>
@@ -381,9 +381,9 @@ stroke-linejoin="round" class="feather feather-home">
 <h4 id="albedo-du-g-buffer-déterministe">Albedo du G-Buffer déterministe</h4>
 <p>Pour générer la texture d’Albedo déterministe dans Blender, nous allons commencer par activer la passe de <em>Diffuse Color</em> de Cycles (qui correspond à l’Albedo)</p>
 <p>Ensuite il va falloir effectuer un rendu. Grâce au compositor et au nœud <code>File Output</code>, l’image correspondant à cette passe sera automatiquement exportée à l’emplacement spécifié à la fin du rendu.</p>
-<p><img alt="Illustration du processus d&rsquo;export de la texture d&rsquo;Albedo déterministe depuis Blender" src="/projects/open_re_poc_devlog_1/images/export_albedo_texture.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_1/images/export_albedo_texture.opti.webp" alt="Illustration du processus d&rsquo;export de la texture d&rsquo;Albedo déterministe depuis Blender"></p>
 <p>Il ne restera plus qu’à importer cette image dans Godot et à la &ldquo;binder&rdquo; au <code>uniform dgbuffer_albedo</code> de l&rsquo;oracle.</p>
-<p><img alt="Association de la texture d&rsquo;Albedo Déterministe au uniform dbuffer_albedo du shader oracle.gdshader" src="/projects/open_re_poc_devlog_1/images/bind_deterministe.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_1/images/bind_deterministe.opti.webp" alt="Association de la texture d&rsquo;Albedo Déterministe au uniform dbuffer_albedo du shader oracle.gdshader"></p>
 <h4 id="albedo-du-g-buffer-interactif-">Albedo du G-Buffer interactif :</h4>
 <p>Pour la version interactive, c’est un peu plus complexe. Godot nous permet d’injecter certaines textures dans un uniform, que l’on peut ensuite utiliser dans le shader. La syntaxe est la suivante :</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">texture</span> <span class="o">:</span> <span class="n">hint_</span><span class="o">&lt;</span><span class="n">insert_texture_name</span><span class="o">&gt;</span><span class="n">_texture</span><span class="p">;</span>
@@ -395,7 +395,7 @@ stroke-linejoin="round" class="feather feather-home">
 </ol>
 </li>
 </ul>
-<p><img alt="Albedo_Subviewport dans la scene Godot" src="/projects/open_re_poc_devlog_1/images/subviewport.opti.webp">
+<p><img src="/projects/open_re_poc_devlog_1/images/subviewport.opti.webp" alt="Albedo_Subviewport dans la scene Godot">
 <br><br></p>
 <ul>
 <li>
@@ -424,7 +424,7 @@ stroke-linejoin="round" class="feather feather-home">
 </ol>
 </li>
 </ul>
-<p><img alt="Réglage du paramètre Debug Draw de la REnder Target" src="/projects/open_re_poc_devlog_1/images/RT_unshaded.opti.webp">
+<p><img src="/projects/open_re_poc_devlog_1/images/RT_unshaded.opti.webp" alt="Réglage du paramètre Debug Draw de la REnder Target">
 <br><br></p>
 <ul>
 <li>
@@ -433,56 +433,56 @@ stroke-linejoin="round" class="feather feather-home">
 </ol>
 </li>
 </ul>
-<p><img alt="Association de la Render Target générant la Texture d&rsquo;Albedo Déterministe au uniform ibuffer_albedo du shader oracle.gdshader" src="/projects/open_re_poc_devlog_1/images/bind_interactive.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_1/images/bind_interactive.opti.webp" alt="Association de la Render Target générant la Texture d&rsquo;Albedo Déterministe au uniform ibuffer_albedo du shader oracle.gdshader"></p>
 <h2 id="harmonisation-de-lalbédo-">Harmonisation de l&rsquo;albédo :</h2>
 <p>Nos textures d’albédo sont en place, correctement créées et &ldquo;bindées&rdquo;. Elles proviennent de deux scènes rigoureusement identiques issues du même fichier. Si &ldquo;l’importer&rdquo; de Godot à bien fait son travail en traduisant les données de Blender, on devrait obtenir une prophétie rassurante… c&rsquo;est-à-dire un bel écran noir.</p>
 <p>Qu’est-ce qui pourrait mal se passer ?</p>
-<p><img alt="Capture de la première prophétie de l&rsquo;Oracle" src="/projects/open_re_poc_devlog_1/images/first_prophecy.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_1/images/first_prophecy.opti.webp" alt="Capture de la première prophétie de l&rsquo;Oracle"></p>
 <p>Oh nooo !!!</p>
 <p>Pas de panique, Godot fait ce qu’il doit faire, le problème ne vient pas de lui. Comme souvent, ce sont les étapes manuelles de la moulinette qui introduisent les erreurs. A savoirs l’export et l&rsquo;import de la texture déterministe.</p>
 <h4 id="espaces-colorimétriques-">Espaces colorimétriques :</h4>
 <p>En observant nos textures d&rsquo;albedo, un détail saute immédiatement aux yeux : la version déterministe apparait assez délavée.</p>
-<p><img alt="gif alternant l&rsquo;albedo interactif et l&rsquo;aldedo deterministe délavé" src="/projects/open_re_poc_devlog_1/images/init_input_alterance.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_1/images/init_input_alterance.webp" alt="gif alternant l&rsquo;albedo interactif et l&rsquo;aldedo deterministe délavé"></p>
 <p>C&rsquo;est un problème d’export. J’avais une intuition sur l’origine du souci : une histoire d’espace de couleur. Il s&rsquo;avère qu&rsquo;il fallait régler champs <code>View</code> de l&rsquo;<em>exporter</em> .png sur <code>Standard</code> :</p>
-<p><img alt="gif montrant comment mettre le champs view de l&rsquo;export png sur standard" src="/projects/open_re_poc_devlog_1/images/set_standar_view.gif"></p>
+<p><img src="/projects/open_re_poc_devlog_1/images/set_standar_view.gif" alt="gif montrant comment mettre le champs view de l&rsquo;export png sur standard"></p>
 <p>Un petit rendu plus tard, on peut soumettre cette nouvelle texture à l’Oracle… et cette fois, la prophétie est bien plus rassurante</p>
-<p><img alt="Capture de la première prophétie de l&rsquo;Oracle" src="/projects/open_re_poc_devlog_1/images/first_prophecy_revision_1.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_1/images/first_prophecy_revision_1.opti.webp" alt="Capture de la première prophétie de l&rsquo;Oracle"></p>
 <h4 id="compression-de-texture-en-vram">Compression de texture en VRAM</h4>
 <p>On a progressé, mais ce n’est pas encore gagné. En zoomant sur l&rsquo;image de l&rsquo;oracle, on remarque de petits motif caracteristiques.</p>
-<p><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_1/images/1_std_dist_zoom.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_1/images/1_std_dist_zoom.opti.webp" alt="Zoom sur le pattern"></p>
 <p>Ce sont des artefacts de compression. Pour économiser de la mémoire vidéo et optimiser les échanges entre le CPU et le GPU, les textures en jeu sont presque toujours compressées. Logique, donc, que Godot compresse par defaut les textures à l&rsquo;import.</p>
 <p>Le problème, c&rsquo;est que les algorithmes de compression des moteurs de jeu ne sont pas conçus pour notre cas d&rsquo;usage. Une texture classique est destinée à habiller un mesh. Un affichage plein écran d&rsquo;une scene entière n&rsquo;est pas vraiment usuel. Si on compare l’image source à sa version compressée, la perte de qualité est flagrante.</p>
-<p><img alt="gif alternant l&rsquo;image source et sa version compressée" src="/projects/open_re_poc_devlog_1/images/alternate_vram_compression.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_1/images/alternate_vram_compression.webp" alt="gif alternant l&rsquo;image source et sa version compressée"></p>
 <p>Pour régler ça, il suffit de desactiver la compression dans les paramètres d&rsquo;import de la texture.</p>
-<p><img alt="gif indiquant comment desactiver la compression des textures dans Godot" src="/projects/open_re_poc_devlog_1/images/set_lossless-optimize.gif"></p>
+<p><img src="/projects/open_re_poc_devlog_1/images/set_lossless-optimize.gif" alt="gif indiquant comment desactiver la compression des textures dans Godot"></p>
 <p>Nouvelle réponse de l’Oracle, cette fois sans compression. (Et sans le super montage. Parce que les plaisenteries les plus courtes&hellip; tout ça, tout ça&hellip;)</p>
-<p><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_1/images/2_lossless_detrminist_zoom.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_1/images/2_lossless_detrminist_zoom.opti.webp" alt="Zoom sur le pattern"></p>
 <h4 id="qualité-du-png-exporté">Qualité du png exporté</h4>
 <p>On a déjà pas mal gagné mais l&rsquo;image est toujours un peu bruitée.</p>
 <p>Le lecteur attentif aura remarqué que l&rsquo;<em>exporter</em> .png de Blender applique par defaut un 15% de compression un peu suspect.</p>
-<p><img alt="Importer png avec 15% de compression" src="/projects/open_re_poc_devlog_1/images/compression_15.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_1/images/compression_15.opti.webp" alt="Importer png avec 15% de compression"></p>
 <p>J’ai donc tenté de le régler sur 0%&hellip; mais ça n&rsquo;a rien changé. J’ai alors tenté une autre approche : augmenter la Color Depth à 16 bits. Et là… victoire ! Plus aucune trace de compression.</p>
 <p>… Bon, à la place on a maintenant un gros problème de banding. Ce qui est encore pire.</p>
-<p><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_1/images/3_png_c0_Distance_ohnooo.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_1/images/3_png_c0_Distance_ohnooo.opti.webp" alt="Zoom sur le pattern"></p>
 <p>D’après la documentation de Godot, l’import PNG est limité à 8 bits. J’imagine que l’image 16 bits est tronquée à l’import, ce qui crée ces vilaines bandes.</p>
 <p>C’est l’impasse. Il faut trouver une autre solution.</p>
 <h4 id="le-format-exr-à-la-rescouse">Le format EXR à la rescouse</h4>
 <p>A partir de là, je me suis mis à explorer les différents formats de fichier proposés par blender. J&rsquo;ai rangé mon cerveau, et j&rsquo;ai commencé à <em>brut force</em> les paramètres de chacuns des <em>exporters</em>.</p>
 <p>C&rsquo;était pas vraiment l&rsquo;autoroute du fun. Pendant plusieurs jours, j&rsquo;ai fait des rendus, donné les textures à manger à l&rsquo;oracle, et scruté ses préseages essayant de déterminer en quoi ils étaient mieux ou moins bien que tel ou tel autre. Mais j&rsquo;ai fini par trouver un alignement de planètes acceptable.</p>
-<p><img alt="Reglage de l&rsquo;export exr dans blender" src="/projects/open_re_poc_devlog_1/images/set_exr_half.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_1/images/set_exr_half.opti.webp" alt="Reglage de l&rsquo;export exr dans blender"></p>
 <p>Je ne connaissais pas le format <code>.exr</code>. Pour la petite histoire, il a été développé par <em>Industrial Light &amp; Magic</em> : la société d&rsquo;effets spéciaux de <em>George Lucas</em>.</p>
 <p>J&rsquo;ai testé les 2 valeurs du champs <code>Color Depth</code> : <code>float (half)</code> et <code>float (full)</code>. Elles donnent des résultats légèrement différentes, mais je n&rsquo;ai pas réussi à décider lequel était réellement meilleur. Cependant, la texture en <code>float (full)</code> pèse 7,13 Mo, contre 250 Ko en <code>float (half)</code>. J&rsquo;ai donc choisi de rester sur du half (au moins pour le moment).</p>
 <h4 id="laliasing">L&rsquo;Aliasing</h4>
 <p>Le résultat n’est pas encore parfait, mais c’est le mieux que j’ai pu obtenir. Si vous avez une idée de comment l&rsquo;améliorer : je prends !</p>
 <p>Cela dit, lorsqu&rsquo;on compare les textures déterministes et interactives actuelles, il devient vraiment difficile de trouver une différence.</p>
-<p><img alt="alterance textures finales" src="/projects/open_re_poc_devlog_1/images/gifalt_final_textures.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_1/images/gifalt_final_textures.webp" alt="alterance textures finales"></p>
 <p>La seule chose que mon oeil arrive à percevoir, c&rsquo;est un peu d&rsquo;aliasing sur les contours (n&rsquo;hesitez pas à me dire en commentaire si vous voyez autre chose).</p>
 <p>Depuis le début, les contours sont effectivement très marqués dans les présages de l&rsquo;oracle. Le phénomène est expliquable : le raytracing de Cycles ne produit pas d&rsquo;aliasing, alors que la rasterisation de Godot si. Ce qui concentre des différences au niveau des zones sujettes à l&rsquo;aliasing : les contours.</p>
 <p>On peut donc encore grapiller un peu en activant l&rsquo;anti-aliasing sur la Render Target de la texture interactive.</p>
 <h2 id="conclusion-">Conclusion :</h2>
 <p>Prenons un peu de recul sur nos résultats. D&rsquo;abord, il faut garder en tête que notre scène de test est très simpliste. Pour être vraiment sûr que Godot et Blender sont bien en phase, il faudra plus de données et surtout des données plus complexes. Ca viendra. Godot comprends les .blend et nous avons desormais un oracle dans l&rsquo;équipe. Il sera donc relativement facile de mettre à l&rsquo;épreuve de nouvelles scènes au fur et à mesure qu&rsquo;on avance. Et si de nouvelles disonances apparaissent, l&rsquo;enquête sera réouverte.</p>
 <p>Ensuite, on pourrait être un peu deçus de ne pas avoir obtenu un présage completement noir. S’il s’agissait d’un autre type de données, j’aurais été plus inquiet. Mais pour une texture d’albédo (qui est basiquement la couleur des surfaces), le &ldquo;jugé à l’œil&rdquo; me semble suffisant. Encore une fois si plus tard dans le développement, on tombe sur des incohérences visuelles, on se souviendra qu’une source d’erreur potentielle existe ici. Mais pour le POC, on va dire que c’est good enough.</p>
-<p><img alt="Retrospective des différentes étapes" src="/projects/open_re_poc_devlog_1/images/gif_alt_goodenough.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_1/images/gif_alt_goodenough.webp" alt="Retrospective des différentes étapes"></p>
 <p>Je couclurai en disant que ce devlog à été assez compliqué à écrire. J&rsquo;ai perdu beaucoup de temps à me remémorer les chose et à les reconstituer (prenez soin de votre git les amis). Mais je reconnais quand même deux avantages à cette situation :</p>
 <ul>
 <li>
