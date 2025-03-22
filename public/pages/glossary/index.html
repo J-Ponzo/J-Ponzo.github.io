@@ -414,69 +414,71 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Les attributs associés aux vertex sont également interpolés et affectés aux fragments correspondants.</p>
 <p>Note : Le terme &ldquo;rasterisation&rdquo; est parfois utilisé pour désigner l&rsquo;ensemble du processus de rendu temps réel classique. Dans ce cas, il fait référence à la méthode de rendu dans son intégralité, par opposition à la méthode de rendu par ray tracing.</p>
 <h2 id="render-target">Render Target</h2>
-<p>Une render target, c&rsquo;est une toile sur laquelle le pipline graphique va peindre une sequence de draw calls. A la fin de la squence (appelée une passe de rendu), cette toile peut être soit :</p>
+<p>Une render target est une toile sur laquelle le pipeline graphique va peindre une séquence de draw calls. À la fin de cette séquence (appelée &ldquo;passe de rendu&rdquo;), cette toile peut soit :</p>
 <ul>
 <li>
 <ol>
-<li>affichée à l&rsquo;écran</li>
+<li>être affichée à l&rsquo;écran,</li>
 </ol>
 </li>
 <li>
 <ol start="2">
-<li>stoqué comme resultat intermédiaire et utilisée lors de la passe de rendu suivante</li>
+<li>être stockée comme résultat intermédiaire et utilisée lors de la passe de rendu suivante.</li>
 </ol>
 </li>
 </ul>
-<p>Le second cas permet d&rsquo;implémenter des effets avancés comme les ombres dynamiques, les plannar reflections, et toute une palanquée de post-process (Bloom, Cel Shading, SSAO, Anti-Aliasing etc&hellip;).</p>
-<p>Note : Dans le contexte d&rsquo;un moteur de jeu, le terme designe implicitement le 2eme cas (un résultat intermédiaire utilisé pour implémenter des effets avancés).</p>
+<p>Le second cas permet d&rsquo;implémenter des effets avancés tels que les ombres dynamiques, les réflexions planaires, et de nombreux effets de post-process (bloom, cel shading, SSAO, anti-aliasing, etc.).</p>
+<p>Note : Dans le contexte d&rsquo;un moteur de jeu, le terme désigne généralement le second cas.</p>
 <h2 id="shader">Shader</h2>
-<p>Un shader est un programme qui s&rsquo;execute sur le GPU. Le terme fait l&rsquo;objet d&rsquo;une légère ambiguité. Suivant le contexte, il designe :</p>
+<p>Un shader est un programme qui s&rsquo;exécute sur le GPU. Le terme fait l&rsquo;objet d&rsquo;une légère ambiguité. Selon le contexte, il designe :</p>
 <ul>
-<li>un <em>shader stage</em> : un programme indépendant et spécialisé qui collabore avec d&rsquo;autres au sein du <a href="/pages/glossary/#pipeline-graphique">pipeline graphique</a> pour générer des images (<a href="/pages/glossary/#vertex-shader"><em>vertex shader</em></a>, <em>geometry-shader</em>, <a href="/pages/glossary/#fragment-shader"><em>fragment shader</em></a>, <em>tessellation shader</em>, etc&hellip;)</li>
-<li>un <em>shader program</em> : un assemblage cohérent de <em>shader stages</em> liés entre eux et destinés à être executés enssemble. C&rsquo;est en quelques sortes, une instance du pipeline graphique.</li>
+<li>un shader stage : un programme indépendant et spécialisé qui collabore avec d&rsquo;autres dans au sein du pipeline graphique pour générer des images (par exemple, le vertex shader, geometry shader, fragment shader, tessellation shader, etc.)</li>
+<li>un shader program : un ensemble cohérent de shader stages destinés à être exécutés ensemble. Il s&rsquo;agit, en quelque sorte, d&rsquo;une instance du pipeline graphique.</li>
 </ul>
-<p>Dans les moteurs de jeux et les logiciels de modélisation, le terme apparait par l&rsquo;intermédiaire du concept de <em>material</em>. Dans ce context, il est le plus souvent employé au sens <em>shader program</em>. Un <em>material</em> pouvant être vu comme un preset de paramettres pour un <em>shader program</em> donné.</p>
-<p>Dans des contextes plus techniques, il a tendance à être utilisé au sens <em>shader stage</em>.</p>
+<p>Dans les moteurs de jeux et les logiciels de modélisation, le terme apparaît généralement à travers le concept de material. Dans ce cas, il est souvent employé au sens de shader program. Un material étant vu comme un preset de paramètres pour un shader program donné.</p>
+<p>Dans des contextes plus techniques, il est plutôt utilisé dans le sens de shader stage.</p>
 <p>Plus d&rsquo;élements ici :
 <a href="/posts/ddj_shaders/">Dis donc Jamy : Comment ça marche un shader ?</a></p>
 <h2 id="skeletal-animation">Skeletal Animation</h2>
-<p>L&rsquo;animation squeletale est une technique d&rsquo;animation qui consiste à associer un squelette à un modèle 3D en vu de le déformer. Pour cela chaque vertex se voit attrué des poid qui reflète le degré d&rsquo;influence que les os proche ont sur lui (on appèle ça le skinning).</p>
+<p>L&rsquo;animation squeletale est une technique d&rsquo;animation qui consiste à associer un squelette à un modèle 3D afin de le déformer. Chaque vertex du modèle est associé à des poids qui déterminent l&rsquo;influence des os proches sur celui-ci (ce processus est appelé skinning).</p>
 <p>[mettre une image]</p>
-<p>Ainsi, lorsqu&rsquo;on anime le squelette, chaque os entraine avec lui les vertex du mesh sur lesquels il a de l&rsquo;influence.</p>
+<p>Lorsque l&rsquo;on anime le squelette, chaque os entraîne avec lui les vertex du mesh qu&rsquo;il influence, provoquant ainsi la déformation du modèle 3D.</p>
 <p>[mettre une image]</p>
-<p>Cette technique est utilisée pour les animations complexes et de grande envergure (marcher, sauter, rouler bouler&hellip;). Elle peut être implémentée côté CPU ou côté GPU selon les besoin. Par exemple, si le gameplay envisagé nécessite de détecter des collisions précises sur le mesh (pour un impacte de balle par exemple), on a besoin d&rsquo;avoir le mesh deformé côté CPU. Si une collision approximative est suffisante, on peut associer des coliders simplifiés à chaque bones du squelette et calculer la colision sur ces derniers.</p>
+<p>Cette technique est couramment utilisée pour des animations complexes et de grande envergure, comme marcher, sauter ou effectuer des mouvements divers. Elle peut être implémentée soit côté CPU, soit côté GPU, selon les besoins.</p>
+<p>Par exemple, si le gameplay nécessite une détection précise des collisions sur la géométrie du mesh, il est nécessaire de le déformer côté CPU. En revanche, si une détection de collision approximative suffit, on peut se contanteer d&rsquo;associaer des colliders simplifiés (spheres, capsules etc.) aux os du squelette et appliquer la déformation du mesh côté GPU.</p>
 <h2 id="smaa">SMAA</h2>
-<p>Le SMAA (Subpixel Morphological Anti-Aliasing) est une technique d&rsquo;anti-aliasing appliquée en post-process. Comme le FXAA, elle consiste à détecter les contours dans l&rsquo;image issue de la passe de rendu principale, puis à y appliquer un effet de flou.</p>
-<p>Mais la détection de contoure, basée sur de la reconnaissance de patterns prédéfinis est meilleur que celle du FXAA. Ce qui réduit les faux positifs est resulte en une image moins floue.</p>
-<p>Avantages de la solution :</p>
+<p>Le SMAA (Subpixel Morphological Anti-Aliasing) est une technique d&rsquo;anti-aliasing appliquée en post-process. Comme le FXAA, elle analyse l&rsquo;image issue de la passe de rendu principale pour détecter les contours et appliquer un flou pour adoucir les bords.</p>
+<p>Cependant, la détection des contours du SMAA est basée sur des algorithmes plus sophistiqués qui reconnaissent des motifs prédéfinis, offrant ainsi une meilleure précision que le FXAA. Cela permet de réduire les faux positifs et de produire une image moins floue.</p>
+<p>Avantages :</p>
 <ul>
-<li>Image plus net qu&rsquo;avec du FXAA</li>
-<li>Utilisable sur un deferred renderer (moteur graphique doté d&rsquo;une architcture particulière permetant le deferred lighting)</li>
+<li>Une image plus nette qu&rsquo;avec le FXAA</li>
+<li>Compatible avec un deferred renderer (moteur graphique utilisant une architcture particulière permettant le deferred lighting)</li>
 </ul>
-<p>Faiblesses de la solution :</p>
+<p>Inconvénients :</p>
 <ul>
 <li>Plus lourd que le FXAA</li>
 </ul>
 <h2 id="ssao">SSAO</h2>
-<p>L&rsquo;oclusion ambiante est une phenomène physique lié au fait que la lumière se diffuse moins dans les espaces confinés. En effet, si vous regarder les coins des murs, la base d&rsquo;une touffe d&rsquo;herbe, ou les petits interstices entre des briques, vous remarquerez que ces zones sont moins éclairées que des endroits plus dégagés (même sans recevoir d&rsquo;ombre directe).</p>
-<p>Le ssao (Screen Space Ambiant occlusion) est un effet de post process qui permet de simuler ce phenomène.</p>
+<p>L&rsquo;occlusion ambiante est un phénomène physique qui selon lequel la lumière se diffuse moins dans les espaces confinés. Par exemple, dans les coins de murs, à la base d&rsquo;une touffe d&rsquo;herbe ou dans les interstices entre des briques, on observe une lumière moins intense que dans les zones plus dégagées (même sans ombre directe).</p>
+<p>Le SSAO (Screen Space Ambient Occlusion) est un effet de post-process qui simule ce phénomène.</p>
 <h2 id="taa">TAA</h2>
-<p>Le TAA (Temporal Anti-Aliasing) est une technique d&rsquo;anti-aliasing appliquée en post-process. Elle consiste à utiliser les frames précédentes pour lisser l&rsquo;image.</p>
-<p>Avantages de la solution :</p>
+<p>Le TAA (Anti-Aliasing Temporel) est une technique d&rsquo;anti-aliasing appliquée en post-process. Elle consiste à exploiter les frames précédentes pour lisser l&rsquo;image.</p>
+<p>Avantages  :</p>
 <ul>
-<li>Rendu très précis (les contours sont bien lisses et le reste de l&rsquo;image bien net)</li>
-<li>Utilisable sur un deferred renderer (moteur graphique doté d&rsquo;une architcture particulière permetant le deferred lighting)</li>
+<li>Rendu très précis : les contours sont bien lissés et le reste de l&rsquo;image reste net.</li>
+<li>Compatible avec un deferred renderer (moteur graphique utilisant une architcture particulière permettant le deferred lighting)</li>
 </ul>
-<p>Faiblesses de la solution :</p>
+<p>Inconvénients :</p>
 <ul>
-<li>Sujet au gosting (effet de trainées floues sur les objets en mouvement)</li>
-<li>Peut couter un peu par rapport à d&rsquo;autres techniques</li>
+<li>Sujet au ghosting (effet de traînées floues sur les objets en mouvement).</li>
+<li>Peut être plus coûteux en ressources par rapport à d&rsquo;autres techniques.</li>
 </ul>
 <h2 id="uv-attribute">UV Attribute</h2>
-<p>C&rsquo;est un type d&rsquo;attribut courrament associé aux vertex. Il représente généralement une coordonnée 2d qui correspont à une position dans une texture. C&rsquo;est grâce à cette information qu&rsquo;on va pouvoir appliquer la texture au mesh. On appele ça le texture mapping. Mais comment ça marche dans le détail ?</p>
-<p>Par la magie de l&rsquo;interpolation (opérée par lors de la rasterization), les coordonnées sont déclinés et associées à chaque fragment. Le fragment shader ayant acces à l&rsquo;UV interpolé peut aors échantillonner (ou sampler) la texture à l&rsquo;endroit indiqué pour déterminer la couleur du pixel à l&rsquo;écran.</p>
+<p>C&rsquo;est un type d&rsquo;attribut couramment associé aux vertex. Il représente une coordonnée 2D, correspondant à une position dans une texture.</p>
+<p>C&rsquo;est un type d&rsquo;attribut courrament associé aux vertex. Il représente généralement une coordonnée 2d qui correspont à une position dans une texture. C&rsquo;est grâce à cette information qu&rsquo;on va pouvoir appliquer la texture au mesh. C&rsquo;est grâce à cet attribut que l&rsquo;on peut appliquer une texture sur un mesh, un processus appelé &ldquo;texture mapping&rdquo;.</p>
+<p>En résumé, par la magie de l&rsquo;interpolation (réalisée lors de la rasterization), les coordonnées UV sont associées à chaque fragment. Le fragment shader, ayant accès à ces coordonnées UV interpolées, peut alors échantillonner (ou &ldquo;sampler&rdquo;) la texture au point indiqué, afin de déterminer la couleur du pixel à afficher à l&rsquo;écran.</p>
 <p>[mettre une image]</p>
-<p>Les vertex peuvent porter plusieurs jeux d&rsquo;UV différents car on paeut avoir plusieurs textures à mapper sur un mesh (par exemple la lumière statique précalculée et stoqué dans une texture appelée ube lightmap).</p>
+<p>Les vertex peuvent porter plusieurs UV différents, car il est possible d&rsquo;appliquer plusieurs textures à un même mesh. Par exemple, une texture pour la lumière statique pré-calculée, stockée dans une texture appelée une lightmap.</p>
 <h2 id="vertex">Vertex</h2>
 <p>Un vertex (ou sommet) est un des élements qui constituent un mesh (ou maillage). Il représente un point dans l&rsquo;espace ou dans le plan. Un vertex peut posséder plusieurs attributs, dont les plus courants sont :</p>
 <ul>
@@ -487,18 +489,18 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Il existe également d&rsquo;autres attributs moins fréquents, comme les poids de skinning utilisées pour l&rsquo;animation. En résumé, un vertex est une coordonnée de l&rsquo;espace ou du plan qui porte de l&rsquo;information.</p>
 <p>Note : Le pluriel de &ldquo;vertex&rdquo; est &ldquo;vertices&rdquo;, ne soyez pas surpris de le voir écrit sous cette forme. Mais dans le langage courant (du moins en France) on dit prèsque toujours vertex. Je l&rsquo;utilise donc prèsque toujours sous cette forme y compris à l&rsquo;écrit, autant par habitude que parce que je trouve ça moins confus (désolé pour vos oreilles et vos yeux si vous n&rsquo;êtes pas de cet avis).</p>
 <h2 id="vertex-color-attribute">Vertex Color Attribute</h2>
-<p>C&rsquo;est un type d&rsquo;attribut courament associé aux vertex. Il stocke une couleur au niveau des sommets du mesh qui va devenir un dégradé après interpolation lors de la rasterisation.</p>
-<p>Il est peu utilisé de cette façon dans les jeux modernes. Mais on s&rsquo;en sert souvent de manière détournée pour encoder des informations utilse à certains effets ou techniques. Le plus utilisé est surement le vertex painting qui consiste à peindre les vertex pour appliquer un effet localisé (salisures, sang, mousse sur un rochet). Mais il y en a d&rsquo;autres.</p>
+<p>C&rsquo;est un type d&rsquo;attribut couramment associé aux vertex. Il représente (comme son nom l&rsquo;indique) une couleur. Cette couleur est interpolée lors de la rasterisation, créant ainsi un dégradé dont chaque couleur est associée au fragment correspondant.</p>
+<p>Bien que cet attribut soit peu utilisé de manière directe dans les jeux modernes, il est souvent détourné pour encoder des informations nécessaires à certaines techniques ou effets. L&rsquo;exemple le plus courant est le vertex painting, qui consiste à peindre les sommets d&rsquo;un objet pour appliquer un effet localisé (comme des salissures, du sang ou de la mousse sur une roche).</p>
 <h2 id="vertex-lighting">Vertex Lighting</h2>
-<p>C&rsquo;est une technique qui consiste à calculer l&rsquo;éclairage au niveau du vertex shader pour chaque drawcall de la passe principale. La valeur d&rsquo;illumination obtenue est ensuite interpolée par le rasterizer et transmise à chaque fragment. Le fragment shader peut alors appliquer cette valeur d&rsquo;illumination interpolée à la couleur du pixel pour déterminer sa couleur finale.</p>
-<p>L&rsquo;avantage de cette technique c&rsquo;est qu&rsquo;elle est très peu coûteuse. Mais la qualité du résultat obtenu dépend de la dansité de vertex de la surface éclairée.</p>
+<p>C&rsquo;est une technique qui consiste à calculer l&rsquo;éclairage au niveau du vertex shader pour chaque drawcall de la passe principale. La valeur d&rsquo;illumination obtenue est ensuite interpolée par le rasterizer et appliquée à chaque fragment. Le fragment shader peut alors utiliser cette valeur interpolée pour ajuster la couleur du pixel et déterminer sa couleur finale.</p>
+<p>L&rsquo;avantage de cette technique est sa faible coût en termes de performances. Cependant, la qualité du rendu dépend de la densité des vertex de la surface éclairée.</p>
 <p>[Mettre une image]</p>
 <p>Termes connexes :
 <a href="/pages/glossary/#pixel-lighting">Pixel Lighting</a>
 <a href="/pages/glossary/#deferred-lighting">Deferred Lighting</a></p>
 <h2 id="vertex-shader">Vertex Shader</h2>
-<p>Le vertex shader, est la première étape programmable du pipeline graphique. Traditionnellement, la mission de ce shader stage est d&rsquo;opérer une succession de transformation géométriques aux vertex qui le traversent, afin de les transférer de leur coordonnée locale en 3d à l&rsquo;espace 2d de l&rsquo;écran.</p>
-<p>Après cette étape, on peut dire que les vertex forment une sorte d&rsquo;image vectorielle prète à être rasterisée. Cela dit, certaines étapes optionnelles du pipeline peuvent eventuellement s&rsquo;apliquer avant la rasterisation (geometry shader et tessellation).</p>
+<p>Le vertex shader est la première étape programmable du pipeline graphique. Traditionnellement, sa fonction principale est de réaliser une série de transformations géométriques sur les vertex qu&rsquo;il traite, afin de les convertir de leurs coordonnée locale en 3d vers l&rsquo;espace 2d de l&rsquo;écran.</p>
+<p>Après cette étape, on peut considérer que les vertex forment une sorte d&rsquo;image vectorielle prête à être rasterisée. Cela dit, certaines étapes optionnelles du pipeline, comme le geometry shader et la tessellation, peuvent être appliquées avant la rasterisation.</p>
 <p>Plus d&rsquo;élements ici :
 <a href="/posts/ddj_shaders/#1-vertex-shader">Dis donc Jamy : Comment ça marche un shader ?</a></p>
 
