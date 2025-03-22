@@ -25,15 +25,16 @@
 
 
 
-<meta name="generator" content="Hugo 0.140.2">
+<meta name="generator" content="Hugo 0.137.0">
 
     
     <meta property="og:url" content="http://localhost:1313/misc/glossary/">
   <meta property="og:site_name" content="Turbo Tartine Games">
   <meta property="og:title" content="Glossaire">
-  <meta property="og:description" content="Anti-Aliasing [Décrire ici tous les types d’anti-aliasing MSAA, FXAA, TAA …]
-Bloom Cel Shading CPU C’est l’acronyme de Central Processing Unit : l’unité de calcule principale d’un ordinateur. Il s’agit tout simplement de votre processeur.
-Deferred Lighting C’est une technique qui consiste à calculer l’éclairage non plus à chaque drawcall, mais dans une seconde passe juste après la passe principale. En ce sens, je l’assimile souvent à un calcule de lumière en post-process (j’avoue ne pas être sur que cette appelation soit bien rigoureuse).">
+  <meta property="og:description" content="Anti-Aliasing L’aliasing (ou crenelage) est un artefact visuel disgratieux caracterisé par un effet escalier sur les contours des objets rendus. Il est introduit lors de la rasterisation (une étape specifique du pipline graphique).
+Pour le combatre il existe différentes technique d’anti-aliasing ayant chacune leurs forces et leur faiblaisses.
+Bloom Le bloom est un effet de post-process qui donne une impression de brillance autour des objets lumineux.
+Cel Shading Le cell shading (ou toon shading) est un effet de post-process donnant à l’image une apparence de dessin animé, avec des contours marqués et des aplats de couleurs unis.">
   <meta property="og:locale" content="fr_fr">
   <meta property="og:type" content="article">
     <meta property="article:section" content="misc">
@@ -43,9 +44,10 @@ Deferred Lighting C’est une technique qui consiste à calculer l’éclairage 
     
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Glossaire">
-  <meta name="twitter:description" content="Anti-Aliasing [Décrire ici tous les types d’anti-aliasing MSAA, FXAA, TAA …]
-Bloom Cel Shading CPU C’est l’acronyme de Central Processing Unit : l’unité de calcule principale d’un ordinateur. Il s’agit tout simplement de votre processeur.
-Deferred Lighting C’est une technique qui consiste à calculer l’éclairage non plus à chaque drawcall, mais dans une seconde passe juste après la passe principale. En ce sens, je l’assimile souvent à un calcule de lumière en post-process (j’avoue ne pas être sur que cette appelation soit bien rigoureuse).">
+  <meta name="twitter:description" content="Anti-Aliasing L’aliasing (ou crenelage) est un artefact visuel disgratieux caracterisé par un effet escalier sur les contours des objets rendus. Il est introduit lors de la rasterisation (une étape specifique du pipline graphique).
+Pour le combatre il existe différentes technique d’anti-aliasing ayant chacune leurs forces et leur faiblaisses.
+Bloom Le bloom est un effet de post-process qui donne une impression de brillance autour des objets lumineux.
+Cel Shading Le cell shading (ou toon shading) est un effet de post-process donnant à l’image une apparence de dessin animé, avec des contours marqués et des aplats de couleurs unis.">
 
 
     
@@ -157,9 +159,12 @@ stroke-linejoin="round" class="feather feather-home">
             
             <div class="page-content">
                 <h2 id="anti-aliasing">Anti-Aliasing</h2>
-<p>[Décrire ici tous les types d&rsquo;anti-aliasing MSAA, FXAA, TAA &hellip;]</p>
+<p>L&rsquo;aliasing (ou crenelage) est un artefact visuel disgratieux caracterisé par un effet escalier sur les contours des objets rendus. Il est introduit lors de la rasterisation (une étape specifique du pipline graphique).</p>
+<p>Pour le combatre il existe différentes technique d&rsquo;anti-aliasing ayant chacune leurs forces et leur faiblaisses.</p>
 <h2 id="bloom">Bloom</h2>
+<p>Le bloom est un effet de post-process qui donne une impression de brillance autour des objets lumineux.</p>
 <h2 id="cel-shading">Cel Shading</h2>
+<p>Le cell shading (ou toon shading) est un effet de post-process donnant à l&rsquo;image une apparence de dessin animé, avec des contours marqués et des aplats de couleurs unis.</p>
 <h2 id="cpu">CPU</h2>
 <p>C&rsquo;est l&rsquo;acronyme de Central Processing Unit : l&rsquo;unité de calcule principale d&rsquo;un ordinateur. Il s&rsquo;agit tout simplement de votre processeur.</p>
 <h2 id="deferred-lighting">Deferred Lighting</h2>
@@ -170,6 +175,7 @@ stroke-linejoin="round" class="feather feather-home">
 <a href="/misc/glossary/#pixel-lighting">Vertex Lighting</a>
 <a href="/misc/glossary/#deferred-lighting">Deferred Lighting</a></p>
 <h2 id="depth-of-field">Depth of Field</h2>
+<p>Le depth of fiels (ou profondeur de champs) est un effet de post process qui simule un effet de mise au point en floutant les objets en dehors d&rsquo;un certaine plage de distance.</p>
 <h2 id="draw-call">Draw Call</h2>
 <p>Un draw call est une commande envoyée au GPU pour lui demander de traiter un ensemble de primitives géométriques (généralement des triangles) afin de les rendre à l&rsquo;écran (ou dans une <em>render target</em>).</p>
 <h2 id="edge-">Edge :</h2>
@@ -207,6 +213,18 @@ stroke-linejoin="round" class="feather feather-home">
 <a href="/posts/ddj_shaders/#3-fragment-shader">Dis donc Jamy : Comment ça marche un shader ?</a></p>
 <h2 id="frame">Frame</h2>
 <p>Une frame, c&rsquo;est une image de la scène générée à un instant donné par le moteur graphique (ou <em>renderer</em>). La vitesse à laquelle on arrive à la construire détermine le <em>frame rate</em>, exprimé en fps (Frame Per Second).</p>
+<h2 id="fxaa">FXAA</h2>
+<p>Le FXAA (Fast Approximate Anti-Aliasing), est une technique d&rsquo;anti-aliasing appliquée en post-process. Elle consiste à détecter les contours dans l&rsquo;image issue de la passe de rendu principale, puis à y appliquer un effet de flou.</p>
+<p>Avantages de la solution :</p>
+<ul>
+<li>Faible impacte sur les performance</li>
+<li>Utilisable sur un deferred renderer (moteur graphique doté d&rsquo;une architcture particulière permetant le deferred lighting)</li>
+</ul>
+<p>Faiblesses de la solution :</p>
+<ul>
+<li>Moins efficace que d&rsquo;autres techniques</li>
+<li>Peut donner une image légèrement floue</li>
+</ul>
 <h2 id="gpu">GPU</h2>
 <p>C&rsquo;est l&rsquo;acronyme de Graphics Processing Unit : l&rsquo;unité de calcule d&rsquo;un ordinateur, destinée aux calculs graphiques. Il s&rsquo;agit tout simplement de votre carte graphique.</p>
 <h2 id="mesh">Mesh</h2>
@@ -223,7 +241,31 @@ stroke-linejoin="round" class="feather feather-home">
 </ul>
 <p>[même image triangulée]</p>
 <h2 id="morph-target">Morph Target</h2>
+<p>Le morph target animation est une technique d&rsquo;animation qui consiste à créer plusieur version d&rsquo;un même mesh. Chacune de ces version est appelée une morph target (ou blend shape). Elles conservent la même topologie (connections entre les face, edges et vertex) que le mesh original, seules les positions des vertex sont altérées.</p>
+<p>Lors de l&rsquo;execution, on pourra modifier progressivement des poid associés à chacunes des versions pour faire passer le mesh d&rsquo;une forme à une autre.</p>
+<p>[mettre une image]</p>
+<p>Ce procédé est utilisé principalement pour des déformations organiques simples et de petite envergure. Comme par exemples :</p>
+<ul>
+<li>l&rsquo;animation faciale</li>
+<li>les gonflements, retractation des muscles</li>
+<li>des pustules qui palpites sur le dos d&rsquo;un monstre</li>
+<li>la corpulance d&rsquo;un personnage dans un écran de personnalisation d&rsquo;avatar</li>
+</ul>
 <h2 id="motion-blur">Motion Blur</h2>
+<p>Le motion blur (ou floue de mouvement) est un effet de post-process qui permet d&rsquo;appuyer la sensation de mouvement en floutant les objets proportionnelement à leur videsse relative par rapport à la caméra.</p>
+<h2 id="msaa">MSAA</h2>
+<p>Le MSAA (Multi Sampling Anti-Aliasing) est une technique d&rsquo;anti-aliasing gravée en dur dans les circuits du GPU. Elle intervient directement à la source du problème : l&rsquo;étape de rasterisation.</p>
+<p>A chaque fois qu&rsquo;un pixel est partiellement couver par un triangle, plutot que de l&rsquo;igorer, le rasterizer va rafiner son échantillonage et émettre quand même un fragment dont les attributs (color, normal, uv etc&hellip;) seront une moyenne des valeurs de chauque echantillon. Quand on parle de MSAA 2X, 4X, 8X &hellip; le chiffre designe le nombre d&rsquo;échantillons supplémentaires effectués pour générer ce fragment. Evidement plus ce chiffre est élevé, plus le resulta est précis, mais plus la resterisation coutera cher.</p>
+<p>Avantages de la solution :</p>
+<ul>
+<li>Implémentée directement dans le hardware et donc très performante</li>
+<li>N&rsquo;effectue le super-sampling (le sur echantillonnage décrit ci-dessus) qu&rsquo;au niveau des contours plutôt que sur l&rsquo;image entière. Ce qui la rend encore moins couteuse.</li>
+</ul>
+<p>Faiblesses de la solution :</p>
+<ul>
+<li>Ne lisse que les contours</li>
+<li>Pas utilisable sur un deferred renderer (moteur graphique doté d&rsquo;une architcture particulière permetant le deferred lighting)</li>
+</ul>
 <h2 id="n-gone">N-Gone</h2>
 <p>Dans un logiciel de modélisation 3d, un N-Gone designe une face composée de plus de 4 vertex. Ils sont à éviter, en particulier si le model est destiné à être importé dans un moteur de jeu. Et ce pour les raisons suivantes :</p>
 <ul>
@@ -336,7 +378,38 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Plus d&rsquo;élements ici :
 <a href="/posts/ddj_shaders/">Dis donc Jamy : Comment ça marche un shader ?</a></p>
 <h2 id="skeletal-animation">Skeletal Animation</h2>
+<p>L&rsquo;animation squeletale est une technique d&rsquo;animation qui consiste à associer un squelette à un modèle 3D en vu de le déformer. Pour cela chaque vertex se voit attrué des poid qui reflète le degré d&rsquo;influence que les os proche ont sur lui (on appèle ça le skinning).</p>
+<p>[mettre une image]</p>
+<p>Ainsi, lorsqu&rsquo;on anime le squelette, chaque os entraine avec lui les vertex du mesh sur lesquels il a de l&rsquo;influence.</p>
+<p>[mettre une image]</p>
+<p>Cette technique est utilisée pour les animations complexes et de grande envergure (marcher, sauter, rouler bouler&hellip;). Elle peut être implémentée côté CPU ou côté GPU selon les besoin. Par exemple, si le gameplay envisagé nécessite de détecter des collisions précises sur le mesh (pour un impacte de balle par exemple), on a besoin d&rsquo;avoir le mesh deformé côté CPU. Si une collision approximative est suffisante, on peut associer des coliders simplifiés à chaque bones du squelette et calculer la colision sur ces derniers.</p>
+<h2 id="smaa">SMAA</h2>
+<p>Le SMAA (Subpixel Morphological Anti-Aliasing) est une technique d&rsquo;anti-aliasing appliquée en post-process. Comme le FXAA, elle consiste à détecter les contours dans l&rsquo;image issue de la passe de rendu principale, puis à y appliquer un effet de flou.</p>
+<p>Mais la détection de contoure, basée sur de la reconnaissance de patterns prédéfinis est meilleur que celle du FXAA. Ce qui réduit les faux positifs est resulte en une image moins floue.</p>
+<p>Avantages de la solution :</p>
+<ul>
+<li>Image plus net qu&rsquo;avec du FXAA</li>
+<li>Utilisable sur un deferred renderer (moteur graphique doté d&rsquo;une architcture particulière permetant le deferred lighting)</li>
+</ul>
+<p>Faiblesses de la solution :</p>
+<ul>
+<li>Plus lourd que le FXAA</li>
+</ul>
 <h2 id="ssao">SSAO</h2>
+<p>L&rsquo;oclusion ambiante est une phenomène physique lié au fait que la lumière se diffuse moins dans les espaces confinés. En effet, si vous regarder les coins des murs, la base d&rsquo;une touffe d&rsquo;herbe, ou les petits interstices entre des briques, vous remarquerez que ces zones sont moins éclairées que des endroits plus dégagés (même sans recevoir d&rsquo;ombre directe).</p>
+<p>Le ssao (Screen Space Ambiant occlusion) est un effet de post process qui permet de simuler ce phenomène.</p>
+<h2 id="taa">TAA</h2>
+<p>Le TAA (Temporal Anti-Aliasing) est une technique d&rsquo;anti-aliasing appliquée en post-process. Elle consiste à utiliser les frames précédentes pour lisser l&rsquo;image.</p>
+<p>Avantages de la solution :</p>
+<ul>
+<li>Rendu très précis (les contours sont bien lisses et le reste de l&rsquo;image bien net)</li>
+<li>Utilisable sur un deferred renderer (moteur graphique doté d&rsquo;une architcture particulière permetant le deferred lighting)</li>
+</ul>
+<p>Faiblesses de la solution :</p>
+<ul>
+<li>Sujet au gosting (effet de trainées floues sur les objets en mouvement)</li>
+<li>Peut couter un peu par rapport à d&rsquo;autres techniques</li>
+</ul>
 <h2 id="uv-attribute">UV Attribute</h2>
 <p>C&rsquo;est un type d&rsquo;attribut courrament associé aux vertex. Il représente généralement une coordonnée 2d qui correspont à une position dans une texture. C&rsquo;est grâce à cette information qu&rsquo;on va pouvoir appliquer la texture au mesh. On appele ça le texture mapping. Mais comment ça marche dans le détail ?</p>
 <p>Par la magie de l&rsquo;interpolation (opérée par lors de la rasterization), les coordonnées sont déclinés et associées à chaque fragment. Le fragment shader ayant acces à l&rsquo;UV interpolé peut aors échantillonner (ou sampler) la texture à l&rsquo;endroit indiqué pour déterminer la couleur du pixel à l&rsquo;écran.</p>

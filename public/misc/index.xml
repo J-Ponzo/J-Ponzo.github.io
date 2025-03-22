@@ -30,9 +30,8 @@
 &lt;h2 id=&#34;cel-shading&#34;&gt;Cel Shading&lt;/h2&gt;
 &lt;h2 id=&#34;cpu&#34;&gt;CPU&lt;/h2&gt;
 &lt;p&gt;C&amp;rsquo;est l&amp;rsquo;acronyme de Central Processing Unit : l&amp;rsquo;unité de calcule principale d&amp;rsquo;un ordinateur. Il s&amp;rsquo;agit tout simplement de votre processeur.&lt;/p&gt;
-&lt;h2 id=&#34;depth-of-field&#34;&gt;Depth of Field&lt;/h2&gt;
-&lt;h2 id=&#34;draw-call&#34;&gt;Draw Call&lt;/h2&gt;
-&lt;p&gt;Un draw call est une commande envoyée au GPU pour lui demander de traiter un ensemble de primitives géométriques (généralement des triangles) afin de les rendre à l&amp;rsquo;écran (ou dans une &lt;em&gt;render target&lt;/em&gt;).&lt;/p&gt;</description>
+&lt;h2 id=&#34;deferred-lighting&#34;&gt;Deferred Lighting&lt;/h2&gt;
+&lt;p&gt;C&amp;rsquo;est une technique qui consiste à calculer l&amp;rsquo;éclairage non plus à chaque drawcall, mais dans une seconde passe juste après la passe principale. En ce sens, je l&amp;rsquo;assimile souvent à un calcule de lumière en post-process (j&amp;rsquo;avoue ne pas être sur que cette appelation soit bien rigoureuse).&lt;/p&gt;</description>
       
     </item>
     

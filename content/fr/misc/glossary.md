@@ -4,11 +4,15 @@ title = 'Glossaire'
 toc = false
 +++
 ## Anti-Aliasing
-[Décrire ici tous les types d'anti-aliasing MSAA, FXAA, TAA ...]
+L'aliasing (ou crenelage) est un artefact visuel disgratieux caracterisé par un effet escalier sur les contours des objets rendus. Il est introduit lors de la rasterisation (une étape specifique du pipline graphique).
+
+Pour le combatre il existe différentes technique d'anti-aliasing ayant chacune leurs forces et leur faiblaisses.
 
 ## Bloom
+Le bloom est un effet de post-process qui donne une impression de brillance autour des objets lumineux.
 
 ## Cel Shading
+Le cell shading (ou toon shading) est un effet de post-process donnant à l'image une apparence de dessin animé, avec des contours marqués et des aplats de couleurs unis.
 
 ## CPU
 C'est l'acronyme de Central Processing Unit : l'unité de calcule principale d'un ordinateur. Il s'agit tout simplement de votre processeur.
@@ -25,6 +29,7 @@ Termes connexes :
 [Deferred Lighting](/misc/glossary/#deferred-lighting)
 
 ## Depth of Field
+Le depth of fiels (ou profondeur de champs) est un effet de post process qui simule un effet de mise au point en floutant les objets en dehors d'un certaine plage de distance.
 
 ## Draw Call
 Un draw call est une commande envoyée au GPU pour lui demander de traiter un ensemble de primitives géométriques (généralement des triangles) afin de les rendre à l'écran (ou dans une *render target*).
@@ -77,6 +82,17 @@ Plus d'élements ici :
 ## Frame
 Une frame, c'est une image de la scène générée à un instant donné par le moteur graphique (ou *renderer*). La vitesse à laquelle on arrive à la construire détermine le *frame rate*, exprimé en fps (Frame Per Second).
 
+## FXAA
+Le FXAA (Fast Approximate Anti-Aliasing), est une technique d'anti-aliasing appliquée en post-process. Elle consiste à détecter les contours dans l'image issue de la passe de rendu principale, puis à y appliquer un effet de flou.
+
+Avantages de la solution :
+- Faible impacte sur les performance
+- Utilisable sur un deferred renderer (moteur graphique doté d'une architcture particulière permetant le deferred lighting)
+
+Faiblesses de la solution :
+- Moins efficace que d'autres techniques
+- Peut donner une image légèrement floue
+
 ## GPU
 C'est l'acronyme de Graphics Processing Unit : l'unité de calcule d'un ordinateur, destinée aux calculs graphiques. Il s'agit tout simplement de votre carte graphique.
 
@@ -94,8 +110,33 @@ Les meshes utilisés dans les moteurs de jeu ont une spécificité supplémentai
 [même image triangulée]
 
 ## Morph Target
+Le morph target animation est une technique d'animation qui consiste à créer plusieur version d'un même mesh. Chacune de ces version est appelée une morph target (ou blend shape). Elles conservent la même topologie (connections entre les face, edges et vertex) que le mesh original, seules les positions des vertex sont altérées.
+
+Lors de l'execution, on pourra modifier progressivement des poid associés à chacunes des versions pour faire passer le mesh d'une forme à une autre.
+
+[mettre une image]
+
+Ce procédé est utilisé principalement pour des déformations organiques simples et de petite envergure. Comme par exemples :
+- l'animation faciale
+- les gonflements, retractation des muscles
+- des pustules qui palpites sur le dos d'un monstre
+- la corpulance d'un personnage dans un écran de personnalisation d'avatar
 
 ## Motion Blur
+Le motion blur (ou floue de mouvement) est un effet de post-process qui permet d'appuyer la sensation de mouvement en floutant les objets proportionnelement à leur videsse relative par rapport à la caméra.
+
+## MSAA
+Le MSAA (Multi Sampling Anti-Aliasing) est une technique d'anti-aliasing gravée en dur dans les circuits du GPU. Elle intervient directement à la source du problème : l'étape de rasterisation.
+
+A chaque fois qu'un pixel est partiellement couver par un triangle, plutot que de l'igorer, le rasterizer va rafiner son échantillonage et émettre quand même un fragment dont les attributs (color, normal, uv etc...) seront une moyenne des valeurs de chauque echantillon. Quand on parle de MSAA 2X, 4X, 8X ... le chiffre designe le nombre d'échantillons supplémentaires effectués pour générer ce fragment. Evidement plus ce chiffre est élevé, plus le resulta est précis, mais plus la resterisation coutera cher.
+
+Avantages de la solution :
+- Implémentée directement dans le hardware et donc très performante
+- N'effectue le super-sampling (le sur echantillonnage décrit ci-dessus) qu'au niveau des contours plutôt que sur l'image entière. Ce qui la rend encore moins couteuse.
+
+Faiblesses de la solution :
+- Ne lisse que les contours
+- Pas utilisable sur un deferred renderer (moteur graphique doté d'une architcture particulière permetant le deferred lighting)
 
 ## N-Gone
 Dans un logiciel de modélisation 3d, un N-Gone designe une face composée de plus de 4 vertex. Ils sont à éviter, en particulier si le model est destiné à être importé dans un moteur de jeu. Et ce pour les raisons suivantes :
@@ -237,8 +278,43 @@ Plus d'élements ici :
 [Dis donc Jamy : Comment ça marche un shader ?](/posts/ddj_shaders)
 
 ## Skeletal Animation
+L'animation squeletale est une technique d'animation qui consiste à associer un squelette à un modèle 3D en vu de le déformer. Pour cela chaque vertex se voit attrué des poid qui reflète le degré d'influence que les os proche ont sur lui (on appèle ça le skinning).
+
+[mettre une image]
+
+Ainsi, lorsqu'on anime le squelette, chaque os entraine avec lui les vertex du mesh sur lesquels il a de l'influence.
+
+[mettre une image]
+
+Cette technique est utilisée pour les animations complexes et de grande envergure (marcher, sauter, rouler bouler...). Elle peut être implémentée côté CPU ou côté GPU selon les besoin. Par exemple, si le gameplay envisagé nécessite de détecter des collisions précises sur le mesh (pour un impacte de balle par exemple), on a besoin d'avoir le mesh deformé côté CPU. Si une collision approximative est suffisante, on peut associer des coliders simplifiés à chaque bones du squelette et calculer la colision sur ces derniers.
+
+## SMAA
+Le SMAA (Subpixel Morphological Anti-Aliasing) est une technique d'anti-aliasing appliquée en post-process. Comme le FXAA, elle consiste à détecter les contours dans l'image issue de la passe de rendu principale, puis à y appliquer un effet de flou.
+
+Mais la détection de contoure, basée sur de la reconnaissance de patterns prédéfinis est meilleur que celle du FXAA. Ce qui réduit les faux positifs est resulte en une image moins floue. 
+
+Avantages de la solution :
+- Image plus net qu'avec du FXAA
+- Utilisable sur un deferred renderer (moteur graphique doté d'une architcture particulière permetant le deferred lighting)
+
+Faiblesses de la solution :
+- Plus lourd que le FXAA
 
 ## SSAO
+L'oclusion ambiante est une phenomène physique lié au fait que la lumière se diffuse moins dans les espaces confinés. En effet, si vous regarder les coins des murs, la base d'une touffe d'herbe, ou les petits interstices entre des briques, vous remarquerez que ces zones sont moins éclairées que des endroits plus dégagés (même sans recevoir d'ombre directe).
+
+Le ssao (Screen Space Ambiant occlusion) est un effet de post process qui permet de simuler ce phenomène.
+
+## TAA
+Le TAA (Temporal Anti-Aliasing) est une technique d'anti-aliasing appliquée en post-process. Elle consiste à utiliser les frames précédentes pour lisser l'image.
+
+Avantages de la solution :
+- Rendu très précis (les contours sont bien lisses et le reste de l'image bien net)
+- Utilisable sur un deferred renderer (moteur graphique doté d'une architcture particulière permetant le deferred lighting)
+
+Faiblesses de la solution :
+- Sujet au gosting (effet de trainées floues sur les objets en mouvement)
+- Peut couter un peu par rapport à d'autres techniques
 
 ## UV Attribute
 C'est un type d'attribut courrament associé aux vertex. Il représente généralement une coordonnée 2d qui correspont à une position dans une texture. C'est grâce à cette information qu'on va pouvoir appliquer la texture au mesh. On appele ça le texture mapping. Mais comment ça marche dans le détail ?
