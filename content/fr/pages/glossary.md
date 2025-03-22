@@ -36,14 +36,14 @@ Le Depth of Field (ou profondeur de champ) est un effet de post-process qui simu
 ## Draw Call
 Un draw call est une instruction envoyée au GPU pour lui demander de traiter et d'afficher un ensemble de primitives géométriques (généralement des triangles) à l'écran, ou dans une render target.
 
-## Edge :
+## Edge
 Une edge (ou arête) est un des élements qui constituent un mesh (ou maillage). Chacune relie deux vertex appartenant a ce dernier.
 
 Les edges ne sont explicitement représentées que dans les logiciels de modélisation 3D. Dans le moteur, elles ne sont présentes que de manière implicite, à travers la définition des triangles.
 
 [mettre une image]
 
-## Face :
+## Face
 Une face est un des élements qui constituent un mesh (ou maillage). Elle est définie par un cycle d'edges fermé appartenant au mesh et représente la plus petite unité de surface visible de ce dernier. En effet, un mesh sans face est invisible.
 
 [mettre une image]
