@@ -18,24 +18,6 @@
     </item>
     
     <item>
-      <title>Glossaire</title>
-      <link>http://localhost:1313/misc/glossary/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/misc/glossary/</guid>
-      
-      <description>&lt;h2 id=&#34;anti-aliasing&#34;&gt;Anti-Aliasing&lt;/h2&gt;
-&lt;p&gt;[Décrire ici tous les types d&amp;rsquo;anti-aliasing MSAA, FXAA, TAA &amp;hellip;]&lt;/p&gt;
-&lt;h2 id=&#34;bloom&#34;&gt;Bloom&lt;/h2&gt;
-&lt;h2 id=&#34;cel-shading&#34;&gt;Cel Shading&lt;/h2&gt;
-&lt;h2 id=&#34;cpu&#34;&gt;CPU&lt;/h2&gt;
-&lt;p&gt;C&amp;rsquo;est l&amp;rsquo;acronyme de Central Processing Unit : l&amp;rsquo;unité de calcule principale d&amp;rsquo;un ordinateur. Il s&amp;rsquo;agit tout simplement de votre processeur.&lt;/p&gt;
-&lt;h2 id=&#34;deferred-lighting&#34;&gt;Deferred Lighting&lt;/h2&gt;
-&lt;p&gt;C&amp;rsquo;est une technique qui consiste à calculer l&amp;rsquo;éclairage non plus à chaque drawcall, mais dans une seconde passe juste après la passe principale. En ce sens, je l&amp;rsquo;assimile souvent à un calcule de lumière en post-process (j&amp;rsquo;avoue ne pas être sur que cette appelation soit bien rigoureuse).&lt;/p&gt;</description>
-      
-    </item>
-    
-    <item>
       <title>Reflection Captures</title>
       <link>http://localhost:1313/misc/reflection_capture/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>

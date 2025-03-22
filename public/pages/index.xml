@@ -21,5 +21,22 @@
       
     </item>
     
+    <item>
+      <title>Lexique</title>
+      <link>http://localhost:1313/pages/glossary/</link>
+      <pubDate>Sun, 09 Mar 2025 06:26:08 +0100</pubDate>
+      
+      <guid>http://localhost:1313/pages/glossary/</guid>
+      
+      <description>&lt;h2 id=&#34;anti-aliasing&#34;&gt;Anti-Aliasing&lt;/h2&gt;
+&lt;p&gt;L&amp;rsquo;aliasing (ou crenelage) est un artefact visuel disgratieux caracterisé par un effet escalier sur les contours des objets rendus. Il est introduit lors de la rasterisation (une étape specifique du pipline graphique).&lt;/p&gt;
+&lt;p&gt;Pour le combatre il existe différentes technique d&amp;rsquo;anti-aliasing ayant chacune leurs forces et leur faiblaisses.&lt;/p&gt;
+&lt;h2 id=&#34;bloom&#34;&gt;Bloom&lt;/h2&gt;
+&lt;p&gt;Le bloom est un effet de post-process qui donne une impression de brillance autour des objets lumineux.&lt;/p&gt;
+&lt;h2 id=&#34;cel-shading&#34;&gt;Cel Shading&lt;/h2&gt;
+&lt;p&gt;Le cell shading (ou toon shading) est un effet de post-process donnant à l&amp;rsquo;image une apparence de dessin animé, avec des contours marqués et des aplats de couleurs unis.&lt;/p&gt;</description>
+      
+    </item>
+    
   </channel>
 </rss>

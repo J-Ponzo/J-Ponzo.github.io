@@ -7,10 +7,10 @@ description = "Article de vulgarisation expliquant ce qu'est un shader"
 ## Introduction
 **Programmer un *shader*** n'est pas plus difficile que de programmer n'importe quoi d'autre. Mais il est vrai que le formalisme peut être un peu **déroutant la première fois** qu'on s'y frotte. Dans ce blog, je cherche à m'adresser à un public assez large. Pas uniquement à des programmeurs professionnels, et encore moins à des programmeurs graphiques spécifiquement. J'aimerais donc **démystifier un peu le concept** pour que cela ne devienne pas un point de blocage.
 
-Aujourd'hui, nous allons donc nous intéresser à ce que sont les [*shaders*](/misc/glossary/#shader), pourquoi ils sont si bizarres et à quoi ils servent exactement. Ça ne fera pas de vous des gourous du *shading* (je suis d'ailleurs loin d'en être un), mais j'espère que cela contribuera à **rendre mes articles plus accessibles**.
+Aujourd'hui, nous allons donc nous intéresser à ce que sont les [*shaders*](/pages/glossary/#shader), pourquoi ils sont si bizarres et à quoi ils servent exactement. Ça ne fera pas de vous des gourous du *shading* (je suis d'ailleurs loin d'en être un), mais j'espère que cela contribuera à **rendre mes articles plus accessibles**.
 
 ## I. Qu'est ce qu'un shader ?
-Un *shader*, c'est tout simplement **un programme**. Il existe plusieurs [langages haut niveau](/misc/glossary/#niveau-dabstraction) pour les écrire. Les principaux sont *GLSL* et *HLSL* (mais on peut trouver des choses plus exotiques). Une fois compilé, le *shader* peut être **exécuté** par une unité de calcul. Sauf que dans notre cas, cette unité de calcul, ce n'est pas un *CPU*, mais un ***GPU***.
+Un *shader*, c'est tout simplement **un programme**. Il existe plusieurs [langages haut niveau](/pages/glossary/#niveau-dabstraction) pour les écrire. Les principaux sont *GLSL* et *HLSL* (mais on peut trouver des choses plus exotiques). Une fois compilé, le *shader* peut être **exécuté** par une unité de calcul. Sauf que dans notre cas, cette unité de calcul, ce n'est pas un *CPU*, mais un ***GPU***.
 
 Jusqu'ici, on n'est pas trop dépaysé mais ça va bientôt changer. Imaginez un programme *CPU* dont la mission serait de traiter les éléments d'un tableau. On aurait quelque chose qui ressemble à ça :
 ```c
@@ -82,16 +82,16 @@ Voilà pourquoi on dit qu'il faut à tout prix **éviter les *branches*** dans l
 En résumé, là où le *CPU* est bon pour gérer un petit nombre de tâches complexes et différentes, le GPU, lui, excelle dans l'art d'exécuter en parallèle un très grand nombre de petites opérations similaires. Et il se trouve que c'est exactement ce dont on a besoin pour traiter des images.
 
 ## III. Le pipeline graphique
-En pratique, il existe **plusieurs types de *shaders***, chacun intervenant à une étape précise de ce qu'on appelle le [*pipeline graphique*](/misc/glossary/#pipeline-graphique). À chaque [*draw call*](/misc/glossary/#draw-call), c'est-à-dire (plus ou moins) pour chaque [*mesh*](/misc/glossary/#mesh) visible dans une [*frame*](/misc/glossary/#frame), ce *pipeline* va être traversé. La géométrie du *mesh* est injectée en entrée sous la forme de triplets de [*vertex*](/misc/glossary/#vertex) (des triangles, donc). Ces derniers vont ensuite être traités étape par étape jusqu'à devenir des pixels affichés à l'écran.
+En pratique, il existe **plusieurs types de *shaders***, chacun intervenant à une étape précise de ce qu'on appelle le [*pipeline graphique*](/pages/glossary/#pipeline-graphique). À chaque [*draw call*](/pages/glossary/#draw-call), c'est-à-dire (plus ou moins) pour chaque [*mesh*](/pages/glossary/#mesh) visible dans une [*frame*](/pages/glossary/#frame), ce *pipeline* va être traversé. La géométrie du *mesh* est injectée en entrée sous la forme de triplets de [*vertex*](/pages/glossary/#vertex) (des triangles, donc). Ces derniers vont ensuite être traités étape par étape jusqu'à devenir des pixels affichés à l'écran.
 
 ![Diagramme représentant le pipeline graphique](images/gfx_pipeline.opti.webp)
 *Diagramme du pipeline graphique*
 
 Dans ce *pipeline*, il y a 2 types d'étapes :
-- Les [*fixed function*](/misc/glossary/#fixed-function) en jaune pâle : cablées en dur dans le *GPU* (et donc très efficaces)
+- Les [*fixed function*](/pages/glossary/#fixed-function) en jaune pâle : cablées en dur dans le *GPU* (et donc très efficaces)
 - Les étapes programmables en vert : les fameux *shaders*
 
-Ça fait beaucoup, et encore, dites-vous qu'il en manque. Mais dans l'immense majorité des cas, on n'utilisera **que le** [*Vertex Shader*](/misc/glossary/#vertex-shader) **et le** [*Fragment Shader*](/misc/glossary/#fragment-shader) (notés respectivement *Vertex Program* et *Fragment Program* sur le schéma, mais c'est la même chose).
+Ça fait beaucoup, et encore, dites-vous qu'il en manque. Mais dans l'immense majorité des cas, on n'utilisera **que le** [*Vertex Shader*](/pages/glossary/#vertex-shader) **et le** [*Fragment Shader*](/pages/glossary/#fragment-shader) (notés respectivement *Vertex Program* et *Fragment Program* sur le schéma, mais c'est la même chose).
 
 ### 1. Vertex Shader
 Les éléments traités par le *vertex shader* sont les *vertex* du *mesh* qui traverse le *pipeline*. Ils sont exprimés dans le référentiel local du *mesh*. L'utilité première du *vertex shader*, c'est d'appliquer des **changements d'espace** au *vertex* pour qu'il se retrouve tour à tour dans :
@@ -103,7 +103,7 @@ Imaginez que la caméra, c'est la navette de Futurama. Ce n'est pas elle qui bou
 
 Je ne vais pas détailler les mathématiques engagées dans la manœuvre parce que c'est un article de vulgarisation (ouais c'est ça... dis plutôt que t'as peur de te planter et de passer pour un imbécile !). Mais retenez que ce sont des **multiplications de matrices** : une grosse opération qui peut être découpée en une multitude de petites opérations identiques. Et comme on l'a vu dans la partie précédente, le *GPU* et son modèle *SIMD* sont taillés pour en avaler des caisses entières sans sourciller.
 
-Notez qu'au-delà de ces changements d'espace, le *vertex shader* est l'endroit parfait pour appliquer des **déformations au *mesh***. Il intervient donc logiquement dans l'implémentation de techniques comme le [*morph target*](/misc/glossary/#morph-target) ou le [*skeletal animation*](/misc/glossary/#skeletal-animation).
+Notez qu'au-delà de ces changements d'espace, le *vertex shader* est l'endroit parfait pour appliquer des **déformations au *mesh***. Il intervient donc logiquement dans l'implémentation de techniques comme le [*morph target*](/pages/glossary/#morph-target) ou le [*skeletal animation*](/pages/glossary/#skeletal-animation).
 
 <div style="text-align: center;">
 	<video width="50%" controls muted loop playsinline autoplay>
@@ -114,30 +114,30 @@ Notez qu'au-delà de ces changements d'espace, le *vertex shader* est l'endroit 
 
 *Animation d'un visage à base de morph targets et d'animation squelettale dans JMonkeyEngine.*
 
-À une époque, la lumière était aussi calculée dans le *vertex shader* pour des questions de performances. On appelle ça le [*vertex lighting*](/misc/glossary/#vertex-lighting). Aujourd'hui, les *GPU* sont largement assez puissants pour calculer la lumière au niveau du pixel. Mais le *vertex lighting* est toujours utilisé en tant que parti pris artistique (ou si on fait un portage grille-pain).
+À une époque, la lumière était aussi calculée dans le *vertex shader* pour des questions de performances. On appelle ça le [*vertex lighting*](/pages/glossary/#vertex-lighting). Aujourd'hui, les *GPU* sont largement assez puissants pour calculer la lumière au niveau du pixel. Mais le *vertex lighting* est toujours utilisé en tant que parti pris artistique (ou si on fait un portage grille-pain).
 
 ![Comparaison du Vertex Lighting et du Pixel Lighting](images/gif_vertex_vs_pîxel_lighting.webp)
 *Screenshots de Silent Hill 2 illustrant la différence visuelle entre le Vertex Lighting (PS2) et le Pixel Lighting (Xbox).*
 
 ### 2. La rasterisation
-La [*rasterisation*](/misc/glossary/#rasterisation) est une étape non programmable du *pipeline*. Mais il est quand même important de comprendre ce que c'est, car elle se place entre le *vertex shader* et le *fragment shader*.
+La [*rasterisation*](/pages/glossary/#rasterisation) est une étape non programmable du *pipeline*. Mais il est quand même important de comprendre ce que c'est, car elle se place entre le *vertex shader* et le *fragment shader*.
 
 Il s'agit d'un procédé qui consiste à **discrétiser une image vectorielle**. Dit autrement, on va prendre nos jolis triangles tout lisses, dont les *vertex* viennent d'être projetés dans l'espace écran (par le *vertex shader*), et on va en faire un amas de pixels qu'on appelle des *fragments*. Ces *fragments* sont ensuite injectés en entrée du *fragment shader* (vous commencez à comprendre le pattern de nommage ?).
 
 ![illustration de l'interpolation de la couleur des vertex via la rasteriasation](images/rasterisation.opti.webp) 
 *Rasterisation avec interpolation de l'attribut vertex color.*
 
-Je ne l'ai pas mentionné jusqu'ici, mais en réalité, les *vertex* portent des attributs en plus de leurs coordonnées. Il est important de noter que lors de la *rasterisation*, une ***interpolation* de ces attributs** est effectuée pour chaque *fragment* généré. L'image ci-dessus illustre cela avec l'attribut [vertex color](/misc/glossary/#vertex-color-attribute).
+Je ne l'ai pas mentionné jusqu'ici, mais en réalité, les *vertex* portent des attributs en plus de leurs coordonnées. Il est important de noter que lors de la *rasterisation*, une ***interpolation* de ces attributs** est effectuée pour chaque *fragment* généré. L'image ci-dessus illustre cela avec l'attribut [vertex color](/pages/glossary/#vertex-color-attribute).
 
 ### 3. Fragment Shader
 Le *fragment shader*, c'est la dernière étape avant que le pixel soit imprimé à l'écran. Son job est de déterminer la **couleur finale de ce pixel** à partir des attributs des *vertex interpolés* lors de la *rasterisation* :
 - Coordonnées : l'endroit où se trouve le pixel sur l'écran.
-- [*Normal*](/misc/glossary/#normal-attribute) : l'orientation de la face associée au *vertex*.
+- [*Normal*](/pages/glossary/#normal-attribute) : l'orientation de la face associée au *vertex*.
 - *Vertex Color* : je pense que cet attribut est le reliquat d'une ère où la puissance ne permettait pas de *sampler* des textures pour chaque pixel. Aujourd'hui, c'est un attribut qu'on utilise de manière détournée pour encoder d'autres informations dans les modèles 3D.
-- [*UV*](/misc/glossary/#uv-attribute) : c'est une coordonnée 2D utilisée la plupart du temps pour *sampler* une texture. On en a généralement plusieurs (*uv0, uv1, uv2*…). Comme le *vertex color*, ils peuvent être utilisés de manière détournée parfois.
+- [*UV*](/pages/glossary/#uv-attribute) : c'est une coordonnée 2D utilisée la plupart du temps pour *sampler* une texture. On en a généralement plusieurs (*uv0, uv1, uv2*…). Comme le *vertex color*, ils peuvent être utilisés de manière détournée parfois.
 
 C'est notamment dans ce *shader* que l'on va pouvoir :
-- Rendre la lumière ([*Per Pixel Lighting*](/misc/glossary/#pixel-lighting)).
+- Rendre la lumière ([*Per Pixel Lighting*](/pages/glossary/#pixel-lighting)).
 - Appliquer les textures.
 - Implémenter divers effets de surface (*dissolve*, etc.).
 
@@ -145,19 +145,19 @@ C'est notamment dans ce *shader* que l'on va pouvoir :
 *Effet de dissolve*
 
 ### 4. Post-Process
-Techniquement, **ce sont des *fragment shaders***. Mais je ne voulais pas les traiter dans la partie précédente pour éviter la confusion, car c'est un cas assez spécifique : les [*post-process*](/misc/glossary/#post-process) sont une forme de *rendu multipass*.
+Techniquement, **ce sont des *fragment shaders***. Mais je ne voulais pas les traiter dans la partie précédente pour éviter la confusion, car c'est un cas assez spécifique : les [*post-process*](/pages/glossary/#post-process) sont une forme de *rendu multipass*.
 
-En effet, nous n'allons pas rendre la scène directement à l'écran, mais dans une [*render target*](/misc/glossary/#render-target). Il s'agit d'une texture classique, mis à part qu'elle n'est pas issue d'une image stoquée sur le disque. Elle est générée à la volée lors de l'exécution. On peut donc y dessiner un peu ce qu'on veut de manière dynamique et s'en servir comme resultat intermédiaire dans toute sortes d'algorithmes. Dans le cas d'un post-process, cette *render target* va contenir un *rendu off-screen* de la scène : c'est notre **première *pass***.
+En effet, nous n'allons pas rendre la scène directement à l'écran, mais dans une [*render target*](/pages/glossary/#render-target). Il s'agit d'une texture classique, mis à part qu'elle n'est pas issue d'une image stoquée sur le disque. Elle est générée à la volée lors de l'exécution. On peut donc y dessiner un peu ce qu'on veut de manière dynamique et s'en servir comme resultat intermédiaire dans toute sortes d'algorithmes. Dans le cas d'un post-process, cette *render target* va contenir un *rendu off-screen* de la scène : c'est notre **première *pass***.
 
-Ensuite, nous allons rendre un [*quad*](/misc/glossary/#quad) devant la caméra en nous arrangeant pour que les coins coïncident parfaitement avec ceux de l'écran. C'est ce *quad* qui va être traité par notre *fragment shader* de *post-process* en traversant le *pipeline*. Lors de cette **seconde pass**, on va pouvoir récupérer chaque pixel de la pass précédente (dans la *render target*) et lui appliquer le traitement qu'on souhaite avant qu'il ne soit imprimé sur le *quad* (que vous ne pouvez pas dicerner de l'écran puisqu'il est parfaitement superposé à ce dernier).
+Ensuite, nous allons rendre un [*quad*](/pages/glossary/#quad) devant la caméra en nous arrangeant pour que les coins coïncident parfaitement avec ceux de l'écran. C'est ce *quad* qui va être traité par notre *fragment shader* de *post-process* en traversant le *pipeline*. Lors de cette **seconde pass**, on va pouvoir récupérer chaque pixel de la pass précédente (dans la *render target*) et lui appliquer le traitement qu'on souhaite avant qu'il ne soit imprimé sur le *quad* (que vous ne pouvez pas dicerner de l'écran puisqu'il est parfaitement superposé à ce dernier).
 
 Énormément d'effets que vous connaissez sont implémentés via des post-process. Pour n'en citer que quelques-uns, on retrouve :
-- Le [bloom](/misc/glossary/#bloom)
+- Le [bloom](/pages/glossary/#bloom)
 - Le fog
-- Le [*SSAO*](/misc/glossary/#ssao)
-- Tous les [*anti-aliasing*](/misc/glossary/#anti-aliasing) sauf le [*MSAA*](/misc/glossary/#anti-aliasing).
-- Divers effets de flou ([*depth of field*](/misc/glossary/#depth-of-field), [*motion blur*](/misc/glossary/#motion-blur)…).
-- Des effets stylistiques ([*Cel Shading*](/misc/glossary/#cel-shading), pixelisation…).
+- Le [*SSAO*](/pages/glossary/#ssao)
+- Tous les [*anti-aliasing*](/pages/glossary/#anti-aliasing) sauf le [*MSAA*](/pages/glossary/#anti-aliasing).
+- Divers effets de flou ([*depth of field*](/pages/glossary/#depth-of-field), [*motion blur*](/pages/glossary/#motion-blur)…).
+- Des effets stylistiques ([*Cel Shading*](/pages/glossary/#cel-shading), pixelisation…).
 - L'aberration chromatique.
 - ...
 

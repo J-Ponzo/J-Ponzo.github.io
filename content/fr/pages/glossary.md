@@ -1,7 +1,9 @@
 +++
 draft = true
-title = 'Glossaire'
-toc = false
+title = 'Lexique'
+author = "Turbo Tartine"
+date = '2025-03-09T06:26:08+01:00'
+disableComments = true
 +++
 ## Anti-Aliasing
 L'aliasing (ou crenelage) est un artefact visuel disgratieux caracterisé par un effet escalier sur les contours des objets rendus. Il est introduit lors de la rasterisation (une étape specifique du pipline graphique).
@@ -25,8 +27,8 @@ L'avantage de cette technique par rapport au vertex lighting et au pixel lightin
 On est donc aussi précis qu'avec du pixel lighting, mais pour beaucoup moins cher. Le problème, c'est qu'avec cette technique, on n'est plus capable de rendre la transparence correctement. Les moteurs utilisant du deferred lighting n'utilisent donc jamais que ça. Ce sont en réalité des hybrides.
 
 Termes connexes :
-[Vertex Lighting](/misc/glossary/#pixel-lighting)
-[Deferred Lighting](/misc/glossary/#deferred-lighting)
+[Vertex Lighting](/pages/glossary/#pixel-lighting)
+[Deferred Lighting](/pages/glossary/#deferred-lighting)
 
 ## Depth of Field
 Le depth of fiels (ou profondeur de champs) est un effet de post process qui simule un effet de mise au point en floutant les objets en dehors d'un certaine plage de distance.
@@ -58,7 +60,7 @@ Note : Les face sont orientées. Sauf configuration particulière, elle ne sont 
 [mettre un gif]
 
 ## Fixed Function
-Fut un temps, les [*GPU*](/misc/glossary/#gpu) n'était pas programmables. L'intégralité du pipeline graphiques était "gravé en dur" directement dans le carte. Ca veut dire qu'il y avait des circuits dédiés pour chacune des étapes / fonctionnalités :
+Fut un temps, les [*GPU*](/pages/glossary/#gpu) n'était pas programmables. L'intégralité du pipeline graphiques était "gravé en dur" directement dans le carte. Ca veut dire qu'il y avait des circuits dédiés pour chacune des étapes / fonctionnalités :
 - transformation des vertex
 - rasterisation
 - éclairage
@@ -230,8 +232,8 @@ Avec cette technique on est plus dépendant de la densité de vertex de la surfa
 [Mettre une image]
 
 Termes connexes :
-[Vertex Lighting](/misc/glossary/#pixel-lighting)
-[Deferred Lighting](/misc/glossary/#deferred-lighting)
+[Vertex Lighting](/pages/glossary/#pixel-lighting)
+[Deferred Lighting](/pages/glossary/#deferred-lighting)
 
 ## Post-Process
 Un post-process est une passe de rendu au cours de laquelle on applique un traitement à un rendu intermédiaire de la scène. Ce rendu intermédiaire est stoqué dans une render target qui a été imprimée lors d'une passe précédente.
@@ -267,7 +269,7 @@ Note : Dans le contexte d'un moteur de jeu, le terme designe implicitement le 2e
 
 ## Shader
 Un shader est un programme qui s'execute sur le GPU. Le terme fait l'objet d'une légère ambiguité. Suivant le contexte, il designe :
-- un *shader stage* : un programme indépendant et spécialisé qui collabore avec d'autres au sein du [pipeline graphique](/misc/glossary/#pipeline-graphique) pour générer des images ([*vertex shader*](/misc/glossary/#vertex-shader), *geometry-shader*, [*fragment shader*](/misc/glossary/#fragment-shader), *tessellation shader*, etc...)
+- un *shader stage* : un programme indépendant et spécialisé qui collabore avec d'autres au sein du [pipeline graphique](/pages/glossary/#pipeline-graphique) pour générer des images ([*vertex shader*](/pages/glossary/#vertex-shader), *geometry-shader*, [*fragment shader*](/pages/glossary/#fragment-shader), *tessellation shader*, etc...)
 - un *shader program* : un assemblage cohérent de *shader stages* liés entre eux et destinés à être executés enssemble. C'est en quelques sortes, une instance du pipeline graphique.
 
 Dans les moteurs de jeux et les logiciels de modélisation, le terme apparait par l'intermédiaire du concept de *material*. Dans ce context, il est le plus souvent employé au sens *shader program*. Un *material* pouvant être vu comme un preset de paramettres pour un *shader program* donné.
@@ -348,8 +350,8 @@ L'avantage de cette technique c'est qu'elle est très peu coûteuse. Mais la qua
 [Mettre une image]
 
 Termes connexes :
-[Pixel Lighting](/misc/glossary/#pixel-lighting)
-[Deferred Lighting](/misc/glossary/#deferred-lighting)
+[Pixel Lighting](/pages/glossary/#pixel-lighting)
+[Deferred Lighting](/pages/glossary/#deferred-lighting)
 
 ## Vertex Shader
 Le vertex shader, est la première étape programmable du pipeline graphique. Traditionnellement, la mission de ce shader stage est d'opérer une succession de transformation géométriques aux vertex qui le traversent, afin de les transférer de leur coordonnée locale en 3d à l'espace 2d de l'écran.
