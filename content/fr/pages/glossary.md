@@ -6,152 +6,155 @@ date = '2025-03-09T06:26:08+01:00'
 disableComments = true
 +++
 ## Anti-Aliasing
-L'aliasing (ou crenelage) est un artefact visuel disgratieux caracterisé par un effet escalier sur les contours des objets rendus. Il est introduit lors de la rasterisation (une étape specifique du pipline graphique).
+L'aliasing (ou crénelage) est un artefact visuel indésirable qui se manifeste par un effet d’escalier sur les contours des objets rendus. Il apparaît lors de la rasterisation, une étape spécifique du pipeline graphique.
 
-Pour le combatre il existe différentes technique d'anti-aliasing ayant chacune leurs forces et leur faiblaisses.
+Pour le réduire, différentes techniques d’anti-aliasing existent, chacune ayant ses forces et ses faiblesses.
 
 ## Bloom
-Le bloom est un effet de post-process qui donne une impression de brillance autour des objets lumineux.
+Le bloom est un effet de post-process qui renforce la luminosité des objets brillants en créant un halo diffus autour d’eux. Il simule la manière dont les caméras et l’œil humain perçoivent les fortes sources de lumière.
 
 ## Cel Shading
-Le cell shading (ou toon shading) est un effet de post-process donnant à l'image une apparence de dessin animé, avec des contours marqués et des aplats de couleurs unis.
+Le cel shading (ou toon shading) est un effet de post-process qui donne à l’image une apparence de dessin animé, avec des contours marqués et des aplats de couleurs uniformes.
 
 ## CPU
-C'est l'acronyme de Central Processing Unit : l'unité de calcule principale d'un ordinateur. Il s'agit tout simplement de votre processeur.
+Acronyme de Central Processing Unit, le CPU est l’unité de calcul principale d’un ordinateur. Il s’agit tout simplement de votre processeur.
 
 ## Deferred Lighting
-C'est une technique qui consiste à calculer l'éclairage non plus à chaque drawcall, mais dans une seconde passe juste après la passe principale. En ce sens, je l'assimile souvent à un calcule de lumière en post-process (j'avoue ne pas être sur que cette appelation soit bien rigoureuse).
+Le deferred lighting est une technique qui consiste à calculer l'éclairage dans une seconde passe de rendu, plutôt qu'à chaque draw call. En ce sens, je l'assimile souvent à un calcule de lumière en post-process (même si cette appellation n’est pas tout à fait rigoureuse).
 
-L'avantage de cette technique par rapport au vertex lighting et au pixel lighting, c'est que l'illumination n'est plus calculée à chaque drawcalls mais une seule fois à la fin. Il dépend donc uniquement de la résolution et s'affranchi de l'overdraw (sur-impression des drawcall qui se recouvrent les uns les autres sur la render target et sont donc partiellement calculés pour rien).
+L’avantage par rapport au vertex lighting et au pixel lighting, c’est que l’éclairage n’est plus calculé à chaque draw call, mais une seule fois à la fin. Cela permet d'éviter les calculs inutils en cas d’overdraw (lorsque des draw calls écrasent des fragments calculés précédement).
 
-On est donc aussi précis qu'avec du pixel lighting, mais pour beaucoup moins cher. Le problème, c'est qu'avec cette technique, on n'est plus capable de rendre la transparence correctement. Les moteurs utilisant du deferred lighting n'utilisent donc jamais que ça. Ce sont en réalité des hybrides.
+En résumé, on conserve la précision du pixel lighting, mais à un coût bien plus faible. Le problème, avec cette technique, c'est qu'elle ne permet pas un rendu correcte de la transparence. C’est pourquoi les moteurs utilisant le deferred lighting doivent combiner cela à d'autres solutions pour gérer la transparence.
 
 Termes connexes :
 [Vertex Lighting](/pages/glossary/#pixel-lighting)
 [Deferred Lighting](/pages/glossary/#deferred-lighting)
 
 ## Depth of Field
-Le depth of fiels (ou profondeur de champs) est un effet de post process qui simule un effet de mise au point en floutant les objets en dehors d'un certaine plage de distance.
+Le Depth of Field (ou profondeur de champ) est un effet de post-process qui simule l'effet de mise au point d'une caméra. Il floute les objets situés en dehors d'une plage de distance définie, créant ainsi une impression de profondeur.
 
 ## Draw Call
-Un draw call est une commande envoyée au GPU pour lui demander de traiter un ensemble de primitives géométriques (généralement des triangles) afin de les rendre à l'écran (ou dans une *render target*).
+Un draw call est une instruction envoyée au GPU pour lui demander de traiter et d'afficher un ensemble de primitives géométriques (généralement des triangles) à l'écran, ou dans une render target.
 
 ## Edge :
-Une edge (ou arrète) est un élement constituant du mesh (ou maillage). Elle lie 2 vertex appartenant au mesh. 
+Une edge (ou arête) est un des élements qui constituent un mesh (ou maillage). Chacune relie deux vertex appartenant a ce dernier.
 
-Elle ne sont explicitement représentée que dans les logiciels de modélisation 3d. Côté moteur, elles ne sont présentes qu'implicitement via la definition des triangles.
+Les edges ne sont explicitement représentées que dans les logiciels de modélisation 3D. Dans le moteur, elles ne sont présentes que de manière implicite, à travers la définition des triangles.
 
 [mettre une image]
 
 ## Face :
-La face est un élement constituant du mesh (ou maillage). Elle est definie par un cycle d'edges fermé appartenant au mesh et constitue la plus petite unité de surface visible de ce dernier. En effet, un mesh dépourvu de face est invisible.
+Une face est un des élements qui constituent un mesh (ou maillage). Elle est définie par un cycle d'edges fermé appartenant au mesh et représente la plus petite unité de surface visible de ce dernier. En effet, un mesh sans face est invisible.
 
 [mettre une image]
 
-On distingue 3 types de faces :
-- les triangles : unique type pris en charge par les moteurs de jeu (une carte graphique ne sait pas afficher autre chose)
-- les quads : Faces composées de 4 vertex. Très utiles en modélisation car ils sont très facile à subdiviser et permetent d'insérer des loops facilement
-- les n-gones : Composés de plus de 4 vertex. Ils sont généralement à proscrir car leur propriété géométriques les rendent difficile à manipuler. 
-
+On distingue trois types de faces :
+- Les triangles : C'est le seul type pris en charge par les moteurs de jeu (une carte graphique ne sait pas afficher autre chose).
+- Les quads : Faces composées de quatre vertex. Très utilisés en modélisation, car ils sont faciles à subdiviser et permettent d'ajouter des loops facilement.
+- Les n-gones : Composés de plus de quatre vertex. Généralement à proscrire, car leurs propriétés géométriques les rendent difficiles à manipuler.
 [mettre une image]
 
-Note : Les face sont orientées. Sauf configuration particulière, elle ne sont visibles que si on les regarde du bon côté. Le côté visible est déterminé par l'ordre des vertex
+Note : Les faces sont orientées. Sauf configuration particulière, elles ne sont visibles que si on les regarde du bon côté. Le côté visible est déterminé par l'ordre des vertex.
 
 [mettre un gif]
 
 ## Fixed Function
-Fut un temps, les [*GPU*](/pages/glossary/#gpu) n'était pas programmables. L'intégralité du pipeline graphiques était "gravé en dur" directement dans le carte. Ca veut dire qu'il y avait des circuits dédiés pour chacune des étapes / fonctionnalités :
+Autrefois, les GPU n'étaient pas programmables. L'ensemble du pipeline graphique était "gravé en dur" directement dans la carte, ce qui signifie que chaque étape qui le compose reposait sur des circuits dédiés :
 - transformation des vertex
 - rasterisation
 - éclairage
 - texturing
-- ....
+- ...
 
-Le programmeur ne pouvait donc pas redéfinir ces étapes. Il ne pouvait que les activer, les desactiver, ou en configurer certains aspect via des founction prédefinies : les fameuses fixed functions.
+Le programmeur ne pouvait donc pas modifier ces étapes, seulement les activer, les désactiver ou ajuster certains paramètres via des fonctions prédéfinies : les fameuses fixed functions.
 
-C'était très efficace du point de vue des performance (toute proportion gardée pour l'époque), mais pas très flexible. Si on voulait de nouvelles features visuelles dans les jeux (éclairage PBR, cel shading...), il fallait qu'elles soient implémentée non pas par les developeurs, mais par les fabriquants de cartes. Ce qui constitue un gros obstacle à l'inovation.
+Ce modèle offrait d'excellentes performances pour l'époque, mais manquait de flexibilité. Pour ajouter de nouvelles fonctionnalités visuelles dans les jeux (éclairage PBR, cel shading...), il aurait fallut que les fabricants de cartes eux même les implémentent directement dans le matériel, ce qui freinait l'innovation.
 
-Les GPU ont donc naturellement évolué vers des modèles de plus en plus programmable en intégrand des *shader stages* à leur pipeline graphique. D'abord avec les vertex shader et les fragment shaders, puis sont apparu les géometry shaders, les tesselation shaders, les compute shaders etc...
+Les GPU ont donc évolué vers des architectures de plus en plus programmables, intégrant des shader stages au pipeline graphique. D'abord avec les vertex shaders et fragment shaders, puis arrivèrent des geometry shaders, tessellation shaders, compute shaders, etc.
 
-Aujourd'hui, les fixed function stages n'ont pas disparut. On les utilise là où ont a pas besoin de flexibilité et/ou quand l'aspect performences est critique (rasterisation, depth test...).
+Aujourd'hui, les fixed function stages n'ont pas disparu. Ils restent utilisés pour les étapes où la flexibilité n'est pas nécessaire et/ou que les performances sont critiques (rasterisation, depth test, etc.).
 
-## Fragment-Shader
-Le fragment shader (aussi appelé pixel shader), est la dernière étape programmable du pipeline graphique. La mission de ce shader stage est de déterminer la couleur finale des fragments (ou pixels) issus de la rasterisation (le fixed function stage qui le précède).
+## Fragment Shader
+Le fragment shader (aussi appelé pixel shader) est la dernière étape programmable du pipeline graphique. Il détermine la couleur finale des fragments (ou pixels) générés lors de la rasterisation, qui est l'étape précédente du pipeline.
 
 Plus d'élements ici :
 [Dis donc Jamy : Comment ça marche un shader ?](/posts/ddj_shaders/#3-fragment-shader)
 
 ## Frame
-Une frame, c'est une image de la scène générée à un instant donné par le moteur graphique (ou *renderer*). La vitesse à laquelle on arrive à la construire détermine le *frame rate*, exprimé en fps (Frame Per Second).
+Une frame est une image de la scène générée à un instant donné par le moteur graphique (ou renderer). La rapidité avec laquelle ces images sont rendues définit le frame rate, exprimé en fps (frames per second).
 
 ## FXAA
-Le FXAA (Fast Approximate Anti-Aliasing), est une technique d'anti-aliasing appliquée en post-process. Elle consiste à détecter les contours dans l'image issue de la passe de rendu principale, puis à y appliquer un effet de flou.
+Le FXAA (Fast Approximate Anti-Aliasing) est une technique d'anti-aliasing appliquée en post-traitement. Elle détecte les contours dans l'image issue de la passe de rendu principale, puis applique un léger flou à ces endroits pour atténuer l'aliasing.
 
-Avantages de la solution :
-- Faible impacte sur les performance
-- Utilisable sur un deferred renderer (moteur graphique doté d'une architcture particulière permetant le deferred lighting)
+Avantages  :
+- Faible impact sur les performances
+- Compatible avec un deferred renderer (moteur graphique utilisant une architcture particulière permettant le deferred lighting)
 
-Faiblesses de la solution :
-- Moins efficace que d'autres techniques
-- Peut donner une image légèrement floue
+Inconvénients  :
+- Moins efficace que d'autres techniques d'anti-aliasing
+- Peut entraîner un léger flou de l'image
 
 ## GPU
-C'est l'acronyme de Graphics Processing Unit : l'unité de calcule d'un ordinateur, destinée aux calculs graphiques. Il s'agit tout simplement de votre carte graphique.
+Acronyme de Graphics Processing Unit, le GPU est l'unité de calcul dédiée aux traitements graphiques d'un ordinateur. Il s'agit tout simplement de la carte graphique.
 
 ## Mesh
 Les objets 3d qui compose une scène sont composés d'un ou pluieurs meshes (ou maillage en français). Il s'agit d'un enssemble de *vertex* (ou sommets) reliés entre eux par des edges (arètes). Si on s'arrête là, on est plus ou moins sur la définition d'un graphe. Mais il y a deux grandes différences :
 - les vertex d'un mesh portent une coordonnée 3d (ou 2d) qui les fixe en un point de l'espace (ou du plan)
 - les cycles fermés d'arrêtes peuvent (ou non) definire des faces. Donnant ainsi au mesh une surface.
 
+Les objets 3D qui composent une scène sont constitués d'un ou plusieurs meshes (ou maillages en français). Un mesh est un ensemble de vertex (sommets) reliés entre eux par des edges (arêtes). Bien que cela ressemble à la définition d'un graphe, il y a deux différences majeures :
+- Les vertex d'un mesh ont une coordonnée en 3D (ou 2D), ce qui les localisent en des points spécifiques de l'espace (ou du plan).
+- Les cycles fermés d'arêtes peuvent (ou non) former des faces, donnant ainsi au mesh une surface.
+
 [mettre une image]
 
-Les meshes utilisés dans les moteurs de jeu ont une spécificité supplémentaires : leurs faces doivent imperativement être des triangles car les cartes graphiques ne comprennent que ça. Il faut donc trianguler les quads et les N-Gones avant de les intégrer à une scène. Cette opération peut être effectuée :
-- A l'export du logiciel de modélisation.
-- A l'import dans le moteur
+Les meshes utilisés dans les moteurs de jeu ont une spécificité supplémentaire : leurs faces doivent impérativement être des triangles, car les cartes graphiques ne gèrent que cette forme. Il est donc nécessaire de trianguler les quads et n-gons avant de les intégrer dans une scène. Cette opération peut être effectuée :
+- Lors de l'exportation depuis le logiciel de modélisation,
+- Ou à l'importation dans le moteur de jeu.
 
 [même image triangulée]
 
 ## Morph Target
-Le morph target animation est une technique d'animation qui consiste à créer plusieur version d'un même mesh. Chacune de ces version est appelée une morph target (ou blend shape). Elles conservent la même topologie (connections entre les face, edges et vertex) que le mesh original, seules les positions des vertex sont altérées.
+L’animation par morph target (ou blend shape) est une technique qui consiste à créer plusieurs versions d’un même mesh. Chaque version, conserve la même topologie que le mesh d’origine (c’est-à-dire le nombre de vertex et la façon dont ils sont connectés entre eux par les edges), seules les positions des vertex sont modifiées.
 
-Lors de l'execution, on pourra modifier progressivement des poid associés à chacunes des versions pour faire passer le mesh d'une forme à une autre.
+Lors de l’exécution, des poids sont attribués à chaque version du mesh. En ajustant ces poids progressivement, on fait passer le mesh d'une version à l'autre de manière fluide. Il est également possible de mélanger plusieurs version si nécessaire.
 
 [mettre une image]
 
-Ce procédé est utilisé principalement pour des déformations organiques simples et de petite envergure. Comme par exemples :
-- l'animation faciale
-- les gonflements, retractation des muscles
-- des pustules qui palpites sur le dos d'un monstre
-- la corpulance d'un personnage dans un écran de personnalisation d'avatar
+Cette technique est principalement utilisée pour des déformations relativement simples et de petite envergure, comme :
+ - l’animation faciale,
+ - le gonflement ou la rétraction des muscles,
+ - des pustules qui palpitent sur le dos d’un monstre,
+ - l’ajustement de la corpulence d’un personnage dans un écran de personnalisation d’avatar.
 
 ## Motion Blur
-Le motion blur (ou floue de mouvement) est un effet de post-process qui permet d'appuyer la sensation de mouvement en floutant les objets proportionnelement à leur videsse relative par rapport à la caméra.
+Le motion blur (ou flou de mouvement) est un effet de post-traitement qui accentue la sensation de vitesse en floutant les objets proportionnellement à leur vitesse relative par rapport à la caméra.
 
 ## MSAA
-Le MSAA (Multi Sampling Anti-Aliasing) est une technique d'anti-aliasing gravée en dur dans les circuits du GPU. Elle intervient directement à la source du problème : l'étape de rasterisation.
+Le MSAA (Multi Sampling Anti-Aliasing) est une technique d'anti-aliasing gravée en dur dans les circuits du GPU. Elle agit à la source du problème : l’étape de rasterisation.
 
-A chaque fois qu'un pixel est partiellement couver par un triangle, plutot que de l'igorer, le rasterizer va rafiner son échantillonage et émettre quand même un fragment dont les attributs (color, normal, uv etc...) seront une moyenne des valeurs de chauque echantillon. Quand on parle de MSAA 2X, 4X, 8X ... le chiffre designe le nombre d'échantillons supplémentaires effectués pour générer ce fragment. Evidement plus ce chiffre est élevé, plus le resulta est précis, mais plus la resterisation coutera cher.
+Lorsqu’un pixel est partiellement couvert par un triangle, plutôt que de l’ignorer, le rasterizer affine son échantillonnage et génère un fragment dont les attributs (couleur, normale, UV, etc.) sont une moyenne des valeurs de chaque échantillon. Lorsque l’on parle de MSAA 2x, 4x, 8x, etc., le chiffre désigne le nombre d’échantillons supplémentaires utilisés pour générer ce fragment. Plus le nombre est élevé, plus le résultat est précis, mais plus la rasterisation est coûteuse.
 
-Avantages de la solution :
-- Implémentée directement dans le hardware et donc très performante
-- N'effectue le super-sampling (le sur echantillonnage décrit ci-dessus) qu'au niveau des contours plutôt que sur l'image entière. Ce qui la rend encore moins couteuse.
+Avantages :
+- Implémentés directement dans le hardware, ce qui la rend très performante.
+- Applique le suréchantillonnage uniquement aux contours, plutôt qu’à toute l’image, ce qui limite son coût.
 
-Faiblesses de la solution :
-- Ne lisse que les contours
-- Pas utilisable sur un deferred renderer (moteur graphique doté d'une architcture particulière permetant le deferred lighting)
+Inconvénients :
+- Ne lisse que les contours.
+- Incompatible avec un deferred renderer (moteur graphique utilisant une architcture particulière permettant le deferred lighting)
 
 ## N-Gone
-Dans un logiciel de modélisation 3d, un N-Gone designe une face composée de plus de 4 vertex. Ils sont à éviter, en particulier si le model est destiné à être importé dans un moteur de jeu. Et ce pour les raisons suivantes :
-- La triangultaion automatique est plus compliquée. Les resultats sont difficile à prévoire
-- Si le modele est animé, les deformation des n-gone peuvent être incorrectes
-- Ils ont des propriété géométrique qui fond qu'il généralement difficile de travailler avec (compliqués à subdiviser, insertion ambigue des edge loops...)
+Dans un logiciel de modélisation 3D, un n-gone désigne une face composée de plus de 4 vertex. Il est généralement déconseillé de les utiliser, surtout si le modèle est destiné à être importé dans un moteur de jeu. Voici quelques raisons pour lesquelles les n-gones posent problème :
+- La triangulation automatique devient plus complexe et les résultats sont difficiles à prévoir.
+- Si le modèle est animé, les déformations des n-gones peuvent être incorrectes.
+- Ils présentent des propriétés géométriques qui rendent leur manipulation difficile (par exemple, ils sont compliqués à subdiviser ou d'y insérer des loops).
 
-Note : Si on est rigoureux, un n-gone designe un polygone composé de n edges. Le triangle et le quad sont donc techniquement des n-gone au sens mathématique du terme. Mais dans le contexte de la modélisation 3d, on considère un poligone comme un n-gone qu'à partir de 5 edges (car c'est à partir de ce nombre que la géometrie pose problème).
+Note : Techniquement, un n-gone désigne un polygone à "n" côtés. Par conséquent, les triangles et les quadrilatères sont aussi des N-Gones au sens mathématique du terme. Toutefois, dans le contexte de la modélisation 3D, on considère un polygone comme un n-gone à partir de 5 côtés, car c'est à partir de ce nombre que la géométrie est problématique.
 
 ## Niveau d'Abstraction
-Le niveau d'abstraction d'un langage informatique designe sa proximité avec la logique humaine. Plus un langage est haut niveau, plus il va être lisible et compréhensible "facilement". Plus il est bas niveau, plus les briques de base qui le composent vont être primitives. Ce qui se traduira par des programmes long et complexes même pour faire des choses très simples.
+Le niveau d'abstraction d'un langage informatique désigne sa proximité avec la logique humaine. Plus un langage est de haut niveau, plus il est lisible et compréhensible "facilement". À l'inverse, plus un langage est de bas niveau, plus il les briques qui le composesont primitives, ce qui rend les programmes longs et complexes, même pour des tâches simples.
 
-Le langage le plus bas niveau que l'on puisse trouver est le langage machine.
+Le langage le plus bas niveau que l'on puisse trouver est le langage machine :
 ```c
 10110000 01100001
 00000001 00000010
@@ -165,9 +168,9 @@ Le langage le plus bas niveau que l'on puisse trouver est le langage machine.
 ...
 ```
 
-Pour l'exemple j'ai juste tappé des suites aléatoires de 1 et de 0 mais ça ne change pas grand chose. Personne ne lit, ni n'écrit de code sous cette forme. On l'obtient par traduction automatique depuis un code source écrit dans un langage de plus haut niveau (on appele ça la compilation).
+Cet exemple n'est pas un vrai programme. C'est juste une suites aléatoires de 1 et de 0 que j'ai inventée, mais cela ne change rien à l’essentiel : personne n'écrit de code directement sous cette forme. Le langage machine est le produit de la compilation, qui traduit automatiquement un code source écrit dans un langage de plus haut niveau.
 
-Un premier niveau d'abstraction permettant une utilisation humaine est l'assembleur :
+Un niveau d'abstraction plus élevé, qui permet une utilisation humaine, est l'assembleur :
 ```asm
 SECTION .data
     extern printf
@@ -186,9 +189,9 @@ main:
     int     0x80
 ```
 
-Mais c'est beaucoup trop difficile pour moi. J'ai récupéré ce code sur internet et apparament, il permetrait d'additionner les 2 entiers 14 et 10 et d'afficher le résultat dans la console. 
+C'est encore trop difficile à comprendre pour moi. J'ai récupéré ce code sur Internet, et apparemment, il permet d'additionner les entiers 14 et 10, puis d'afficher le résultat dans la console.
 
-Au dessus de l'assembleur on retrouve les "langage traditionnels" (C/C++, Python, Java, JavaScript ...). Heureusement beucoup plus simples. A titre d'exemple, en C, le code assembler ci-dessus s'écrirait :
+Au-dessus de l'assembleur, on trouve les langages de programmation traditionnels (comme C, C++, Python, Java, JavaScript…). Ces langages sont beaucoup plus accessibles. Par exemple, en C, le code assembleur ci-dessus se traduirait ainsi :
 ```c
 #include <stdio.h>
 #include <stdlib.h>
@@ -200,34 +203,34 @@ int main()
 }
 ```
 
-Notez que tous les "langages traditionnels" ne se placent pas exactement au même niveau d'abstraction. Le C est par exemple plus bas niveau que le Java. Mais les différences sont plus subtiles que pour les exemples précédent.
+Il est important de noter que tous les langages traditionnels ne se situent pas exactement au même niveau d'abstraction. Par exemple, le C est un langage plus bas niveau que le Java. Cependant, les différences sont plus subtiles que dans les exemples précédents.
 
 ## Normal Attribute
-C'est un type d'attribut courament associé aux vertex. Il décrit l'orientation de la surface au niveau des sommets du mesh. C'est une moyenne  pondérée des normales des triangles adjacents au sommet. Differents types de pondération sont possibles :
-- pondération par l'aire des triangles
-- pondération par l'angle au vertex
-- pondération selon le materiau
-- mélange de tout ça
+C'est un type d'attribut couramment associé aux vertex. Il décrit l'orientation de la surface du mesh à la position du vertex. C'est une moyenne pondérée des normales des triangles qui lui sont adjacents. Différents types de pondération peuvent être utilisés :
+- Pondération par l'aire des triangles
+- Pondération par l'angle au vertex
+- Pondération en fonction du matériau
+- Mélange de ces méthodes
 
-Les normales interviennent principalement dans le calcule de l'éclairage. Le fait que les normales soient des moyennes donne un aspect lisse à la surface lorsqu'elle est éclairée. 
+Les normales sont principalement utilisées dans le calcul de l'éclairage. Le fait que ces normales soient partagées par les triangles adjacents donne un aspect lisse à la surface lorsqu'elle est éclairée.
 
 [mettre une image smooth]
 
-C'est bien la plupart du temps mais parfois on veut que certaines arrêtes soient saillantes. Pour cela il faut dupliquer les vertex de l'arrête et donner à chacun la normale d'une des face adjacente.
+Cependant, dans certains cas, on souhaite que certaines arêtes soient saillantes. Pour cela, il suffit de dupliquer les vertex de l'arête et d'attribuer à chaque copie la normale d'une des faces adjacentes.
 
 [mettre une image sharp]
 
-Cet attribut est le plus souvent calculé automatiquement par le logiciel de modélisation 3D en fonction de l'agencement des vertex, edges et faces du mesh. Les arrêtes saillantes peuvent être détectées automatiquement selon l'angle entre les 2 faces adjacentes, ou annotés manuellement par l'artiste en déclarant des arrêtes comme soft ou sharp ou en créant des smoothing groups.
+Cet attribut est généralement calculé automatiquement par le logiciel de modélisation 3D, selon l'agencement des vertex, edges et faces du mesh. Les arêtes saillantes peuvent être détectées automatiquement en fonction de l'angle entre deux faces adjacentes, ou être définies manuellement par l'artiste en marquant des arêtes comme soft ou sharp, ou en créant des smoothing groups.
 
 ## Pipeline Graphique
-Le pipeline graphique est une sequence d'étape executées par le GPU lors d'un draw call. Son rôle est de transformer les vertex 3D qui le traversent en  pixels affichés à l'écran.
+Le pipeline graphique est une séquence d'étapes exécutées par le GPU lors d'un draw call. Son rôle est de transformer les vertices 3D en pixels affichés à l'écran.
 
-Certaines de ces étapes sont directement gravées dans les circuits du GPU (les fixed function stages), d'autres sont programmable (les shader stages).
+Certaines de ces étapes sont directement gravées dans les circuits du GPU (les fixed function stages), tandis que d'autres sont programmables (shader stages).
 
 ## Pixel Lighting
-C'est une technique qui consiste à calculer l'éclairage au niveau du fragment shader pour chaque drawcall de la passe principale. 
+C'est une technique qui consiste à calculer l'éclairage au niveau du fragment shader pour chaque draw call de la passe principale.
 
-Avec cette technique on est plus dépendant de la densité de vertex de la surface éclairée, l'illumination étant calculée directement au niveau du pixel. Mais elle coûte beaucoup plus cher étant donné que le calcul n'est pas effetué pour chaque vertex, mais pour chaque pixel (et il y en a en principe beaucoup plus)
+Grâce à cette méthode, l'éclairage ne dépendant plus de la densité de vertex de la surface éclairée, car l'illumination est calculée directement au niveau du pixel. Cependant, cette technique est plus coûteuse, car le calcul est effectué pour chaque pixel, et non pour chaque vertex (et en principe il y en a beaucoup plus)
 
 [Mettre une image]
 
@@ -236,27 +239,27 @@ Termes connexes :
 [Deferred Lighting](/pages/glossary/#deferred-lighting)
 
 ## Post-Process
-Un post-process est une passe de rendu au cours de laquelle on applique un traitement à un rendu intermédiaire de la scène. Ce rendu intermédiaire est stoqué dans une render target qui a été imprimée lors d'une passe précédente.
+Un post-process est une passe de rendu durant laquelle un traitement est appliqués à un rendu intermédiaire de la scène. Ce rendu est stocké dans une render target, qui a été générée lors d'une passe précédente.
 
-Enormement d'effets visuels sont obtenus de cette manière (Depth of field, Color Grading, Film Grain, Vignetting ...)
+De nombreux effets visuels sont réalisés de cette manière (Depth of field, Color Grading, Film Grain, Vignetting etc.)
 
 ## Quad
-Un quad est une face d'un mesh composée de 4 edges et de 4 vertex. Contrairement au triangle, il n'est pas forcement planaire (contenu dans un seul plan).
+Un quad est une face d'un mesh (maillage) composée de quatre edges (arêtes) et de quatre vertex (sommets). Contrairement à un triangle, un quad n'est pas nécessairement planaire (c'est-à-dire qu'il peut ne pas être contenu dans un seul plan).
 
 [mettre une image]
 
-Dans un moteur de jeu qui ne comprend que les triangles, il s'agit d'une primitive géométrique prédéfinie, composée de 2 triangles qui partagent 2 de leurs vertex (pour un total de 4 vertex donc). Dans ce contexte, le quad est planaire. C'est même un carré.
+Dans un moteur de jeu qui ne comprend que des triangles, le quad est une primitive géométrique prédéfinie qui est décomposée en deux triangles, partageant deux de leurs vertex (pour un total de quatre vertex). Dans ce cas, le quad est toujours planaire, et il forme un carré ou un rectangle.
 
 [mettre une image]
 
 ## Rasterisation
-La rasterisation, c'est l'action de transformer une image vectorielle (définie par des primitives géométriques) en un image matricielle (constituée de pixels).
+La rasterisation est le processus de transformation d'une image vectorielle (définie par des primitives géométriques) en une image matricielle, (composée de pixels).
 
-Dans le cadre du pipline graphique, il s'agit du fixed function stage qui se place entre le vertex shader et le fragment shader. Cette étape rasterise des triangles spécifiquement. Ces derniers sont definis par les vertex en espace écran issus du vertex shader. Les pixels générés, aussi appelés fragment, sont ensuite envoyé en entrée du fragment shader.
+Dans le cadre de la pipeline graphique, il s'agit du fixed function stage située entre le vertex shader et le fragment shader. Cette étape rasterise des triangles, définis par les vertex en espace écran issus du vertex shader. Les pixels générés, aussi appelés fragments, sont ensuite envoyés en entrée du fragment shader.
 
-Les attributs portés par les vertex sont également interpolés et associés aux fragement correspondant.
+Les attributs associés aux vertex sont également interpolés et affectés aux fragments correspondants.
 
-Note : Le terme rasterisation est parfois employé pour designer la totalité du processus de rendu temps réèl classique. Dans ce cas il fait référence à la methode de rendu dans sont intégralité par oposition à la methode de rendu par Ray Tracing.
+Note : Le terme "rasterisation" est parfois utilisé pour désigner l'ensemble du processus de rendu temps réel classique. Dans ce cas, il fait référence à la méthode de rendu dans son intégralité, par opposition à la méthode de rendu par ray tracing.
 
 ## Render Target
 Une render target, c'est une toile sur laquelle le pipline graphique va peindre une sequence de draw calls. A la fin de la squence (appelée une passe de rendu), cette toile peut être soit :
@@ -328,14 +331,14 @@ C'est un type d'attribut courrament associé aux vertex. Il représente généra
 Les vertex peuvent porter plusieurs jeux d'UV différents car on paeut avoir plusieurs textures à mapper sur un mesh (par exemple la lumière statique précalculée et stoqué dans une texture appelée ube lightmap).
 
 ## Vertex
-Le vertex (ou sommet) est un élement constituant du mesh (ou maillage). Il représente un point fixe de l'espace (3d) ou du plan (2d). Il peut porter un certain nombre d'attributs dont les plus courants sont :
-- vertex color
-- normal
-- UVs
+Un vertex (ou sommet) est un des élements qui constituent un mesh (ou maillage). Il représente un point dans l'espace ou dans le plan. Un vertex peut posséder plusieurs attributs, dont les plus courants sont :
+- Une couleur
+- Une normale
+- Des coordonnées UV
 
-D'autres attributs moins frequents, comme les poids du skinning, peuvent s'ajouter à cette liste. Retenez juste que c'est une coordonnée de l'espace ou du plan qui porte de l'information.
+Il existe également d'autres attributs moins fréquents, comme les poids de skinning utilisées pour l'animation. En résumé, un vertex est une coordonnée de l'espace ou du plan qui porte de l'information.
 
-Note : Le pluriel correcte de vertex est vertices (ne soyez pas surpris de le voir écrit sous cette forme). Mais je l'entand très peu à l'oral (en tout cas en France) et je trouve que c'est une source de confusion innutile. J'utilise donc très souvent le terme vetex même au pluriel (désolé pour pour vos oreilles et vos yeux).
+Note : Le pluriel de "vertex" est "vertices", ne soyez pas surpris de le voir écrit sous cette forme. Mais dans le langage courant (du moins en France) on dit prèsque toujours vertex. Je l'utilise donc prèsque toujours sous cette forme y compris à l'écrit, autant par habitude que parce que je trouve ça moins confus (désolé pour vos oreilles et vos yeux si vous n'êtes pas de cet avis).
 
 ## Vertex Color Attribute
 C'est un type d'attribut courament associé aux vertex. Il stocke une couleur au niveau des sommets du mesh qui va devenir un dégradé après interpolation lors de la rasterisation.
