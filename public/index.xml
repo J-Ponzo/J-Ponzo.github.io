@@ -61,11 +61,31 @@
       
       <guid>http://localhost:1313/pages/glossary/</guid>
       
-      <description>&lt;h2 id=&#34;anti-aliasing&#34;&gt;Anti-Aliasing&lt;/h2&gt;
-&lt;p&gt;L&amp;rsquo;aliasing (ou crénelage) est un artefact visuel indésirable qui se manifeste par un effet d’escalier sur les contours des objets rendus. Il apparaît lors de la rasterisation, une étape spécifique du pipeline graphique.&lt;/p&gt;
+      <description>&lt;hr&gt;
+&lt;hr&gt;
+&lt;hr&gt;
+&lt;hr&gt;
+&lt;hr&gt;
+&lt;hr&gt;
+&lt;hr&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;anti-aliasing&#34;&gt;Anti-Aliasing&lt;/h2&gt;
+&lt;p&gt;🔗 {&lt;a href=&#34;http://localhost:1313/pages/glossary/#fxaa&#34;&gt;fxaa&lt;/a&gt; - &lt;a href=&#34;http://localhost:1313/pages/glossary/#msaa&#34;&gt;msaa&lt;/a&gt; - &lt;a href=&#34;http://localhost:1313/pages/glossary/#smaa&#34;&gt;smaa&lt;/a&gt; - &lt;a href=&#34;http://localhost:1313/pages/glossary/#taa&#34;&gt;taa&lt;/a&gt;}&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;L&amp;rsquo;aliasing (ou crénelage) est un artefact visuel indésirable qui se manifeste par un effet d’escalier sur les contours des objets rendus. Il apparaît lors de la &lt;a href=&#34;http://localhost:1313/pages/glossary/#rasterisation&#34;&gt;rasterisation&lt;/a&gt;, une étape spécifique du &lt;a href=&#34;http://localhost:1313/pages/glossary/#pipeline-graphique&#34;&gt;pipeline graphique&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Pour le réduire, différentes techniques d’anti-aliasing existent, chacune ayant ses forces et ses faiblesses.&lt;/p&gt;
+&lt;hr&gt;
+&lt;hr&gt;
+&lt;hr&gt;
+&lt;hr&gt;
+&lt;hr&gt;
+&lt;hr&gt;
+&lt;hr&gt;
+&lt;hr&gt;
 &lt;h2 id=&#34;bloom&#34;&gt;Bloom&lt;/h2&gt;
-&lt;p&gt;Le bloom est un effet de post-process qui renforce la luminosité des objets brillants en créant un halo diffus autour d’eux. Il simule la manière dont les caméras et l’œil humain perçoivent les fortes sources de lumière.&lt;/p&gt;</description>
+&lt;p&gt;🔗 {&lt;a href=&#34;http://localhost:1313/pages/glossary/#post-process&#34;&gt;post-process&lt;/a&gt;}&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Le bloom est un effet de &lt;a href=&#34;http://localhost:1313/pages/glossary/#post-process&#34;&gt;post-process&lt;/a&gt; qui renforce la luminosité des objets brillants en créant un halo diffus autour d’eux. Il simule la manière dont les caméras et l’œil humain perçoivent les fortes sources de lumière.&lt;/p&gt;</description>
       
     </item>
     

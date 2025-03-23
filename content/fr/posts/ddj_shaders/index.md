@@ -10,7 +10,7 @@ description = "Article de vulgarisation expliquant ce qu'est un shader"
 Aujourd'hui, nous allons donc nous intéresser à ce que sont les [*shaders*](/pages/glossary/#shader), pourquoi ils sont si bizarres et à quoi ils servent exactement. Ça ne fera pas de vous des gourous du *shading* (je suis d'ailleurs loin d'en être un), mais j'espère que cela contribuera à **rendre mes articles plus accessibles**.
 
 ## I. Qu'est ce qu'un shader ?
-Un *shader*, c'est tout simplement **un programme**. Il existe plusieurs [langages haut niveau](/pages/glossary/#niveau-dabstraction) pour les écrire. Les principaux sont *GLSL* et *HLSL* (mais on peut trouver des choses plus exotiques). Une fois compilé, le *shader* peut être **exécuté** par une unité de calcul. Sauf que dans notre cas, cette unité de calcul, ce n'est pas un *CPU*, mais un ***GPU***.
+Un *shader*, c'est tout simplement **un programme**. Il existe plusieurs [langages haut niveau](/pages/glossary/#niveau-dabstraction) pour les écrire. Les principaux sont *GLSL* et *HLSL* (mais on peut trouver des choses plus exotiques). Une fois compilé, le *shader* peut être **exécuté** par une unité de calcul. Sauf que dans notre cas, cette unité de calcul, ce n'est pas un [*CPU*](/pages/glossary/#cpu), mais un [***GPU***](/pages/glossary/#gpu).
 
 Jusqu'ici, on n'est pas trop dépaysé mais ça va bientôt changer. Imaginez un programme *CPU* dont la mission serait de traiter les éléments d'un tableau. On aurait quelque chose qui ressemble à ça :
 ```c
@@ -91,7 +91,7 @@ Dans ce *pipeline*, il y a 2 types d'étapes :
 - Les [*fixed function*](/pages/glossary/#fixed-function) en jaune pâle : cablées en dur dans le *GPU* (et donc très efficaces)
 - Les étapes programmables en vert : les fameux *shaders*
 
-Ça fait beaucoup, et encore, dites-vous qu'il en manque. Mais dans l'immense majorité des cas, on n'utilisera **que le** [*Vertex Shader*](/pages/glossary/#vertex-shader) **et le** [*Fragment Shader*](/pages/glossary/#fragment-shader) (notés respectivement *Vertex Program* et *Fragment Program* sur le schéma, mais c'est la même chose).
+Ça fait beaucoup, et encore, dites-vous qu'il en manque. Mais dans l'immense majorité des cas, on n'utilisera **que le [***Vertex Shader***](/pages/glossary/#vertex-shader) et le [***Fragment Shader***](/pages/glossary/#fragment-shader)** (notés respectivement *Vertex Program* et *Fragment Program* sur le schéma, mais c'est la même chose).
 
 ### 1. Vertex Shader
 Les éléments traités par le *vertex shader* sont les *vertex* du *mesh* qui traverse le *pipeline*. Ils sont exprimés dans le référentiel local du *mesh*. L'utilité première du *vertex shader*, c'est d'appliquer des **changements d'espace** au *vertex* pour qu'il se retrouve tour à tour dans :
@@ -155,7 +155,7 @@ Ensuite, nous allons rendre un [*quad*](/pages/glossary/#quad) devant la caméra
 - Le [bloom](/pages/glossary/#bloom)
 - Le fog
 - Le [*SSAO*](/pages/glossary/#ssao)
-- Tous les [*anti-aliasing*](/pages/glossary/#anti-aliasing) sauf le [*MSAA*](/pages/glossary/#anti-aliasing).
+- Tous les [*anti-aliasing*](/pages/glossary/#anti-aliasing) sauf le [*MSAA*](/pages/glossary/#msaa).
 - Divers effets de flou ([*depth of field*](/pages/glossary/#depth-of-field), [*motion blur*](/pages/glossary/#motion-blur)…).
 - Des effets stylistiques ([*Cel Shading*](/pages/glossary/#cel-shading), pixelisation…).
 - L'aberration chromatique.
