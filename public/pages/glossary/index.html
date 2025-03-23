@@ -322,8 +322,9 @@ margin-right: auto;" /></p>
 <p>🔗 {<a href="/pages/glossary/#mesh">mesh</a> - <a href="/pages/glossary/#vertex">vertex</a> - <a href="/pages/glossary/#face">face</a>}</p>
 <hr>
 <p>Une edge (ou arête) est un des élements qui constituent un <a href="/pages/glossary/#mesh">mesh</a> (ou maillage). Chacune relie deux <a href="/pages/glossary/#vertex">vertex</a> appartenant a ce dernier.</p>
+<p><img alt="Illustration d'edges dans un mesh" src="./images/edge.opti.webp" style="display: block; margin-left: auto;
+margin-right: auto;" /></p>
 <p>Les edges ne sont explicitement représentées que dans les logiciels de modélisation 3D. Dans le moteur, elles ne sont présentes que de manière implicite, à travers la définition des triangles.</p>
-<p>[mettre une image]</p>
 <hr>
 <hr>
 <hr>
@@ -336,16 +337,16 @@ margin-right: auto;" /></p>
 <p>🔗 {<a href="/pages/glossary/#mesh">mesh</a> - <a href="/pages/glossary/#vertex">vertex</a> - <a href="/pages/glossary/#edge">edge</a>} {<a href="/pages/glossary/#quad">quad</a> - <a href="/pages/glossary/#n-gone">n-gone</a>}</p>
 <hr>
 <p>Une face est un des élements qui constituent un <a href="/pages/glossary/#mesh">mesh</a> (ou maillage). Elle est définie par un cycle d&rsquo;<a href="/pages/glossary/#edge">edges</a> fermé appartenant au mesh et représente la plus petite unité de surface visible de ce dernier. En effet, un mesh sans face est invisible.</p>
-<p>[mettre une image]</p>
+<p><img alt="Illustration d'une face dans un mesh" src="./images/face.opti.webp" style="display: block; margin-left: auto;
+margin-right: auto;" /></p>
 <p>On distingue trois types de faces :</p>
 <ul>
 <li>Les triangles : C&rsquo;est le seul type pris en charge par les moteurs de jeu (une carte graphique ne sait pas afficher autre chose).</li>
 <li>Les <a href="/pages/glossary/#quad">quads</a> : Faces composées de quatre <a href="/pages/glossary/#vertex">vertex</a>. Très utilisés en modélisation, car ils sont faciles à subdiviser et permettent d&rsquo;ajouter des loops facilement.</li>
-<li>Les <a href="/pages/glossary/#n-gone">n-gones</a> : Composés de plus de quatre vertex. Généralement à proscrire, car leurs propriétés géométriques les rendent difficiles à manipuler.
-[mettre une image]</li>
+<li>Les <a href="/pages/glossary/#n-gone">n-gones</a> : Composés de plus de quatre vertex. Généralement à proscrire, car leurs propriétés géométriques les rendent difficiles à manipuler.</li>
 </ul>
+<p><img alt="4 images du même mesh dans lesquelles sont tour à tour surlifnées un triangle, un quad, un n-gone et un trou (abscence de face)" src="/pages/glossary/images/face_types.opti.webp"></p>
 <p>Note : Les faces sont orientées. Sauf configuration particulière, elles ne sont visibles que si on les regarde du bon côté. Le côté visible est déterminé par l&rsquo;ordre des vertex.</p>
-<p>[mettre un gif]</p>
 <hr>
 <hr>
 <hr>
@@ -442,13 +443,15 @@ margin-right: auto;" /></p>
 <li>Les vertex d&rsquo;un mesh ont une coordonnée en 3D (ou 2D), ce qui les localisent en des points spécifiques de l&rsquo;espace (ou du plan).</li>
 <li>Les cycles fermés d&rsquo;arêtes peuvent (ou non) former des <a href="/pages/glossary/#face">faces</a>, donnant ainsi au mesh une surface.</li>
 </ul>
-<p>[mettre une image]</p>
+<p><img alt="Illustration d'un mesh" src="./images/mesh.opti.webp" style="display: block; margin-left: auto;
+margin-right: auto;" /></p>
 <p>Les meshes utilisés dans les moteurs de jeu ont une spécificité supplémentaire : leurs faces doivent impérativement être des triangles, car les cartes graphiques ne gèrent que cette forme. Il est donc nécessaire de trianguler les <a href="/pages/glossary/#quad">quads</a> et <a href="/pages/glossary/#n-gone">n-gons</a> avant de les intégrer dans une scène. Cette opération peut être effectuée :</p>
 <ul>
 <li>Lors de l&rsquo;exportation depuis le logiciel de modélisation,</li>
 <li>Ou à l&rsquo;importation dans le moteur de jeu.</li>
 </ul>
-<p>[même image triangulée]</p>
+<p><img alt="Illustration du mesh triangulé" src="./images/triangulate.opti.webp" style="display: block; margin-left: auto;
+margin-right: auto;" /></p>
 <hr>
 <hr>
 <hr>
@@ -523,6 +526,8 @@ margin-right: auto;" /></p>
 <li>Si le modèle est animé, les déformations des n-gones peuvent être incorrectes.</li>
 <li>Ils présentent des propriétés géométriques qui rendent leur manipulation difficile (par exemple, ils sont compliqués à subdiviser ou d&rsquo;y insérer des loops).</li>
 </ul>
+<p><img alt="Illustration d'un n-gone" src="./images/ngone.opti.webp" style="display: block; margin-left: auto;
+margin-right: auto;" /></p>
 <p>Note : Techniquement, un n-gone désigne un polygone à &ldquo;n&rdquo; côtés. Par conséquent, les triangles et les quadrilatères sont aussi des N-Gones au sens mathématique du terme. Toutefois, dans le contexte de la modélisation 3D, on considère un polygone comme un n-gone à partir de 5 côtés, car c&rsquo;est à partir de ce nombre que la géométrie est problématique.</p>
 <hr>
 <hr>
@@ -623,7 +628,7 @@ margin-right: auto;" /></p>
 <hr>
 <p>C&rsquo;est une technique qui consiste à calculer l&rsquo;éclairage au niveau du <a href="/pages/glossary/#fragment-shader">fragment shader</a> pour chaque <a href="/pages/glossary/#draw-call">draw call </a> de la passe principale.</p>
 <p>Grâce à cette méthode, l&rsquo;éclairage ne dépendant plus de la densité de <a href="/pages/glossary/#vertex">vertex</a> de la surface éclairée, car l&rsquo;illumination est calculée directement au niveau du pixel. Cependant, cette technique est plus coûteuse, car le calcul est effectué pour chaque pixel, et non pour chaque vertex (et en principe il y en a beaucoup plus)</p>
-<p>[Mettre une image]</p>
+<img alt="Comaraison du vertex lighting et du pixel lighting sur une sphère" src="./images/vertex-vs-fragment.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 <hr>
 <hr>
 <hr>
@@ -650,9 +655,9 @@ margin-right: auto;" /></p>
 <p>🔗 {<a href="/pages/glossary/#face">face</a>}</p>
 <hr>
 <p>Un quad est une <a href="/pages/glossary/#face">face</a> d&rsquo;un <a href="/pages/glossary/#mesh">mesh</a> (maillage) composée de quatre <a href="/pages/glossary/#edge">edges</a> (arêtes) et de quatre <a href="/pages/glossary/#vertex">vertex</a> (sommets). Contrairement à un triangle, un quad n&rsquo;est pas nécessairement planaire (c&rsquo;est-à-dire qu&rsquo;il peut ne pas être contenu dans un seul plan).</p>
-<p>[mettre une image]</p>
+<p><img alt="Illustration d'un quad" src="./images/quad.opti.webp" style="display: block; margin-left: auto;
+margin-right: auto;" /></p>
 <p>Dans un moteur de jeu qui ne comprend que des triangles, le quad est une primitive géométrique prédéfinie qui est décomposée en deux triangles, partageant deux de leurs vertex (pour un total de quatre vertex). Dans ce cas, le quad est toujours planaire, et il forme un carré ou un rectangle.</p>
-<p>[mettre une image]</p>
 <hr>
 <hr>
 <hr>
@@ -766,6 +771,7 @@ margin-right: auto;" /></p>
 <hr>
 <p>L&rsquo;occlusion ambiante est un phénomène physique qui selon lequel la lumière se diffuse moins dans les espaces confinés. Par exemple, dans les coins de murs, à la base d&rsquo;une touffe d&rsquo;herbe ou dans les interstices entre des briques, on observe une lumière moins intense que dans les zones plus dégagées (même sans ombre directe).</p>
 <p>Le SSAO (Screen Space Ambient Occlusion) est un effet de <a href="/pages/glossary/#post-process">post-process</a> qui simule ce phénomène.</p>
+<p><img alt="Schéma illustrant le texture mapping" src="/pages/glossary/images/ssao_comp.opti.webp"></p>
 <hr>
 <hr>
 <hr>
@@ -800,8 +806,8 @@ margin-right: auto;" /></p>
 <p>🔗 {<a href="/pages/glossary/#vertex">vertex</a>} {<a href="/pages/glossary/#rasterisation">rasterisation</a>} {<a href="/pages/glossary/#normal-attribute">normal attribute</a> - <a href="/pages/glossary/#vertex-color-attribute">vertex color attribute</a>}</p>
 <hr>
 <p>C&rsquo;est un type d&rsquo;attribut couramment associé aux <a href="/pages/glossary/#vertex">vertex</a>. Il représente une coordonnée 2D, correspondant à une position dans une texture. C&rsquo;est grâce à cet attribut que l&rsquo;on peut appliquer une texture sur un <a href="/pages/glossary/#mesh">mesh</a>, un processus appelé &ldquo;texture mapping&rdquo;.</p>
+<p><img alt="Schéma illustrant le texture mapping" src="/pages/glossary/images/tex_mapping.opti.webp"></p>
 <p>En résumé, par la magie de l&rsquo;interpolation (réalisée lors de la <a href="/pages/glossary/#rasterisation">rasterisation</a>), les coordonnées UV sont associées à chaque fragment. Le <a href="/pages/glossary/#fragment-shader">fragment shader</a>, ayant accès à ces coordonnées UV interpolées, peut alors échantillonner (ou &ldquo;sampler&rdquo;) la texture au point indiqué, afin de déterminer la couleur du pixel à afficher à l&rsquo;écran.</p>
-<p>[mettre une image]</p>
 <p>Les vertex peuvent porter plusieurs UV différents, car il est possible d&rsquo;appliquer plusieurs textures à un même mesh. Par exemple, une texture pour la lumière statique pré-calculée, stockée dans une texture appelée une lightmap.</p>
 <hr>
 <hr>
@@ -814,7 +820,9 @@ margin-right: auto;" /></p>
 <h2 id="vertex">Vertex</h2>
 <p>🔗 {<a href="/pages/glossary/#mesh">mesh</a> - <a href="/pages/glossary/#edge">edge</a> - <a href="/pages/glossary/#face">face</a>} {<a href="/pages/glossary/#normal-attribute">normal attribute</a> - <a href="/pages/glossary/#uv-attribute">uv attribute</a> - <a href="/pages/glossary/#vertex-color-attribute">vertex color attribute</a>}</p>
 <hr>
-<p>Un vertex (ou sommet) est un des élements qui constituent un <a href="/pages/glossary/#mesh">mesh</a> (ou maillage). Il représente un point dans l&rsquo;espace ou dans le plan. Un vertex peut posséder plusieurs attributs, dont les plus courants sont :</p>
+<p>Un vertex (ou sommet) est un des élements qui constituent un <a href="/pages/glossary/#mesh">mesh</a> (ou maillage). Il représente un point dans l&rsquo;espace ou dans le plan.</p>
+<p><img alt="Illustration de vertices dans un mesh" src="/pages/glossary/images/vertex.opti.webp"></p>
+<p>Un vertex peut posséder plusieurs attributs, dont les plus courants sont :</p>
 <ul>
 <li>Une <a href="/pages/glossary/#vertex-color-attribute">couleur</a></li>
 <li>Une <a href="/pages/glossary/#normal-attribute">normale</a></li>
@@ -848,7 +856,7 @@ margin-right: auto;" /></p>
 <hr>
 <p>C&rsquo;est une technique qui consiste à calculer l&rsquo;éclairage au niveau du <a href="/pages/glossary/#vertex-shader">vertex shader</a> pour chaque <a href="/pages/glossary/#draw-call">draw call</a> de la passe principale. La valeur d&rsquo;illumination obtenue est ensuite interpolée par le <a href="/pages/glossary/#rasterisation">rasterizer</a> et appliquée à chaque fragment. Le <a href="/pages/glossary/#fragment-shader">fragment shader</a> peut alors utiliser cette valeur interpolée pour ajuster la couleur du pixel et déterminer sa couleur finale.</p>
 <p>L&rsquo;avantage de cette technique est sa faible coût en termes de performances. Cependant, la qualité du rendu dépend de la densité des <a href="/pages/glossary/#vertex">vertex</a> de la surface éclairée.</p>
-<p>[Mettre une image]</p>
+<img alt="Comaraison du vertex lighting et du pixel lighting sur une sphère" src="./images/vertex-vs-fragment.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 <hr>
 <hr>
 <hr>

@@ -146,9 +146,10 @@ Un draw call est une instruction envoyée au [GPU](/pages/glossary/#gpu) pour lu
 
 Une edge (ou arête) est un des élements qui constituent un [mesh](/pages/glossary/#mesh) (ou maillage). Chacune relie deux [vertex](/pages/glossary/#vertex) appartenant a ce dernier.
 
-Les edges ne sont explicitement représentées que dans les logiciels de modélisation 3D. Dans le moteur, elles ne sont présentes que de manière implicite, à travers la définition des triangles.
+<img alt="Illustration d'edges dans un mesh" src="./images/edge.opti.webp" style="display: block; margin-left: auto;
+  margin-right: auto;" /> 
 
-[mettre une image]
+Les edges ne sont explicitement représentées que dans les logiciels de modélisation 3D. Dans le moteur, elles ne sont présentes que de manière implicite, à travers la définition des triangles.
 
 ---
 ---
@@ -166,17 +167,17 @@ Les edges ne sont explicitement représentées que dans les logiciels de modéli
 
 Une face est un des élements qui constituent un [mesh](/pages/glossary/#mesh) (ou maillage). Elle est définie par un cycle d'[edges](/pages/glossary/#edge) fermé appartenant au mesh et représente la plus petite unité de surface visible de ce dernier. En effet, un mesh sans face est invisible.
 
-[mettre une image]
+<img alt="Illustration d'une face dans un mesh" src="./images/face.opti.webp" style="display: block; margin-left: auto;
+  margin-right: auto;" /> 
 
 On distingue trois types de faces :
 - Les triangles : C'est le seul type pris en charge par les moteurs de jeu (une carte graphique ne sait pas afficher autre chose).
 - Les [quads](/pages/glossary/#quad) : Faces composées de quatre [vertex](/pages/glossary/#vertex). Très utilisés en modélisation, car ils sont faciles à subdiviser et permettent d'ajouter des loops facilement.
 - Les [n-gones](/pages/glossary/#n-gone) : Composés de plus de quatre vertex. Généralement à proscrire, car leurs propriétés géométriques les rendent difficiles à manipuler.
-[mettre une image]
+
+![4 images du même mesh dans lesquelles sont tour à tour surlifnées un triangle, un quad, un n-gone et un trou (abscence de face)](images/face_types.opti.webp)
 
 Note : Les faces sont orientées. Sauf configuration particulière, elles ne sont visibles que si on les regarde du bon côté. Le côté visible est déterminé par l'ordre des vertex.
-
-[mettre un gif]
 
 ---
 ---
@@ -294,13 +295,15 @@ Les objets 3D qui composent une scène sont constitués d'un ou plusieurs meshes
 - Les vertex d'un mesh ont une coordonnée en 3D (ou 2D), ce qui les localisent en des points spécifiques de l'espace (ou du plan).
 - Les cycles fermés d'arêtes peuvent (ou non) former des [faces](/pages/glossary/#face), donnant ainsi au mesh une surface.
 
-[mettre une image]
+<img alt="Illustration d'un mesh" src="./images/mesh.opti.webp" style="display: block; margin-left: auto;
+  margin-right: auto;" /> 
 
 Les meshes utilisés dans les moteurs de jeu ont une spécificité supplémentaire : leurs faces doivent impérativement être des triangles, car les cartes graphiques ne gèrent que cette forme. Il est donc nécessaire de trianguler les [quads](/pages/glossary/#quad) et [n-gons](/pages/glossary/#n-gone) avant de les intégrer dans une scène. Cette opération peut être effectuée :
 - Lors de l'exportation depuis le logiciel de modélisation,
 - Ou à l'importation dans le moteur de jeu.
 
-[même image triangulée]
+<img alt="Illustration du mesh triangulé" src="./images/triangulate.opti.webp" style="display: block; margin-left: auto;
+  margin-right: auto;" /> 
 
 ---
 ---
@@ -390,6 +393,9 @@ Dans un logiciel de modélisation 3D, un n-gone désigne une [face](/pages/gloss
 - La triangulation automatique devient plus complexe et les résultats sont difficiles à prévoir.
 - Si le modèle est animé, les déformations des n-gones peuvent être incorrectes.
 - Ils présentent des propriétés géométriques qui rendent leur manipulation difficile (par exemple, ils sont compliqués à subdiviser ou d'y insérer des loops).
+
+<img alt="Illustration d'un n-gone" src="./images/ngone.opti.webp" style="display: block; margin-left: auto;
+  margin-right: auto;" /> 
 
 Note : Techniquement, un n-gone désigne un polygone à "n" côtés. Par conséquent, les triangles et les quadrilatères sont aussi des N-Gones au sens mathématique du terme. Toutefois, dans le contexte de la modélisation 3D, on considère un polygone comme un n-gone à partir de 5 côtés, car c'est à partir de ce nombre que la géométrie est problématique.
 
@@ -523,7 +529,7 @@ C'est une technique qui consiste à calculer l'éclairage au niveau du [fragment
 
 Grâce à cette méthode, l'éclairage ne dépendant plus de la densité de [vertex](/pages/glossary/#vertex) de la surface éclairée, car l'illumination est calculée directement au niveau du pixel. Cependant, cette technique est plus coûteuse, car le calcul est effectué pour chaque pixel, et non pour chaque vertex (et en principe il y en a beaucoup plus)
 
-[Mettre une image]
+<img alt="Comaraison du vertex lighting et du pixel lighting sur une sphère" src="./images/vertex-vs-fragment.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 
 ---
 ---
@@ -560,11 +566,10 @@ De nombreux effets visuels sont réalisés de cette manière ([Depth of field](/
 
 Un quad est une [face](/pages/glossary/#face) d'un [mesh](/pages/glossary/#mesh) (maillage) composée de quatre [edges](/pages/glossary/#edge) (arêtes) et de quatre [vertex](/pages/glossary/#vertex) (sommets). Contrairement à un triangle, un quad n'est pas nécessairement planaire (c'est-à-dire qu'il peut ne pas être contenu dans un seul plan).
 
-[mettre une image]
+<img alt="Illustration d'un quad" src="./images/quad.opti.webp" style="display: block; margin-left: auto;
+  margin-right: auto;" /> 
 
 Dans un moteur de jeu qui ne comprend que des triangles, le quad est une primitive géométrique prédéfinie qui est décomposée en deux triangles, partageant deux de leurs vertex (pour un total de quatre vertex). Dans ce cas, le quad est toujours planaire, et il forme un carré ou un rectangle.
-
-[mettre une image]
 
 ---
 ---
@@ -703,6 +708,8 @@ L'occlusion ambiante est un phénomène physique qui selon lequel la lumière se
 
 Le SSAO (Screen Space Ambient Occlusion) est un effet de [post-process](/pages/glossary/#post-process) qui simule ce phénomène.
 
+![Schéma illustrant le texture mapping](images/ssao_comp.opti.webp)
+
 ---
 ---
 ---
@@ -743,9 +750,9 @@ Inconvénients :
 
 C'est un type d'attribut couramment associé aux [vertex](/pages/glossary/#vertex). Il représente une coordonnée 2D, correspondant à une position dans une texture. C'est grâce à cet attribut que l'on peut appliquer une texture sur un [mesh](/pages/glossary/#mesh), un processus appelé "texture mapping".
 
-En résumé, par la magie de l'interpolation (réalisée lors de la [rasterisation](/pages/glossary/#rasterisation)), les coordonnées UV sont associées à chaque fragment. Le [fragment shader](/pages/glossary/#fragment-shader), ayant accès à ces coordonnées UV interpolées, peut alors échantillonner (ou "sampler") la texture au point indiqué, afin de déterminer la couleur du pixel à afficher à l'écran.
+![Schéma illustrant le texture mapping](images/tex_mapping.opti.webp)
 
-[mettre une image]
+En résumé, par la magie de l'interpolation (réalisée lors de la [rasterisation](/pages/glossary/#rasterisation)), les coordonnées UV sont associées à chaque fragment. Le [fragment shader](/pages/glossary/#fragment-shader), ayant accès à ces coordonnées UV interpolées, peut alors échantillonner (ou "sampler") la texture au point indiqué, afin de déterminer la couleur du pixel à afficher à l'écran.
 
 Les vertex peuvent porter plusieurs UV différents, car il est possible d'appliquer plusieurs textures à un même mesh. Par exemple, une texture pour la lumière statique pré-calculée, stockée dans une texture appelée une lightmap.
 
@@ -763,7 +770,11 @@ Les vertex peuvent porter plusieurs UV différents, car il est possible d'appliq
 
 ---
 
-Un vertex (ou sommet) est un des élements qui constituent un [mesh](/pages/glossary/#mesh) (ou maillage). Il représente un point dans l'espace ou dans le plan. Un vertex peut posséder plusieurs attributs, dont les plus courants sont :
+Un vertex (ou sommet) est un des élements qui constituent un [mesh](/pages/glossary/#mesh) (ou maillage). Il représente un point dans l'espace ou dans le plan. 
+
+![Illustration de vertices dans un mesh](images/vertex.opti.webp)
+
+Un vertex peut posséder plusieurs attributs, dont les plus courants sont :
 - Une [couleur](/pages/glossary/#vertex-color-attribute)
 - Une [normale](/pages/glossary/#normal-attribute)
 - Des coordonnées [UV](/pages/glossary/#uv-attribute)
@@ -808,7 +819,7 @@ C'est une technique qui consiste à calculer l'éclairage au niveau du [vertex s
 
 L'avantage de cette technique est sa faible coût en termes de performances. Cependant, la qualité du rendu dépend de la densité des [vertex](/pages/glossary/#vertex) de la surface éclairée.
 
-[Mettre une image]
+<img alt="Comaraison du vertex lighting et du pixel lighting sur une sphère" src="./images/vertex-vs-fragment.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 
 ---
 ---
