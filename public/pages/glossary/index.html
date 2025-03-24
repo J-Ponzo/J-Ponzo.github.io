@@ -33,7 +33,7 @@
   <meta property="og:title" content="Lexique">
   <meta property="og:description" content="Anti-Aliasing 🔗 {fxaa - msaa - smaa - taa}
 L’aliasing (ou crénelage) est un artefact visuel indésirable qui se manifeste par un effet d’escalier sur les contours des objets rendus. Il apparaît lors de la rasterisation, une étape spécifique du pipeline graphique.
-Pour le réduire, différentes techniques d’anti-aliasing existent, chacune ayant ses forces et ses faiblesses.
+Pour le réduire, différentes techniques d’anti-aliasing existent, chacune ayant leurs forces et leurs faiblesses.
 Bloom 🔗 {post-process}
 Le bloom est un effet de post-process qui renforce la luminosité des objets brillants en créant un halo diffus autour d’eux. Il simule la manière dont les caméras et l’œil humain perçoivent les fortes sources de lumière.">
   <meta property="og:locale" content="fr_fr">
@@ -49,7 +49,7 @@ Le bloom est un effet de post-process qui renforce la luminosité des objets bri
   <meta name="twitter:title" content="Lexique">
   <meta name="twitter:description" content="Anti-Aliasing 🔗 {fxaa - msaa - smaa - taa}
 L’aliasing (ou crénelage) est un artefact visuel indésirable qui se manifeste par un effet d’escalier sur les contours des objets rendus. Il apparaît lors de la rasterisation, une étape spécifique du pipeline graphique.
-Pour le réduire, différentes techniques d’anti-aliasing existent, chacune ayant ses forces et ses faiblesses.
+Pour le réduire, différentes techniques d’anti-aliasing existent, chacune ayant leurs forces et leurs faiblesses.
 Bloom 🔗 {post-process}
 Le bloom est un effet de post-process qui renforce la luminosité des objets brillants en créant un halo diffus autour d’eux. Il simule la manière dont les caméras et l’œil humain perçoivent les fortes sources de lumière.">
 
@@ -130,7 +130,7 @@ stroke-linejoin="round" class="feather feather-home">
                 </li>
                 
                 <li>
-                    <a class="menu-link active" href="/pages/glossary/">
+                    <a class="menu-link " href="/pages/glossary/">
                         Lexique
                     </a>
                     
@@ -231,7 +231,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>🔗 {<a href="/pages/glossary/#fxaa">fxaa</a> - <a href="/pages/glossary/#msaa">msaa</a> - <a href="/pages/glossary/#smaa">smaa</a> - <a href="/pages/glossary/#taa">taa</a>}</p>
 <hr>
 <p>L&rsquo;aliasing (ou crénelage) est un artefact visuel indésirable qui se manifeste par un effet d’escalier sur les contours des objets rendus. Il apparaît lors de la <a href="/pages/glossary/#rasterisation">rasterisation</a>, une étape spécifique du <a href="/pages/glossary/#pipeline-graphique">pipeline graphique</a>.</p>
-<p>Pour le réduire, différentes techniques d’anti-aliasing existent, chacune ayant ses forces et ses faiblesses.</p>
+<p>Pour le réduire, différentes techniques d’anti-aliasing existent, chacune ayant leurs forces et leurs faiblesses.</p>
 <hr>
 <hr>
 <hr>
@@ -369,7 +369,7 @@ margin-right: auto;" /></p>
 <p>Le programmeur ne pouvait donc pas modifier ces étapes, seulement les activer, les désactiver ou ajuster certains paramètres via des fonctions prédéfinies : les fameuses fixed functions.</p>
 <p>Ce modèle offrait d&rsquo;excellentes performances pour l&rsquo;époque, mais manquait de flexibilité. Pour ajouter de nouvelles fonctionnalités visuelles dans les jeux (éclairage PBR, <a href="/pages/glossary/#cel-shading">cel shading</a>&hellip;), il aurait fallut que les fabricants de cartes eux même les implémentent directement dans le matériel, ce qui freinait l&rsquo;innovation.</p>
 <p>Les GPU ont donc évolué vers des architectures de plus en plus programmables, intégrant des <a href="/pages/glossary/#shader">shader stages</a> au pipeline graphique. D&rsquo;abord avec les <a href="/pages/glossary/#vertex-shader">vertex shaders</a> et <a href="/pages/glossary/#fragment-shader">fragment shaders</a>, puis arrivèrent des geometry shaders, tessellation shaders, compute shaders, etc.</p>
-<p>Aujourd&rsquo;hui, les fixed function stages n&rsquo;ont pas disparu. Ils restent utilisés pour les étapes où la flexibilité n&rsquo;est pas nécessaire et/ou que les performances sont critiques (rasterisation, depth test, etc.).</p>
+<p>Aujourd&rsquo;hui, les fixed function stages n&rsquo;ont pas disparu. Ils restent utilisés pour les étapes où la flexibilité n&rsquo;est pas nécessaire et/ou quand les performances sont critiques (rasterisation, depth test, etc.).</p>
 <hr>
 <hr>
 <hr>
@@ -498,10 +498,11 @@ margin-right: auto;" /></p>
 <p>🔗 {<a href="/pages/glossary/#anti-aliasing">anti-aliasing</a>}</p>
 <hr>
 <p>Le MSAA (Multi Sampling Anti-Aliasing) est une technique d&rsquo;<a href="/pages/glossary/#anti-aliasing">anti-aliasing</a> gravée en dur dans les circuits du <a href="/pages/glossary/#gpu">GPU</a>. Elle agit à la source du problème : l’étape de <a href="/pages/glossary/#rasterisation">rasterisation</a>.</p>
-<p>Lorsqu’un pixel est partiellement couvert par un triangle, plutôt que de l’ignorer, le rasterizer affine son échantillonnage et génère un fragment dont les attributs (couleur, normale, UV, etc.) sont une moyenne des valeurs de chaque échantillon. Lorsque l’on parle de MSAA 2x, 4x, 8x, etc., le chiffre désigne le nombre d’échantillons supplémentaires utilisés pour générer ce fragment. Plus le nombre est élevé, plus le résultat est précis, mais plus la rasterisation est coûteuse.</p>
+<p>Lorsqu’un pixel est partiellement couvert par un triangle, plutôt que de l’ignorer, le rasterizer affine son échantillonnage et génère un fragment dont les attributs (couleur, normale, UV, etc.) sont une moyenne des valeurs de chaque échantillon. Lorsque l’on parle de MSAA 2x, 4x, 8x, etc., le chiffre désigne le nombre d’échantillons supplémentaires utilisés pour générer ce fragment. Plus le nombre est élevé, plus le résultat est précis (mais plus la rasterisation est coûteuse).</p>
+<p>[mettre une image]</p>
 <p>Avantages :</p>
 <ul>
-<li>Implémentés directement dans le hardware, ce qui la rend très performante.</li>
+<li>Implémentée directement dans le hardware, ce qui la rend assez performante.</li>
 <li>Applique le suréchantillonnage uniquement aux contours, plutôt qu’à toute l’image, ce qui limite son coût.</li>
 </ul>
 <p>Inconvénients :</p>
@@ -524,7 +525,7 @@ margin-right: auto;" /></p>
 <ul>
 <li>La triangulation automatique devient plus complexe et les résultats sont difficiles à prévoir.</li>
 <li>Si le modèle est animé, les déformations des n-gones peuvent être incorrectes.</li>
-<li>Ils présentent des propriétés géométriques qui rendent leur manipulation difficile (par exemple, ils sont compliqués à subdiviser ou d&rsquo;y insérer des loops).</li>
+<li>Ils présentent des propriétés géométriques qui rendent leur manipulation difficile (par exemple, ils est compliqué de les subdiviser ou d&rsquo;y insérer des loops).</li>
 </ul>
 <p><img alt="Illustration d'un n-gone" src="./images/ngone.opti.webp" style="display: block; margin-left: auto;
 margin-right: auto;" /></p>
@@ -538,7 +539,7 @@ margin-right: auto;" /></p>
 <hr>
 <hr>
 <h2 id="niveau-dabstraction">Niveau d&rsquo;Abstraction</h2>
-<p>Le niveau d&rsquo;abstraction d&rsquo;un langage informatique désigne sa proximité avec la logique humaine. Plus un langage est de haut niveau, plus il est lisible et compréhensible &ldquo;facilement&rdquo;. À l&rsquo;inverse, plus un langage est de bas niveau, plus il les briques qui le composesont primitives, ce qui rend les programmes longs et complexes, même pour des tâches simples.</p>
+<p>Le niveau d&rsquo;abstraction d&rsquo;un langage informatique désigne sa proximité avec la logique humaine. Plus un langage est de haut niveau, plus il est lisible et compréhensible &ldquo;facilement&rdquo;. À l&rsquo;inverse, plus un langage est de bas niveau, plus il les briques qui le compose sont primitives, ce qui rend les programmes longs et complexes, même pour des tâches simples.</p>
 <p>Le langage le plus bas niveau que l&rsquo;on puisse trouver est le langage machine :</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="mi">10110000</span> <span class="mo">01100001</span>
 </span></span><span class="line"><span class="cl"><span class="mo">00000001</span> <span class="mo">00000010</span>
@@ -671,7 +672,7 @@ margin-right: auto;" /></p>
 <br>📜 <a href="/posts/ddj_shaders/">Dis donc Jamy : Comment ça marche un shader ?</a></p>
 <hr>
 <p>La rasterisation est le processus de transformation d&rsquo;une image vectorielle (définie par des primitives géométriques) en une image matricielle, (composée de pixels).</p>
-<p>Dans le cadre de la <a href="/pages/glossary/#pipeline-graphique">pipeline graphique</a>, il s&rsquo;agit du <a href="/pages/glossary/#fixed-function">fixed function stage</a> située entre le <a href="/pages/glossary/#vertex-shader">vertex shader</a> et le <a href="/pages/glossary/#fragment-shader">fragment shader</a>. Cette étape rasterise des triangles, définis par les <a href="/pages/glossary/#vertex">vertex</a> en espace écran issus du vertex shader. Les pixels générés, aussi appelés fragments, sont ensuite envoyés en entrée du fragment shader.</p>
+<p>Dans le cadre du <a href="/pages/glossary/#pipeline-graphique">pipeline graphique</a>, il s&rsquo;agit du <a href="/pages/glossary/#fixed-function">fixed function stage</a> située entre le <a href="/pages/glossary/#vertex-shader">vertex shader</a> et le <a href="/pages/glossary/#fragment-shader">fragment shader</a>. Cette étape rasterise des triangles, définis par les <a href="/pages/glossary/#vertex">vertex</a> en espace écran issus du vertex shader. Les pixels générés, aussi appelés fragments, sont ensuite envoyés en entrée du fragment shader.</p>
 <p>Les attributs associés aux vertex (<a href="/pages/glossary/#normal-attribute">normal</a>, <a href="/pages/glossary/#vertex-color-attribute">couleur</a>, <a href="/pages/glossary/#uv-attribute">uv</a>) sont également interpolés et affectés aux fragments correspondants.</p>
 <p>Note : Le terme &ldquo;rasterisation&rdquo; est parfois utilisé pour désigner l&rsquo;ensemble du processus de rendu temps réel classique. Dans ce cas, il fait référence à la méthode de rendu dans son intégralité, par opposition à la méthode de rendu par ray tracing.</p>
 <hr>
@@ -855,7 +856,7 @@ margin-right: auto;" /></p>
 <p>🔗 {<a href="/pages/glossary/#pixel-lighting">pixel lighting</a> - <a href="/pages/glossary/#deferred-lighting">deferred lighting</a>}</p>
 <hr>
 <p>C&rsquo;est une technique qui consiste à calculer l&rsquo;éclairage au niveau du <a href="/pages/glossary/#vertex-shader">vertex shader</a> pour chaque <a href="/pages/glossary/#draw-call">draw call</a> de la passe principale. La valeur d&rsquo;illumination obtenue est ensuite interpolée par le <a href="/pages/glossary/#rasterisation">rasterizer</a> et appliquée à chaque fragment. Le <a href="/pages/glossary/#fragment-shader">fragment shader</a> peut alors utiliser cette valeur interpolée pour ajuster la couleur du pixel et déterminer sa couleur finale.</p>
-<p>L&rsquo;avantage de cette technique est sa faible coût en termes de performances. Cependant, la qualité du rendu dépend de la densité des <a href="/pages/glossary/#vertex">vertex</a> de la surface éclairée.</p>
+<p>L&rsquo;avantage de cette technique est son faible coût en termes de performances. Cependant, la qualité du rendu dépend de la densité des <a href="/pages/glossary/#vertex">vertex</a> de la surface éclairée.</p>
 <img alt="Comaraison du vertex lighting et du pixel lighting sur une sphère" src="./images/vertex-vs-fragment.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 <hr>
 <hr>

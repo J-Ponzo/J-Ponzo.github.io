@@ -22,7 +22,7 @@ disableComments = false
 
 L'aliasing (ou crénelage) est un artefact visuel indésirable qui se manifeste par un effet d’escalier sur les contours des objets rendus. Il apparaît lors de la [rasterisation](/pages/glossary/#rasterisation), une étape spécifique du [pipeline graphique](/pages/glossary/#pipeline-graphique).
 
-Pour le réduire, différentes techniques d’anti-aliasing existent, chacune ayant ses forces et ses faiblesses.
+Pour le réduire, différentes techniques d’anti-aliasing existent, chacune ayant leurs forces et leurs faiblesses.
 
 ---
 ---
@@ -206,7 +206,7 @@ Ce modèle offrait d'excellentes performances pour l'époque, mais manquait de f
 
 Les GPU ont donc évolué vers des architectures de plus en plus programmables, intégrant des [shader stages](/pages/glossary/#shader) au pipeline graphique. D'abord avec les [vertex shaders](/pages/glossary/#vertex-shader) et [fragment shaders](/pages/glossary/#fragment-shader), puis arrivèrent des geometry shaders, tessellation shaders, compute shaders, etc.
 
-Aujourd'hui, les fixed function stages n'ont pas disparu. Ils restent utilisés pour les étapes où la flexibilité n'est pas nécessaire et/ou que les performances sont critiques (rasterisation, depth test, etc.).
+Aujourd'hui, les fixed function stages n'ont pas disparu. Ils restent utilisés pour les étapes où la flexibilité n'est pas nécessaire et/ou quand les performances sont critiques (rasterisation, depth test, etc.).
 
 ---
 ---
@@ -365,10 +365,12 @@ Le motion blur (ou flou de mouvement) est un effet de [post-process](/pages/glos
 
 Le MSAA (Multi Sampling Anti-Aliasing) est une technique d'[anti-aliasing](/pages/glossary/#anti-aliasing) gravée en dur dans les circuits du [GPU](/pages/glossary/#gpu). Elle agit à la source du problème : l’étape de [rasterisation](/pages/glossary/#rasterisation).
 
-Lorsqu’un pixel est partiellement couvert par un triangle, plutôt que de l’ignorer, le rasterizer affine son échantillonnage et génère un fragment dont les attributs (couleur, normale, UV, etc.) sont une moyenne des valeurs de chaque échantillon. Lorsque l’on parle de MSAA 2x, 4x, 8x, etc., le chiffre désigne le nombre d’échantillons supplémentaires utilisés pour générer ce fragment. Plus le nombre est élevé, plus le résultat est précis, mais plus la rasterisation est coûteuse.
+Lorsqu’un pixel est partiellement couvert par un triangle, plutôt que de l’ignorer, le rasterizer affine son échantillonnage et génère un fragment dont les attributs (couleur, normale, UV, etc.) sont une moyenne des valeurs de chaque échantillon. Lorsque l’on parle de MSAA 2x, 4x, 8x, etc., le chiffre désigne le nombre d’échantillons supplémentaires utilisés pour générer ce fragment. Plus le nombre est élevé, plus le résultat est précis (mais plus la rasterisation est coûteuse).
+
+[mettre une image]
 
 Avantages :
-- Implémentés directement dans le hardware, ce qui la rend très performante.
+- Implémentée directement dans le hardware, ce qui la rend assez performante.
 - Applique le suréchantillonnage uniquement aux contours, plutôt qu’à toute l’image, ce qui limite son coût.
 
 Inconvénients :
@@ -392,7 +394,7 @@ Inconvénients :
 Dans un logiciel de modélisation 3D, un n-gone désigne une [face](/pages/glossary/#face) composée de plus de 4 [vertex](/pages/glossary/#vertex). Il est généralement déconseillé de les utiliser, surtout si le modèle est destiné à être importé dans un moteur de jeu. Voici quelques raisons pour lesquelles les n-gones posent problème :
 - La triangulation automatique devient plus complexe et les résultats sont difficiles à prévoir.
 - Si le modèle est animé, les déformations des n-gones peuvent être incorrectes.
-- Ils présentent des propriétés géométriques qui rendent leur manipulation difficile (par exemple, ils sont compliqués à subdiviser ou d'y insérer des loops).
+- Ils présentent des propriétés géométriques qui rendent leur manipulation difficile (par exemple, ils est compliqué de les subdiviser ou d'y insérer des loops).
 
 <img alt="Illustration d'un n-gone" src="./images/ngone.opti.webp" style="display: block; margin-left: auto;
   margin-right: auto;" /> 
@@ -409,7 +411,7 @@ Note : Techniquement, un n-gone désigne un polygone à "n" côtés. Par conséq
 ---
 
 ## Niveau d'Abstraction
-Le niveau d'abstraction d'un langage informatique désigne sa proximité avec la logique humaine. Plus un langage est de haut niveau, plus il est lisible et compréhensible "facilement". À l'inverse, plus un langage est de bas niveau, plus il les briques qui le composesont primitives, ce qui rend les programmes longs et complexes, même pour des tâches simples.
+Le niveau d'abstraction d'un langage informatique désigne sa proximité avec la logique humaine. Plus un langage est de haut niveau, plus il est lisible et compréhensible "facilement". À l'inverse, plus un langage est de bas niveau, plus il les briques qui le compose sont primitives, ce qui rend les programmes longs et complexes, même pour des tâches simples.
 
 Le langage le plus bas niveau que l'on puisse trouver est le langage machine :
 ```c
@@ -588,7 +590,7 @@ Dans un moteur de jeu qui ne comprend que des triangles, le quad est une primiti
 
 La rasterisation est le processus de transformation d'une image vectorielle (définie par des primitives géométriques) en une image matricielle, (composée de pixels).
 
-Dans le cadre de la [pipeline graphique](/pages/glossary/#pipeline-graphique), il s'agit du [fixed function stage](/pages/glossary/#fixed-function) située entre le [vertex shader](/pages/glossary/#vertex-shader) et le [fragment shader](/pages/glossary/#fragment-shader). Cette étape rasterise des triangles, définis par les [vertex](/pages/glossary/#vertex) en espace écran issus du vertex shader. Les pixels générés, aussi appelés fragments, sont ensuite envoyés en entrée du fragment shader.
+Dans le cadre du [pipeline graphique](/pages/glossary/#pipeline-graphique), il s'agit du [fixed function stage](/pages/glossary/#fixed-function) située entre le [vertex shader](/pages/glossary/#vertex-shader) et le [fragment shader](/pages/glossary/#fragment-shader). Cette étape rasterise des triangles, définis par les [vertex](/pages/glossary/#vertex) en espace écran issus du vertex shader. Les pixels générés, aussi appelés fragments, sont ensuite envoyés en entrée du fragment shader.
 
 Les attributs associés aux vertex ([normal](/pages/glossary/#normal-attribute), [couleur](/pages/glossary/#vertex-color-attribute), [uv](/pages/glossary/#uv-attribute)) sont également interpolés et affectés aux fragments correspondants.
 
@@ -817,7 +819,7 @@ Bien que cet attribut soit peu utilisé de manière directe dans les jeux modern
 
 C'est une technique qui consiste à calculer l'éclairage au niveau du [vertex shader](/pages/glossary/#vertex-shader) pour chaque [draw call](/pages/glossary/#draw-call) de la passe principale. La valeur d'illumination obtenue est ensuite interpolée par le [rasterizer](/pages/glossary/#rasterisation) et appliquée à chaque fragment. Le [fragment shader](/pages/glossary/#fragment-shader) peut alors utiliser cette valeur interpolée pour ajuster la couleur du pixel et déterminer sa couleur finale.
 
-L'avantage de cette technique est sa faible coût en termes de performances. Cependant, la qualité du rendu dépend de la densité des [vertex](/pages/glossary/#vertex) de la surface éclairée.
+L'avantage de cette technique est son faible coût en termes de performances. Cependant, la qualité du rendu dépend de la densité des [vertex](/pages/glossary/#vertex) de la surface éclairée.
 
 <img alt="Comaraison du vertex lighting et du pixel lighting sur une sphère" src="./images/vertex-vs-fragment.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 
