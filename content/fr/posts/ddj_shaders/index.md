@@ -1,6 +1,6 @@
 +++
 date = '2025-03-24T10:20:34+01:00'
-draft = true
+draft = false
 title = 'Dis donc Jamy : Comment ça marche un shader ?'
 description = "Article de vulgarisation expliquant ce qu'est un shader"
 +++

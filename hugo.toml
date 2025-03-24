@@ -223,6 +223,10 @@ name = "bluesky"
 url = "https://@turbotartine.bsky.social"
 
 [[params.socialIcons]]
+name = "mastodon"
+url = "https://mastodon.gamedev.place/@TurboTartine"
+
+[[params.socialIcons]]
 name = "Rss"
 url = "/index.xml"
 
