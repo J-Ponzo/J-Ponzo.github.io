@@ -1,5 +1,5 @@
 +++
-draft = true
+draft = false
 title = 'Lexique'
 author = "Turbo Tartine"
 date = '2025-03-24T06:26:08+01:00'
