@@ -162,7 +162,7 @@ theme = "hugo-blog-awesome"
   [[Languages.fr-fr.menu.main]]
     pageRef="glossary"
     name = 'Lexique'
-    url = '/glossary/'
+    url = '/pages/glossary/'
     weight = 50
 
 [Languages.fr-fr.params]

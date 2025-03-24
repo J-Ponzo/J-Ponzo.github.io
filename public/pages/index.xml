@@ -6,25 +6,11 @@
     <description>Recent content in Pages on Turbo Tartine Games</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-fr</language>
-    <lastBuildDate>Sun, 09 Mar 2025 06:26:08 +0100</lastBuildDate><atom:link href="http://localhost:1313/pages/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>À propos</title>
-      <link>http://localhost:1313/pages/about/</link>
-      <pubDate>Sun, 09 Mar 2025 06:26:08 +0100</pubDate>
-      
-      <guid>http://localhost:1313/pages/about/</guid>
-      
-      <description>&lt;h2 id=&#34;hello-world-&#34;&gt;Hello World !&lt;/h2&gt;
-&lt;p&gt;Bienvenue sur Turbo Tartine Games, ce petit coin d’Internet dans lequel je partage ma passion pour le développement de jeux vidéo.&lt;/p&gt;
-&lt;h2 id=&#34;qui-suis-je-&#34;&gt;Qui suis-je ?&lt;/h2&gt;
-&lt;p&gt;Je m’appelle Jérémy, je suis passionné de jeux vidéo depuis toujours et j’ai la chance d’avoir pu en faire un métier. Je travaille dans un studio lyonnais du nom de &lt;a href=&#34;https://bsky.app/profile/wanadevstudio.com&#34;&gt;WanadevStudio&lt;/a&gt;. Mes journées consistent à développer des jeux (principalement en VR) sous Unreal Engine. Mais lorsque la nuit tombe, je deviens TurboTartine. Sous cette identité pas vraiment secrète, je continue de faire des jeux, mais sur mon temps libre. Cette double vie me permet d’appréhender cette passion sous deux angles très différents :&lt;/p&gt;</description>
-      
-    </item>
-    
+    <lastBuildDate>Mon, 24 Mar 2025 06:26:08 +0100</lastBuildDate><atom:link href="http://localhost:1313/pages/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Lexique</title>
       <link>http://localhost:1313/pages/glossary/</link>
-      <pubDate>Sun, 09 Mar 2025 06:26:08 +0100</pubDate>
+      <pubDate>Mon, 24 Mar 2025 06:26:08 +0100</pubDate>
       
       <guid>http://localhost:1313/pages/glossary/</guid>
       
@@ -53,6 +39,20 @@
 &lt;p&gt;🔗 {&lt;a href=&#34;http://localhost:1313/pages/glossary/#post-process&#34;&gt;post-process&lt;/a&gt;}&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;Le bloom est un effet de &lt;a href=&#34;http://localhost:1313/pages/glossary/#post-process&#34;&gt;post-process&lt;/a&gt; qui renforce la luminosité des objets brillants en créant un halo diffus autour d’eux. Il simule la manière dont les caméras et l’œil humain perçoivent les fortes sources de lumière.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>À propos</title>
+      <link>http://localhost:1313/pages/about/</link>
+      <pubDate>Sun, 09 Mar 2025 06:26:08 +0100</pubDate>
+      
+      <guid>http://localhost:1313/pages/about/</guid>
+      
+      <description>&lt;h2 id=&#34;hello-world-&#34;&gt;Hello World !&lt;/h2&gt;
+&lt;p&gt;Bienvenue sur Turbo Tartine Games, ce petit coin d’Internet dans lequel je partage ma passion pour le développement de jeux vidéo.&lt;/p&gt;
+&lt;h2 id=&#34;qui-suis-je-&#34;&gt;Qui suis-je ?&lt;/h2&gt;
+&lt;p&gt;Je m’appelle Jérémy, je suis passionné de jeux vidéo depuis toujours et j’ai la chance d’avoir pu en faire un métier. Je travaille dans un studio lyonnais du nom de &lt;a href=&#34;https://bsky.app/profile/wanadevstudio.com&#34;&gt;WanadevStudio&lt;/a&gt;. Mes journées consistent à développer des jeux (principalement en VR) sous Unreal Engine. Mais lorsque la nuit tombe, je deviens TurboTartine. Sous cette identité pas vraiment secrète, je continue de faire des jeux, mais sur mon temps libre. Cette double vie me permet d’appréhender cette passion sous deux angles très différents :&lt;/p&gt;</description>
       
     </item>
     
