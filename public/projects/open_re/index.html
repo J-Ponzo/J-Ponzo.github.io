@@ -49,7 +49,7 @@
     
 
     <link rel="canonical" href="http://localhost:1313/projects/open_re/">
-    <link href="/style.min.9ddc55ed4b8a072eb3b61cdfa3002bb6d3e79408ff0924030443240dfacbfcf6.css" rel="stylesheet">
+    <link href="/style.min.1622d675c43252297dbe4cbaa0a3480f2eb1798c1ac2ca39a3d7e4504625cb62.css" rel="stylesheet">
     <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
 
     
@@ -117,6 +117,13 @@ stroke-linejoin="round" class="feather feather-home">
                 <li>
                     <a class="menu-link " href="/posts/">
                         Articles
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/pages/glossary/">
+                        Lexique
                     </a>
                     
                 </li>
@@ -262,9 +269,9 @@ stroke-linejoin="round" class="feather feather-home">
 </ol>
 <p>Notez que le « s » à &ldquo;images&rdquo; n&rsquo;est pas une faute de frappe. Nous n&rsquo;exporterons pas directement le rendu final en un seul bloc. En effet, ce dernier sera décomposé en une série d&rsquo;images représentant chacune des données spécifiques : profondeur, normales, couleur, etc. Sous cette forme, il sera possible de composer l&rsquo;arrière-plan avec ce que la caméra filme en temps réel. Sans intervention supplémentaire de la part de l&rsquo;utilisateur, les deux mondes seront alors fusionnés de manière quasi-indiscernable : ils s&rsquo;occulteront l&rsquo;un l&rsquo;autre naturellement et leur éclairage sera uniforme et cohérent.</p>
 <p><img alt="Diagramme illustrant le fonctionnement général de OpenRE" src="/projects/open_re/images/OpenRE_diagram.webp"></p>
-<p>Évidemment, il serait trop fastidieux d&rsquo;effectuer toutes ces étapes à la main pour tout point de vue à chaque fois qu&rsquo;on bouge un fauteil ou qu&rsquo;on change la couleur du tapis. Pour que la technologie soit exploitable, OpenRE devra être capable d&rsquo;automatiser tout cela.</p>
+<p>Évidemment, il serait trop fastidieux d&rsquo;effectuer toutes ces étapes à la main pour tout les points de vue à chaque fois qu&rsquo;on bouge un fauteil ou qu&rsquo;on change la couleur du tapis. Pour que la technologie soit exploitable, OpenRE devra être capable d&rsquo;automatiser tout cela.</p>
 <h3 id="4-limitations-">4. Limitations :</h3>
-<p>L&rsquo;implémentation actuelle présente malheureusement des limitations assez lourdes. En effet, je bypass presque complètement le système de rendu de Godot en m&rsquo;appuyant sur un post-process custom pour incorporer l&rsquo;arrière-plan et rendre les lumières. Cela signifie qu&rsquo;en l&rsquo;état, les fonctionnalités graphiques natives ne sont pas utilisables. Tout doit être réimplémenté dans le shader du post-process. En conséquence, le monde interactif ne bénéficie pour l&rsquo;instant que de :</p>
+<p>L&rsquo;implémentation actuelle présente malheureusement des limitations assez lourdes. En effet, je bypass presque complètement le système de rendu de Godot en m&rsquo;appuyant sur un <a href="/pages/glossary/#post-process">post-process</a> custom pour incorporer l&rsquo;arrière-plan et rendre les lumières. Cela signifie qu&rsquo;en l&rsquo;état, les fonctionnalités graphiques natives ne sont pas utilisables. Tout doit être réimplémenté dans le <a href="/pages/glossary/#shader">shader</a> du post-process. En conséquence, le monde interactif ne bénéficie pour l&rsquo;instant que de :</p>
 <ul>
 <li>8 points lights basiques (couleur, intensité)</li>
 <li>8 spot lights basiques (couleur, intensité, angle)</li>
@@ -288,7 +295,7 @@ stroke-linejoin="round" class="feather feather-home">
 <li><strong>2. Deferred shading pass :</strong> pour obtenir l&rsquo;image finale, il suffit alors d&rsquo;accumuler les contributions lumineuses de la scène sur chaque pixel. Ce qui n&rsquo;est pas très compliqué puisque le G-Buffer nous fournit toutes les données nécessaires au calcul en chaque point de l&rsquo;écran.</li>
 </ul>
 <p><img alt="Schéma illustrant le fonctionnement d&rsquo;un deferred renderer" src="/projects/open_re/images/deferred_schema_arrows.opti.webp"></p>
-<p>Comme évoqué dans la partie précédente, OpenRE sépare la scène en deux parties distinctes. Pour rendre une frame, on aura donc besoin d&rsquo;un G-Buffer pour chacune de ces parties :</p>
+<p>Comme évoqué dans la partie précédente, OpenRE sépare la scène en deux parties distinctes. Pour rendre une <a href="/pages/glossary/#frame">frame</a>, on aura donc besoin d&rsquo;un G-Buffer pour chacune de ces parties :</p>
 <ul>
 <li>Le G-Buffer interactif sera construit à la volée dans Godot.</li>
 <li>Le G-Buffer déterministe aura été précalculé par Blender (la série d&rsquo;images exportées, vous vous rappelez ?).</li>
@@ -297,7 +304,7 @@ stroke-linejoin="round" class="feather feather-home">
 <h3 id="2-dg-buffer--le-g-buffer-du-monde-déterministe">2. DG-Buffer : le G-Buffer du monde déterministe</h3>
 <p>Blender dispose de deux moteurs de rendu :</p>
 <ul>
-<li><strong>Eevee</strong> : basé sur la rasterization. Permet un rendu quasi temps réel mais moins réaliste.</li>
+<li><strong>Eevee</strong> : basé sur la <a href="/pages/glossary/#rasterisation">rasterisation</a>. Permet un rendu quasi temps réel mais moins réaliste.</li>
 <li><strong>Cycles</strong> : basé sur le path-tracing. Il produit des images photoréalistes, mais le rendu prend un certain temps.</li>
 </ul>
 <p>Pour OpenRE, nous utiliserons bien sûr Cycles, afin de garantir une qualité visuelle maximale. Grâce au compositeur de Blender, le rendu pourra être décomposé en plusieurs textures qui constitueront notre DG-Buffer :</p>
@@ -348,7 +355,7 @@ table th:nth-of-type(3) {
 <p>On pourrait se contenter de n&rsquo;intégrer que l&rsquo;albedo au DG-Buffer. Mais il faudrait alors recalculer tout l&rsquo;éclairage en temps réel côté Godot, ce qui n&rsquo;est pas toujours nécessaire. Les neuf maps sont donc exportées pour permettre une recomposition directe de certaines parties de l&rsquo;image. De cette manière, on conserve la qualité visuelle de Cycles sur ces zones, et on économise (beaucoup) de temps de calcul.</p>
 <h3 id="3-ig-buffer--le-g-buffer-du-monde-interactif">3. IG-Buffer : le G-Buffer du monde interactif</h3>
 <p>Si Godot implémentait un deferred renderer, on pourrait piocher les maps qui nous intéressent directement dans son G-Buffer. Mais malheureusement pour nous, le renderer officiel de Godot est un forward. Il n&rsquo;y a donc pas de G-Buffer.</p>
-<p>Il va falloir bricoler le nôtre et, pour cela, on va utiliser des render targets. Si vous n&rsquo;êtes pas familier avec le terme, c&rsquo;est un système qui permet d&rsquo;effectuer un rendu de la scène depuis une caméra, mais dans une texture plutôt qu&rsquo;à l&rsquo;écran directement. L&rsquo;avantage, c&rsquo;est qu&rsquo;on va pouvoir appliquer du post-process à cette texture et ainsi prendre la main sur la façon dont elle est rendue.</p>
+<p>Il va falloir bricoler le nôtre et, pour cela, on va utiliser des <a href="/pages/glossary/#render-target">render targets</a>. Si vous n&rsquo;êtes pas familier avec le terme, c&rsquo;est un système qui permet d&rsquo;effectuer un rendu de la scène depuis une caméra, mais dans une texture plutôt qu&rsquo;à l&rsquo;écran directement. L&rsquo;avantage, c&rsquo;est qu&rsquo;on va pouvoir appliquer du post-process à cette texture et ainsi prendre la main sur la façon dont elle est rendue.</p>
 <p>Pour construire notre IG-Buffer, on va donc créer une render target pour chacune des textures qui le composent. Et pour chacune de ces render targets, on écrira un post-process dédié qui sera chargé de rendre spécifiquement la donnée qui nous intéresse.</p>
 <p>Cela peut paraître un peu fastidieux, mais finalement pas tant que ça. En effet, je suis un peu malhonnête quand j&rsquo;affirme que Godot n&rsquo;a pas de G-Buffer dans lequel récupérer les informations. En réalité, le moteur expose nativement à ses shaders des textures contenant des données très proches de ce qu&rsquo;on veut. La plupart du temps, le post-process tiendra en une ligne et se contentera de sampler l&rsquo;une de ces textures.</p>
 <style>
@@ -388,7 +395,7 @@ table th:nth-of-type(3) {
       </tr>
       <tr>
           <td style="text-align: center"><strong>Albedo</strong></td>
-          <td style="text-align: left">Celle-là, c&rsquo;est la plus facile. On affiche directement la <em>screen_texture</em> de Godot.</td>
+          <td style="text-align: left">Celle-là, c&rsquo;est la plus facile. On affiche directement la <em>screen_texture</em> de Godot (avec un petit twist).</td>
           <td style="text-align: center"><img alt="Albedo" src="/projects/open_re/images/I_albedo_squared.opti.webp"></td>
       </tr>
   </tbody>

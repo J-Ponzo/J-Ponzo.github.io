@@ -6,25 +6,15 @@
     <description>Recent content in Articles on Turbo Tartine Games</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-fr</language>
-    <lastBuildDate>Wed, 12 Mar 2025 10:20:34 +0100</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 24 Mar 2025 10:20:34 +0100</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Dis donc Jamy : Comment ça marche un shader ?</title>
       <link>http://localhost:1313/posts/ddj_shaders/</link>
-      <pubDate>Wed, 12 Mar 2025 10:20:34 +0100</pubDate>
+      <pubDate>Mon, 24 Mar 2025 10:20:34 +0100</pubDate>
       
       <guid>http://localhost:1313/posts/ddj_shaders/</guid>
       
-      <description>&lt;style&gt;
-a[href^=&#34;/misc/glossary&#34;] {
-    color: rgb(20, 130, 20) !important;
-	font-weight: bold;
-}
-
-a[href^=&#34;/misc/glossary&#34;]:after {
-    content: &#34;🎓&#34;;
-}
-&lt;/style&gt;
-&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;Programmer un &lt;em&gt;shader&lt;/em&gt;&lt;/strong&gt; n&amp;rsquo;est pas plus difficile que de programmer n&amp;rsquo;importe quoi d&amp;rsquo;autre. Mais il est vrai que le formalisme peut être un peu &lt;strong&gt;déroutant la première fois&lt;/strong&gt; qu&amp;rsquo;on s&amp;rsquo;y frotte. Dans ce blog, je cherche à m&amp;rsquo;adresser à un public assez large. Pas uniquement à des programmeurs professionnels, et encore moins à des programmeurs graphiques spécifiquement. J&amp;rsquo;aimerais donc &lt;strong&gt;démystifier un peu le concept&lt;/strong&gt; pour que cela ne devienne pas un point de blocage.&lt;/p&gt;</description>
       
     </item>

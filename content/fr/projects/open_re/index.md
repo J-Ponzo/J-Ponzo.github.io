@@ -69,10 +69,10 @@ Notez que le « s » à "images" n'est pas une faute de frappe. Nous n'exportero
 
 ![Diagramme illustrant le fonctionnement général de OpenRE](images/OpenRE_diagram.webp)
 
-Évidemment, il serait trop fastidieux d'effectuer toutes ces étapes à la main pour tout point de vue à chaque fois qu'on bouge un fauteil ou qu'on change la couleur du tapis. Pour que la technologie soit exploitable, OpenRE devra être capable d'automatiser tout cela.
+Évidemment, il serait trop fastidieux d'effectuer toutes ces étapes à la main pour tout les points de vue à chaque fois qu'on bouge un fauteil ou qu'on change la couleur du tapis. Pour que la technologie soit exploitable, OpenRE devra être capable d'automatiser tout cela.
 
 ### 4. Limitations :
-L'implémentation actuelle présente malheureusement des limitations assez lourdes. En effet, je bypass presque complètement le système de rendu de Godot en m'appuyant sur un post-process custom pour incorporer l'arrière-plan et rendre les lumières. Cela signifie qu'en l'état, les fonctionnalités graphiques natives ne sont pas utilisables. Tout doit être réimplémenté dans le shader du post-process. En conséquence, le monde interactif ne bénéficie pour l'instant que de :
+L'implémentation actuelle présente malheureusement des limitations assez lourdes. En effet, je bypass presque complètement le système de rendu de Godot en m'appuyant sur un [post-process](/pages/glossary/#post-process) custom pour incorporer l'arrière-plan et rendre les lumières. Cela signifie qu'en l'état, les fonctionnalités graphiques natives ne sont pas utilisables. Tout doit être réimplémenté dans le [shader](/pages/glossary/#shader) du post-process. En conséquence, le monde interactif ne bénéficie pour l'instant que de :
 - 8 points lights basiques (couleur, intensité)
 - 8 spot lights basiques (couleur, intensité, angle)
 - 4 ombres dynamiques (appliquables sur les spot lights uniquement)
@@ -95,7 +95,7 @@ Pour fusionner les mondes, OpenRE reprend le principe du deferred rendering. Cet
 
 ![Schéma illustrant le fonctionnement d'un deferred renderer](images/deferred_schema_arrows.opti.webp)
 
-Comme évoqué dans la partie précédente, OpenRE sépare la scène en deux parties distinctes. Pour rendre une frame, on aura donc besoin d'un G-Buffer pour chacune de ces parties :
+Comme évoqué dans la partie précédente, OpenRE sépare la scène en deux parties distinctes. Pour rendre une [frame](/pages/glossary/#frame), on aura donc besoin d'un G-Buffer pour chacune de ces parties :
 - Le G-Buffer interactif sera construit à la volée dans Godot.
 - Le G-Buffer déterministe aura été précalculé par Blender (la série d'images exportées, vous vous rappelez ?).
 
@@ -103,7 +103,7 @@ Les deux seront ensuite fournis au fameux post-process custom qui les composera 
 
 ### 2. DG-Buffer : le G-Buffer du monde déterministe
 Blender dispose de deux moteurs de rendu :
-- **Eevee** : basé sur la rasterization. Permet un rendu quasi temps réel mais moins réaliste.
+- **Eevee** : basé sur la [rasterisation](/pages/glossary/#rasterisation). Permet un rendu quasi temps réel mais moins réaliste.
 - **Cycles** : basé sur le path-tracing. Il produit des images photoréalistes, mais le rendu prend un certain temps.
 
 Pour OpenRE, nous utiliserons bien sûr Cycles, afin de garantir une qualité visuelle maximale. Grâce au compositeur de Blender, le rendu pourra être décomposé en plusieurs textures qui constitueront notre DG-Buffer :
@@ -135,7 +135,7 @@ On pourrait se contenter de n'intégrer que l'albedo au DG-Buffer. Mais il faudr
 ### 3. IG-Buffer : le G-Buffer du monde interactif
 Si Godot implémentait un deferred renderer, on pourrait piocher les maps qui nous intéressent directement dans son G-Buffer. Mais malheureusement pour nous, le renderer officiel de Godot est un forward. Il n'y a donc pas de G-Buffer.
 
-Il va falloir bricoler le nôtre et, pour cela, on va utiliser des render targets. Si vous n'êtes pas familier avec le terme, c'est un système qui permet d'effectuer un rendu de la scène depuis une caméra, mais dans une texture plutôt qu'à l'écran directement. L'avantage, c'est qu'on va pouvoir appliquer du post-process à cette texture et ainsi prendre la main sur la façon dont elle est rendue.
+Il va falloir bricoler le nôtre et, pour cela, on va utiliser des [render targets](/pages/glossary/#render-target). Si vous n'êtes pas familier avec le terme, c'est un système qui permet d'effectuer un rendu de la scène depuis une caméra, mais dans une texture plutôt qu'à l'écran directement. L'avantage, c'est qu'on va pouvoir appliquer du post-process à cette texture et ainsi prendre la main sur la façon dont elle est rendue.
 
 Pour construire notre IG-Buffer, on va donc créer une render target pour chacune des textures qui le composent. Et pour chacune de ces render targets, on écrira un post-process dédié qui sera chargé de rendre spécifiquement la donnée qui nous intéresse.
 
@@ -158,7 +158,7 @@ table th:nth-of-type(3) {
 | **Depth**                      | On utilise la *depth_texture* fournie par Godot. Elle n'est pas rouge comme dans le DG-Buffer, car la valeur est dupliquée dans les 3 canaux. Par contre, elle n'a pas l'air encodée de la même façon : le clair est proche et le sombre éloigné. Là, c'est déjà plus gênant, et on verra dans un devlog dédié que c'est en réalité encore pire. | ![Depth map](images/I_depth_squared.opti.webp) |
 | **Normal**                     | Ici, c'est la *normal_roughness_texture* qu'on utilise (en ignorant simplement la roughness). Là encore, l'encodage est différent. On y reviendra aussi dans un devlog, mais c'est moins complexe que pour la depth.                                                         | ![Normal map](images/I_normal_squared.opti.webp) |
 | **ORM**                        | Pour celle-ci, Godot ne nous fournit pas ce qu'il faut. Un focus sur le bricolage associé aura lui aussi son devlog.                                                                                                                        | ![ORM map](images/I_ORM_squared.opti.webp) |
-| **Albedo**                     | Celle-là, c'est la plus facile. On affiche directement la *screen_texture* de Godot.                                                                                                                                                         | ![Albedo](images/I_albedo_squared.opti.webp) |
+| **Albedo**                     | Celle-là, c'est la plus facile. On affiche directement la *screen_texture* de Godot (avec un petit twist).                                                                                                                                                         | ![Albedo](images/I_albedo_squared.opti.webp) |
 
 ### 4. Calcul de l'éclairage
 Maintenant que nous disposons de nos G-Buffers, il n'y a plus qu'à calculer la lumière en post-process grâce à une passe de deferred shading. Mais la dualité du monde introduit quelques complications.
