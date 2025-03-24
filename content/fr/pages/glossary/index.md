@@ -367,7 +367,8 @@ Le MSAA (Multi Sampling Anti-Aliasing) est une technique d'[anti-aliasing](/page
 
 Lorsqu’un pixel est partiellement couvert par un triangle, plutôt que de l’ignorer, le rasterizer affine son échantillonnage et génère un fragment dont les attributs (couleur, normale, UV, etc.) sont une moyenne des valeurs de chaque échantillon. Lorsque l’on parle de MSAA 2x, 4x, 8x, etc., le chiffre désigne le nombre d’échantillons supplémentaires utilisés pour générer ce fragment. Plus le nombre est élevé, plus le résultat est précis (mais plus la rasterisation est coûteuse).
 
-[mettre une image]
+<img alt="Illustration de l'effet du MSAA en fonction du nombre de samples" src="./images/msaa.opti.webp" style="display: block; margin-left: auto;
+  margin-right: auto;" /> 
 
 Avantages :
 - Implémentée directement dans le hardware, ce qui la rend assez performante.
