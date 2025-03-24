@@ -486,11 +486,14 @@ C'est un type d'attribut couramment associé aux [vertex](/pages/glossary/#verte
 
 Les normales sont principalement utilisées dans le calcul de l'éclairage. Le fait que ces normales soient partagées par les triangles adjacents donne un aspect lisse à la surface lorsqu'elle est éclairée.
 
-[mettre une image smooth]
+<img alt="Illustration de l'illumination d'une sphere dont les normales sont partagées entre toutes les faces" src="./images/shared_normals.opti.webp" style="display: block; margin-left: auto;
+  margin-right: auto;" /> 
 
 Cependant, dans certains cas, on souhaite que certaines [edges](/pages/glossary/#edge) (arêtes) soient saillantes. Pour cela, il suffit de dupliquer les vertex de l'edge et d'attribuer à chaque copie la normale d'une des [faces](/pages/glossary/#face) adjacentes.
 
-[mettre une image sharp]
+<img alt="Illustration de l'illumination d'une sphere dont les vertex ont été dupliqués" src="./images/duplicated_normals.opti.webp" style="display: block; margin-left: auto;
+  margin-right: auto;" /> 
+
 
 Cet attribut est généralement calculé automatiquement par le logiciel de modélisation 3D, selon l'agencement des vertex, edges et faces du mesh. Les edges saillantes peuvent être détectées automatiquement en fonction de l'angle entre deux faces adjacentes, ou être définies manuellement par l'artiste en marquant des edges comme soft ou sharp, ou en créant des smoothing groups.
 
@@ -706,7 +709,7 @@ Inconvénients :
 
 ---
 
-L'occlusion ambiante est un phénomène physique qui selon lequel la lumière se diffuse moins dans les espaces confinés. Par exemple, dans les coins de murs, à la base d'une touffe d'herbe ou dans les interstices entre des briques, on observe une lumière moins intense que dans les zones plus dégagées (même sans ombre directe).
+L'occlusion ambiante est un phénomène physique selon lequel la lumière se diffuse moins dans les espaces confinés. Par exemple, dans les coins de murs, à la base d'une touffe d'herbe ou dans les interstices entre des briques, on observe une lumière moins intense que dans les zones plus dégagées (même sans ombre directe).
 
 Le SSAO (Screen Space Ambient Occlusion) est un effet de [post-process](/pages/glossary/#post-process) qui simule ce phénomène.
 
@@ -726,7 +729,7 @@ Le SSAO (Screen Space Ambient Occlusion) est un effet de [post-process](/pages/g
 
 ---
 
-Le TAA (Anti-Aliasing Temporel) est une technique d'[anti-aliasing](/pages/glossary/#anti-aliasing) appliquée en [post-process](/pages/glossary/#post-process). Elle consiste à exploiter les [frames](/pages/glossary/#frame) précédentes pour lisser l'image.
+Le TAA (Temporal Anti-Aliasing) est une technique d'[anti-aliasing](/pages/glossary/#anti-aliasing) appliquée en [post-process](/pages/glossary/#post-process). Elle consiste à exploiter les [frames](/pages/glossary/#frame) précédentes pour lisser l'image.
 
 Avantages  :
 - Rendu très précis : les contours sont bien lissés et le reste de l'image reste net.
@@ -756,7 +759,7 @@ C'est un type d'attribut couramment associé aux [vertex](/pages/glossary/#verte
 
 En résumé, par la magie de l'interpolation (réalisée lors de la [rasterisation](/pages/glossary/#rasterisation)), les coordonnées UV sont associées à chaque fragment. Le [fragment shader](/pages/glossary/#fragment-shader), ayant accès à ces coordonnées UV interpolées, peut alors échantillonner (ou "sampler") la texture au point indiqué, afin de déterminer la couleur du pixel à afficher à l'écran.
 
-Les vertex peuvent porter plusieurs UV différents, car il est possible d'appliquer plusieurs textures à un même mesh. Par exemple, une texture pour la lumière statique pré-calculée, stockée dans une texture appelée une lightmap.
+Note : Les vertex peuvent porter plusieurs UV différents, car il est possible d'appliquer plusieurs textures à un même mesh. Par exemple, une texture pour la lumière statique pré-calculée, stockée dans une texture appelée une lightmap.
 
 ---
 ---
@@ -800,6 +803,8 @@ Note : Le pluriel de "vertex" est "vertices", ne soyez pas surpris de le voir é
 ---
 
 C'est un type d'attribut couramment associé aux [vertex](/pages/glossary/#vertex). Il représente (comme son nom l'indique) une couleur. Cette couleur est interpolée lors de la [rasterisation](/pages/glossary/#rasterisation), créant ainsi un dégradé dont chaque couleur est associée au fragment correspondant.
+
+![illustration de l'interpolation de la couleur des vertex via la rasteriasation](images/rasterisation.opti.webp) 
 
 Bien que cet attribut soit peu utilisé de manière directe dans les jeux modernes, il est souvent détourné pour encoder des informations nécessaires à certaines techniques ou effets. L'exemple le plus courant est le vertex painting, qui consiste à peindre les sommets d'un objet pour appliquer un effet localisé (comme des salissures, du sang ou de la mousse sur une roche).
 

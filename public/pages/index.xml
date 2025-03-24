@@ -40,7 +40,7 @@
 &lt;p&gt;🔗 {&lt;a href=&#34;http://localhost:1313/pages/glossary/#fxaa&#34;&gt;fxaa&lt;/a&gt; - &lt;a href=&#34;http://localhost:1313/pages/glossary/#msaa&#34;&gt;msaa&lt;/a&gt; - &lt;a href=&#34;http://localhost:1313/pages/glossary/#smaa&#34;&gt;smaa&lt;/a&gt; - &lt;a href=&#34;http://localhost:1313/pages/glossary/#taa&#34;&gt;taa&lt;/a&gt;}&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;L&amp;rsquo;aliasing (ou crénelage) est un artefact visuel indésirable qui se manifeste par un effet d’escalier sur les contours des objets rendus. Il apparaît lors de la &lt;a href=&#34;http://localhost:1313/pages/glossary/#rasterisation&#34;&gt;rasterisation&lt;/a&gt;, une étape spécifique du &lt;a href=&#34;http://localhost:1313/pages/glossary/#pipeline-graphique&#34;&gt;pipeline graphique&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Pour le réduire, différentes techniques d’anti-aliasing existent, chacune ayant ses forces et ses faiblesses.&lt;/p&gt;
+&lt;p&gt;Pour le réduire, différentes techniques d’anti-aliasing existent, chacune ayant leurs forces et leurs faiblesses.&lt;/p&gt;
 &lt;hr&gt;
 &lt;hr&gt;
 &lt;hr&gt;
