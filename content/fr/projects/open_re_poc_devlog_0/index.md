@@ -36,7 +36,8 @@ Pour cela, la technologie s'appuie sur une structure de données particulière a
 
 Pour fusionner les scènes, OpenRE va donc composer les G-Buffers déterministe et interactif (respectivement générées par Blender et Godot). Mais il n'est pas évident que des données produites par deux logiciels différents soient directement compatibles. C'est même loin d'être gagné.
 
-![Meme illustrant les différences de conventions entre Blender et Godot](images/meme_ilove_gbuffer.opti.webp)
+<img alt="Meme illustrant les différences de conventions entre Blender et Godot" src="./images/meme_ilove_gbuffer.opti.webp" style="display: block; margin-left: auto;
+  margin-right: auto;" />
 
 En effet, tous les logiciels graphiques suivent des conventions qui leur sont propres (unités, espaces colorimétriques, axes du repère, etc.). Tant qu'on reste à l'intérieur d'un système, la cohérence de l'ensemble est plus ou moins garantie. Mais dès lors que deux systèmes doivent s'échanger des données pour collaborer, c'est le début des problèmes.
 
@@ -52,7 +53,7 @@ Si Godot et Blender sont bien sur la même longueur d'onde, les G-Buffers qu'ils
 
 ![Image illustrant le protocol de validation](images/oracle_schema_update.opti.webp)
 
-Mais trêve de métaphores. Concrètement, cet oracle est un *post-process* du nom de `oracle.gdshader`. Il prend en entrée :
+Mais trêve de métaphores. Concrètement, cet oracle est un [*post-process*](/pages/glossary/#post-process) du nom de `oracle.gdshader`. Il prend en entrée :
 - les textures des deux G-Buffers
 - le type de texture à comparer
 
@@ -72,6 +73,8 @@ Comme vous pouvez le voir sur les captures, il s'agit d'une Cornell box basique 
 
 ### 3. Implémentation de l’Oracle
 Voyons maintenant de quoi est fait notre oracle. Sans plus de cérémonie, voici son code source. C'est un petit pavé, mais ne vous inquiétez pas, nous allons le décortiquer ensemble.
+
+Vous noterez qu'en l'état, il ne fait pas grand-chose. Voyez ça comme un squelette de base que nous allons habiller petit à petit au fil des devlogs.
 
 ```glsl
 shader_type spatial;
@@ -113,13 +116,12 @@ void fragment() {
 	ALBEDO = out_color;
 }
 ```
+Si vous voyez un shader pour la première fois, ce code peut être un peu destabilisant. Mais ne vous laissez pa intimider ! Pour être à l'aise, il vous manque juste quelques élements de contexte que vous trouverez [ici](/posts/ddj_shaders). 
 
-En l'état, il ne fait pas grand-chose. Voyez ça comme un squelette de base que nous allons habiller petit à petit au fil des devlogs.
-
-Sans transition, commençons le tour du propriétaire.
+Maintenant nous pouvons commencer le tour du propriétaire.
 
 #### 3.1. Code minimal d'un post-process
-D'abord, quelques lignes de base qu'on ne détaillera pas. C'est la façon usuelle de créer un post-process dans Godot.
+D'abord, quelques lignes de base qu'on ne détaillera pas complètement (mais un peu quand même). C'est la façon usuelle de créer un post-process dans Godot. 
  ```glsl
 shader_type spatial;
 render_mode unshaded, fog_disabled;
@@ -129,8 +131,14 @@ void vertex() {
 }
 ```
 
+En effet, dans ce moteur, le quad sur lequel on va rendre notre post-process et physiquement présent dans là scène (c'est bizare mais c'est comme ça). Il faut donc :
+- s'assurer qu'il ne reçois ni la lumière, ni le fog : 
+<br>`render_mode unshaded, fog_disabled;`
+- faire coincider les coins du quad et ceux de l'écran dans le [vertex shader](/pages/glossary/#vertex-shader) : 
+<br>`POSITION = vec4(VERTEX.xy, 1.0, 1.0);`
+
 #### 3.2. Les uniforms ou paramètres d'entrée
-Les uniforms sont les paramètres d'entrée du shader. C'est à travers eux que le CPU peut envoyer des données au GPU. Une fois initialisés, ils peuvent être référencés comme des variables globales dans le code du shader.
+Les uniforms sont les paramètres d'entrée du shader. C'est à travers eux que le [CPU](/pages/glossary/#cpu) peut envoyer des données au [GPU](/pages/glossary/#gpu). Une fois initialisés, ils peuvent être référencés comme des variables globales dans le code du shader.
 
 Les uniforms `data_type`, `d_gbuffer` et `i_gbuffer` correspondent aux deux G-Buffers ainsi qu'au type de données sélectionné pour la comparaison (évoqués précédemment).
 ```glsl
@@ -194,11 +202,15 @@ void fragment() {
 }
 ```
 
-**IL NE FAUT JAMAIS FAIRE ÇA DANS UN SHADER DE PRODUCTION !**
+**AYA ! IL A FAIT UN IF QUI SERT A RIEN DANS UN SHADER !**
 
-J'expliquerai peut-être pourquoi dans un article un jour. Mais retenez que, pour des raisons de performances, les branchements conditionnels sont à éviter au maximum dans le code GPU.
+En effet, comme expliqué dans [l'article cité en début de section](/posts/ddj_shaders), les branchements conditionnels sont à éviter au maximum dans le code GPU. Et ce, pour des questions de performence.
 
-Ici, on s’en fout, car on est sur un POC et que l'oracle n'est qu'un outil de développement. La performance n'est pas critique, donc on se permet quelques libertés pour se faciliter la vie. 
+A ma décharge, l'impacte dans ce cas précis sera minime, car tous les fragments passent du même côté du if pour un [draw call](/pages/glossary/#draw-call) donné (la valeur de data_type est la même pour tous). Il ne faudrait tout de même pas faire ça dans du code de production car :
+- la condition est quand même évaluée
+- la présence du if peut empécher le compilateur de faire certaines optimisation
+
+Mais ici, on s’en fout, car on est sur un POC et que l'oracle n'est qu'un outil de développement. La performance n'est pas critique, donc on se permet quelques libertés pour se faciliter la vie. 
 
 ```glsl
 // Point d'entrée du post-process
@@ -223,7 +235,7 @@ Dans ce numéro, nous n'allons pas dérouler le processus d'harmonisation des do
 
 D'un autre côté, nous venons de mettre en place un super environnement d'ODD, et il serait terriblement frustrant de ne pas le tester. (Allez ! Juste une fois! C'est dans longtemps le prochain épisode..).
 
-On va donc faire ce qu'il faut pour recueillir notre première prophétie. Pour garder les choses simples, on se limitera à la texture d'Albedo (on oublie les autres pour l'instant).
+On va donc faire ce qu'il faut pour recueillir notre première prophétie. Pour garder les choses simples, on va prendre quelques racourcis et on se limitera à la texture d'Albedo (on oublie les autres pour l'instant).
 
 ### 1. Préparation de l'Oracle
 On va devoir enrichir un peu le code de l'Oracle pour implémenter la comparaison de l'Albedo. Le changement concerne la fonction de calcul de la différence.
@@ -265,7 +277,8 @@ La génération des textures d'Albedo déterministe et interactive est malheureu
 
 À partir de là, il ne reste plus qu'à les assigner aux uniforms correspondants de `oracle.gdshader` et à régler `data_type` sur 0 (qui correspond à `ALBEDO_TYPE`).
 
-![gif dans lequel les 2 textures sont bindés aux paramètres du shader](images/bind_textures.opti.webp)
+<img alt="Inspector de godot dans lequel on peut voir data_type réglé sur 0 et les 2 textures bindées à D_Buffer et G_Buffer" src="./images/bind_textures.opti.webp" style="display: block; margin-left: auto;
+  margin-right: auto;" /> 
 
 ### 3. C'est maintenant ! C'est maintenant !
 Le type de données à comparer est bien réglé sur Albedo. Nos textures sont en place, correctement générées (faites-moi confiance…) et associées aux uniforms du shader. Elles proviennent de deux scènes rigoureusement identiques issues du même fichier. Si l’importeur de Godot a bien fait son travail en traduisant les données de Blender, on devrait obtenir une prophétie rassurante… c'est-à-dire un bel écran noir.
