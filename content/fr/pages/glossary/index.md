@@ -669,7 +669,7 @@ Lorsque l'on anime le squelette, chaque os entraîne avec lui les vertex du mesh
 
 Cette technique est couramment utilisée pour des animations complexes et de grande envergure, comme marcher, sauter ou effectuer des mouvements divers. Elle peut être implémentée soit côté [CPU](/pages/glossary/#cpu), soit côté [GPU](/pages/glossary/#gpu), selon les besoins. 
 
-Par exemple, si le gameplay nécessite une détection précise des collisions sur la géométrie du mesh, il est nécessaire de le déformer côté CPU. En revanche, si une détection de collision approximative suffit, on peut se contanter d'associer des colliders simplifiés (spheres, capsules etc.) aux os du squelette et appliquer la déformation du mesh côté GPU.
+Par exemple, si le gameplay nécessite une détection précise des collisions sur la géométrie du mesh, il est nécessaire de le déformer côté CPU. En revanche, si une détection de collision approximative suffit, on peut se contenter d'associer des colliders simplifiés (spheres, capsules etc.) aux os du squelette et appliquer la déformation du mesh côté GPU.
 
 ---
 ---
@@ -787,7 +787,7 @@ Un vertex peut posséder plusieurs attributs, dont les plus courants sont :
 
 Il existe également d'autres attributs moins fréquents, comme les poids de skinning utilisées pour l'animation. En résumé, un vertex est une coordonnée de l'espace ou du plan qui porte de l'information.
 
-Note : Le pluriel de "vertex" est "vertices", ne soyez pas surpris de le voir écrit sous cette forme. Mais dans le langage courant (du moins en France) on dit prèsque toujours vertex. Je l'utilise donc prèsque toujours sous cette forme y compris à l'écrit, autant par habitude que parce que je trouve ça moins confus (désolé pour vos oreilles et vos yeux si vous n'êtes pas de cet avis).
+Note : Le pluriel de "vertex" est "vertices", ne soyez pas surpris de le voir écrit sous cette forme. Mais dans le langage courant (du moins en France) on dit presque toujours vertex. Je l'utilise donc presque toujours sous cette forme y compris à l'écrit, autant par habitude que parce que je trouve ça moins confus (désolé pour vos oreilles et vos yeux si vous n'êtes pas de cet avis).
 
 ---
 ---
