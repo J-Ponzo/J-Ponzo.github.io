@@ -61,7 +61,7 @@ Son job est de calculer, deux à deux, les différences entre les textures déte
 - Noir → les pixels des textures sources sont identiques
 - Blanc → la différence entre les pixels des textures sources est maximale
 
-Si l'oracle affiche une image noire pour tous les types de textures possibles, alors les G-Buffers sont identiques.
+Si l'oracle affiche une image noire pour tous les types de textures possibles, alors c'est gagné : les G-Buffers sont identiques.
 
 ### 2. Mise en place d’une scène de test
 Pour commencer, j’ai créé une petite scène dans Blender, composée de quelques primitives et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale, étant donné que Godot prend en charge le format de scène Blender. Il suffit d’importer le fichier `.blend` et de l’ajouter à une scène vide.
@@ -116,7 +116,7 @@ void fragment() {
 	ALBEDO = out_color;
 }
 ```
-Si vous voyez un shader pour la première fois, ce code peut être un peu destabilisant. Mais ne vous laissez pa intimider ! Pour être à l'aise, il vous manque juste quelques élements de contexte que vous trouverez [ici](/posts/ddj_shaders). 
+Si vous voyez un [shader](/pages/glossary/#shader) pour la première fois, ce code peut être un peu destabilisant. Mais ne vous laissez pa intimider ! Pour être à l'aise, il vous manque juste quelques élements de contexte que vous trouverez [ici](/posts/ddj_shaders). 
 
 Maintenant nous pouvons commencer le tour du propriétaire.
 
@@ -131,7 +131,7 @@ void vertex() {
 }
 ```
 
-En effet, dans ce moteur, le quad sur lequel on va rendre notre post-process et physiquement présent dans là scène (c'est bizare mais c'est comme ça). Il faut donc :
+En effet, dans ce moteur, le [quad](/pages/glossary/#quad) sur lequel on va rendre notre post-process et physiquement présent dans là scène (c'est bizare mais c'est comme ça). Il faut donc :
 - s'assurer qu'il ne reçois ni la lumière, ni le fog : 
 <br>`render_mode unshaded, fog_disabled;`
 - faire coincider les coins du quad et ceux de l'écran dans le [vertex shader](/pages/glossary/#vertex-shader) : 
