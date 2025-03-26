@@ -159,6 +159,11 @@ theme = "hugo-blog-awesome"
     name = 'À propos'
     url = '/about/'
     weight = 50
+  [[Languages.fr-fr.menu.main]]
+    pageRef="glossary"
+    name = 'Lexique'
+    url = '/pages/glossary/'
+    weight = 50
 
 [Languages.fr-fr.params]
   sitename = "Turbo Tartine Games"
@@ -216,6 +221,10 @@ url = "https://jponzo.itch.io"
 [[params.socialIcons]]
 name = "bluesky"
 url = "https://@turbotartine.bsky.social"
+
+[[params.socialIcons]]
+name = "mastodon"
+url = "https://mastodon.gamedev.place/@TurboTartine"
 
 [[params.socialIcons]]
 name = "Rss"

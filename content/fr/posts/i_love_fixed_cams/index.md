@@ -30,7 +30,7 @@ Personne ne peut prétendre connaître tous les jeux vidéo sortis depuis la nai
 ![Grille-pain-PS1 sur une table de petit-dèj](images/PSToaster.opti.webp)
 *Une authentique PS1 dans son habitat naturel*
 
-Nous étions alors au début de l’ère de la 3D. Les machines, impressionnantes pour l’époque, se rapprocheraient d’un **grille-pain** connecté bas de gamme si on les jugeait avec nos standards actuels. Les GPU n’étaient pas programmables, la mémoire disponible ridicule… bref, les développeurs de cette époque étaient de véritables héros. Pour créer des jeux dignes de ce nom, ils devaient composer avec des **limitations matérielles** drastiques et adopter des stratégies d’optimisation parfois extrêmes.
+Nous étions alors au début de l’ère de la 3D. Les machines, impressionnantes pour l’époque, se rapprocheraient d’un **grille-pain** connecté bas de gamme si on les jugeait avec nos standards actuels. Les [GPU](/pages/glossary/#gpu) n’étaient pas programmables, la mémoire disponible ridicule… bref, les développeurs de cette époque étaient de véritables héros. Pour créer des jeux dignes de ce nom, ils devaient composer avec des **limitations matérielles** drastiques et adopter des stratégies d’optimisation parfois extrêmes.
 
 ### 1. Ce qui ne bouge pas, te rend plus fort
 De nombreuses techniques d’optimisation dans le jeu vidéo reposent sur un postulat simple : la **majorité de la géométrie** à afficher est **statique**. Certes, il y a les personnages, les véhicules, et les effets de particules qui eux sont dynamiques. Mais la quantité de géométrie que cela représente est relativement faible face à ce qui est nécessaire pour modéliser l’environnement. Et cet environnement, lui, ne bouge pas.
@@ -65,7 +65,7 @@ Ce schéma de contrôle est **impopulaire** car il nécessite un petit temps d�
 Si les **caméras regardent dans le même sens**, le problème est moindre. Dans ce cas, les changements de référentiels sont des translations, et la translation **conserve les directions**. L’orientation de l’avatar reste stable d’un écran à l’autre. Cela permet d’implémenter un schéma de contrôles " naïf ", où les mouvements de l’avatar suivent directement ceux du joystick.
 
 ![Illustration d'un changements de plan avec caméra alignées](images/FF8_parallel_cams.opti.webp)
-*Conservation de l'orientation dans le cas de caméras alignées (Environnement : DGU de FF8, Personnage incrusté : Jill de RE3)*
+*Conservation de l'orientation dans le cas de caméras alignées (Environnement : BGU de FF8, Personnage incrusté : Jill de RE3)*
 
 Mais en pratique, il sera difficile de respecter cette contrainte. La spécialité des caméras fixes est de permettre des environnements très détaillés. Si l’agencement de l’espace ne reflète pas ce niveau de détail, on **intègre vite une dissonance** : " Il est bizarre ton manoir ! Pourquoi les pièces sont toutes les unes à la suite des autres ? "
 
