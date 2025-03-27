@@ -116,7 +116,7 @@ void fragment() {
 	ALBEDO = out_color;
 }
 ```
-Si vous voyez un [shader](/pages/glossary/#shader) pour la première fois, ce code peut être un peu destabilisant. Mais ne vous laissez pa intimider ! Pour être à l'aise, il vous manque juste quelques élements de contexte que vous trouverez [ici](/posts/ddj_shaders). 
+Si c'est la première fois que vous voyez un [shader](/pages/glossary/#shader), ce code peut être un peu destabilisant. Mais ne vous laissez pa intimider ! Pour être à l'aise, il vous manque juste quelques élements de contexte que vous trouverez [ici](/posts/ddj_shaders). 
 
 Maintenant nous pouvons commencer le tour du propriétaire.
 
