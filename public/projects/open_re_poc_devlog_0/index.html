@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.137.0">
+<meta name="generator" content="Hugo 0.140.2">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re_poc_devlog_0/">
@@ -214,7 +214,7 @@ stroke-linejoin="round" class="feather feather-home">
 <h3 id="2-shit-happens">2. Shit happens</h3>
 <p>Petite particularité concernant les premiers articles de la série : il s&rsquo;agira de &ldquo;rétro-devlogs&rdquo;. En effet, j’ai démarré ce projet il y a déjà plusieurs mois, sans trop savoir où j’allais. Je n&rsquo;étais pas sûr que mes expérimentations mèneraient quelque part et, de toute façon, l&rsquo;idée même de tenir un blog ne m&rsquo;avait pas encore traversé l&rsquo;esprit.</p>
 <p>Durant cette période, il se trouve que le dépôt Git a pris feu (suite à une sombre histoire de fichiers Blender beaucoup trop volumineux). Je sais qu&rsquo;il existe des méthodes douces pour régler ce genre de problème, mais j&rsquo;avoue que sur le moment, je ne voyais pas trop l&rsquo;intérêt. J&rsquo;ai donc bêtement supprimé le dépôt pour en recréer un avec ma copie locale (après avoir fait le nécessaire pour mieux gérer mes scènes).</p>
-<p><img alt="Image générée par IA d&rsquo;un dépôt Git sinistré par un fichier Blender trop gros" src="/projects/open_re_poc_devlog_0/images/shit-happens.opti.webp">
+<p><img src="/projects/open_re_poc_devlog_0/images/shit-happens.opti.webp" alt="Image générée par IA d&rsquo;un dépôt Git sinistré par un fichier Blender trop gros">
 <em>Image générée par IA d&rsquo;un dépôt Git sinistré par un fichier Blender trop gros</em></p>
 <p>Résultat : j’ai perdu l’historique du projet. Je ne peux donc plus restaurer les premières versions pour analyser ce que j&rsquo;avais fait. Réaliser des captures d&rsquo;écran de mes résultats originaux est également impossible. Ces premiers numéros seront donc des reconstitutions.</p>
 <h2 id="part-i--problématique-de-lharmonisation-des-données">Part I : Problématique de l&rsquo;harmonisation des données</h2>
@@ -225,7 +225,8 @@ stroke-linejoin="round" class="feather feather-home">
 </ul>
 <p>Pour cela, la technologie s&rsquo;appuie sur une structure de données particulière appelée un G-Buffer. Pour rappel, il s&rsquo;agit d&rsquo;une collection de textures encodant diverses données géométriques relatives à un point de vue d&rsquo;une scène (profondeur, albédo, normales, etc.).</p>
 <p>Pour fusionner les scènes, OpenRE va donc composer les G-Buffers déterministe et interactif (respectivement générées par Blender et Godot). Mais il n&rsquo;est pas évident que des données produites par deux logiciels différents soient directement compatibles. C&rsquo;est même loin d&rsquo;être gagné.</p>
-<p><img alt="Meme illustrant les différences de conventions entre Blender et Godot" src="/projects/open_re_poc_devlog_0/images/meme_ilove_gbuffer.opti.webp"></p>
+<p><img alt="Meme illustrant les différences de conventions entre Blender et Godot" src="./images/meme_ilove_gbuffer.opti.webp" style="display: block; margin-left: auto;
+margin-right: auto;" /></p>
 <p>En effet, tous les logiciels graphiques suivent des conventions qui leur sont propres (unités, espaces colorimétriques, axes du repère, etc.). Tant qu&rsquo;on reste à l&rsquo;intérieur d&rsquo;un système, la cohérence de l&rsquo;ensemble est plus ou moins garantie. Mais dès lors que deux systèmes doivent s&rsquo;échanger des données pour collaborer, c&rsquo;est le début des problèmes.</p>
 <p>Avant toute chose, il va donc falloir s&rsquo;arranger pour que Blender et Godot parlent la même langue. Et comme on le verra dans les prochains devlogs, cela va demander un certain nombre d&rsquo;ajustements.</p>
 <h2 id="part-ii--la-méthode-de-loracle">Part II : La méthode de l&rsquo;oracle</h2>
@@ -233,8 +234,8 @@ stroke-linejoin="round" class="feather feather-home">
 <p>À la manière d&rsquo;un oracle, cette moulinette va formuler des prophéties parfois cryptiques en réponse aux questions qu&rsquo;on lui pose. Mais, interprétés correctement, ces présages nous aideront à avancer dans notre périple.</p>
 <h3 id="1-comment-ça-marche-">1. Comment ça marche ?</h3>
 <p>Si Godot et Blender sont bien sur la même longueur d&rsquo;onde, les G-Buffers qu&rsquo;ils produisent à partir d&rsquo;une même scène devraient être identiques. C&rsquo;est ce que nous allons chercher à vérifier avec l&rsquo;aide de l&rsquo;oracle. Son rôle sera de comparer les G-Buffers qu&rsquo;on lui donne et de nous délivrer une image de laquelle on devra déduire son verdicte.</p>
-<p><img alt="Image illustrant le protocol de validation" src="/projects/open_re_poc_devlog_0/images/oracle_schema_update.opti.webp"></p>
-<p>Mais trêve de métaphores. Concrètement, cet oracle est un <em>post-process</em> du nom de <code>oracle.gdshader</code>. Il prend en entrée :</p>
+<p><img src="/projects/open_re_poc_devlog_0/images/oracle_schema_update.opti.webp" alt="Image illustrant le protocol de validation"></p>
+<p>Mais trêve de métaphores. Concrètement, cet oracle est un <a href="/pages/glossary/#post-process"><em>post-process</em></a> du nom de <code>oracle.gdshader</code>. Il prend en entrée :</p>
 <ul>
 <li>les textures des deux G-Buffers</li>
 <li>le type de texture à comparer</li>
@@ -244,14 +245,15 @@ stroke-linejoin="round" class="feather feather-home">
 <li>Noir → les pixels des textures sources sont identiques</li>
 <li>Blanc → la différence entre les pixels des textures sources est maximale</li>
 </ul>
-<p>Si l&rsquo;oracle affiche une image noire pour tous les types de textures possibles, alors les G-Buffers sont identiques.</p>
+<p>Si l&rsquo;oracle affiche une image noire pour tous les types de textures possibles, alors c&rsquo;est gagné : les G-Buffers sont identiques.</p>
 <h3 id="2-mise-en-place-dune-scène-de-test">2. Mise en place d’une scène de test</h3>
 <p>Pour commencer, j’ai créé une petite scène dans Blender, composée de quelques primitives et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale, étant donné que Godot prend en charge le format de scène Blender. Il suffit d’importer le fichier <code>.blend</code> et de l’ajouter à une scène vide.</p>
-<p><img alt="Illustration représentant la SimpleScene dans Blender" src="/projects/open_re_poc_devlog_0/images/simpleBlend.opti.webp"><br>
-<img alt="Illustration représentant la SimpleScene dans Godot" src="/projects/open_re_poc_devlog_0/images/simpleGodot.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_0/images/simpleBlend.opti.webp" alt="Illustration représentant la SimpleScene dans Blender"><br>
+<img src="/projects/open_re_poc_devlog_0/images/simpleGodot.opti.webp" alt="Illustration représentant la SimpleScene dans Godot"></p>
 <p>Comme vous pouvez le voir sur les captures, il s&rsquo;agit d&rsquo;une Cornell box basique avec un petit podium au centre, sur lequel nous pourrons mettre en scène ce dont nous aurons besoin le moment venu. Dans ce devlog, nous allons nous contenter de mettre en place l&rsquo;environnement. Il n&rsquo;y a donc rien sur le podium pour l&rsquo;instant.</p>
 <h3 id="3-implémentation-de-loracle">3. Implémentation de l’Oracle</h3>
 <p>Voyons maintenant de quoi est fait notre oracle. Sans plus de cérémonie, voici son code source. C&rsquo;est un petit pavé, mais ne vous inquiétez pas, nous allons le décortiquer ensemble.</p>
+<p>Vous noterez qu&rsquo;en l&rsquo;état, il ne fait pas grand-chose. Voyez ça comme un squelette de base que nous allons habiller petit à petit au fil des devlogs.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
@@ -290,18 +292,25 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	
 </span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">out_color</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>En l&rsquo;état, il ne fait pas grand-chose. Voyez ça comme un squelette de base que nous allons habiller petit à petit au fil des devlogs.</p>
-<p>Sans transition, commençons le tour du propriétaire.</p>
+</span></span></code></pre></div><p>Si c&rsquo;est la première fois que vous voyez un <a href="/pages/glossary/#shader">shader</a>, ce code peut être un peu destabilisant. Mais ne vous laissez pa intimider ! Pour être à l&rsquo;aise, il vous manque juste quelques élements de contexte que vous trouverez <a href="/posts/ddj_shaders/">ici</a>.</p>
+<p>Maintenant nous pouvons commencer le tour du propriétaire.</p>
 <h4 id="31-code-minimal-dun-post-process">3.1. Code minimal d&rsquo;un post-process</h4>
-<p>D&rsquo;abord, quelques lignes de base qu&rsquo;on ne détaillera pas. C&rsquo;est la façon usuelle de créer un post-process dans Godot.</p>
+<p>D&rsquo;abord, quelques lignes de base qu&rsquo;on ne détaillera pas complètement (mais un peu quand même). C&rsquo;est la façon usuelle de créer un post-process dans Godot.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">vertex</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">   <span class="n">POSITION</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">VERTEX</span><span class="p">.</span><span class="n">xy</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><h4 id="32-les-uniforms-ou-paramètres-dentrée">3.2. Les uniforms ou paramètres d&rsquo;entrée</h4>
-<p>Les uniforms sont les paramètres d&rsquo;entrée du shader. C&rsquo;est à travers eux que le CPU peut envoyer des données au GPU. Une fois initialisés, ils peuvent être référencés comme des variables globales dans le code du shader.</p>
+</span></span></code></pre></div><p>En effet, dans ce moteur, le <a href="/pages/glossary/#quad">quad</a> sur lequel on va rendre notre post-process et physiquement présent dans là scène (c&rsquo;est bizare mais c&rsquo;est comme ça). Il faut donc :</p>
+<ul>
+<li>s&rsquo;assurer qu&rsquo;il ne reçois ni la lumière, ni le fog :
+<br><code>render_mode unshaded, fog_disabled;</code></li>
+<li>faire coincider les coins du quad et ceux de l&rsquo;écran dans le <a href="/pages/glossary/#vertex-shader">vertex shader</a> :
+<br><code>POSITION = vec4(VERTEX.xy, 1.0, 1.0);</code></li>
+</ul>
+<h4 id="32-les-uniforms-ou-paramètres-dentrée">3.2. Les uniforms ou paramètres d&rsquo;entrée</h4>
+<p>Les uniforms sont les paramètres d&rsquo;entrée du shader. C&rsquo;est à travers eux que le <a href="/pages/glossary/#cpu">CPU</a> peut envoyer des données au <a href="/pages/glossary/#gpu">GPU</a>. Une fois initialisés, ils peuvent être référencés comme des variables globales dans le code du shader.</p>
 <p>Les uniforms <code>data_type</code>, <code>d_gbuffer</code> et <code>i_gbuffer</code> correspondent aux deux G-Buffers ainsi qu&rsquo;au type de données sélectionné pour la comparaison (évoqués précédemment).</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// Type de donnée à comparer</span>
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">int</span> <span class="n">data_type</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
@@ -350,9 +359,14 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	
 </span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">out_color</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p><strong>IL NE FAUT JAMAIS FAIRE ÇA DANS UN SHADER DE PRODUCTION !</strong></p>
-<p>J&rsquo;expliquerai peut-être pourquoi dans un article un jour. Mais retenez que, pour des raisons de performances, les branchements conditionnels sont à éviter au maximum dans le code GPU.</p>
-<p>Ici, on s’en fout, car on est sur un POC et que l&rsquo;oracle n&rsquo;est qu&rsquo;un outil de développement. La performance n&rsquo;est pas critique, donc on se permet quelques libertés pour se faciliter la vie.</p>
+</span></span></code></pre></div><p><strong>AYA ! IL A FAIT UN IF QUI SERT A RIEN DANS UN SHADER !</strong></p>
+<p>En effet, comme expliqué dans <a href="/posts/ddj_shaders/">l&rsquo;article cité en début de section</a>, les branchements conditionnels sont à éviter au maximum dans le code GPU. Et ce, pour des questions de performence.</p>
+<p>A ma décharge, l&rsquo;impacte dans ce cas précis sera minime, car tous les fragments passent du même côté du if pour un <a href="/pages/glossary/#draw-call">draw call</a> donné (la valeur de data_type est la même pour tous). Il ne faudrait tout de même pas faire ça dans du code de production car :</p>
+<ul>
+<li>la condition est quand même évaluée</li>
+<li>la présence du if peut empécher le compilateur de faire certaines optimisation</li>
+</ul>
+<p>Mais ici, on s’en fout, car on est sur un POC et que l&rsquo;oracle n&rsquo;est qu&rsquo;un outil de développement. La performance n&rsquo;est pas critique, donc on se permet quelques libertés pour se faciliter la vie.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// Point d&#39;entrée du post-process</span>
 </span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="p">...</span>
@@ -370,7 +384,7 @@ stroke-linejoin="round" class="feather feather-home">
 <h2 id="part-iii--notre-première-prophétie">Part III : Notre première prophétie</h2>
 <p>Dans ce numéro, nous n&rsquo;allons pas dérouler le processus d&rsquo;harmonisation des données en intégralité. Ce serait beaucoup trop long. Le sujet va nous occuper pendant encore plusieurs devlogs.</p>
 <p>D&rsquo;un autre côté, nous venons de mettre en place un super environnement d&rsquo;ODD, et il serait terriblement frustrant de ne pas le tester. (Allez ! Juste une fois! C&rsquo;est dans longtemps le prochain épisode..).</p>
-<p>On va donc faire ce qu&rsquo;il faut pour recueillir notre première prophétie. Pour garder les choses simples, on se limitera à la texture d&rsquo;Albedo (on oublie les autres pour l&rsquo;instant).</p>
+<p>On va donc faire ce qu&rsquo;il faut pour recueillir notre première prophétie. Pour garder les choses simples, on va prendre quelques racourcis et on se limitera à la texture d&rsquo;Albedo (on oublie les autres pour l&rsquo;instant).</p>
 <h3 id="1-préparation-de-loracle">1. Préparation de l&rsquo;Oracle</h3>
 <p>On va devoir enrichir un peu le code de l&rsquo;Oracle pour implémenter la comparaison de l&rsquo;Albedo. Le changement concerne la fonction de calcul de la différence.</p>
 <p>Avant :</p>
@@ -398,13 +412,14 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span></code></pre></div><p>La fonction <code>compute_difference(...)</code> ne renvoie plus systématiquement <code>ERROR_COLOR</code>. Lorsque le type de données à comparer est réglé sur <code>ALBEDO_TYPE</code>, la fonction <code>compute_albedo_difference(...)</code> est invoquée à la place. Elle effectue une simple distance euclidienne entre les deux couleurs.</p>
 <h3 id="2-assignation-des-textures">2. Assignation des textures</h3>
 <p>La génération des textures d&rsquo;Albedo déterministe et interactive est malheureusement hors scope pour aujourd&rsquo;hui. On va simplement considérer qu&rsquo;on les a déjà et qu&rsquo;elles ont été obtenues à partir d&rsquo;un Godot et d&rsquo;un Blender dans leur paramétrage d&rsquo;usine, sans toucher à plus que le strict nécessaire. Les voici :</p>
-<p><img alt="images du file système contenant les 2 textures" src="/projects/open_re_poc_devlog_0/images/fake_textures.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_0/images/fake_textures.opti.webp" alt="images du file système contenant les 2 textures"></p>
 <p>À partir de là, il ne reste plus qu&rsquo;à les assigner aux uniforms correspondants de <code>oracle.gdshader</code> et à régler <code>data_type</code> sur 0 (qui correspond à <code>ALBEDO_TYPE</code>).</p>
-<p><img alt="gif dans lequel les 2 textures sont bindés aux paramètres du shader" src="/projects/open_re_poc_devlog_0/images/bind_textures.opti.webp"></p>
+<p><img alt="Inspector de godot dans lequel on peut voir data_type réglé sur 0 et les 2 textures bindées à D_Buffer et G_Buffer" src="./images/bind_textures.opti.webp" style="display: block; margin-left: auto;
+margin-right: auto;" /></p>
 <h3 id="3-cest-maintenant--cest-maintenant-">3. C&rsquo;est maintenant ! C&rsquo;est maintenant !</h3>
 <p>Le type de données à comparer est bien réglé sur Albedo. Nos textures sont en place, correctement générées (faites-moi confiance…) et associées aux uniforms du shader. Elles proviennent de deux scènes rigoureusement identiques issues du même fichier. Si l’importeur de Godot a bien fait son travail en traduisant les données de Blender, on devrait obtenir une prophétie rassurante… c&rsquo;est-à-dire un bel écran noir.</p>
 <p>Qu’est-ce qui pourrait mal se passer ?</p>
-<p><img alt="Capture de la première prophétie de l&rsquo;Oracle" src="/projects/open_re_poc_devlog_0/images/first_prophecy.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_0/images/first_prophecy.opti.webp" alt="Capture de la première prophétie de l&rsquo;Oracle"></p>
 <p>Oh nooo !!!</p>
 <p>Quelle surprise ! L&rsquo;image n&rsquo;est pas noire (qui aurait pu s&rsquo;en douter ?!). Rassurez-vous, l&rsquo;importeur fonctionne très bien, le problème vient d&rsquo;ailleurs. Il va falloir trouver ce qui cloche et le corriger. Mais ce sera pour une autre fois, car on arrive à la fin de ce devlog. (Oui&hellip; je dois garder un peu de temps pour dev, sinon il n&rsquo;y aura plus rien à raconter.)</p>
 <h2 id="conclusion-">Conclusion :</h2>
