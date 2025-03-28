@@ -116,12 +116,12 @@ void fragment() {
 	ALBEDO = out_color;
 }
 ```
-Si c'est la première fois que vous voyez un [shader](/pages/glossary/#shader), ce code peut être un peu destabilisant. Mais ne vous laissez pas intimider ! Il ne vous manque surement que quelques élements de contexte que vous trouverez [ici](/posts/ddj_shaders). 
+Si c'est la première fois que vous voyez un [shader](/pages/glossary/#shader), ce code peut être un peu déstabilisant. Mais ne vous laissez pas intimider ! Il ne vous manque sûrement que quelques éléments de contexte, que vous trouverez [ici](/posts/ddj_shaders). 
 
-Maintenant nous pouvons commencer le tour du propriétaire.
+Maintenant, nous pouvons commencer le tour du propriétaire.
 
 #### 3.1. Code minimal d'un post-process
-D'abord, quelques lignes de base qu'on ne détaillera pas complètement (mais un peu quand même). Il s'agit de la façon usuelle de créer un post-process dans Godot. 
+D'abord, quelques lignes de base qu'on ne détaillera pas complètement (mais un peu quand même). Il s'agit de la façon usuelle de créer un post-process dans Godot.
  ```glsl
 shader_type spatial;
 render_mode unshaded, fog_disabled;
@@ -131,10 +131,10 @@ void vertex() {
 }
 ```
 
-En effet, dans ce moteur, le [quad](/pages/glossary/#quad) sur lequel on va rendre notre post-process et physiquement présent dans là scène (c'est bizare mais c'est comme ça). Il faut donc :
-- s'assurer qu'il ne reçoive ni la lumière, ni le fog : 
+Dans ce moteur, le [quad](/pages/glossary/#quad) sur lequel on va rendre notre post-process est physiquement présent dans la scène (c'est bizarre, mais c'est comme ça). Il faut donc :
+- s'assurer qu'il ne reçoive ni la lumière ni le fog :
 <br>`render_mode unshaded, fog_disabled;`
-- faire coincider les coins du quad et ceux de l'écran dans le [vertex shader](/pages/glossary/#vertex-shader) : 
+- Faire coïncider les coins du quad avec ceux de l'écran dans le [vertex shader](/pages/glossary/#vertex-shader) : 
 <br>`POSITION = vec4(VERTEX.xy, 1.0, 1.0);`
 
 #### 3.2. Les uniforms ou paramètres d'entrée
@@ -151,7 +151,7 @@ uniform sampler2D[NB_GMAPS] d_gbuffer : filter_nearest;
 uniform sampler2D[NB_GMAPS] i_gbuffer : filter_nearest;
 ```
 
-#### 3.3. Calcul de différence
+#### 3.3. Calcul de la différence
 C'est ici qu'on implémentera le calcul de la différence. Ou devrais-je dire **des** différences, car comme nous le verrons plus tard, nous serons amenés à traiter les données différemment selon leur type.
 ```glsl
 const vec3 ERROR_COLOR = vec3(1.0, 0.0, 1.0);
@@ -161,11 +161,11 @@ vec3 compute_difference(vec3 d_frag, vec3 i_frag) {
 	return ERROR_COLOR;
 }
 ```
-Pour l'instant, la fonction renvoie simplement `ERROR_COLOR`, une couleur magenta bien dégueu qui attirera immédiatement l'attention si on la voit à l'écran.
+Pour l'instant, la fonction renvoie simplement `ERROR_COLOR`,  une couleur magenta bien criarde qui attirera immédiatement l'attention si elle apparaît à l'écran.
 
-C'est quelque chose que je fais assez souvent et qui correspondrait à un `throw new Exception();` ou un `return -1;` en code CPU.
+C'est une technique que j'utilise souvent, qui correspondrait à un `throw new Exception();` ou un `return -1;` en code CPU.
 
-Dans un GPU, nous sommes assez limités en termes de gestion d'erreurs, il faut donc parfois être un peu créatif. N’hésitez pas à partager vos petites techniques personnelles dans les commentaires si vous en avez !
+Sur un GPU, la gestion des erreurs est très limitée. Il faut donc parfois être un peu créatif. N’hésitez pas à partager vos petites techniques personnelles dans les commentaires si vous en avez !
 
 #### 3.4. Le point d'entrée du post-process
 Et enfin, voici la fonction `void fragment()`, le point d'entrée principal du post-process.
@@ -186,7 +186,7 @@ void fragment() {
 	ALBEDO = out_color;
 }
 ```
-La première chose à noter, c'est que je réutilise ma technique du ERROR_COLOR d'une manière un peu différente. Ici, je m'assure de la validité du uniforms `data_type`. Si sa valeur n'est pas définie → BOOM ! Écran magenta !
+La première chose à noter, c'est que je réutilise ma technique du ERROR_COLOR d'une manière un peu différente. Ici, je m'assure de la validité du uniform  `data_type`. Si sa valeur n'est pas définie → BOOM ! Écran magenta !
 
 ```glsl
 // Point d'entrée du post-process
@@ -202,15 +202,15 @@ void fragment() {
 }
 ```
 
-**AYA ! IL A FAIT UN IF QUI SERT A RIEN DANS UN SHADER !**
+**AYA ! IL A FAIT UN IF QUI SERT À RIEN DANS UN SHADER !**
 
-En effet, comme expliqué dans [l'article cité en début de section](/posts/ddj_shaders), les branchements conditionnels sont à éviter au maximum dans le code GPU. Et ce, pour des questions de performance.
+En effet, comme expliqué dans [l'article cité en début de section](/posts/ddj_shaders), les branchements conditionnels sont à éviter autant que possible dans le code GPU pour des raisons de performance.
 
-A ma décharge, l'impacte dans ce cas précis sera minime, car tous les fragments passent du même côté du if pour un [draw call](/pages/glossary/#draw-call) donné. Il ne faudrait tout de même pas faire ça dans du code de production car :
-- la condition est quand même évaluée
-- la présence du if peut empécher le compilateur de faire certaines optimisation
+À ma décharge, l'impact ici sera minime, car tous les fragments passent du même côté du `if` pour un [draw call](/pages/glossary/#draw-call) donné. Il ne faudrait tout de même pas faire ça dans du code de production, car :
+- La condition est quand même évaluée.
+- La présence du `if` peut empêcher le compilateur d'effectuer certaines optimisations.
 
-Mais ici, on s’en fout, car on est sur un POC et que l'oracle n'est qu'un outil de développement. La performance n'est pas critique, donc on se permet quelques libertés pour se faciliter la vie. 
+Mais ici, on s’en fout ! On est sur un POC, et l'oracle n'est qu'un outil de développement. La performance n'est pas critique, donc on se permet quelques libertés pour se faciliter la vie.
 
 ```glsl
 // Point d'entrée du post-process
@@ -228,17 +228,17 @@ void fragment() {
 }
 ```
 
-Le reste du code est assez trivial. D'abord on sample les textures pour obtenir les pixels que l'on souhaite comparer. Puis on invoque `compute_difference(...)` sur ces pixels pour déterminer la nuance de gris à afficher.
+Le reste du code est assez trivial. D'abord, on sample les textures pour obtenir les pixels que l'on souhaite comparer. Puis, on invoque `compute_difference(...)` sur ces pixels pour déterminer la nuance de gris à afficher.
 
 ## Part III : Notre première prophétie
-Dans ce numéro, nous n'allons pas dérouler le processus d'harmonisation des données en intégralité. Ce serait beaucoup trop long. Le sujet va nous occuper pendant encore plusieurs devlogs.
+Dans ce numéro, nous n'allons pas dérouler l'intégralité du processus d'harmonisation des données. Ce serait beaucoup trop long. Le sujet va nous occuper encore pendant plusieurs devlogs.
 
-D'un autre côté, nous venons de mettre en place un super environnement d'ODD, et il serait terriblement frustrant de ne pas le tester. (Allez ! Juste une fois! C'est dans longtemps le prochain épisode..).
+D'un autre côté, nous venons de mettre en place un super environnement d'ODD, et il serait terriblement frustrant de ne pas le tester. (Allez ! Juste une fois ! Le prochain épisode n'est pas pour tout de suite…)
 
-On va donc faire ce qu'il faut pour recueillir notre première prophétie. Pour garder les choses simples, on va prendre quelques racourcis et on se limitera à la texture d'Albedo (on oublie les autres pour l'instant).
+Nous allons donc faire ce qu'il faut pour recueillir notre première prophétie. Pour garder les choses simples, nous allons prendre quelques raccourcis et nous limiter à la texture d'Albedo (on oublie les autres pour l'instant).
 
 ### 1. Préparation de l'Oracle
-On va devoir enrichir un peu le code de l'Oracle pour implémenter la comparaison de l'Albedo. Le changement concerne la fonction de calcul de la différence.
+Nous allons devoir enrichir un peu le code de l'Oracle pour implémenter la comparaison de l'Albedo. Le changement concerne la fonction de calcul de la différence.
 
 Avant :
 ```glsl
@@ -268,31 +268,31 @@ vec3 compute_difference(vec3 d_frag, vec3 i_frag) {
 }
 ```
 
-La fonction `compute_difference(...)` ne renvoie plus systématiquement `ERROR_COLOR`. Lorsque le type de données à comparer est réglé sur `ALBEDO_TYPE`, la fonction `compute_albedo_difference(...)` est invoquée à la place. Elle effectue une simple distance euclidienne entre les deux couleurs.
+La fonction `compute_difference(...)` ne renvoie plus systématiquement `ERROR_COLOR`. Lorsque le type de données à comparer est réglé sur  `ALBEDO_TYPE`, la fonction `compute_albedo_difference(...)` est invoquée à la place. Elle effectue une simple distance euclidienne entre les deux couleurs.
 
 ### 2. Assignation des textures
 La génération des textures d'Albedo déterministe et interactive est malheureusement hors scope pour aujourd'hui. On va simplement considérer qu'on les a déjà et qu'elles ont été obtenues à partir d'un Godot et d'un Blender dans leur paramétrage d'usine, sans toucher à plus que le strict nécessaire. Les voici :
 
 ![images du file système contenant les 2 textures](images/fake_textures.opti.webp)
 
-À partir de là, il ne reste plus qu'à les assigner aux uniforms correspondants de `oracle.gdshader` et à régler `data_type` sur 0 (qui correspond à `ALBEDO_TYPE`).
+À partir de là, il ne reste plus qu'à les assigner aux uniforms correspondants dans `oracle.gdshader` et à régler `data_type` sur 0 (qui correspond à `ALBEDO_TYPE`).
 
 <img alt="Inspector de godot dans lequel on peut voir data_type réglé sur 0 et les 2 textures bindées à D_Buffer et G_Buffer" src="./images/bind_textures.opti.webp" style="display: block; margin-left: auto;
   margin-right: auto;" /> 
 
 ### 3. C'est maintenant ! C'est maintenant !
-Le type de données à comparer est bien réglé sur Albedo. Nos textures sont en place, correctement générées (faites-moi confiance…) et associées aux uniforms du shader. Elles proviennent de deux scènes rigoureusement identiques issues du même fichier. Si l’importeur de Godot a bien fait son travail en traduisant les données de Blender, on devrait obtenir une prophétie rassurante… c'est-à-dire un bel écran noir.
+Le type de données à comparer est bien réglé sur Albedo. Nos textures sont en place, correctement générées (faites-moi confiance…) et associées aux uniforms du shader. Elles proviennent de deux scènes rigoureusement identiques issues du même fichier. Si l'importeur de Godot a bien fait son travail en traduisant les données de Blender, nous devrions obtenir une prophétie rassurante… c'est-à-dire un bel écran noir.
 
-Qu’est-ce qui pourrait mal se passer ?
+Qu'est-ce qui pourrait mal se passer ?
 
 ![Capture de la première prophétie de l'Oracle](images/first_prophecy.opti.webp)
 
 Oh nooo !!!
 
-Quelle surprise ! L'image n'est pas noire (qui aurait pu s'en douter ?!). Rassurez-vous, l'importeur fonctionne très bien, le problème vient d'ailleurs. Il va falloir trouver ce qui cloche et le corriger. Mais ce sera pour une autre fois, car on arrive à la fin de ce devlog. (Oui... je dois garder un peu de temps pour dev, sinon il n'y aura plus rien à raconter.)
+Quelle surprise ! L'image n'est pas noire (qui aurait pu s'en douter ?!). Rassurez-vous, l'importeur fonctionne très bien, le problème vient d'ailleurs. Il va falloir trouver ce qui cloche et le corriger. Mais ce sera pour une autre fois, car nous arrivons à la fin de ce devlog. (Oui… je dois garder un peu de temps pour le dev, sinon il n'y aura plus rien à raconter.)
 
 ## Conclusion :
-Nous venons de poser les bases d'un environnement capable de comparer facilement les données produites par Blender et Godot. Jusqu'ici, il ne nous a appris qu'une chose : ces données ne sont **pas** compatibles par défaut (en ce qui concerne l'Albedo au moins).
+Nous venons de poser les bases d'un environnement capable de comparer facilement les données produites par Blender et Godot. Jusqu'ici, il ne nous a appris qu'une chose : ces données ne sont **pas** compatibles par défaut (en ce qui concerne l'albédo au moins).
 
 C'est à partir de là que le vrai travail va commencer. Par le biais de différents réglages et pré-traitements, d'un côté comme de l'autre, nous allons harmoniser les deux logiciels. Mais nous ne ferons pas ça à l'aveugle. Grâce à l'Oracle, nous aurons un moyen efficace de visualiser l'impact de nos ajustements. Itération après itération, nous pourrons garder ce qui améliore les résultats et jeter le reste. Et ce, jusqu'à obtenir des données totalement identiques (du moins, c'est ce qu'on espère).
 
@@ -305,7 +305,7 @@ Je terminerai en disant que ce devlog a été assez compliqué à écrire. J'ai 
 
 Mais reconnaissons quand même un avantage à la situation : le TurboTartine du futur, malgré ses problèmes de mémoire, sait à peu près ce qu'il a fait ensuite, ce qui aide à structurer tout ça.
 
-D'ailleurs, je peux déjà annoncer le sujet du prochain numéro ! Dans le prochain devlog, nous allons utiliser l'oracle pour harmoniser les textures d'albédo de nos G-Buffers (qui l'eu cru hein ?).
+D'ailleurs, je peux déjà annoncer le sujet du prochain numéro ! Dans le prochain devlog, nous allons utiliser l'oracle pour harmoniser les textures d'albédo de nos G-Buffers (qui l'eût cru hein ?).
 
 D’ici là, prenez soin de vous, et j'espère que ce premier devlog vous aura plu. N’hésitez pas à me faire vos retours !
 
