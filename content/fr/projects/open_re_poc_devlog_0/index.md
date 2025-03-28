@@ -49,7 +49,7 @@ Pour identifier ces ajustements, on va utiliser une technique que j’aime bien 
 À la manière d'un oracle, cette moulinette va formuler des prophéties parfois cryptiques en réponse aux questions qu'on lui pose. Mais, interprétés correctement, ces présages nous aideront à avancer dans notre périple.
 
 ### 1. Comment ça marche ?
-Si Godot et Blender sont bien sur la même longueur d'onde, les G-Buffers qu'ils produisent à partir d'une même scène devraient être identiques. C'est ce que nous allons chercher à vérifier avec l'aide de l'oracle. Son rôle sera de comparer les G-Buffers qu'on lui donne et de nous délivrer une image de laquelle on devra déduire son verdicte.
+Si Godot et Blender sont bien sur la même longueur d'onde, les G-Buffers qu'ils produisent à partir d'une même scène devraient être identiques. C'est ce que nous allons chercher à vérifier avec l'aide de l'oracle. Son rôle sera de comparer les G-Buffers qu'on lui donne et de nous délivrer une image à partir de laquelle on devra déduire son verdicte.
 
 ![Image illustrant le protocol de validation](images/oracle_schema_update.opti.webp)
 
@@ -61,10 +61,10 @@ Son job est de calculer, deux à deux, les différences entre les textures déte
 - Noir → les pixels des textures sources sont identiques
 - Blanc → la différence entre les pixels des textures sources est maximale
 
-Si l'oracle affiche une image noire pour tous les types de textures possibles, alors c'est gagné : les G-Buffers sont identiques.
+Si l'oracle affiche une image noire pour chaque types de textures, c'est gagné : les G-Buffers sont identiques.
 
 ### 2. Mise en place d’une scène de test
-Pour commencer, j’ai créé une petite scène dans Blender, composée de quelques primitives et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale, étant donné que Godot prend en charge le format de scène Blender. Il suffit d’importer le fichier `.blend` et de l’ajouter à une scène vide.
+Pour commencer, j’ai créé une petite scène dans Blender, composée de quelques primitives et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale, étant donné que Godot prend en charge le format de scène de Blender. Il suffit d’importer le fichier `.blend` et de l’ajouter à une scène vide.
 
 ![Illustration représentant la SimpleScene dans Blender](images/simpleBlend.opti.webp)  
 ![Illustration représentant la SimpleScene dans Godot](images/simpleGodot.opti.webp)
@@ -116,7 +116,7 @@ void fragment() {
 	ALBEDO = out_color;
 }
 ```
-Si c'est la première fois que vous voyez un [shader](/pages/glossary/#shader), ce code peut être un peu destabilisant. Mais ne vous laissez pa intimider ! Pour être à l'aise, il vous manque juste quelques élements de contexte que vous trouverez [ici](/posts/ddj_shaders). 
+Si c'est la première fois que vous voyez un [shader](/pages/glossary/#shader), ce code peut être un peu destabilisant. Mais ne vous laissez pas intimider ! Il ne vous manque surement que quelques élements de contexte que vous trouverez [ici](/posts/ddj_shaders). 
 
 Maintenant nous pouvons commencer le tour du propriétaire.
 
@@ -132,7 +132,7 @@ void vertex() {
 ```
 
 En effet, dans ce moteur, le [quad](/pages/glossary/#quad) sur lequel on va rendre notre post-process et physiquement présent dans là scène (c'est bizare mais c'est comme ça). Il faut donc :
-- s'assurer qu'il ne reçois ni la lumière, ni le fog : 
+- s'assurer qu'il ne reçoive ni la lumière, ni le fog : 
 <br>`render_mode unshaded, fog_disabled;`
 - faire coincider les coins du quad et ceux de l'écran dans le [vertex shader](/pages/glossary/#vertex-shader) : 
 <br>`POSITION = vec4(VERTEX.xy, 1.0, 1.0);`
@@ -204,9 +204,9 @@ void fragment() {
 
 **AYA ! IL A FAIT UN IF QUI SERT A RIEN DANS UN SHADER !**
 
-En effet, comme expliqué dans [l'article cité en début de section](/posts/ddj_shaders), les branchements conditionnels sont à éviter au maximum dans le code GPU. Et ce, pour des questions de performence.
+En effet, comme expliqué dans [l'article cité en début de section](/posts/ddj_shaders), les branchements conditionnels sont à éviter au maximum dans le code GPU. Et ce, pour des questions de performance.
 
-A ma décharge, l'impacte dans ce cas précis sera minime, car tous les fragments passent du même côté du if pour un [draw call](/pages/glossary/#draw-call) donné (la valeur de data_type est la même pour tous). Il ne faudrait tout de même pas faire ça dans du code de production car :
+A ma décharge, l'impacte dans ce cas précis sera minime, car tous les fragments passent du même côté du if pour un [draw call](/pages/glossary/#draw-call) donné. Il ne faudrait tout de même pas faire ça dans du code de production car :
 - la condition est quand même évaluée
 - la présence du if peut empécher le compilateur de faire certaines optimisation
 
