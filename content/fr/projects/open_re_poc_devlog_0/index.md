@@ -6,21 +6,21 @@ title = 'OpenRE devlog 0 : Oracle Driven Development'
 description = 'devlog 0 du projet OpenRE'
 +++
 ## Introduction
-Bienvenue dans ce tout premier devlog d'OpenRE : le devlog Zéro ! Cette série a pour but de documenter la phase de proof of concept (POC) du projet.
+Bienvenue dans ce tout premier devlog d'OpenRE : le devlog zéro ! Cette série a pour but de documenter la phase de proof of concept (POC) du projet.
 
 Si vous ne l'avez pas encore lu, je vous recommande de consulter l'article [Les prémices d'OpenRE (Open Retro Engine)](/projects/open_re), qui vous donnera une vision globale du projet. J'y introduis notamment quelques notions et un peu de terminologie. Il est préférable de l'avoir parcouru pour mieux contextualiser ce que je raconte dans les devlogs.
 
 Dans ce numéro, je vais parler de méthodologie. Nous allons mettre en place un petit outil qui nous aidera à harmoniser les données dont OpenRE a besoin pour fonctionner. Mais avant d'entrer dans le vif du sujet, laissez-moi introduire un peu de contexte.
 
 ### 1. Format de la série
-Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un ou plusieurs nouveaux numéros, si j'estime que les séparer à du sens.
+Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un ou plusieurs nouveaux numéros, si j'estime que les séparer a du sens.
 
 Étant donné qu’OpenRE est un projet personnel que je développe sur mon temps libre, le rythme de publication risque d’être irrégulier. Certains mois seront plus légers que d’autres, mais ce n’est pas bien grave. Au contraire, ce sera intéressant de voir comment la cadence évolue au fil du temps.
 
 ### 2. Shit happens
-Petite particularité concernant les premiers articles de la série : il s'agira de "rétro-devlogs". En effet, j’ai démarré ce projet il y a déjà plusieurs mois, sans trop savoir où j’allais. Je n'étais pas sûr que mes expérimentations mèneraient quelque part et, de toute façon, l'idée même de tenir un blog ne m'avait pas encore traversé l'esprit.
+Petite particularité concernant les premiers articles de la série : il s'agira de rétro-devlogs. En effet, j’ai démarré ce projet il y a déjà plusieurs mois, sans trop savoir où j’allais. Je n'étais pas sûr que mes expérimentations mèneraient quelque part et, de toute façon, l'idée même de tenir un blog ne m'avait pas encore traversé l'esprit.
 
-Durant cette période, il se trouve que le dépôt Git a pris feu (suite à une sombre histoire de fichiers Blender beaucoup trop volumineux). Je sais qu'il existe des méthodes douces pour régler ce genre de problème, mais j'avoue que sur le moment, je ne voyais pas trop l'intérêt. J'ai donc bêtement supprimé le dépôt pour en recréer un avec ma copie locale (après avoir fait le nécessaire pour mieux gérer mes scènes).
+Durant cette période, il se trouve que le dépôt Git a pris feu (suite à une sombre histoire de fichiers Blender beaucoup trop volumineux). Je sais qu'il existe des méthodes douces pour régler ce genre de problème, mais j'avoue que, sur le moment, je ne voyais pas trop l'intérêt. J'ai donc bêtement supprimé le dépôt pour en recréer un avec ma copie locale (après avoir fait le nécessaire pour mieux gérer mes scènes).
 
 ![Image générée par IA d'un dépôt Git sinistré par un fichier Blender trop gros](images/shit-happens.opti.webp)
 *Image générée par IA d'un dépôt Git sinistré par un fichier Blender trop gros*
@@ -46,22 +46,22 @@ Avant toute chose, il va donc falloir s'arranger pour que Blender et Godot parle
 ## Part II : La méthode de l'oracle
 Pour identifier ces ajustements, on va utiliser une technique que j’aime bien et que j’appelle le *Oracle Driven Development*. C’est un peu comme du *Test Driven Development*, sauf qu’au lieu d’avoir un jeu de tests automatisés, propre et exhaustif, on va bricoler une petite moulinette qu’il faudra lancer en partie à la main.
 
-À la manière d'un oracle, cette moulinette va formuler des prophéties parfois cryptiques en réponse aux questions qu'on lui pose. Mais, interprétés correctement, ces présages nous aideront à avancer dans notre périple.
+À la manière d'un oracle, cette moulinette va formuler des prophéties parfois cryptiques en réponse aux questions qu'on lui pose. Mais interprétés correctement, ces présages nous aideront à avancer dans notre périple.
 
 ### 1. Comment ça marche ?
-Si Godot et Blender sont bien sur la même longueur d'onde, les G-Buffers qu'ils produisent à partir d'une même scène devraient être identiques. C'est ce que nous allons chercher à vérifier avec l'aide de l'oracle. Son rôle sera de comparer les G-Buffers qu'on lui donne et de nous délivrer une image à partir de laquelle on devra déduire son verdicte.
+Si Godot et Blender sont bien sur la même longueur d'onde, les G-Buffers qu'ils produisent à partir d'une même scène devraient être identiques. C'est ce que nous allons chercher à vérifier avec l'aide de l'oracle. Son rôle sera de comparer les G-Buffers qu'on lui donne et de nous délivrer une image à partir de laquelle on devra déduire son verdict.
 
-![Image illustrant le protocol de validation](images/oracle_schema_update.opti.webp)
+![Image illustrant le protocole de validation](images/oracle_schema_update.opti.webp)
 
 Mais trêve de métaphores. Concrètement, cet oracle est un [*post-process*](/pages/glossary/#post-process) du nom de `oracle.gdshader`. Il prend en entrée :
 - les textures des deux G-Buffers
 - le type de texture à comparer
 
-Son job est de calculer, deux à deux, les différences entre les textures déterministe et interactive de chaque type et d'afficher à l'écran celle qui correspond au type sélectionné. Le degré de différence sera représenté en niveau de gris :
+Son job est de calculer, deux à deux, les différences entre les textures déterministe et interactive de chaque type et d'afficher à l'écran celle qui correspond au type sélectionné. Le degré de différence sera représenté en niveaux de gris :
 - Noir → les pixels des textures sources sont identiques
 - Blanc → la différence entre les pixels des textures sources est maximale
 
-Si l'oracle affiche une image noire pour chaque types de textures, c'est gagné : les G-Buffers sont identiques.
+Si l'oracle affiche une image entièrement  noire pour chaque type de texture, c'est gagné : les G-Buffers sont identiques.
 
 ### 2. Mise en place d’une scène de test
 Pour commencer, j’ai créé une petite scène dans Blender, composée de quelques primitives et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale, étant donné que Godot prend en charge le format de scène de Blender. Il suffit d’importer le fichier `.blend` et de l’ajouter à une scène vide.
@@ -121,7 +121,7 @@ Si c'est la première fois que vous voyez un [shader](/pages/glossary/#shader), 
 Maintenant nous pouvons commencer le tour du propriétaire.
 
 #### 3.1. Code minimal d'un post-process
-D'abord, quelques lignes de base qu'on ne détaillera pas complètement (mais un peu quand même). C'est la façon usuelle de créer un post-process dans Godot. 
+D'abord, quelques lignes de base qu'on ne détaillera pas complètement (mais un peu quand même). Il s'agit de la façon usuelle de créer un post-process dans Godot. 
  ```glsl
 shader_type spatial;
 render_mode unshaded, fog_disabled;
