@@ -55,22 +55,22 @@ En comparaison, un cœur de ***GPU*** est con comme une pelle. Non seulement il 
 
 <br> 
 <img alt="Portrait de Fred de C'est pas sorcier" src="./images/Fred.opti.webp" style="float: right; margin-left: 20px; max-width: 128px;" /> 
-<p align = right> 
+<p align = right style="text-align: right;"> 
 Mais dis donc, Jamy ! Si tous les cœurs exécutent la même instruction, ils vont tous fournir le même résultat ! 
 <br>Ça n'a aucun sens ! 
 </p> 
 <br> <br> 
 <img alt="Portrait de Jamy de C'est pas sorcier" src="./images/Jamy.opti.webp" style="float: left; margin-right: 20px; max-width: 128px; clear: both;" />
-<p align = left> Eh bien, pas tout à fait ! Les cœurs exécutent bien tous la même instruction, mais ils le font sur <strong>des données différentes</strong> (les éléments du tableau, vous vous rappelez ?). Ils peuvent donc quand même avoir des sorties différentes. 
+<p align = left style="text-align: left;"> Eh bien, pas tout à fait ! Les cœurs exécutent bien tous la même instruction, mais ils le font sur <strong>des données différentes</strong> (les éléments du tableau, vous vous rappelez ?). Ils peuvent donc quand même avoir des sorties différentes. 
 </p> 
 <br> 
 <img alt="Portrait de Fred de C'est pas sorcier" src="./images/Fred.opti.webp" style="float: right; margin-left: 20px; max-width: 128px;" /> 
-<p align = right> D'accord ! Mais comment ça marche pour les <strong><i>branchements conditionnels</i> ?</strong> Les cœurs qui passent dans le <i>if</i> ne peuvent pas pointer sur la même instruction que ceux qui passent dans le <i>else</i>. 
+<p align = right style="text-align: right;"> D'accord ! Mais comment ça marche pour les <strong><i>branchements conditionnels</i> ?</strong> Les cœurs qui passent dans le <i>if</i> ne peuvent pas pointer sur la même instruction que ceux qui passent dans le <i>else</i>. 
 <br><strong>Ça ne marche pas, ton truc !</strong>
 </p> 
 <br> 
 <img alt="Portrait de Jamy de C'est pas sorcier" src="./images/Jamy.opti.webp" style="float: left; margin-right: 20px; max-width: 128px; clear: both;" /> 
-<p align = left> Tu as raison, Fred, mais il y a une astuce ! En réalité, les deux côtés sont évalués séquentiellement par tous les cœurs. Et les cœurs non concernés par l'instruction courante ? Eh bien, c'est simple... ils ne font rien... <strong>ils attendent...</strong> 
+<p align = left style="text-align: left;"> Tu as raison, Fred, mais il y a une astuce ! En réalité, les deux côtés sont évalués séquentiellement par tous les cœurs. Et les cœurs non concernés par l'instruction courante ? Eh bien, c'est simple... ils ne font rien... <strong>ils attendent...</strong> 
 </p> 
 <br> 
 
