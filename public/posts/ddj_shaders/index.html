@@ -68,7 +68,7 @@
     </script>
 
 
-<meta name="generator" content="Hugo 0.140.2">
+<meta name="generator" content="Hugo 0.137.0">
 
     
     <meta property="og:url" content="http://localhost:1313/posts/ddj_shaders/">
@@ -261,7 +261,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Pour répondre à cette question, on va devoir se pencher sur les <strong>différences architecturales</strong> entre ces deux types d&rsquo;unités de calcul.</p>
 <p>Un <em><strong>CPU</strong></em> contient relativement peu de cœurs (entre 4 et 16 la plupart du temps). Mais ce sont des cœurs extrêmement puissants et surtout très agiles, car indépendants les uns des autres. Chacun est capable de dérouler sa propre séquence d&rsquo;instructions dans son coin. C&rsquo;est le modèle <strong><em>MIMD</em> (Multiple Instruction, Multiple Data)</strong>. Un <em>CPU</em> est donc très bon pour effectuer plusieurs tâches complexes et différentes en même temps.</p>
 <p>En comparaison, un cœur de <em><strong>GPU</strong></em> est con comme une pelle. Non seulement il est beaucoup moins puissant, mais surtout il fonctionne sur le modèle <strong><em>SIMD</em> (Single Instruction, Multiple Data)</strong>. Ça veut dire que les cœurs d&rsquo;un <em>GPU</em> ne sont pas capables d&rsquo;exécuter simultanément des instructions différentes. À chaque tick d&rsquo;horloge, tout le monde tape dans la même.</p>
-<p><img src="/posts/ddj_shaders/images/meme_winnie_cpu_vs_gpu.opti.webp" alt="Même illustrant de manière humoristique les differences entre les coeurs CPU et GPU">
+<p><img alt="Même illustrant de manière humoristique les differences entre les coeurs CPU et GPU" src="/posts/ddj_shaders/images/meme_winnie_cpu_vs_gpu.opti.webp">
 <em>Même illustrant de manière humoristique les differences entre les coeurs CPU et GPU</em></p>
 <br> 
 <img alt="Portrait de Fred de C'est pas sorcier" src="./images/Fred.opti.webp" style="float: right; margin-left: 20px; max-width: 128px;" /> 
@@ -283,13 +283,13 @@ Mais dis donc, Jamy ! Si tous les cœurs exécutent la même instruction, ils vo
 <p align = left style="text-align: left;"> Tu as raison, Fred, mais il y a une astuce ! En réalité, les deux côtés sont évalués séquentiellement par tous les cœurs. Et les cœurs non concernés par l'instruction courante ? Eh bien, c'est simple... ils ne font rien... <strong>ils attendent...</strong> 
 </p> 
 <br> 
-<p><img src="/posts/ddj_shaders/images/gpu_simd.opti.webp" alt="Schema d&rsquo;execution d&rsquo;un programme dans un GPU">
+<p><img alt="Schema d&rsquo;execution d&rsquo;un programme dans un GPU" src="/posts/ddj_shaders/images/gpu_simd.opti.webp">
 <em>Illustration du modèle SIMD</em></p>
 <p>Voilà pourquoi on dit qu&rsquo;il faut à tout prix <strong>éviter les <em>branches</em></strong> dans le code d&rsquo;un <em>shader</em>. À chaque fois qu&rsquo;on en fait une, on met des cœurs au chômage. Cette architecture est donc assez contraignante, mais elle permet à un <em>GPU</em> de gérer non pas 8 ou 16, mais plusieurs <strong>milliers de cœurs.</strong></p>
 <p>En résumé, là où le <em>CPU</em> est bon pour gérer un petit nombre de tâches complexes et différentes, le GPU, lui, excelle dans l&rsquo;art d&rsquo;exécuter en parallèle un très grand nombre de petites opérations similaires. Et il se trouve que c&rsquo;est exactement ce dont on a besoin pour traiter des images.</p>
 <h2 id="iii-le-pipeline-graphique">III. Le pipeline graphique</h2>
 <p>En pratique, il existe <strong>plusieurs types de <em>shaders</em></strong>, chacun intervenant à une étape précise de ce qu&rsquo;on appelle le <a href="/pages/glossary/#pipeline-graphique"><em>pipeline graphique</em></a>. À chaque <a href="/pages/glossary/#draw-call"><em>draw call</em></a>, c&rsquo;est-à-dire (plus ou moins) pour chaque <a href="/pages/glossary/#mesh"><em>mesh</em></a> visible dans une <a href="/pages/glossary/#frame"><em>frame</em></a>, ce <em>pipeline</em> va être traversé. La géométrie du <em>mesh</em> est injectée en entrée sous la forme de triplets de <a href="/pages/glossary/#vertex"><em>vertex</em></a> (des triangles, donc). Ces derniers vont ensuite être traités étape par étape jusqu&rsquo;à devenir des pixels affichés à l&rsquo;écran.</p>
-<p><img src="/posts/ddj_shaders/images/gfx_pipeline.opti.webp" alt="Diagramme représentant le pipeline graphique">
+<p><img alt="Diagramme représentant le pipeline graphique" src="/posts/ddj_shaders/images/gfx_pipeline.opti.webp">
 <em>Diagramme du pipeline graphique</em></p>
 <p>Dans ce <em>pipeline</em>, il y a 2 types d&rsquo;étapes :</p>
 <ul>
@@ -327,12 +327,12 @@ Mais dis donc, Jamy ! Si tous les cœurs exécutent la même instruction, ils vo
 </div>
 <p><em>Animation d&rsquo;un visage à base de morph targets et d&rsquo;animation squelettale dans JMonkeyEngine.</em></p>
 <p>À une époque, la lumière était aussi calculée dans le <em>vertex shader</em> pour des questions de performances. On appelle ça le <a href="/pages/glossary/#vertex-lighting"><em>vertex lighting</em></a>. Aujourd&rsquo;hui, les <em>GPU</em> sont largement assez puissants pour calculer la lumière au niveau du pixel. Mais le <em>vertex lighting</em> est toujours utilisé en tant que parti pris artistique (ou si on fait un portage grille-pain).</p>
-<p><img src="/posts/ddj_shaders/images/gif_vertex_vs_p%C3%AExel_lighting.webp" alt="Comparaison du Vertex Lighting et du Pixel Lighting">
+<p><img alt="Comparaison du Vertex Lighting et du Pixel Lighting" src="/posts/ddj_shaders/images/gif_vertex_vs_p%C3%AExel_lighting.webp">
 <em>Screenshots de Silent Hill 2 illustrant la différence visuelle entre le Vertex Lighting (PS2) et le Pixel Lighting (Xbox).</em></p>
 <h3 id="2-la-rasterisation">2. La rasterisation</h3>
 <p>La <a href="/pages/glossary/#rasterisation"><em>rasterisation</em></a> est une étape non programmable du <em>pipeline</em>. Mais il est quand même important de comprendre ce que c&rsquo;est, car elle se place entre le <em>vertex shader</em> et le <em>fragment shader</em>.</p>
 <p>Il s&rsquo;agit d&rsquo;un procédé qui consiste à <strong>discrétiser une image vectorielle</strong>. Dit autrement, on va prendre nos jolis triangles tout lisses, dont les <em>vertex</em> viennent d&rsquo;être projetés dans l&rsquo;espace écran (par le <em>vertex shader</em>), et on va en faire un amas de pixels qu&rsquo;on appelle des <em>fragments</em>. Ces <em>fragments</em> sont ensuite injectés en entrée du <em>fragment shader</em> (vous commencez à comprendre le pattern de nommage ?).</p>
-<p><img src="/posts/ddj_shaders/images/rasterisation.opti.webp" alt="illustration de l&rsquo;interpolation de la couleur des vertex via la rasteriasation">
+<p><img alt="illustration de l&rsquo;interpolation de la couleur des vertex via la rasteriasation" src="/posts/ddj_shaders/images/rasterisation.opti.webp">
 <em>Rasterisation avec interpolation de l&rsquo;attribut vertex color.</em></p>
 <p>Je ne l&rsquo;ai pas mentionné jusqu&rsquo;ici, mais en réalité, les <em>vertex</em> portent des attributs en plus de leurs coordonnées. Il est important de noter que lors de la <em>rasterisation</em>, une <strong><em>interpolation</em> de ces attributs</strong> est effectuée pour chaque <em>fragment</em> généré. L&rsquo;image ci-dessus illustre cela avec l&rsquo;attribut <a href="/pages/glossary/#vertex-color-attribute">vertex color</a>.</p>
 <h3 id="3-fragment-shader">3. Fragment Shader</h3>
@@ -349,7 +349,7 @@ Mais dis donc, Jamy ! Si tous les cœurs exécutent la même instruction, ils vo
 <li>Appliquer les textures.</li>
 <li>Implémenter divers effets de surface (<em>dissolve</em>, etc.).</li>
 </ul>
-<p><img src="/posts/ddj_shaders/images/dissolve-optimize.gif" alt="illustration d&rsquo;un effet de dissolve">
+<p><img alt="illustration d&rsquo;un effet de dissolve" src="/posts/ddj_shaders/images/dissolve-optimize.gif">
 <em>Effet de dissolve</em></p>
 <h3 id="4-post-process">4. Post-Process</h3>
 <p>Techniquement, <strong>ce sont des <em>fragment shaders</em></strong>. Mais je ne voulais pas les traiter dans la partie précédente pour éviter la confusion, car c&rsquo;est un cas assez spécifique : les <a href="/pages/glossary/#post-process"><em>post-process</em></a> sont une forme de <em>rendu multipass</em>.</p>
@@ -366,7 +366,7 @@ Mais dis donc, Jamy ! Si tous les cœurs exécutent la même instruction, ils vo
 <li>L&rsquo;aberration chromatique.</li>
 <li>&hellip;</li>
 </ul>
-<p><img src="/posts/ddj_shaders/images/style_post_process.webp" alt="gif alterant divers effets de style en post process">
+<p><img alt="gif alterant divers effets de style en post process" src="/posts/ddj_shaders/images/style_post_process.webp">
 <em>Divers effets de style en post-process.</em></p>
 <h2 id="conclusion">Conclusion</h2>
 <p>Dans cet article, je fais pas mal de raccourcis et d&rsquo;approximations. L&rsquo;objectif n&rsquo;est pas de vous apprendre à écrire des <em>shaders</em>, mais de vous <strong>donner une vision globale</strong> de ce qu&rsquo;ils sont et à quoi ils servent.</p>

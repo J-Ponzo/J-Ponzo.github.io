@@ -1,9 +1,9 @@
 +++
 author = 'Turbo Tartine'
-date = '2025-02-21T12:51:02+01:00'
-draft = true
+date = '2025-03-31T06:31:35+02:00'
+draft = false
 title = 'OpenRE devlog 0 : Oracle Driven Development'
-description = 'devlog 0 du projet OpenRE'
+description = 'Devlog 0 du projet OpenRE'
 +++
 ## Introduction
 Bienvenue dans ce tout premier *devlog* d'OpenRE : le devlog zéro ! Cette série a pour but de documenter la phase de *proof of concept* (POC) du projet.
