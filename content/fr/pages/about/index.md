@@ -1,9 +1,13 @@
 ---
-title: "À propos"
+title: ""
 author : "Turbo Tartine"
 date : '2025-03-09T06:26:08+01:00'
 disableComments : true
+toc : false
 ---
+
+<img alt="Portrait de l'auteur du blog" src="/avatar.jpg" style="display: block; width: 192px; height: 192px; border-radius: 100%; margin-left: auto; margin-right: auto;" /> 
+
 ## Hello World !
 Bienvenue sur Turbo Tartine Games, ce petit coin d’Internet dans lequel je partage ma passion pour le développement de jeux vidéo.
 

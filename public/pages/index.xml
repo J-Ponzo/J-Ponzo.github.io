@@ -43,13 +43,14 @@
     </item>
     
     <item>
-      <title>À propos</title>
+      <title></title>
       <link>http://localhost:1313/pages/about/</link>
       <pubDate>Sun, 09 Mar 2025 06:26:08 +0100</pubDate>
       
       <guid>http://localhost:1313/pages/about/</guid>
       
-      <description>&lt;h2 id=&#34;hello-world-&#34;&gt;Hello World !&lt;/h2&gt;
+      <description>&lt;img alt=&#34;Portrait de l&#39;auteur du blog&#34; src=&#34;http://localhost:1313/avatar.jpg&#34; style=&#34;display: block; width: 192px; height: 192px; border-radius: 100%; margin-left: auto; margin-right: auto;&#34; /&gt; 
+&lt;h2 id=&#34;hello-world-&#34;&gt;Hello World !&lt;/h2&gt;
 &lt;p&gt;Bienvenue sur Turbo Tartine Games, ce petit coin d’Internet dans lequel je partage ma passion pour le développement de jeux vidéo.&lt;/p&gt;
 &lt;h2 id=&#34;qui-suis-je-&#34;&gt;Qui suis-je ?&lt;/h2&gt;
 &lt;p&gt;Je m’appelle Jérémy, je suis passionné de jeux vidéo depuis toujours et j’ai la chance d’avoir pu en faire un métier. Je travaille dans un studio lyonnais du nom de &lt;a href=&#34;https://bsky.app/profile/wanadevstudio.com&#34;&gt;WanadevStudio&lt;/a&gt;. Mes journées consistent à développer des jeux (principalement en VR) sous Unreal Engine. Mais lorsque la nuit tombe, je deviens TurboTartine. Sous cette identité pas vraiment secrète, je continue de faire des jeux, mais sur mon temps libre. Cette double vie me permet d’appréhender cette passion sous deux angles très différents :&lt;/p&gt;</description>
