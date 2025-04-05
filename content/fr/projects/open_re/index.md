@@ -220,7 +220,9 @@ Lorsque j'aurai une vision suffisamment claire du projet et que j'aurai levé le
 Le dépôt de ce POC n'est malheureusement pas public. De toute façon, la codebase est affreuse. Je vous assure, vous n'avez pas envie de mettre le nez dedans. Mais ce n'est pas la raison principale. En réalité, pour juger les capacités de rendu d'OpenRE, j'ai besoin d'assets de qualité et cohérents entre eux. Trouver de tels assets libres de droits et dans un délai raisonnable serait un vrai casse-tête. J'utilise donc des ressources déjà en ma possession (achetées ou gratuites) et je ne peux pas les redistribuer.
 
 #### Devlogs :
-*Cette phase est en cours. Les devlogs seront publiés dès qu’ils seront disponibles.*
+- [devlog 0 : Oracle Driven Development](projects/open_re_poc_devlog_0)
+
+*Cette phase est en cours. Les devlogs suivant seront publiés dès qu’ils seront disponibles.*
 
 ### 2. Le SDK
 C'est ici que les choses sérieuses commenceront. L'enjeu est de faire passer OpenRE d'un prototype un peu bancal à quelque chose de réellement utilisable. Si tout se passe comme prévu, à l'issue de cette phase nous aurons un SDK fonctionnel et suffisamment documenté pour être utilisé dans de vrais projets.
