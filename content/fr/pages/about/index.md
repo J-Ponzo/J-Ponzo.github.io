@@ -1,13 +1,18 @@
 ---
-title: "À propos"
+title: ""
 author : "Turbo Tartine"
+date : '2025-03-09T06:26:08+01:00'
 disableComments : true
+toc : false
 ---
+
+<img alt="Portrait de l'auteur du blog" src="/avatar.jpg" style="display: block; width: 192px; height: 192px; border-radius: 100%; margin-left: auto; margin-right: auto;" /> 
+
 ## Hello World !
 Bienvenue sur Turbo Tartine Games, ce petit coin d’Internet dans lequel je partage ma passion pour le développement de jeux vidéo.
 
 ## Qui suis-je ?
-Je m’appelle Jérémy, je suis passionné de jeux vidéo depuis toujours et j’ai la chance d’avoir pu en faire un métier. Je travaille dans un studio lyonnais du nom de WanadevStudio. Mes journées consistent à développer des jeux (principalement en VR) sous Unreal Engine. Mais lorsque la nuit tombe, je deviens TurboTartine. Sous cette identité pas vraiment secrète, je continue de faire des jeux, mais sur mon temps libre. Cette double vie me permet d’appréhender cette passion sous deux angles très différents :
+Je m’appelle Jérémy, je suis passionné de jeux vidéo depuis toujours et j’ai la chance d’avoir pu en faire un métier. Je travaille dans un studio lyonnais du nom de [WanadevStudio](https://bsky.app/profile/wanadevstudio.com). Mes journées consistent à développer des jeux (principalement en VR) sous Unreal Engine. Mais lorsque la nuit tombe, je deviens TurboTartine. Sous cette identité pas vraiment secrète, je continue de faire des jeux, mais sur mon temps libre. Cette double vie me permet d’appréhender cette passion sous deux angles très différents :
 - D’un côté, j’ai l’occasion de travailler sur des jeux d’une certaine envergure, avec des moyens et des collègues talentueux dont j’apprends tous les jours (et accessoirement, ça me permet de remplir mon frigo, ce qui ne gâche rien).
 - De l’autre, je dispose d’une liberté totale pour expérimenter et créer sans aucune contrainte de production ou d’objectif de rentabilité (ce qui explique pourquoi mon Git regorge de projets fantastiques… et inachevés).
 

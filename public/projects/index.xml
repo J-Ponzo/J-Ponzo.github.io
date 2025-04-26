@@ -6,7 +6,20 @@
     <description>Recent content in Projets on Turbo Tartine Games</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-fr</language>
-    <lastBuildDate>Sun, 09 Mar 2025 06:28:42 +0100</lastBuildDate><atom:link href="http://localhost:1313/projects/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 31 Mar 2025 06:31:35 +0200</lastBuildDate><atom:link href="http://localhost:1313/projects/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OpenRE devlog 0 : Oracle Driven Development</title>
+      <link>http://localhost:1313/projects/open_re_poc_devlog_0/</link>
+      <pubDate>Mon, 31 Mar 2025 06:31:35 +0200</pubDate>
+      
+      <guid>http://localhost:1313/projects/open_re_poc_devlog_0/</guid>
+      
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Bienvenue dans ce tout premier &lt;em&gt;devlog&lt;/em&gt; d&amp;rsquo;OpenRE : le devlog zéro ! Cette série a pour but de documenter la phase de &lt;em&gt;proof of concept&lt;/em&gt; (POC) du projet.&lt;/p&gt;
+&lt;p&gt;Si vous ne l&amp;rsquo;avez pas encore lu, je vous recommande de consulter l&amp;rsquo;article &lt;a href=&#34;http://localhost:1313/projects/open_re/&#34;&gt;Les prémices d&amp;rsquo;OpenRE (Open Retro Engine)&lt;/a&gt;, qui vous donnera une vision globale du projet. J&amp;rsquo;y introduis notamment quelques notions et un peu de terminologie. Il est préférable de l&amp;rsquo;avoir parcouru pour mieux contextualiser ce que je raconte dans les &lt;em&gt;devlogs&lt;/em&gt;.&lt;/p&gt;</description>
+      
+    </item>
+    
     <item>
       <title>Les prémices d&#39;OpenRE (Open Retro Engine)</title>
       <link>http://localhost:1313/projects/open_re/</link>
@@ -37,19 +50,6 @@
       
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Bienvenu dans ce tout premier devlog d&amp;rsquo;OpenRE : le develog Zéro ! Cette série a pour but de documenter la phase de POC (proof of concept) du projet. Le format sera assez simple. Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un nouveau numéro.&lt;/p&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>OpenRE devlog 0 : Oracle Driven Development</title>
-      <link>http://localhost:1313/projects/open_re_poc_devlog_0/</link>
-      <pubDate>Fri, 21 Feb 2025 12:51:02 +0100</pubDate>
-      
-      <guid>http://localhost:1313/projects/open_re_poc_devlog_0/</guid>
-      
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Bienvenue dans ce tout premier devlog d&amp;rsquo;OpenRE : le devlog Zéro ! Cette série a pour but de documenter la phase de proof of concept (POC) du projet.&lt;/p&gt;
-&lt;p&gt;Si vous ne l&amp;rsquo;avez pas encore lu, je vous recommande de consulter l&amp;rsquo;article &lt;a href=&#34;http://localhost:1313/projects/open_re/&#34;&gt;Les prémices d&amp;rsquo;OpenRE (Open Retro Engine)&lt;/a&gt;, qui vous donnera une vision globale du projet. J&amp;rsquo;y introduis notamment quelques notions et un peu de terminologie. Il est préférable de l&amp;rsquo;avoir parcouru pour mieux contextualiser ce que je raconte dans les devlogs.&lt;/p&gt;</description>
       
     </item>
     
