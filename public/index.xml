@@ -14,7 +14,44 @@
       
       <guid>http://localhost:1313/posts/ddj_render_paths/</guid>
       
-      <description></description>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;[&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Si vous utilisez des engines vous avez croisé les termes forward et deferred
+]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;i-le-forward-rendering&#34;&gt;I. Le Forward Rendering&lt;/h2&gt;
+&lt;p&gt;[
+Forces&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Simple&lt;/li&gt;
+&lt;li&gt;Compatible MSAA&lt;/li&gt;
+&lt;li&gt;Transparence facile à implémenter&lt;/li&gt;
+&lt;li&gt;Flexibilité maximale pour le shading (possibilité des shader specifique pour chaque couple {light, mesh})&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Faiblesses&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;La lumière coute cher en cas d&amp;rsquo;overdraw
+]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;ii-le-deferred-rendering&#34;&gt;II. Le Deferred Rendering&lt;/h2&gt;
+&lt;p&gt;[
+Forces&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Le coût de la lumière n&amp;rsquo;est plus impacté par l&amp;rsquo;overdraw&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Faiblesses&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Complexe&lt;/li&gt;
+&lt;li&gt;Imcompatible avec le MSAA (faire des recherches plus poussées sur la raison)&lt;/li&gt;
+&lt;li&gt;Ne gère pas la transparance&lt;/li&gt;
+&lt;li&gt;Mois de flexibilité pour le shading (tous les mesh partagent le même G-Buffer. nécessiter d&amp;rsquo;unifier le model pour ne pas avoir. les specificité ne peuvent plus être implémentées au niveau shader uniquement)&lt;/li&gt;
+&lt;li&gt;Gros besoins en mémoire GPU (stockage ET bande passante)
+]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;iii-le-light-prepass&#34;&gt;III. Le Light Prepass&lt;/h2&gt;
+&lt;p&gt;[
+Forces&lt;/p&gt;</description>
       
     </item>
     

@@ -53,7 +53,7 @@
         },
         "datePublished": "2025-04-05",
         "description": "",
-        "wordCount":  0 ,
+        "wordCount":  267 ,
         "mainEntityOfPage": "True",
         "dateModified": "2025-04-05",
         "image": {
@@ -74,7 +74,12 @@
     <meta property="og:url" content="http://localhost:1313/posts/ddj_render_paths/">
   <meta property="og:site_name" content="Turbo Tartine Games">
   <meta property="og:title" content="Dis-donc Jamy : C&#39;est quoi un chemin de rendu ? (Forward / Deferred etc...)">
-  <meta property="og:description" content="Bienvenue sur mon blog ! Retrouvez-y articles, tutoriels et devlogs, issus de mes péripéties de développeur indépendant.">
+  <meta property="og:description" content="Introduction [
+Si vous utilisez des engines vous avez croisé les termes forward et deferred ] I. Le Forward Rendering [ Forces
+Simple Compatible MSAA Transparence facile à implémenter Flexibilité maximale pour le shading (possibilité des shader specifique pour chaque couple {light, mesh}) Faiblesses
+La lumière coute cher en cas d’overdraw ] II. Le Deferred Rendering [ Forces
+Le coût de la lumière n’est plus impacté par l’overdraw Faiblesses
+Complexe Imcompatible avec le MSAA (faire des recherches plus poussées sur la raison) Ne gère pas la transparance Mois de flexibilité pour le shading (tous les mesh partagent le même G-Buffer. nécessiter d’unifier le model pour ne pas avoir. les specificité ne peuvent plus être implémentées au niveau shader uniquement) Gros besoins en mémoire GPU (stockage ET bande passante) ] III. Le Light Prepass [ Forces">
   <meta property="og:locale" content="fr_fr">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -86,7 +91,12 @@
     
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Dis-donc Jamy : C&#39;est quoi un chemin de rendu ? (Forward / Deferred etc...)">
-  <meta name="twitter:description" content="Bienvenue sur mon blog ! Retrouvez-y articles, tutoriels et devlogs, issus de mes péripéties de développeur indépendant.">
+  <meta name="twitter:description" content="Introduction [
+Si vous utilisez des engines vous avez croisé les termes forward et deferred ] I. Le Forward Rendering [ Forces
+Simple Compatible MSAA Transparence facile à implémenter Flexibilité maximale pour le shading (possibilité des shader specifique pour chaque couple {light, mesh}) Faiblesses
+La lumière coute cher en cas d’overdraw ] II. Le Deferred Rendering [ Forces
+Le coût de la lumière n’est plus impacté par l’overdraw Faiblesses
+Complexe Imcompatible avec le MSAA (faire des recherches plus poussées sur la raison) Ne gère pas la transparance Mois de flexibilité pour le shading (tous les mesh partagent le même G-Buffer. nécessiter d’unifier le model pour ne pas avoir. les specificité ne peuvent plus être implémentées au niveau shader uniquement) Gros besoins en mémoire GPU (stockage ET bande passante) ] III. Le Light Prepass [ Forces">
 
 
     
@@ -211,10 +221,77 @@ stroke-linejoin="round" class="feather feather-home">
     
     <details class="toc" ZgotmplZ>
         <summary><b>Table des matières</b></summary>
-        <nav id="TableOfContents"></nav>
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#i-le-forward-rendering">I. Le Forward Rendering</a></li>
+    <li><a href="#ii-le-deferred-rendering">II. Le Deferred Rendering</a></li>
+    <li><a href="#iii-le-light-prepass">III. Le Light Prepass</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
     </details>
             <div class="page-content">
-                
+                <h2 id="introduction">Introduction</h2>
+<p>[</p>
+<ul>
+<li>Si vous utilisez des engines vous avez croisé les termes forward et deferred
+]</li>
+</ul>
+<h2 id="i-le-forward-rendering">I. Le Forward Rendering</h2>
+<p>[
+Forces</p>
+<ul>
+<li>Simple</li>
+<li>Compatible MSAA</li>
+<li>Transparence facile à implémenter</li>
+<li>Flexibilité maximale pour le shading (possibilité des shader specifique pour chaque couple {light, mesh})</li>
+</ul>
+<p>Faiblesses</p>
+<ul>
+<li>La lumière coute cher en cas d&rsquo;overdraw
+]</li>
+</ul>
+<h2 id="ii-le-deferred-rendering">II. Le Deferred Rendering</h2>
+<p>[
+Forces</p>
+<ul>
+<li>Le coût de la lumière n&rsquo;est plus impacté par l&rsquo;overdraw</li>
+</ul>
+<p>Faiblesses</p>
+<ul>
+<li>Complexe</li>
+<li>Imcompatible avec le MSAA (faire des recherches plus poussées sur la raison)</li>
+<li>Ne gère pas la transparance</li>
+<li>Mois de flexibilité pour le shading (tous les mesh partagent le même G-Buffer. nécessiter d&rsquo;unifier le model pour ne pas avoir. les specificité ne peuvent plus être implémentées au niveau shader uniquement)</li>
+<li>Gros besoins en mémoire GPU (stockage ET bande passante)
+]</li>
+</ul>
+<h2 id="iii-le-light-prepass">III. Le Light Prepass</h2>
+<p>[
+Forces</p>
+<ul>
+<li>Le coût de la lumière n&rsquo;est plus impacté par l&rsquo;overdraw</li>
+<li>Besoins en mémoire GPU (stockage ET bande passante) plus modérés =&gt; A permis de faire du deferred lighting sur des consoles un peu faible (PS3 etc&hellip;)</li>
+<li>Partiellement compatible avec le MSAA (faire des recherches plus poussées sur le &ldquo;partiellement&rdquo;)</li>
+<li>Meilleur flexibilité pour le shading</li>
+</ul>
+<p>Faiblesses</p>
+<ul>
+<li>Encore plus complexe</li>
+<li>Contre productif avec le workflow PBR dominant (metallic)</li>
+<li>Les GPU actuels, y compris console (et bientôt mobile high-end) sont assez puissantes pour que l&rsquo;argument materiel n&rsquo;en soit plus un
+]</li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>[</p>
+<ul>
+<li>Standard actuel, hybrides deferred/forward pour la transparance</li>
+<li>Ouverture sur les specificité (forward+, clustered deferred etc&hellip;) =&gt; Grande diversité d&rsquo;implémentation</li>
+<li>L&rsquo;industrie est un tout, c&rsquo;est imprévisible =&gt; Light Prepass prometteur mais evolution des machines et standardisation/dominance du PBR metallic l&rsquo;ont rendu obsolete.
+]</li>
+</ul>
+
             </div>
         </article>
 <hr style="margin-top: 40px; margin-bottom: 40px;" />
