@@ -124,7 +124,11 @@
       <guid>http://localhost:1313/projects/open_re_poc_devlog_1/</guid>
       
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Bienvenu dans ce tout premier devlog d&amp;rsquo;OpenRE : le develog Zéro ! Cette série a pour but de documenter la phase de POC (proof of concept) du projet. Le format sera assez simple. Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un nouveau numéro.&lt;/p&gt;</description>
+&lt;h2 id=&#34;préparation-des-données&#34;&gt;Préparation des données&lt;/h2&gt;
+&lt;h4 id=&#34;albedo-du-g-buffer-déterministe&#34;&gt;Albedo du G-Buffer déterministe&lt;/h4&gt;
+&lt;p&gt;Pour générer la texture d’Albedo déterministe dans Blender, nous allons commencer par activer la passe de &lt;em&gt;Diffuse Color&lt;/em&gt; de Cycles (qui correspond à l’Albedo)&lt;/p&gt;
+&lt;p&gt;Ensuite il va falloir effectuer un rendu. Grâce au compositor et au nœud &lt;code&gt;File Output&lt;/code&gt;, l’image correspondant à cette passe sera automatiquement exportée à l’emplacement spécifié à la fin du rendu.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;Illustration du processus d&amp;rsquo;export de la texture d&amp;rsquo;Albedo déterministe depuis Blender&#34; src=&#34;http://localhost:1313/projects/open_re_poc_devlog_1/images/export_albedo_texture.opti.webp&#34;&gt;&lt;/p&gt;</description>
       
     </item>
     
