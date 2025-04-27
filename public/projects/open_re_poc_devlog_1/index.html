@@ -170,6 +170,24 @@ stroke-linejoin="round" class="feather feather-home">
         <summary><b>Table des matières</b></summary>
         <nav id="TableOfContents">
   <ul>
+    <li><a href="#i-avant-propos">I. Avant propos</a></li>
+    <li><a href="#ii-introduction">II. Introduction</a></li>
+    <li><a href="#iii-génération-des-textures">III. Génération des textures</a>
+      <ul>
+        <li><a href="#1-albédo-déterministe">1. Albédo déterministe</a></li>
+        <li><a href="#2-albédo-intéractif">2. Albédo intéractif</a></li>
+      </ul>
+    </li>
+    <li><a href="#iv-réglages">IV. Réglages</a>
+      <ul>
+        <li><a href="#1-espace-colorimétrique">1. Espace colorimétrique</a></li>
+        <li><a href="#2-compression-de-texture-en-vram">2. Compression de texture en VRAM</a></li>
+        <li><a href="#3-qualité-du-png-exporté">3. Qualité du png exporté</a></li>
+        <li><a href="#4-le-format-exr-à-la-rescouse">4. Le format EXR à la rescouse</a></li>
+        <li><a href="#5-laliasing">5. L’Aliasing</a></li>
+      </ul>
+    </li>
+    <li><a href="#v-conclusion">V. Conclusion</a></li>
     <li><a href="#introduction">Introduction</a></li>
     <li><a href="#part-i--préparation-des-données">Part I : Préparation des données</a>
       <ul>
@@ -180,10 +198,10 @@ stroke-linejoin="round" class="feather feather-home">
     <li><a href="#part-ii--harmonisation-de-lalbédo-">Part II : Harmonisation de l&rsquo;albédo :</a>
       <ul>
         <li><a href="#1-espaces-colorimétriques-">1. Espaces colorimétriques :</a></li>
-        <li><a href="#2-compression-de-texture-en-vram">2. Compression de texture en VRAM</a></li>
-        <li><a href="#3-qualité-du-png-exporté">3. Qualité du png exporté</a></li>
-        <li><a href="#4-le-format-exr-à-la-rescouse">4. Le format EXR à la rescouse</a></li>
-        <li><a href="#5-laliasing">5. L&rsquo;Aliasing</a></li>
+        <li><a href="#2-compression-de-texture-en-vram-1">2. Compression de texture en VRAM</a></li>
+        <li><a href="#3-qualité-du-png-exporté-1">3. Qualité du png exporté</a></li>
+        <li><a href="#4-le-format-exr-à-la-rescouse-1">4. Le format EXR à la rescouse</a></li>
+        <li><a href="#5-laliasing-1">5. L&rsquo;Aliasing</a></li>
       </ul>
     </li>
     <li><a href="#conclusion-">Conclusion :</a></li>
@@ -191,7 +209,46 @@ stroke-linejoin="round" class="feather feather-home">
 </nav>
     </details>
             <div class="page-content">
-                <h2 id="introduction">Introduction</h2>
+                <h2 id="i-avant-propos">I. Avant propos</h2>
+<p>Avant de démarer, je voudrais dire que rétrospectivement, je ne suis pas très convaincu par le format du premier numéro de cette série. Je le trouve un peu trop détaillé, peut être un peu trop &ldquo;story telling&rdquo; aussi. C&rsquo;est toujours une volonté d&rsquo;essayer de faire des articles un peu personels et authentiques. Mais dans le cadre d&rsquo;un devlog, il peut être interessant de rester relativement concis pour ne pas nuire à l&rsquo;objectif principal : documenter l&rsquo;avencement du projet.</p>
+<p>L&rsquo;aspect retour d&rsquo;experience et le ton détendu restent important pour moi. Je compte juste les doser un peu différement pour que la charge utile d&rsquo;un numéro reste correcte et viser un temps de lecture entre 5 et 10 min. Cela dit, si vous préferiez l&rsquo;ancien format, n&rsquo;hésitez pas à me le faire savoir.</p>
+<h2 id="ii-introduction">II. Introduction</h2>
+<p>Dans le devlog 0, nous avons mis en place un outils permettant d&rsquo;évaluer le degré d&rsquo;uniformisation des données issues de Blender (le G-Buffer déterministe) et de Godot (le G-Buffer interactif). J&rsquo;appel cet outils &ldquo;l&rsquo;Oracle&rdquo; et les résultat qui en émergent des &ldquo;prophecies&rdquo; (parce que la métaphores est ma figure de style préférée ^^).</p>
+<p>Avant de nous quitter, nous avions receuilli notre toute première &ldquo;prophecie&rdquo; : une comparaison pixel par pixel des textures d&rsquo;albédo contenue dans ces G-Buffers.</p>
+<p><img alt="Capture de la première prophétie de l&rsquo;Oracle" src="/projects/open_re_poc_devlog_1/images/first_prophecy.opti.webp"></p>
+<p>Dans cette image en niveau de gris, plus un pixel est claire, plus la différence entre les images comparées est grande. Ce résultat n&rsquo;est donc pas très bon.</p>
+<p>Dans ce devlog, nous allons appliquer successivement divers réglages (dans Blender et Godot) afin d&rsquo;harmoniser nos texture d&rsquo;albédo déterministe et interactive. Nous évalurons l&rsquo;impacte (positif ou négatif) de chaque changement en solicitant une mise à jour de la prophecie de l&rsquo;Oracle. Mais avant cela, interessons nous à la génération de ces textures d&rsquo;albédo.</p>
+<h2 id="iii-génération-des-textures">III. Génération des textures</h2>
+<p>Le mois dernier, pour alléger un peu le devlog 0, nous avions admis que nos textures d&rsquo;albédo avaient été “obtenues à partir d’un Godot et d’un Blender dans leur paramétrage d’usine”. Voyons de plus près ce que j&rsquo;entands par là.</p>
+<h3 id="1-albédo-déterministe">1. Albédo déterministe</h3>
+<h3 id="2-albédo-intéractif">2. Albédo intéractif</h3>
+<h2 id="iv-réglages">IV. Réglages</h2>
+<p>Maintenant que nous savons précisément d&rsquo;où viennent les textures à comparer, nous pouvons commencer à étalonner les logiciels. Pour réviser la prophecie à chaque étape, il suffira :</p>
+<ul>
+<li>
+<ol>
+<li>De régénerer la texture déterministe (si le changement concerne Blender)</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>De relancer l&rsquo;Oracle en faisant play dans Godot</li>
+</ol>
+</li>
+</ul>
+<h3 id="1-espace-colorimétrique">1. Espace colorimétrique</h3>
+<p>La première chose qui saute aux yeux lorsqu&rsquo;on regarde nos textures d&rsquo;albédo, c&rsquo;est que la version déterministe parait délavée.</p>
+<p><img alt="gif alternant l&rsquo;albedo interactif et l&rsquo;aldedo deterministe délavé" src="/projects/open_re_poc_devlog_1/images/init_input_alterance.webp"></p>
+<p>Il s&rsquo;agit d&rsquo;un problème d&rsquo;export. Par défaut, le champs <code>View</code> de l&rsquo;<em>exporter</em> PNG de Blender est réglé sur l&rsquo;espace de couleur <code>AgX</code>.</p>
+<p><img alt="gif montrant comment mettre le champs view de l&rsquo;export png sur standard" src="/projects/open_re_poc_devlog_1/images/set_standar_view.gif"></p>
+<p>Sélectionner <code>Standard</code> à la place donne un bien meilleur résultat :</p>
+<p><img alt="Capture de la première prophétie de l&rsquo;Oracle" src="/projects/open_re_poc_devlog_1/images/first_prophecy_revision_1.opti.webp"></p>
+<h3 id="2-compression-de-texture-en-vram">2. Compression de texture en VRAM</h3>
+<h3 id="3-qualité-du-png-exporté">3. Qualité du png exporté</h3>
+<h3 id="4-le-format-exr-à-la-rescouse">4. Le format EXR à la rescouse</h3>
+<h3 id="5-laliasing">5. L’Aliasing</h3>
+<h2 id="v-conclusion">V. Conclusion</h2>
+<h2 id="introduction">Introduction</h2>
 <p>Dans le devlog précédent, nous avons vu que les G-Buffers produits par Godot et Blender ne sont pas en phase par defaut et que nous allons devoir étalonner les données avant de chercher à les fusionner. Pour cela, nous avons posé les bases d&rsquo;un outil nous permetant d&rsquo;estimer facilement le degré de compatibilité des textures composant ces G-Buffers : l&rsquo;Oracle.</p>
 <p>Avec le recule, je ne suis pas complètement satisfait de ce premier devlog. Il aurait gagné à être plus concret et un peu moins détaillé. Aujourd&rsquo;hui nous allons nous occuper de l&rsquo;harmonisation des textures d&rsquo;albédo et je vais essayer d&rsquo;aller vers un format plus court et plus direct tout en essayant de conserver l&rsquo;aspect &ldquo;retour d&rsquo;experience&rdquo; qui est important pour moi. Comme d&rsquo;habitude, n&rsquo;hesitez pas à me faire savoir quel format vous préférez.</p>
 <h2 id="part-i--préparation-des-données">Part I : Préparation des données</h2>
@@ -266,7 +323,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p><img alt="gif montrant comment mettre le champs view de l&rsquo;export png sur standard" src="/projects/open_re_poc_devlog_1/images/set_standar_view.gif"></p>
 <p>Un petit rendu plus tard, on peut soumettre cette nouvelle texture à l’Oracle… et cette fois, la prophétie est bien plus rassurante</p>
 <p><img alt="Capture de la première prophétie de l&rsquo;Oracle" src="/projects/open_re_poc_devlog_1/images/first_prophecy_revision_1.opti.webp"></p>
-<h3 id="2-compression-de-texture-en-vram">2. Compression de texture en VRAM</h3>
+<h3 id="2-compression-de-texture-en-vram-1">2. Compression de texture en VRAM</h3>
 <p>On a progressé, mais ce n’est pas encore gagné. En zoomant sur l&rsquo;image de l&rsquo;oracle, on remarque de petits motif caracteristiques.</p>
 <p><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_1/images/1_std_dist_zoom.opti.webp"></p>
 <p>Ce sont des artefacts de compression. Pour économiser de la mémoire vidéo et optimiser les échanges entre le CPU et le GPU, les textures en jeu sont presque toujours compressées. Logique, donc, que Godot compresse par defaut les textures à l&rsquo;import.</p>
@@ -276,7 +333,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p><img alt="gif indiquant comment desactiver la compression des textures dans Godot" src="/projects/open_re_poc_devlog_1/images/set_lossless-optimize.gif"></p>
 <p>Nouvelle réponse de l’Oracle, cette fois sans compression. (Et sans le super montage. Parce que les plaisenteries les plus courtes&hellip; tout ça, tout ça&hellip;)</p>
 <p><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_1/images/2_lossless_detrminist_zoom.opti.webp"></p>
-<h3 id="3-qualité-du-png-exporté">3. Qualité du png exporté</h3>
+<h3 id="3-qualité-du-png-exporté-1">3. Qualité du png exporté</h3>
 <p>On a déjà pas mal gagné mais l&rsquo;image est toujours un peu bruitée.</p>
 <p>Le lecteur attentif aura remarqué que l&rsquo;<em>exporter</em> .png de Blender applique par defaut un 15% de compression un peu suspect.</p>
 <p><img alt="Importer png avec 15% de compression" src="/projects/open_re_poc_devlog_1/images/compression_15.opti.webp"></p>
@@ -285,13 +342,13 @@ stroke-linejoin="round" class="feather feather-home">
 <p><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_1/images/3_png_c0_Distance_ohnooo.opti.webp"></p>
 <p>D’après la documentation de Godot, l’import PNG est limité à 8 bits. J’imagine que l’image 16 bits est tronquée à l’import, ce qui crée ces vilaines bandes.</p>
 <p>C’est l’impasse. Il faut trouver une autre solution.</p>
-<h3 id="4-le-format-exr-à-la-rescouse">4. Le format EXR à la rescouse</h3>
+<h3 id="4-le-format-exr-à-la-rescouse-1">4. Le format EXR à la rescouse</h3>
 <p>A partir de là, je me suis mis à explorer les différents formats de fichier proposés par blender. J&rsquo;ai rangé mon cerveau, et j&rsquo;ai commencé à <em>brut force</em> les paramètres de chacuns des <em>exporters</em>.</p>
 <p>C&rsquo;était pas vraiment l&rsquo;autoroute du fun. Pendant plusieurs jours, j&rsquo;ai fait des rendus, donné les textures à manger à l&rsquo;oracle, et scruté ses préseages essayant de déterminer en quoi ils étaient mieux ou moins bien que tel ou tel autre. Mais j&rsquo;ai fini par trouver un alignement de planètes acceptable.</p>
 <p><img alt="Reglage de l&rsquo;export exr dans blender" src="/projects/open_re_poc_devlog_1/images/set_exr_half.opti.webp"></p>
 <p>Je ne connaissais pas le format <code>.exr</code>. Pour la petite histoire, il a été développé par <em>Industrial Light &amp; Magic</em> : la société d&rsquo;effets spéciaux de <em>George Lucas</em>.</p>
 <p>J&rsquo;ai testé les 2 valeurs du champs <code>Color Depth</code> : <code>float (half)</code> et <code>float (full)</code>. Elles donnent des résultats légèrement différentes, mais je n&rsquo;ai pas réussi à décider lequel était réellement meilleur. Cependant, la texture en <code>float (full)</code> pèse 7,13 Mo, contre 250 Ko en <code>float (half)</code>. J&rsquo;ai donc choisi de rester sur du half (au moins pour le moment).</p>
-<h3 id="5-laliasing">5. L&rsquo;Aliasing</h3>
+<h3 id="5-laliasing-1">5. L&rsquo;Aliasing</h3>
 <p>Le résultat n’est pas encore parfait, mais c’est le mieux que j’ai pu obtenir. Si vous avez une idée de comment l&rsquo;améliorer : je prends !</p>
 <p>Cela dit, lorsqu&rsquo;on compare les textures déterministes et interactives actuelles, il devient vraiment difficile de trouver une différence.</p>
 <p><img alt="alterance textures finales" src="/projects/open_re_poc_devlog_1/images/gifalt_final_textures.webp"></p>

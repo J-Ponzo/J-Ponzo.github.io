@@ -5,6 +5,60 @@ draft = true
 title = "Harmonisation de l'Albedo"
 description = 'devlog 1 du projet OpenRE'
 +++
+## I. Avant propos
+Avant de démarer, je voudrais dire que rétrospectivement, je ne suis pas très convaincu par le format du premier numéro de cette série. Je le trouve un peu trop détaillé, peut être un peu trop "story telling" aussi. C'est toujours une volonté d'essayer de faire des articles un peu personels et authentiques. Mais dans le cadre d'un devlog, il peut être interessant de rester relativement concis pour ne pas nuire à l'objectif principal : documenter l'avencement du projet.
+
+L'aspect retour d'experience et le ton détendu restent important pour moi. Je compte juste les doser un peu différement pour que la charge utile d'un numéro reste correcte et viser un temps de lecture entre 5 et 10 min. Cela dit, si vous préferiez l'ancien format, n'hésitez pas à me le faire savoir.
+
+## II. Introduction
+Dans le devlog 0, nous avons mis en place un outils permettant d'évaluer le degré d'uniformisation des données issues de Blender (le G-Buffer déterministe) et de Godot (le G-Buffer interactif). J'appel cet outils "l'Oracle" et les résultat qui en émergent des "prophecies" (parce que la métaphores est ma figure de style préférée ^^).
+
+Avant de nous quitter, nous avions receuilli notre toute première "prophecie" : une comparaison pixel par pixel des textures d'albédo contenue dans ces G-Buffers.
+
+![Capture de la première prophétie de l'Oracle](images/first_prophecy.opti.webp)
+
+Dans cette image en niveau de gris, plus un pixel est claire, plus la différence entre les images comparées est grande. Ce résultat n'est donc pas très bon.
+
+Dans ce devlog, nous allons appliquer successivement divers réglages (dans Blender et Godot) afin d'harmoniser nos texture d'albédo déterministe et interactive. Nous évalurons l'impacte (positif ou négatif) de chaque changement en solicitant une mise à jour de la prophecie de l'Oracle. Mais avant cela, interessons nous à la génération de ces textures d'albédo.
+
+## III. Génération des textures
+Le mois dernier, pour alléger un peu le devlog 0, nous avions admis que nos textures d'albédo avaient été “obtenues à partir d’un Godot et d’un Blender dans leur paramétrage d’usine”. Voyons de plus près ce que j'entands par là.
+
+### 1. Albédo déterministe
+
+
+### 2. Albédo intéractif
+
+## IV. Réglages
+Maintenant que nous savons précisément d'où viennent les textures à comparer, nous pouvons commencer à étalonner les logiciels. Pour réviser la prophecie à chaque étape, il suffira :
+- 1. De régénerer la texture déterministe (si le changement concerne Blender)
+- 2. De relancer l'Oracle en faisant play dans Godot
+
+### 1. Espace colorimétrique
+La première chose qui saute aux yeux lorsqu'on regarde nos textures d'albédo, c'est que la version déterministe parait délavée.
+
+![gif alternant l'albedo interactif et l'aldedo deterministe délavé](images/init_input_alterance.webp)
+
+Il s'agit d'un problème d'export. Par défaut, le champs `View` de l'*exporter* PNG de Blender est réglé sur l'espace de couleur `AgX`. 
+
+![gif montrant comment mettre le champs view de l'export png sur standard](images/set_standar_view.gif)
+
+Sélectionner `Standard` à la place donne un bien meilleur résultat :
+
+![Capture de la première prophétie de l'Oracle](images/first_prophecy_revision_1.opti.webp)
+
+
+### 2. Compression de texture en VRAM
+
+
+### 3. Qualité du png exporté
+
+### 4. Le format EXR à la rescouse
+
+### 5. L’Aliasing
+
+## V. Conclusion
+
 ## Introduction
 Dans le devlog précédent, nous avons vu que les G-Buffers produits par Godot et Blender ne sont pas en phase par defaut et que nous allons devoir étalonner les données avant de chercher à les fusionner. Pour cela, nous avons posé les bases d'un outil nous permetant d'estimer facilement le degré de compatibilité des textures composant ces G-Buffers : l'Oracle.
 

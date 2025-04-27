@@ -123,12 +123,13 @@
       
       <guid>http://localhost:1313/projects/open_re_poc_devlog_1/</guid>
       
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;h2 id=&#34;préparation-des-données&#34;&gt;Préparation des données&lt;/h2&gt;
-&lt;h4 id=&#34;albedo-du-g-buffer-déterministe&#34;&gt;Albedo du G-Buffer déterministe&lt;/h4&gt;
-&lt;p&gt;Pour générer la texture d’Albedo déterministe dans Blender, nous allons commencer par activer la passe de &lt;em&gt;Diffuse Color&lt;/em&gt; de Cycles (qui correspond à l’Albedo)&lt;/p&gt;
-&lt;p&gt;Ensuite il va falloir effectuer un rendu. Grâce au compositor et au nœud &lt;code&gt;File Output&lt;/code&gt;, l’image correspondant à cette passe sera automatiquement exportée à l’emplacement spécifié à la fin du rendu.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;Illustration du processus d&amp;rsquo;export de la texture d&amp;rsquo;Albedo déterministe depuis Blender&#34; src=&#34;http://localhost:1313/projects/open_re_poc_devlog_1/images/export_albedo_texture.opti.webp&#34;&gt;&lt;/p&gt;</description>
+      <description>&lt;h2 id=&#34;i-avant-propos&#34;&gt;I. Avant propos&lt;/h2&gt;
+&lt;p&gt;Avant de démarer, je voudrais dire que rétrospectivement, je ne suis pas très convaincu par le format du premier numéro de cette série. Je le trouve un peu trop détaillé, peut être un peu trop &amp;ldquo;story telling&amp;rdquo; aussi. C&amp;rsquo;est toujours une volonté d&amp;rsquo;essayer de faire des articles un peu personels et authentiques. Mais dans le cadre d&amp;rsquo;un devlog, il est peut être plus à propos de .&lt;/p&gt;
+&lt;h2 id=&#34;ii-devlog-précedent&#34;&gt;II. Devlog précedent&lt;/h2&gt;
+&lt;h2 id=&#34;iv-conclusion&#34;&gt;IV. Conclusion&lt;/h2&gt;
+&lt;h2 id=&#34;v-devlog-suivant&#34;&gt;V. Devlog suivant&lt;/h2&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Dans le devlog précédent, nous avons vu que les G-Buffers produits par Godot et Blender ne sont pas en phase par defaut et que nous allons devoir étalonner les données avant de chercher à les fusionner. Pour cela, nous avons posé les bases d&amp;rsquo;un outil nous permetant d&amp;rsquo;estimer facilement le degré de compatibilité des textures composant ces G-Buffers : l&amp;rsquo;Oracle.&lt;/p&gt;</description>
       
     </item>
     

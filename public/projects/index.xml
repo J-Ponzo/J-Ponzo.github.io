@@ -48,9 +48,8 @@
       
       <guid>http://localhost:1313/projects/open_re_poc_devlog_1/</guid>
       
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Dans le devlog précédent, nous avons vu que les G-Buffers produits par Godot et Blender ne sont pas en phase par defaut et que nous allons devoir étalonner les données avant de chercher à les fusionner. Pour cela, nous avons posé les bases d&amp;rsquo;un outil nous permetant d&amp;rsquo;estimer facilement le degré de compatibilité des textures composant ces G-Buffers : l&amp;rsquo;Oracle.&lt;/p&gt;
-&lt;p&gt;Avec le recule, je ne suis pas complètement satisfait de ce premier devlog. Il aurait gagné à être plus concret et un peu moins détaillé. Aujourd&amp;rsquo;hui nous allons nous occuper de l&amp;rsquo;harmonisation des textures d&amp;rsquo;albédo et je vais essayer d&amp;rsquo;aller vers un format plus court et plus direct tout en essayant de conserver l&amp;rsquo;aspect &amp;ldquo;retour d&amp;rsquo;experience&amp;rdquo; qui est important pour moi. Comme d&amp;rsquo;habitude, n&amp;rsquo;hesitez pas à me faire savoir quel format vous préférez.&lt;/p&gt;</description>
+      <description>&lt;h2 id=&#34;i-avant-propos&#34;&gt;I. Avant propos&lt;/h2&gt;
+&lt;p&gt;Avant de démarer, je voudrais dire que rétrospectivement, je ne suis pas très convaincu par le format du premier numéro de cette série. Je le trouve un peu trop détaillé, peut être un peu trop &amp;ldquo;story telling&amp;rdquo; aussi. C&amp;rsquo;est toujours une volonté d&amp;rsquo;essayer de faire des articles un peu personels et authentiques. Mais dans le cadre d&amp;rsquo;un devlog, il peut être interessant de rester relativement concis pour ne pas nuire à l&amp;rsquo;objectif principal : documenter l&amp;rsquo;avencement du projet.&lt;/p&gt;</description>
       
     </item>
     
