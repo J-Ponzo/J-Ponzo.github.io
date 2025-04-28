@@ -213,26 +213,80 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Avant de démarer, je voudrais dire que rétrospectivement, je ne suis pas très convaincu par le format du premier numéro de cette série. Je le trouve un peu trop détaillé, peut être un peu trop &ldquo;story telling&rdquo; aussi. C&rsquo;est toujours une volonté d&rsquo;essayer de faire des articles un peu personels et authentiques. Mais dans le cadre d&rsquo;un devlog, il peut être interessant de rester relativement concis pour ne pas nuire à l&rsquo;objectif principal : documenter l&rsquo;avencement du projet.</p>
 <p>L&rsquo;aspect retour d&rsquo;experience et le ton détendu restent important pour moi. Je compte juste les doser un peu différement pour que la charge utile d&rsquo;un numéro reste correcte et viser un temps de lecture entre 5 et 10 min. Cela dit, si vous préferiez l&rsquo;ancien format, n&rsquo;hésitez pas à me le faire savoir.</p>
 <h2 id="ii-introduction">II. Introduction</h2>
-<p>Dans le devlog 0, nous avons mis en place un outils permettant d&rsquo;évaluer le degré d&rsquo;uniformisation des données issues de Blender (le G-Buffer déterministe) et de Godot (le G-Buffer interactif). J&rsquo;appel cet outils &ldquo;l&rsquo;Oracle&rdquo; et les résultat qui en émergent des &ldquo;prophecies&rdquo; (parce que la métaphores est ma figure de style préférée ^^).</p>
+<p>Dans le devlog 0, nous avons mis en place un outils permettant d&rsquo;évaluer le degré d&rsquo;uniformisation des données issues de Blender (le G-Buffer déterministe) et de Godot (le G-Buffer interactif). J&rsquo;appel cet outils &ldquo;l&rsquo;Oracle&rdquo; et les résultat qui en émergent des &ldquo;prophecies&rdquo; (parce que la métaphore est ma figure de style préférée ^^).</p>
 <p>Avant de nous quitter, nous avions receuilli notre toute première &ldquo;prophecie&rdquo; : une comparaison pixel par pixel des textures d&rsquo;albédo contenue dans ces G-Buffers.</p>
 <p><img alt="Capture de la première prophétie de l&rsquo;Oracle" src="/projects/open_re_poc_devlog_1/images/first_prophecy.opti.webp"></p>
-<p>Dans cette image en niveau de gris, plus un pixel est claire, plus la différence entre les images comparées est grande. Ce résultat n&rsquo;est donc pas très bon.</p>
+<p>Dans cette image en niveau de gris, plus un pixel est claire, plus la différence entre les textures comparées est grande. Ce résultat n&rsquo;est donc pas très bon.</p>
 <p>Dans ce devlog, nous allons appliquer successivement divers réglages (dans Blender et Godot) afin d&rsquo;harmoniser nos texture d&rsquo;albédo déterministe et interactive. Nous évalurons l&rsquo;impacte (positif ou négatif) de chaque changement en solicitant une mise à jour de la prophecie de l&rsquo;Oracle. Mais avant cela, interessons nous à la génération de ces textures d&rsquo;albédo.</p>
 <h2 id="iii-génération-des-textures">III. Génération des textures</h2>
 <p>Le mois dernier, pour alléger un peu le devlog 0, nous avions admis que nos textures d&rsquo;albédo avaient été “obtenues à partir d’un Godot et d’un Blender dans leur paramétrage d’usine”. Voyons de plus près ce que j&rsquo;entands par là.</p>
 <h3 id="1-albédo-déterministe">1. Albédo déterministe</h3>
+<p>Pour générer la texture d&rsquo;albédo déterministe côté Blender, il faut d&rsquo;abord activer la passe correspondante dans Cycles : la passe de <em>Diffuse Color</em>. Cela a pour effet d&rsquo;ajouter une sortie <code>diffCol</code> au noeud principal du compositor (<code>Render Layers</code>).</p>
+<p>Ensuite il n&rsquo;y a plus qu&rsquo;à brancher <code>diffCol</code> à un noeud <code>File Output</code> qui a pour effet d&rsquo;exporter automatiquement les images branchées à ses pins d&rsquo;entrée lorsqu&rsquo;un rendu est effectué. Vous pouvez ajouter autant de pins <code>Input</code> que vous voulez dans le volet latéral <code>Node</code> et pour chacun d&rsquo;eux vous pouvez définir le chemin et les options d&rsquo;export du rendu.</p>
+<p><img alt="Illustration du processus d&rsquo;export de la texture d&rsquo;Albedo déterministe depuis Blender" src="/projects/open_re_poc_devlog_1/images/export_albedo_texture.opti.webp"></p>
+<p>Pour gagner du temps, on peut règler le chemin d&rsquo;export directement vers un emplacement spécifique du projet Godot. Ainsi à chaque rendu, la texture sera automatiquement importée dès que la fenêtre Godot reprend le focus. Il faudra biensure la &ldquo;binder&rdquo; une première fois au <code>uniform dgbuffer_albedo</code> de l&rsquo;Oracle (exactement comme on l&rsquo;a fait dans le devlog 0), mais à partir de la, tout est automatique.</p>
+<p>Ainsi, mettre à jour la texture d&rsquo;albédo détèrministe pour soliciter une nouvelle prophecie sera aussi simple que d&rsquo;appuyer sur F12 pour déclencher le rendu</p>
 <h3 id="2-albédo-intéractif">2. Albédo intéractif</h3>
-<h2 id="iv-réglages">IV. Réglages</h2>
-<p>Maintenant que nous savons précisément d&rsquo;où viennent les textures à comparer, nous pouvons commencer à étalonner les logiciels. Pour réviser la prophecie à chaque étape, il suffira :</p>
+<p>Pour la version interactive, c’est un peu plus complexe. On ne va pas exporter, puis réimporter une image comme je vous l&rsquo;ai laissé croire. Ca n&rsquo;aurait pas beaucoup de sens étant donné que le monde intéractif évolue au runtime et que Godot en fait un rendu à chaque frame. En réalité, le moteur est déjà en pocession des informations dont on a besoin. On doit &ldquo;juste&rdquo; trouver comment les récupérer.</p>
+<p>Il se trouve que depuis un shader, il est possible d&rsquo;accéder directement à des textures spéciales représentant divers aspects de la frame actuelle (rendu final, profondeur etc&hellip;). La syntaxe est la suivante :</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">texture</span> <span class="o">:</span> <span class="n">hint_</span><span class="o">&lt;</span><span class="n">insert_texture_name</span><span class="o">&gt;</span><span class="n">_texture</span><span class="p">;</span>
+</span></span></code></pre></div><p>La texture qui nous intéresse ici est <code>hint_screen_texture</code>. Malheureusement, ce n’est pas directement l’albédo, mais un rendu classique prenant en compte la lumière. On ne peut donc pas l&rsquo;utiliser telle quel dans le code de l&rsquo;Oracle. Pour contourner ce problème, nous allons :</p>
 <ul>
 <li>
 <ol>
-<li>De régénerer la texture déterministe (si le changement concerne Blender)</li>
+<li>créer une Render Target (un <code>SubViewport</code> en terminologie Godot)</li>
+</ol>
+</li>
+</ul>
+<p><img alt="Albedo_Subviewport dans la scene Godot" src="/projects/open_re_poc_devlog_1/images/subviewport.opti.webp">
+<br><br></p>
+<ul>
+<li>
+<ol start="2">
+<li>lui appliquer un post-process simple affichant simplement la <code>hint_screen_texture</code></li>
+</ol>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">screen_texture</span> <span class="o">:</span> <span class="n">hint_screen_texture</span><span class="p">,</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">vertex</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">POSITION</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">VERTEX</span><span class="p">.</span><span class="n">xy</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="n">texture</span><span class="p">(</span><span class="n">screen_texture</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">.</span><span class="n">xy</span><span class="p">).</span><span class="n">rgb</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><br>
+<ul>
+<li>
+<ol start="3">
+<li>régler le paramètre <code>Debug Draw</code> de la Render Target sur <code>Unshaded</code> (pour ne plus avoir la lumière)</li>
+</ol>
+</li>
+</ul>
+<p><img alt="Réglage du paramètre Debug Draw de la REnder Target" src="/projects/open_re_poc_devlog_1/images/RT_unshaded.opti.webp">
+<br><br></p>
+<ul>
+<li>
+<ol start="4">
+<li>&ldquo;binder&rdquo; cette Render Target au <code>uniform igbuffer_albedo</code> de l&rsquo;oracle (là encore, comme nous l&rsquo;avions fait avec la fausse texture du devlog 0).</li>
+</ol>
+</li>
+</ul>
+<h2 id="iv-réglages">IV. Réglages</h2>
+<p>Maintenant que nous savons précisément d&rsquo;où viennent les textures à comparer, nous pouvons commencer à étalonner les logiciels. Pour réviser la prophecie à chaque étape, il suffira de :</p>
+<ul>
+<li>
+<ol>
+<li>Presser <code>F12</code> dans Blender (uniquement si le réglage concerne Blender)</li>
 </ol>
 </li>
 <li>
 <ol start="2">
-<li>De relancer l&rsquo;Oracle en faisant play dans Godot</li>
+<li>Puis faire <code>Play</code> dans Godot</li>
 </ol>
 </li>
 </ul>

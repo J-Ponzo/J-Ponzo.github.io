@@ -11,13 +11,13 @@ Avant de démarer, je voudrais dire que rétrospectivement, je ne suis pas très
 L'aspect retour d'experience et le ton détendu restent important pour moi. Je compte juste les doser un peu différement pour que la charge utile d'un numéro reste correcte et viser un temps de lecture entre 5 et 10 min. Cela dit, si vous préferiez l'ancien format, n'hésitez pas à me le faire savoir.
 
 ## II. Introduction
-Dans le devlog 0, nous avons mis en place un outils permettant d'évaluer le degré d'uniformisation des données issues de Blender (le G-Buffer déterministe) et de Godot (le G-Buffer interactif). J'appel cet outils "l'Oracle" et les résultat qui en émergent des "prophecies" (parce que la métaphores est ma figure de style préférée ^^).
+Dans le devlog 0, nous avons mis en place un outils permettant d'évaluer le degré d'uniformisation des données issues de Blender (le G-Buffer déterministe) et de Godot (le G-Buffer interactif). J'appel cet outils "l'Oracle" et les résultat qui en émergent des "prophecies" (parce que la métaphore est ma figure de style préférée ^^).
 
 Avant de nous quitter, nous avions receuilli notre toute première "prophecie" : une comparaison pixel par pixel des textures d'albédo contenue dans ces G-Buffers.
 
 ![Capture de la première prophétie de l'Oracle](images/first_prophecy.opti.webp)
 
-Dans cette image en niveau de gris, plus un pixel est claire, plus la différence entre les images comparées est grande. Ce résultat n'est donc pas très bon.
+Dans cette image en niveau de gris, plus un pixel est claire, plus la différence entre les textures comparées est grande. Ce résultat n'est donc pas très bon.
 
 Dans ce devlog, nous allons appliquer successivement divers réglages (dans Blender et Godot) afin d'harmoniser nos texture d'albédo déterministe et interactive. Nous évalurons l'impacte (positif ou négatif) de chaque changement en solicitant une mise à jour de la prophecie de l'Oracle. Mais avant cela, interessons nous à la génération de ces textures d'albédo.
 
@@ -25,14 +25,58 @@ Dans ce devlog, nous allons appliquer successivement divers réglages (dans Blen
 Le mois dernier, pour alléger un peu le devlog 0, nous avions admis que nos textures d'albédo avaient été “obtenues à partir d’un Godot et d’un Blender dans leur paramétrage d’usine”. Voyons de plus près ce que j'entands par là.
 
 ### 1. Albédo déterministe
+Pour générer la texture d'albédo déterministe côté Blender, il faut d'abord activer la passe correspondante dans Cycles : la passe de *Diffuse Color*. Cela a pour effet d'ajouter une sortie `diffCol` au noeud principal du compositor (`Render Layers`).
 
+Ensuite il n'y a plus qu'à brancher `diffCol` à un noeud `File Output` qui a pour effet d'exporter automatiquement les images branchées à ses pins d'entrée lorsqu'un rendu est effectué. Vous pouvez ajouter autant de pins `Input` que vous voulez dans le volet latéral `Node` et pour chacun d'eux vous pouvez définir le chemin et les options d'export du rendu.
+
+![Illustration du processus d'export de la texture d'Albedo déterministe depuis Blender](images/export_albedo_texture.opti.webp)
+
+Pour gagner du temps, on peut règler le chemin d'export directement vers un emplacement spécifique du projet Godot. Ainsi à chaque rendu, la texture sera automatiquement importée dès que la fenêtre Godot reprend le focus. Il faudra biensure la "binder" une première fois au `uniform dgbuffer_albedo` de l'Oracle (exactement comme on l'a fait dans le devlog 0), mais à partir de la, tout est automatique. 
+
+Ainsi, mettre à jour la texture d'albédo détèrministe pour soliciter une nouvelle prophecie sera aussi simple que d'appuyer sur F12 pour déclencher le rendu 
 
 ### 2. Albédo intéractif
 
+Pour la version interactive, c’est un peu plus complexe. On ne va pas exporter, puis réimporter une image comme je vous l'ai laissé croire. Ca n'aurait pas beaucoup de sens étant donné que le monde intéractif évolue au runtime et que Godot en fait un rendu à chaque frame. En réalité, le moteur est déjà en pocession des informations dont on a besoin. On doit "juste" trouver comment les récupérer.
+
+Il se trouve que depuis un shader, il est possible d'accéder directement à des textures spéciales représentant divers aspects de la frame actuelle (rendu final, profondeur etc...). La syntaxe est la suivante :
+``` glsl
+uniform sampler2D texture : hint_<insert_texture_name>_texture;
+```
+
+La texture qui nous intéresse ici est `hint_screen_texture`. Malheureusement, ce n’est pas directement l’albédo, mais un rendu classique prenant en compte la lumière. On ne peut donc pas l'utiliser telle quel dans le code de l'Oracle. Pour contourner ce problème, nous allons :
+- 1. créer une Render Target (un `SubViewport` en terminologie Godot)
+
+![Albedo_Subviewport dans la scene Godot](images/subviewport.opti.webp)
+<br><br>
+- 2. lui appliquer un post-process simple affichant simplement la `hint_screen_texture`
+```glsl
+shader_type spatial;
+render_mode unshaded, fog_disabled;
+
+uniform sampler2D screen_texture : hint_screen_texture, filter_nearest;
+
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+void fragment() {
+	ALBEDO = vec3(texture(screen_texture, SCREEN_UV.xy).rgb);
+}
+```
+<br>
+
+- 3. régler le paramètre `Debug Draw` de la Render Target sur `Unshaded` (pour ne plus avoir la lumière)
+
+![Réglage du paramètre Debug Draw de la REnder Target](images/RT_unshaded.opti.webp) 
+<br><br>
+
+- 4. "binder" cette Render Target au `uniform igbuffer_albedo` de l'oracle (là encore, comme nous l'avions fait avec la fausse texture du devlog 0).
+
 ## IV. Réglages
-Maintenant que nous savons précisément d'où viennent les textures à comparer, nous pouvons commencer à étalonner les logiciels. Pour réviser la prophecie à chaque étape, il suffira :
-- 1. De régénerer la texture déterministe (si le changement concerne Blender)
-- 2. De relancer l'Oracle en faisant play dans Godot
+Maintenant que nous savons précisément d'où viennent les textures à comparer, nous pouvons commencer à étalonner les logiciels. Pour réviser la prophecie à chaque étape, il suffira de :
+- 1. Presser `F12` dans Blender (uniquement si le réglage concerne Blender)
+- 2. Puis faire `Play` dans Godot
 
 ### 1. Espace colorimétrique
 La première chose qui saute aux yeux lorsqu'on regarde nos textures d'albédo, c'est que la version déterministe parait délavée.
@@ -49,7 +93,6 @@ Sélectionner `Standard` à la place donne un bien meilleur résultat :
 
 
 ### 2. Compression de texture en VRAM
-
 
 ### 3. Qualité du png exporté
 
