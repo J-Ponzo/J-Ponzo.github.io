@@ -123,8 +123,9 @@
       
       <guid>http://localhost:1313/projects/open_re_poc_devlog_1/</guid>
       
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Bienvenu dans ce tout premier devlog d&amp;rsquo;OpenRE : le develog Zéro ! Cette série a pour but de documenter la phase de POC (proof of concept) du projet. Le format sera assez simple. Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un nouveau numéro.&lt;/p&gt;</description>
+      <description>&lt;h2 id=&#34;i-avant-propos&#34;&gt;I. Avant-propos&lt;/h2&gt;
+&lt;p&gt;Avant de démarrer, je voudrais préciser que, rétrospectivement, je ne suis pas totalement convaincu par le format de ce premier numéro. Je le trouve un peu trop détaillé, peut-être même un peu trop &amp;ldquo;storytelling&amp;rdquo;.
+Mon intention reste de proposer des articles personnels et authentiques, mais dans le cadre d&amp;rsquo;un devlog, il peut être intéressant de rester relativement concis pour ne pas perdre de vue l&amp;rsquo;objectif principal : documenter l&amp;rsquo;avancement du projet.&lt;/p&gt;</description>
       
     </item>
     

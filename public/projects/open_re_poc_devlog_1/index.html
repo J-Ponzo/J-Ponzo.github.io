@@ -170,235 +170,60 @@ stroke-linejoin="round" class="feather feather-home">
         <summary><b>Table des matières</b></summary>
         <nav id="TableOfContents">
   <ul>
-    <li><a href="#introduction">Introduction</a></li>
-    <li><a href="#shit-happens">Shit happens</a></li>
-    <li><a href="#problématique-de-lharmonisation-des-données">Problématique de l&rsquo;harmonisation des données</a></li>
-    <li><a href="#la-méthode-de-loracle">La méthode de l&rsquo;oracle</a>
+    <li><a href="#i-avant-propos">I. Avant-propos</a></li>
+    <li><a href="#ii-introduction">II. Introduction</a></li>
+    <li><a href="#iii-génération-des-textures">III. Génération des textures</a>
       <ul>
-        <li>
-          <ul>
-            <li><a href="#implementation-de-loracle">Implementation de l’Oracle</a></li>
-            <li><a href="#1-code-minimal-dun-post-process">1. Code minimal d&rsquo;un Post-Process</a></li>
-            <li><a href="#2-les-uniforms-ou-paramettres-dentrée">2. Les uniforms ou paramettres d&rsquo;entrée</a></li>
-            <li><a href="#3-calcul-des-différences">3. Calcul des différences</a></li>
-            <li><a href="#4-fragment--post-processmain">4. fragment() = post-process.main()</a></li>
-          </ul>
-        </li>
+        <li><a href="#1-albédo-déterministe">1. Albédo déterministe</a></li>
+        <li><a href="#2-albédo-intéractif">2. Albédo intéractif</a></li>
       </ul>
     </li>
-    <li><a href="#préparation-des-données">Préparation des données</a>
+    <li><a href="#iv-réglages">IV. Réglages</a>
       <ul>
-        <li>
-          <ul>
-            <li><a href="#mise-en-place-dune-scène-de-test">Mise en place d’une scène de test</a></li>
-            <li><a href="#albedo-du-g-buffer-déterministe">Albedo du G-Buffer déterministe</a></li>
-            <li><a href="#albedo-du-g-buffer-interactif-">Albedo du G-Buffer interactif :</a></li>
-          </ul>
-        </li>
+        <li><a href="#1-espace-colorimétrique">1. Espace colorimétrique</a></li>
+        <li><a href="#2-compression-de-texture-en-vram">2. Compression de texture en VRAM</a></li>
+        <li><a href="#3-qualité-du-png-exporté">3. Qualité du PNG exporté</a></li>
+        <li><a href="#4-le-format-exr-à-la-rescousse">4. Le format EXR à la rescousse</a></li>
+        <li><a href="#5-laliasing">5. L’aliasing</a></li>
       </ul>
     </li>
-    <li><a href="#harmonisation-de-lalbédo-">Harmonisation de l&rsquo;albédo :</a>
-      <ul>
-        <li>
-          <ul>
-            <li><a href="#espaces-colorimétriques-">Espaces colorimétriques :</a></li>
-            <li><a href="#compression-de-texture-en-vram">Compression de texture en VRAM</a></li>
-            <li><a href="#qualité-du-png-exporté">Qualité du png exporté</a></li>
-            <li><a href="#le-format-exr-à-la-rescouse">Le format EXR à la rescouse</a></li>
-            <li><a href="#laliasing">L&rsquo;Aliasing</a></li>
-          </ul>
-        </li>
-      </ul>
-    </li>
-    <li><a href="#conclusion-">Conclusion :</a></li>
+    <li><a href="#v-conclusion">V. Conclusion</a></li>
   </ul>
 </nav>
     </details>
             <div class="page-content">
-                <h2 id="introduction">Introduction</h2>
-<p>Bienvenu dans ce tout premier devlog d&rsquo;OpenRE : le develog Zéro ! Cette série a pour but de documenter la phase de POC (proof of concept) du projet. Le format sera assez simple. Tout au long du développement, je prendrai des notes dès que je tomberai sur un sujet intéressant. Chaque mois (si j’arrive à m’y tenir), je sélectionnerai les plus pertinents pour les présenter dans un nouveau numéro.</p>
-<p>Étant donné qu’OpenRE est un projet personnel que je développe sur mon temps libre, le rythme de publication risque d’être irrégulier. Certains numéros seront plus légers que d’autres, mais ce n’est pas bien grave. Au contraire, ce sera intéressant de voir comment la cadence évolue au fil du temps.</p>
-<p>Avant de démarer, je vous recommande de jeter un oeil à la <a href="/projects/open_re/">présentation générale du projet</a>. J&rsquo;y introduit notament quelques notions et un peu de terminologie. Il est préférable de l&rsquo;avoir parcouru pour contextualiser un peu ce dont je parle dans les devlogs.</p>
-<p>Sur ce, c&rsquo;est parti !</p>
-<h2 id="shit-happens">Shit happens</h2>
-<p>Petite particularité concernant les première articles de la série : il s&rsquo;agira de &ldquo;retro-devlogs&rdquo;. En effet j’ai commencé OpenRE il y a plusieurs mois, sans trop savoir où j’allais. Je n&rsquo;étais pas sûr que mes expérimentations mèneraient quelque part et de toutes façons, l&rsquo;idée même de tenir un blog ne m&rsquo;avais pas encore traversé l&rsquo;esprit.</p>
-<p>Durant cette période, il se trouve que le dépôt git a pris feu (suite à une sombre histoire de fichiers blender beaucoup trop volumineux). Je sais qu&rsquo;il existe des methodes douce pour régler ce genre de problème. Mais j&rsquo;avoue que sur le moment je ne voyais pas trop l&rsquo;intérais. J&rsquo;ai donc bêtement supprimé le dépôt pour en recréer un avec ma copie locale (après avoir fait le nécessaire pour gérer un peu mieux mes scenes).</p>
-<p>Résultat : j’ai perdu l’historique du projet. Je ne peux donc  plus réstaurer les premières versions pour analyser ce que j&rsquo;avais fait. Réaliser des capture d&rsquo;écran de mes résultats originaux est également impossible. Ces premiers numéros seront donc des reconstitutions.</p>
-<h2 id="problématique-de-lharmonisation-des-données">Problématique de l&rsquo;harmonisation des données</h2>
-<p>Si vous avez lu l&rsquo;article mentionné dans l&rsquo;introduction, vous savez qu&rsquo;OpenRE permet de fusionner le rendu de 2 scènes :</p>
-<ul>
-<li>La scène déterministe : précalculée dans Blender</li>
-<li>La scène intéractive : rendue en temps réèl dans Godot.</li>
-</ul>
-<p>Pour cela, la technologie s&rsquo;appuie sur une structure de donnée particulière appelée un G-Buffer. Pour rappel, il s&rsquo;agit d&rsquo;une collections de textures encodant diverse données géométriques relative à un point de vu sur une scène. OpenRE fusionne donc le G-Buffer déterministe précalculé par Blender et le G-Buffer interactif rendu à la volée dans Godot. Mais il n&rsquo;est pas évident que des données produite par deux logiciels différents soitent directement compatibles. C&rsquo;est même pas gagné du tout en réalité.</p>
-<p>En effet, tous les logiciels graphiques suivent des conventions qui leurs sont propres (unités, espaces colorimétriques, axes du repère &hellip;). Tant qu&rsquo;on reste à l&rsquo;interieur d&rsquo;un système, la cohérence de l&rsquo;ensemble est plus ou moins garantie. Mais dès lors que deux systèmes doivent s&rsquo;échanger des données pour collaborer, c&rsquo;est le début des problèmes.</p>
-<p>Avant toute choses, il va donc falloir s&rsquo;arranger pour que Blender et Godot parlent la même langue. Et comme on va le voir, cela va demander un certain nombre d&rsquo;ajustements.</p>
-<h2 id="la-méthode-de-loracle">La méthode de l&rsquo;oracle</h2>
-<p>Pour identifier ces ajustements, je vais utiliser une technique que j’aime bien et que j’appelle le <em>Oracle Driven Development</em>. C’est un peu comme du <em>Test Driven Development</em>, sauf qu’au lieu d’avoir un jeu de tests automatisés, propre et exhaustif, je vais bricoler une petite moulinette qu’il faudra lancer à moitié à la main.</p>
-<p>A la manière d&rsquo;un oracle, cette moulinette va formuler des prophéties parfois cryptiques en réponse aux questions qu&rsquo;on lui pose. Mais interprétés correctement, ces présages nous aideront à avancer dans notre périple.</p>
-<p>Si Godot et Blender sont bien sur la même longueure d&rsquo;ondes, les G-Buffer qu&rsquo;ils produisent à partir d&rsquo;une même scène devraient être identiques. C&rsquo;est ce que nous allons chercher à vérifier avec l&rsquo;aide de l&rsquo;oracle. Son rôle sera de comparer les G-Buffers, et de nous délivrer son jugement sous la forme d&rsquo;une image. Il nous faudra alors lire norte réponse dans cette image.</p>
-<p><img alt="Image illustrant le protocol de validation" src="images/oracle_schema.opti.webp"></p>
-<p>Mais trève de métaphore. Concrètement, cet Oracle est un post-process du nom de oracle.gdshader. Il prend en entrée les textures des deux G-Buffers et le type de texture à comparer. Son job est de calculer la différence entre les deux textures du type choisi (la déterministe et l’interactive) et de l&rsquo;afficher à l&rsquo;écran. Selon le type de donné, les différences pourront avoir des implémentations spécifiques. Mais chacune de ces implémentaions renveront une nuance de gris à interpréter comme suit :</p>
-<ul>
-<li>noir -&gt; les pixels sont identiques</li>
-<li>blanc -&gt; la différence entre les pixels est maximale</li>
-</ul>
-<h4 id="implementation-de-loracle">Implementation de l’Oracle</h4>
-<p>Voici le code source de l&rsquo;oracle. C&rsquo;est un petit pavé, mais ne vous inquiétez pas, on va le décortiquer ensemble.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">vertex</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="n">POSITION</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">VERTEX</span><span class="p">.</span><span class="n">xy</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// Type de donnée à comparer</span>
-</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">int</span> <span class="n">data_type</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// Determinist &amp; Interactive G-Buffer</span>
-</span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="k">int</span> <span class="n">NB_GMAPS</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span><span class="p">[</span><span class="n">NB_GMAPS</span><span class="p">]</span> <span class="n">d_gbuffer</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span><span class="p">[</span><span class="n">NB_GMAPS</span><span class="p">]</span> <span class="n">i_gbuffer</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// Choix du mode d&#39;affichage</span>
-</span></span><span class="line"><span class="cl"><span class="cp">#define I_D_DIFFERENCE 0</span>
-</span></span><span class="line"><span class="cl"><span class="cp">#define D_TEXTURE_ONLY 1</span>
-</span></span><span class="line"><span class="cl"><span class="cp">#define I_TEXTURE_ONLY 2</span>
-</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">int</span> <span class="n">view_mode</span> <span class="o">=</span> <span class="mo">0</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="k">vec3</span> <span class="n">ERROR_COLOR</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// Calcule la différence entre 2 pixels </span>
-</span></span><span class="line"><span class="cl"><span class="k">vec3</span> <span class="n">compute_difference</span><span class="p">(</span><span class="k">vec3</span> <span class="n">d_frag</span><span class="p">,</span> <span class="k">vec3</span> <span class="n">i_frag</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">ERROR_COLOR</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// Point d&#39;entrée du post-process</span>
-</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">out_color</span> <span class="o">=</span> <span class="n">ERROR_COLOR</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">	
-</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">data_type</span> <span class="o">&gt;=</span> <span class="mo">0</span> <span class="o">&amp;&amp;</span> <span class="n">data_type</span> <span class="o">&lt;</span> <span class="n">NB_GMAPS</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="c1">// Récupération des pixels déterministe et interactif</span>
-</span></span><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">d_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_gbuffer</span><span class="p">[</span><span class="n">data_type</span><span class="p">],</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">i_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_gbuffer</span><span class="p">[</span><span class="n">data_type</span><span class="p">],</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">		
-</span></span><span class="line"><span class="cl">		<span class="c1">// Selection de l&#39;affichage</span>
-</span></span><span class="line"><span class="cl">		<span class="k">switch</span> <span class="p">(</span><span class="n">view_mode</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="n">case</span> <span class="n">I_D_DIFFERENCE</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">				<span class="c1">// Cas nominal : LA PROPHECIE !!!</span>
-</span></span><span class="line"><span class="cl">				<span class="n">out_color</span> <span class="o">=</span> <span class="n">compute_difference</span><span class="p">(</span><span class="n">d_frag</span><span class="p">,</span> <span class="n">i_frag</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">				<span class="k">break</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">			<span class="n">case</span> <span class="n">D_TEXTURE_ONLY</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">				<span class="c1">// Affichage du pixel deterministe brut</span>
-</span></span><span class="line"><span class="cl">				<span class="n">out_color</span> <span class="o">=</span> <span class="n">d_frag</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">				<span class="k">break</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">			<span class="n">case</span> <span class="n">I_TEXTURE_ONLY</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">				<span class="c1">// Affichage du pixel interactif brut</span>
-</span></span><span class="line"><span class="cl">				<span class="n">out_color</span> <span class="o">=</span> <span class="n">i_frag</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">				<span class="k">break</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">		<span class="p">}</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl">	
-</span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">out_color</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><h4 id="1-code-minimal-dun-post-process">1. Code minimal d&rsquo;un Post-Process</h4>
-<p>D&rsquo;abord, quelques lignes de base qu&rsquo;on ne détaillera pas. C&rsquo;est la façon usuelle de créer un post-process dans Godot.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">vertex</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">   <span class="n">POSITION</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">VERTEX</span><span class="p">.</span><span class="n">xy</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><h4 id="2-les-uniforms-ou-paramettres-dentrée">2. Les uniforms ou paramettres d&rsquo;entrée</h4>
-<p>Les uniforms sont les paramètres d&rsquo;entrée du shader. C&rsquo;est à travers eux que le CPU peut envoyer des données au GPU. Une fois initialisés, ils peuvent être référencés comme des variables globales dans le code du shader.</p>
-<p>Les uniforms <code>data_type</code>, <code>d_gbuffer</code> et <code>i_gbuffer</code> correspondent aux deux G-Buffers ainsi qu&rsquo;au type de donnée sélectionné pour la comparaison (évoqués précédement).</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// Type de donnée à comparer</span>
-</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">int</span> <span class="n">data_type</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// Determinist &amp; Interactive G-Buffer</span>
-</span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="k">int</span> <span class="n">NB_GMAPS</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span><span class="p">[</span><span class="n">NB_GMAPS</span><span class="p">]</span> <span class="n">d_gbuffer</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span><span class="p">[</span><span class="n">NB_GMAPS</span><span class="p">]</span> <span class="n">i_gbuffer</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// Choix du mode d&#39;affichage</span>
-</span></span><span class="line"><span class="cl"><span class="cp">#define I_D_DIFFERENCE 0</span>
-</span></span><span class="line"><span class="cl"><span class="cp">#define D_TEXTURE_ONLY 1</span>
-</span></span><span class="line"><span class="cl"><span class="cp">#define I_TEXTURE_ONLY 2</span>
-</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">int</span> <span class="n">view_mode</span> <span class="o">=</span> <span class="mo">0</span><span class="p">;</span>
-</span></span></code></pre></div><p>Le paramètre <code>view_mode</code> lui est nouveau. On en a pas encore parlé. C&rsquo;est un paramettre de debug qui nous permettra d&rsquo;afficher facilement des images intermédiaires pour nous aider à intérpréter les prophéties de l&rsquo;oracle. Pour l&rsquo;instant on ne peut visualiser que les textures interactive et déterministe corespondant au type de donnée sélectionné. Mais au fur et à mesure qu&rsquo;on avance, on pourra rajouté de nouveaux mode d&rsquo;affichage.</p>
-<h4 id="3-calcul-des-différences">3. Calcul des différences</h4>
-<p>C&rsquo;est ici qu&rsquo;on implémentera le calcule de la différence. Ou devrais-je dire DES différences. Comme on le verra dans la suite, on sera amenés à traiter les données différement selon leur type.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">const</span> <span class="k">vec3</span> <span class="n">ERROR_COLOR</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// Calcule la différence entre 2 pixels </span>
-</span></span><span class="line"><span class="cl"><span class="k">vec3</span> <span class="n">compute_difference</span><span class="p">(</span><span class="k">vec3</span> <span class="n">d_frag</span><span class="p">,</span> <span class="k">vec3</span> <span class="n">i_frag</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">ERROR_COLOR</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>Pour l&rsquo;instant la fonction renvoit simplement la valeur <code>ERROR_COLOR</code> qui est un magenta bien dégueu qui nous interpellera si on le voit à l&rsquo;écran. C&rsquo;est quelque chose que je fais assez souvent et qui correspondrait à un <code>throw new Exception();</code> ou d&rsquo;un <code>return -1;</code> en code CPU.</p>
-<p>En effet, les GPU sont assez limités en terme de gestion d&rsquo;erreur. Il faut donc parfois être un peu créatif. Si vous en avez, n&rsquo;hésitez pas à paratger vos technique personnelles dans les commentaires.</p>
-<h4 id="4-fragment--post-processmain">4. fragment() = post-process.main()</h4>
-<p>Et enfin il y a la fonction <code>void fragment()</code> qui est le point d&rsquo;entrée principal du post process.</p>
-<p>La première chose qu&rsquo;on peut noter, c&rsquo;est que je réutiliser ma stratégie du <code>ERROR_COLOR</code> dans une saveur un peu différente. Ici je verifie les valeurs des uniforms <code>data_type</code> et <code>view_mode</code> pour m&rsquo;assurer qu&rsquo;elles sont valides. <strong>IL NE FAUT JAMAIS FAIRE CA DANS UN SHADER DE PRODUCTION !</strong></p>
-<p>J&rsquo;expliquerai peut être pourquoi dans un article un jour. Mais retenez que pour des raisons de performences, les branchements conditionnels sont à éviter au maximum dans le code GPU. Ici on s&rsquo;en fout car on est sur un POC et que l&rsquo;oracle n&rsquo;est qu&rsquo;un outil dont on se sert pour le développement. La performence n&rsquo;est pas critiques, on se permet donc quelque libertées pour se faciliter vie.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// Point d&#39;entrée du post-process</span>
-</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">out_color</span> <span class="o">=</span> <span class="n">ERROR_COLOR</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">	
-</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">data_type</span> <span class="o">&gt;=</span> <span class="mo">0</span> <span class="o">&amp;&amp;</span> <span class="n">data_type</span> <span class="o">&lt;</span> <span class="n">NB_GMAPS</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="c1">// Récupération des pixels déterministe et interactif</span>
-</span></span><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">d_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_gbuffer</span><span class="p">[</span><span class="n">data_type</span><span class="p">],</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">i_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_gbuffer</span><span class="p">[</span><span class="n">data_type</span><span class="p">],</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">		
-</span></span><span class="line"><span class="cl">		<span class="c1">// Selection de l&#39;affichage</span>
-</span></span><span class="line"><span class="cl">		<span class="k">switch</span> <span class="p">(</span><span class="n">view_mode</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="n">case</span> <span class="n">I_D_DIFFERENCE</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">				<span class="c1">// Cas nominal : LA PROPHECIE !!!</span>
-</span></span><span class="line"><span class="cl">				<span class="n">out_color</span> <span class="o">=</span> <span class="n">compute_difference</span><span class="p">(</span><span class="n">d_frag</span><span class="p">,</span> <span class="n">i_frag</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">				<span class="k">break</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">			<span class="n">case</span> <span class="n">D_TEXTURE_ONLY</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">				<span class="c1">// Affichage du pixel deterministe brut</span>
-</span></span><span class="line"><span class="cl">				<span class="n">out_color</span> <span class="o">=</span> <span class="n">d_frag</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">				<span class="k">break</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">			<span class="n">case</span> <span class="n">I_TEXTURE_ONLY</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">				<span class="c1">// Affichage du pixel interactif brut</span>
-</span></span><span class="line"><span class="cl">				<span class="n">out_color</span> <span class="o">=</span> <span class="n">i_frag</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">				<span class="k">break</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">		<span class="p">}</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl">	
-</span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">out_color</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>Le reste du code est assez trivial. D&rsquo;abord on sample les pixels que l&rsquo;on souhaite comparer. Ensuite, dans le cas nominal (<code>view_mode == I_D_DIFFERENCE</code>) on invoque <code>compute_difference(...)</code> sur ces derniers pour déterminer la couleur à afficher.</p>
-<p>Si un mode d&rsquo;affichage de debug est actif, on execute les traitements appropriés à la place (ici, on affiche le pixel brut de la texture correspondante).</p>
-<h2 id="préparation-des-données">Préparation des données</h2>
-<p>Nous savons désormais comment fonctionne l’oracle, mais nous n’avons pas encore de données à lui soumettre. Il faut donc les construire.</p>
-<h4 id="mise-en-place-dune-scène-de-test">Mise en place d’une scène de test</h4>
-<p>Pour commencer, j’ai créé une petite scène dans Blender, composée de quelques primitives basiques et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale car Godot prend en charge le format de scène Blender. il suffit d’importer le fichier .blend et de l’ajouter dans une scène vide.</p>
-<p><img alt="Illustration représentant la SimpleScene dans Blender" src="images/simpleBlend.opti.webp"><br>
-<img alt="Illustration représentant la SimpleScene dans Godot" src="images/simpleGodot.opti.webp"></p>
-<p>Les G-Buffers déterministes et interactifs que nous présenteront à l’oracle seront issus de ces scènes. À terme - comme le code source vous l&rsquo;a certainement spoilé - ils devront contenir les textures suivantes :</p>
-<ul>
-<li><strong>Albedo</strong> (couleur diffuse)</li>
-<li><strong>Depth</strong> (profondeur)</li>
-<li><strong>Normal</strong> (orientation des surfaces)</li>
-<li><strong>ORM</strong> (Occlusion, Roughness, Metallic)</li>
-</ul>
-<p>Mais pour le moment, concentrons-nous sur l’Albedo. Croyez-moi, c’est déjà bien suffisant pour aujourd’hui ! Nous traiterons les autres types de données dans des devlogs dédiés.</p>
-<h4 id="albedo-du-g-buffer-déterministe">Albedo du G-Buffer déterministe</h4>
-<p>Pour générer la texture d’Albedo déterministe dans Blender, nous allons commencer par activer la passe de <em>Diffuse Color</em> de Cycles (qui correspond à l’Albedo)</p>
-<p>Ensuite il va falloir effectuer un rendu. Grâce au compositor et au nœud <code>File Output</code>, l’image correspondant à cette passe sera automatiquement exportée à l’emplacement spécifié à la fin du rendu.</p>
+                <h2 id="i-avant-propos">I. Avant-propos</h2>
+<p>Avant de démarrer, je voudrais préciser que, rétrospectivement, je ne suis pas totalement convaincu par le format de ce premier numéro. Je le trouve un peu trop détaillé, peut-être même un peu trop &ldquo;storytelling&rdquo;.
+Mon intention reste de proposer des articles personnels et authentiques, mais dans le cadre d&rsquo;un devlog, il peut être intéressant de rester relativement concis pour ne pas perdre de vue l&rsquo;objectif principal : documenter l&rsquo;avancement du projet.</p>
+<p>L&rsquo;aspect retour d&rsquo;expérience et le ton détendu restent importants pour moi. Je compte juste les doser un peu différemment, pour que la charge utile de chaque numéro reste correcte, et viser un temps de lecture compris entre 5 et 10 minutes.
+Cela dit, si vous préférez l&rsquo;ancien format, n&rsquo;hésitez pas à me le faire savoir !</p>
+<h2 id="ii-introduction">II. Introduction</h2>
+<p>Dans le devlog 0, nous avons mis en place un outil permettant d&rsquo;évaluer le degré d&rsquo;uniformisation des données issues de Blender (le G-Buffer déterministe) et de Godot (le G-Buffer interactif).
+J&rsquo;appelle cet outil &ldquo;l&rsquo;Oracle&rdquo;, et les résultats qui en émergent des &ldquo;prophéties&rdquo; (parce que la métaphore est ma figure de style préférée ^^).</p>
+<p>Avant de nous quitter, nous avions recueilli notre toute première &ldquo;prophétie&rdquo; : une comparaison pixel par pixel des textures d&rsquo;albédo contenues dans ces G-Buffers.</p>
+<p><img alt="Capture de la première prophétie de l&rsquo;Oracle" src="/projects/open_re_poc_devlog_1/images/first_prophecy.opti.webp"></p>
+<p>Dans cette image en niveaux de gris, plus un pixel est clair, plus la différence entre les textures comparées est grande. Ce résultat n&rsquo;est donc pas très bon.</p>
+<p>Dans ce devlog, nous allons appliquer successivement divers réglages (dans Blender et Godot) pour harmoniser nos textures d&rsquo;albédo déterministe et interactive.
+Nous évaluerons l&rsquo;impact (positif ou négatif) de chaque changement en sollicitant une mise à jour de la prophétie de l&rsquo;Oracle.
+Mais avant cela, intéressons-nous à la génération de ces fameuses textures d&rsquo;albédo.</p>
+<h2 id="iii-génération-des-textures">III. Génération des textures</h2>
+<p>Le mois dernier, pour alléger un peu le devlog 0, nous avions admis que nos textures d&rsquo;albédo avaient été &ldquo;obtenues à partir d’un Godot et d’un Blender dans leur paramétrage d’usine&rdquo;. Voyons d&rsquo;un peu plus près ce que j&rsquo;entends par là.</p>
+<h3 id="1-albédo-déterministe">1. Albédo déterministe</h3>
+<p>Pour générer la texture d&rsquo;albédo déterministe côté Blender, il faut d&rsquo;abord activer la passe correspondante dans Cycles : la passe de <em>Diffuse Color</em>. Cela a pour effet d&rsquo;ajouter un pin de sortie <code>diffCol</code> au nœud principal du compositor (<code>Render Layers</code>, dans la capture d&rsquo;écran ci-après).</p>
+<p>Ensuite, il n&rsquo;y a plus qu&rsquo;à brancher cette <code>diffCol</code> à un nœud <code>File Output</code>. Ce dernier exportera automatiquement les images connectées à ses pins d&rsquo;entrée à chaque fin de rendu. Vous pouvez ajouter autant de pins <code>Input</code> que nécessaire dans le volet latéral<code>Node</code>, et pour chacun d&rsquo;eux définir un chemin et des options d&rsquo;export specifiques. Pour l&rsquo;instant, on a besoin que d&rsquo;un pin &ldquo;albedo&rdquo; avec les réglages par défaut.</p>
 <p><img alt="Illustration du processus d&rsquo;export de la texture d&rsquo;Albedo déterministe depuis Blender" src="/projects/open_re_poc_devlog_1/images/export_albedo_texture.opti.webp"></p>
-<p>Il ne restera plus qu’à importer cette image dans Godot et à la &ldquo;binder&rdquo; au <code>uniform dgbuffer_albedo</code> de l&rsquo;oracle.</p>
-<p><img alt="Association de la texture d&rsquo;Albedo Déterministe au uniform dbuffer_albedo du shader oracle.gdshader" src="/projects/open_re_poc_devlog_1/images/bind_deterministe.opti.webp"></p>
-<h4 id="albedo-du-g-buffer-interactif-">Albedo du G-Buffer interactif :</h4>
-<p>Pour la version interactive, c’est un peu plus complexe. Godot nous permet d’injecter certaines textures dans un uniform, que l’on peut ensuite utiliser dans le shader. La syntaxe est la suivante :</p>
+<p>Pour fludifier le processus, de régeneration de l&rsquo;albédo déterministe, on peut faire pointer d&rsquo;export directement vers un emplacement spécifique du projet Godot. Ainsi, à chaque rendu, la texture sera automatiquement importée dès que Godot reprend le focus. Il faudra bien sûr la &ldquo;binder&rdquo; une première fois au uniform <code>dgbuffer_albedo</code> de l&rsquo;Oracle (exactement comme on l&rsquo;a fait dans le devlog 0). Mais à partir de là, tout devient automatique.</p>
+<p>Mettre à jour la texture d&rsquo;albédo déterministe pour solliciter une nouvelle prophétie reviendra alors à appuyer sur <code>F12</code> pour redéclencher le rendu !</p>
+<h3 id="2-albédo-intéractif">2. Albédo intéractif</h3>
+<p>Pour la version interactive, c’est un peu plus complexe. On ne va pas exporter, puis réimporter une image comme je vous l&rsquo;avais laissé croire. Ça n’aurait pas beaucoup de sens, puisque le monde interactif évolue au runtime, et que Godot en fait un rendu à chaque frame.
+En réalité, le moteur est déjà en possession des informations dont on a besoin. Il faut &ldquo;juste&rdquo; trouver comment les récupérer et les mettre à disposition de l&rsquo;Oracle.</p>
+<p>Il se trouve que, depuis un shader, il est possible d&rsquo;accéder directement à certaines textures spéciales représentant divers aspects de la frame courrante (rendu final, profondeur, etc.). La syntaxe est la suivante :</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">texture</span> <span class="o">:</span> <span class="n">hint_</span><span class="o">&lt;</span><span class="n">insert_texture_name</span><span class="o">&gt;</span><span class="n">_texture</span><span class="p">;</span>
-</span></span></code></pre></div><p>La texture qui nous intéresse ici est <code>hint_screen_texture</code>.Malheureusement, ce n’est pas directement l’Albedo, mais un rendu classique depuis la caméra, prenant en compte la lumière. Pour contourner ce problème, nous allons :</p>
+</span></span></code></pre></div><p>La texture qui nous intéresse ici est hint_screen_texture. Malheureusement, ce n’est pas directement l’albédo : c’est un rendu classique prenant en compte l’éclairage. On ne peut donc pas l&rsquo;utiliser tel quel dans le code de l&rsquo;Oracle. Pour contourner ce problème, voici ce que nous allons faire :</p>
 <ul>
 <li>
 <ol>
-<li>créer une Render Target (un <code>SubViewport</code> en terminologie Godot)</li>
+<li>Créer une Render Target (un <code>SubViewport</code> en terminologie Godot).</li>
 </ol>
 </li>
 </ul>
@@ -407,7 +232,7 @@ stroke-linejoin="round" class="feather feather-home">
 <ul>
 <li>
 <ol start="2">
-<li>lui appliquer un post-process simple affichant simplement la <code>hint_screen_texture</code></li>
+<li>Lui appliquer un post-process très simple, qui affiche directement la <code>hint_screen_texture</code></li>
 </ol>
 </li>
 </ul>
@@ -427,7 +252,7 @@ stroke-linejoin="round" class="feather feather-home">
 <ul>
 <li>
 <ol start="3">
-<li>régler le paramètre <code>Debug Draw</code> de la Render Target sur <code>Unshaded</code></li>
+<li>Régler le paramètre <code>Debug Draw</code> de la Render Target sur <code>Unshaded</code> (pour retirer l&rsquo;éclairage)</li>
 </ol>
 </li>
 </ul>
@@ -436,73 +261,65 @@ stroke-linejoin="round" class="feather feather-home">
 <ul>
 <li>
 <ol start="4">
-<li>&ldquo;binder&rdquo; cette Render Target au <code>uniform igbuffer_albedo</code> de l&rsquo;oracle</li>
+<li>Enfin, &ldquo;binder&rdquo; cette render target au <code>uniform igbuffer_albedo</code> de l&rsquo;oracle. Un peu comme nous l&rsquo;avions faitavec la fausse texture dans le devlog 0, à ceci près que cette fois, la texture n&rsquo;est pas issue d&rsquo;un fichier, mais d&rsquo;un rendu offscreen dans une render target.</li>
 </ol>
 </li>
 </ul>
-<p><img alt="Association de la Render Target générant la Texture d&rsquo;Albedo Déterministe au uniform ibuffer_albedo du shader oracle.gdshader" src="/projects/open_re_poc_devlog_1/images/bind_interactive.opti.webp"></p>
-<h2 id="harmonisation-de-lalbédo-">Harmonisation de l&rsquo;albédo :</h2>
-<p>Nos textures d’albédo sont en place, correctement créées et &ldquo;bindées&rdquo;. Elles proviennent de deux scènes rigoureusement identiques issues du même fichier. Si &ldquo;l’importer&rdquo; de Godot à bien fait son travail en traduisant les données de Blender, on devrait obtenir une prophétie rassurante… c&rsquo;est-à-dire un bel écran noir.</p>
-<p>Qu’est-ce qui pourrait mal se passer ?</p>
-<p><img alt="Capture de la première prophétie de l&rsquo;Oracle" src="/projects/open_re_poc_devlog_1/images/first_prophecy.opti.webp"></p>
-<p>Oh nooo !!!</p>
-<p>Pas de panique, Godot fait ce qu’il doit faire, le problème ne vient pas de lui. Comme souvent, ce sont les étapes manuelles de la moulinette qui introduisent les erreurs. A savoirs l’export et l&rsquo;import de la texture déterministe.</p>
-<h4 id="espaces-colorimétriques-">Espaces colorimétriques :</h4>
-<p>En observant nos textures d&rsquo;albedo, un détail saute immédiatement aux yeux : la version déterministe apparait assez délavée.</p>
-<p><img alt="gif alternant l&rsquo;albedo interactif et l&rsquo;aldedo deterministe délavé" src="/projects/open_re_poc_devlog_1/images/init_input_alterance.webp"></p>
-<p>C&rsquo;est un problème d’export. J’avais une intuition sur l’origine du souci : une histoire d’espace de couleur. Il s&rsquo;avère qu&rsquo;il fallait régler champs <code>View</code> de l&rsquo;<em>exporter</em> .png sur <code>Standard</code> :</p>
-<p><img alt="gif montrant comment mettre le champs view de l&rsquo;export png sur standard" src="/projects/open_re_poc_devlog_1/images/set_standar_view.gif"></p>
-<p>Un petit rendu plus tard, on peut soumettre cette nouvelle texture à l’Oracle… et cette fois, la prophétie est bien plus rassurante</p>
-<p><img alt="Capture de la première prophétie de l&rsquo;Oracle" src="/projects/open_re_poc_devlog_1/images/first_prophecy_revision_1.opti.webp"></p>
-<h4 id="compression-de-texture-en-vram">Compression de texture en VRAM</h4>
-<p>On a progressé, mais ce n’est pas encore gagné. En zoomant sur l&rsquo;image de l&rsquo;oracle, on remarque de petits motif caracteristiques.</p>
-<p><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_1/images/1_std_dist_zoom.opti.webp"></p>
-<p>Ce sont des artefacts de compression. Pour économiser de la mémoire vidéo et optimiser les échanges entre le CPU et le GPU, les textures en jeu sont presque toujours compressées. Logique, donc, que Godot compresse par defaut les textures à l&rsquo;import.</p>
-<p>Le problème, c&rsquo;est que les algorithmes de compression des moteurs de jeu ne sont pas conçus pour notre cas d&rsquo;usage. Une texture classique est destinée à habiller un mesh. Un affichage plein écran d&rsquo;une scene entière n&rsquo;est pas vraiment usuel. Si on compare l’image source à sa version compressée, la perte de qualité est flagrante.</p>
-<p><img alt="gif alternant l&rsquo;image source et sa version compressée" src="/projects/open_re_poc_devlog_1/images/alternate_vram_compression.webp"></p>
-<p>Pour régler ça, il suffit de desactiver la compression dans les paramètres d&rsquo;import de la texture.</p>
-<p><img alt="gif indiquant comment desactiver la compression des textures dans Godot" src="/projects/open_re_poc_devlog_1/images/set_lossless-optimize.gif"></p>
-<p>Nouvelle réponse de l’Oracle, cette fois sans compression. (Et sans le super montage. Parce que les plaisenteries les plus courtes&hellip; tout ça, tout ça&hellip;)</p>
-<p><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_1/images/2_lossless_detrminist_zoom.opti.webp"></p>
-<h4 id="qualité-du-png-exporté">Qualité du png exporté</h4>
-<p>On a déjà pas mal gagné mais l&rsquo;image est toujours un peu bruitée.</p>
-<p>Le lecteur attentif aura remarqué que l&rsquo;<em>exporter</em> .png de Blender applique par defaut un 15% de compression un peu suspect.</p>
-<p><img alt="Importer png avec 15% de compression" src="/projects/open_re_poc_devlog_1/images/compression_15.opti.webp"></p>
-<p>J’ai donc tenté de le régler sur 0%&hellip; mais ça n&rsquo;a rien changé. J’ai alors tenté une autre approche : augmenter la Color Depth à 16 bits. Et là… victoire ! Plus aucune trace de compression.</p>
-<p>… Bon, à la place on a maintenant un gros problème de banding. Ce qui est encore pire.</p>
-<p><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_1/images/3_png_c0_Distance_ohnooo.opti.webp"></p>
-<p>D’après la documentation de Godot, l’import PNG est limité à 8 bits. J’imagine que l’image 16 bits est tronquée à l’import, ce qui crée ces vilaines bandes.</p>
-<p>C’est l’impasse. Il faut trouver une autre solution.</p>
-<h4 id="le-format-exr-à-la-rescouse">Le format EXR à la rescouse</h4>
-<p>A partir de là, je me suis mis à explorer les différents formats de fichier proposés par blender. J&rsquo;ai rangé mon cerveau, et j&rsquo;ai commencé à <em>brut force</em> les paramètres de chacuns des <em>exporters</em>.</p>
-<p>C&rsquo;était pas vraiment l&rsquo;autoroute du fun. Pendant plusieurs jours, j&rsquo;ai fait des rendus, donné les textures à manger à l&rsquo;oracle, et scruté ses préseages essayant de déterminer en quoi ils étaient mieux ou moins bien que tel ou tel autre. Mais j&rsquo;ai fini par trouver un alignement de planètes acceptable.</p>
-<p><img alt="Reglage de l&rsquo;export exr dans blender" src="/projects/open_re_poc_devlog_1/images/set_exr_half.opti.webp"></p>
-<p>Je ne connaissais pas le format <code>.exr</code>. Pour la petite histoire, il a été développé par <em>Industrial Light &amp; Magic</em> : la société d&rsquo;effets spéciaux de <em>George Lucas</em>.</p>
-<p>J&rsquo;ai testé les 2 valeurs du champs <code>Color Depth</code> : <code>float (half)</code> et <code>float (full)</code>. Elles donnent des résultats légèrement différentes, mais je n&rsquo;ai pas réussi à décider lequel était réellement meilleur. Cependant, la texture en <code>float (full)</code> pèse 7,13 Mo, contre 250 Ko en <code>float (half)</code>. J&rsquo;ai donc choisi de rester sur du half (au moins pour le moment).</p>
-<h4 id="laliasing">L&rsquo;Aliasing</h4>
-<p>Le résultat n’est pas encore parfait, mais c’est le mieux que j’ai pu obtenir. Si vous avez une idée de comment l&rsquo;améliorer : je prends !</p>
-<p>Cela dit, lorsqu&rsquo;on compare les textures déterministes et interactives actuelles, il devient vraiment difficile de trouver une différence.</p>
-<p><img alt="alterance textures finales" src="/projects/open_re_poc_devlog_1/images/gifalt_final_textures.webp"></p>
-<p>La seule chose que mon oeil arrive à percevoir, c&rsquo;est un peu d&rsquo;aliasing sur les contours (n&rsquo;hesitez pas à me dire en commentaire si vous voyez autre chose).</p>
-<p>Depuis le début, les contours sont effectivement très marqués dans les présages de l&rsquo;oracle. Le phénomène est expliquable : le raytracing de Cycles ne produit pas d&rsquo;aliasing, alors que la rasterisation de Godot si. Ce qui concentre des différences au niveau des zones sujettes à l&rsquo;aliasing : les contours.</p>
-<p>On peut donc encore grapiller un peu en activant l&rsquo;anti-aliasing sur la Render Target de la texture interactive.</p>
-<h2 id="conclusion-">Conclusion :</h2>
-<p>Prenons un peu de recul sur nos résultats. D&rsquo;abord, il faut garder en tête que notre scène de test est très simpliste. Pour être vraiment sûr que Godot et Blender sont bien en phase, il faudra plus de données et surtout des données plus complexes. Ca viendra. Godot comprends les .blend et nous avons desormais un oracle dans l&rsquo;équipe. Il sera donc relativement facile de mettre à l&rsquo;épreuve de nouvelles scènes au fur et à mesure qu&rsquo;on avance. Et si de nouvelles disonances apparaissent, l&rsquo;enquête sera réouverte.</p>
-<p>Ensuite, on pourrait être un peu deçus de ne pas avoir obtenu un présage completement noir. S’il s’agissait d’un autre type de données, j’aurais été plus inquiet. Mais pour une texture d’albédo (qui est basiquement la couleur des surfaces), le &ldquo;jugé à l’œil&rdquo; me semble suffisant. Encore une fois si plus tard dans le développement, on tombe sur des incohérences visuelles, on se souviendra qu’une source d’erreur potentielle existe ici. Mais pour le POC, on va dire que c’est good enough.</p>
-<p><img alt="Retrospective des différentes étapes" src="/projects/open_re_poc_devlog_1/images/gif_alt_goodenough.webp"></p>
-<p>Je couclurai en disant que ce devlog à été assez compliqué à écrire. J&rsquo;ai perdu beaucoup de temps à me remémorer les chose et à les reconstituer (prenez soin de votre git les amis). Mais je reconnais quand même deux avantages à cette situation :</p>
+<h2 id="iv-réglages">IV. Réglages</h2>
+<p>Maintenant que nous savons précisément d&rsquo;où viennent les textures à comparer, nous pouvons commencer à étalonner les logiciels. Pour réviser la prophecie à chaque modification, il suffira de :</p>
 <ul>
 <li>
 <ol>
-<li>Repasser sur mon travail m&rsquo;a permis d&rsquo;affiner certains points. En effet, dans ma version originale j&rsquo;avais ajusté plus de choses. Mais je me suis appercus que certains de mes réglages se compensaient l&rsquo;un l&rsquo;autre et qu&rsquo;ils étaient en réalité inutils. Le set d&rsquo;ajustement que je presente ici est plus minimaliste, ce qui est une très bonne chose.</li>
+<li>Presser <code>F12</code> dans Blender (uniquement si le réglage concerne Blender)</li>
 </ol>
 </li>
 <li>
 <ol start="2">
-<li>Le TurboTartine du futur, malgré ses problèmes de mémoire, sait à peu près ce qu&rsquo;il a fait ensuite. Ce qui je pense aide à la structuration. Mais surtout, ça me permets d&rsquo;annoncer le sujet du prochain numéro : l&rsquo;harmonisation des textures de profondeur.</li>
+<li>Puis faire <code>Play</code> dans Godot une fois le rendu terminé</li>
 </ol>
 </li>
 </ul>
+<h3 id="1-espace-colorimétrique">1. Espace colorimétrique</h3>
+<p>La première chose qui saute aux yeux lorsqu&rsquo;on regarde nos textures d&rsquo;albédo, c&rsquo;est que la version déterministe paraît délavée.</p>
+<p><img alt="gif alternant l&rsquo;albedo interactif et l&rsquo;aldedo deterministe délavé" src="/projects/open_re_poc_devlog_1/images/init_input_alterance.webp"></p>
+<p>Il s&rsquo;agit d&rsquo;un problème d&rsquo;export. Par défaut, le champ <code>View</code> de l&rsquo;exporter PNG de Blender est réglé sur l&rsquo;espace de couleur <code>AgX</code>.</p>
+<p><img alt="gif montrant comment mettre le champs view de l&rsquo;export png sur standard" src="/projects/open_re_poc_devlog_1/images/set_standar_view.gif"></p>
+<p>Sélectionner <code>Standard</code> à la place donne un bien meilleur résultat :</p>
+<p><img alt="Capture de la première prophétie de l&rsquo;Oracle" src="/projects/open_re_poc_devlog_1/images/first_prophecy_revision_1.opti.webp"></p>
+<h3 id="2-compression-de-texture-en-vram">2. Compression de texture en VRAM</h3>
+<p>On a progressé, mais ce n’est pas encore gagné. En effet, quand on zoome sur la nouvelle prophétie, on remarque la présence de petits motifs caractéristiques.</p>
+<p><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_1/images/1_std_dist_zoom.opti.webp"></p>
+<p>Ce sont des artefacts de compression. En effet, dans un jeu, les textures sont presque toujours compressées. Cela permet d&rsquo;économiser la mémoire vidéo (VRAM) et d&rsquo;optimiser les échanges de données entre le CPU et le GPU. La plupart des moteurs de jeu appliquent donc cette compression par défaut dès l&rsquo;import.</p>
+<p>Cependant, les algorithmes utilisés sont pensés pour des textures destinées à habiller des modèles 3D. Dans le cas nominal, ces artefacts sont imperceptibles. Mais pour un affichage plein écran d&rsquo;une scène complète présentant des variations abruptes au niveau des contours de chaque objet, la détérioration de l&rsquo;image source est flagrante.</p>
+<p><img alt="gif alternant l&rsquo;image source et sa version compressée" src="/projects/open_re_poc_devlog_1/images/alternate_vram_compression.webp"></p>
+<p>Pour régler ça, il suffit de désactiver la compression dans les paramètres d&rsquo;import de la texture.</p>
+<p><img alt="gif indiquant comment desactiver la compression des textures dans Godot" src="/projects/open_re_poc_devlog_1/images/set_lossless-optimize.gif"></p>
+<p>Nouvelle réponse de l’Oracle, cette fois-ci sans compression (et sans le super montage. Parce que les plaisanteries les plus courtes&hellip; tout ça, tout ça&hellip;).</p>
+<p><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_1/images/2_lossless_detrminist_zoom.opti.webp"></p>
+<p>On peut constater que les artefacts ont disparu. Mais l&rsquo;image reste légèrement bruitée.</p>
+<h3 id="3-qualité-du-png-exporté">3. Qualité du PNG exporté</h3>
+<p>J&rsquo;ai d&rsquo;abord pensé qu&rsquo;il s&rsquo;agissait également d&rsquo;artefacts de compression, introduits cette fois-ci à l&rsquo;export. En effet, l&rsquo;exporter PNG de Blender contient un champ <code>Compression</code> réglé à 15 % par défaut. Malheureusement, le mettre à 0 % n&rsquo;a rien changé.</p>
+<p>Cela pouvait aussi provenir d&rsquo;une erreur d&rsquo;arrondi liée à un manque de précision dans l&rsquo;encodage des couleurs. J&rsquo;ai donc passé la <code>Color Depth</code> à 16 bits, ce qui a supprimé le bruit mais introduit un nouveau problème encore pire que le précédent : du banding.</p>
+<p><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_1/images/3_png_c0_Distance.opti.webp"></p>
+<p>D’après la documentation de Godot, l’import PNG est limité à 8 bits. Mon interprétation est que le passage à 16 bits est bien la bonne solution pour corriger le bruit, mais elle n&rsquo;est pas viable pour nous car l&rsquo;importeur de Godot tronque les valeurs pour rester en 8 bits. Ce qui crée ces vilaines bandes.</p>
+<p>C’est l’impasse. On ne va pas pouvoir s&rsquo;en sortir avec le format PNG. Il faut trouver autre chose.</p>
+<h3 id="4-le-format-exr-à-la-rescousse">4. Le format EXR à la rescousse</h3>
+<p>C&rsquo;est à ce moment-là que j&rsquo;ai rangé mon cerveau et que j&rsquo;ai commencé à <em>brutforce</em> les paramètres des exporteurs de chacun des formats de fichier supportés par Blender. C&rsquo;était pas vraiment l&rsquo;autoroute du fun. J&rsquo;ai passé plusieurs jours à faire des rendus et à scruter les présages pour essayer de déterminer en quoi ils étaient mieux ou moins bien que tel ou tel autre.</p>
+<p>Heureusement, j&rsquo;ai fini par trouver un alignement de planètes acceptable avec le format EXR.</p>
+<p><img alt="Reglage de l&rsquo;export exr dans blender" src="/projects/open_re_poc_devlog_1/images/set_exr_half.opti.webp"></p>
+<p>J&rsquo;ai testé les deux valeurs du champ <code>Color Depth</code> : <code>float (half</code>) et <code>float (full)</code>. Elles donnent des résultats légèrement différents, mais je n&rsquo;ai pas réussi à décider lequel était réellement meilleur. Cependant, la texture en <code>float (full)</code> pèse 7,13 Mo, contre 250 Ko en <code>float (half)</code>. J&rsquo;ai donc choisi de rester sur du <em>half</em> (au moins pour le moment).</p>
+<h3 id="5-laliasing">5. L’aliasing</h3>
+<p>Le résultat n’est pas encore parfait, mais on est vraiment pas mal. Lorsqu&rsquo;on compare les textures déterministes et interactives actuelles, il devient vraiment difficile de faire la différence.</p>
+<p><img alt="alterance textures finales" src="/projects/open_re_poc_devlog_1/images/gifalt_final_textures.webp"></p>
+<p>La seule chose que mon œil arrive à percevoir, c&rsquo;est un peu d&rsquo;aliasing sur les contours (n&rsquo;hésitez pas à me dire en commentaire si vous voyez autre chose).</p>
+<p>Depuis le début, les contours sont effectivement très marqués dans les présages de l&rsquo;Oracle. Le phénomène est explicable : le raytracing de Cycles ne produit pas d&rsquo;aliasing, alors que la rastérisation de Godot, si. Ce qui concentre les différences au niveau des zones sujettes à l&rsquo;aliasing : les contours.</p>
+<p>On peut donc encore grappiller un peu en activant l&rsquo;anti-aliasing sur la Render Target de la texture interactive.</p>
+<h2 id="v-conclusion">V. Conclusion</h2>
+<p>On pourrait être un peu déçus de ne pas avoir obtenu un présage complètement noir. Mais prenons un peu de recul sur ce résultat.</p>
+<p>D&rsquo;abord, il faut savoir que l&rsquo;espace colorimétrique RGB n&rsquo;est pas uniforme du point de vue de la perception humaine. Cela veut dire que des couleurs en apparence très proches dans cet espace peuvent nous paraître relativement différentes, alors que d&rsquo;autres, pourtant objectivement plus éloignées, seront indissociables pour notre œil.</p>
+<p>En principe, il faudrait donc convertir nos couleurs dans un espace perceptuellement uniforme avant de calculer la distance qui les sépare. Pour être honnête, j&rsquo;ai tenté une traduction de RGB vers CIELAB, mais je n&rsquo;ai pas obtenu les résultats que j&rsquo;espérais. Cela dit, l&rsquo;opération n&rsquo;est pas triviale, et il est plus que probable que je me sois trompé en l&rsquo;écrivant.</p>
+<p>Quoi qu’il en soit, ce petit raccourci ne me paraît pas bien dangereux. S’il s’agissait d’un autre type de données, j’aurais été plus inquiet. Mais pour une texture d’albédo, le &ldquo;jugé à l’œil&rdquo; me semble suffisant. Si, plus tard dans le développement, on tombe sur des incohérences visuelles, on se souviendra qu’une source d’erreur potentielle existe ici. Mais pour le POC, on va dire que c’est good enough.</p>
+<p><img alt="Retrospective des différentes étapes" src="/projects/open_re_poc_devlog_1/images/gif_alt_goodenough.webp"></p>
 
             </div>
         </article>
