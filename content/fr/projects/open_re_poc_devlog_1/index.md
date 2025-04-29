@@ -6,10 +6,10 @@ title = "Harmonisation de l'Albedo"
 description = 'devlog 1 du projet OpenRE'
 +++
 ## I. Avant-propos
-Avant de démarrer, je voudrais préciser que, rétrospectivement, je ne suis pas totalement convaincu par le format de ce premier numéro. Je le trouve un peu trop détaillé, peut-être même un peu trop "storytelling".
-Mon intention reste de proposer des articles personnels et authentiques, mais dans le cadre d'un devlog, il peut être intéressant de rester relativement concis pour ne pas perdre de vue l'objectif principal : documenter l'avancement du projet.
+Avant de démarrer, je voudrais préciser que, rétrospectivement, je ne suis pas totalement convaincu par le format du premier numéro de cette serie. Je le trouve un peu trop détaillé, peut-être un peu trop "storytelling" aussi.
+Mon intention est toujours de proposer des articles personnels et authentiques, mais dans le cadre d'un devlog, il peut être intéressant de rester relativement concis pour ne pas perdre de vue l'objectif principal : documenter l'avancement du projet.
 
-L'aspect retour d'expérience et le ton détendu restent importants pour moi. Je compte juste les doser un peu différemment, pour que la charge utile de chaque numéro reste correcte, et viser un temps de lecture compris entre 5 et 10 minutes.
+L'aspect retour d'expérience et le ton détendu me tiennent toujours à cœur. Je compte juste les doser un peu différemment, pour que la charge utile de chaque numéro reste correcte, et viser un temps de lecture compris entre 5 et 10 minutes.
 Cela dit, si vous préférez l'ancien format, n'hésitez pas à me le faire savoir !
 
 ## II. Introduction
@@ -32,11 +32,11 @@ Le mois dernier, pour alléger un peu le devlog 0, nous avions admis que nos tex
 ### 1. Albédo déterministe
 Pour générer la texture d'albédo déterministe côté Blender, il faut d'abord activer la passe correspondante dans Cycles : la passe de *Diffuse Color*. Cela a pour effet d'ajouter un pin de sortie `diffCol` au nœud principal du compositor (`Render Layers`, dans la capture d'écran ci-après).
 
-Ensuite, il n'y a plus qu'à brancher cette `diffCol` à un nœud `File Output`. Ce dernier exportera automatiquement les images connectées à ses pins d'entrée à chaque fin de rendu. Vous pouvez ajouter autant de pins `Input` que nécessaire dans le volet latéral`Node`, et pour chacun d'eux définir un chemin et des options d'export specifiques. Pour l'instant, on a besoin que d'un pin "albedo" avec les réglages par défaut.
+Ensuite, il n'y a plus qu'à brancher cette `diffCol` à un nœud `File Output`. Ce dernier exportera automatiquement les images connectées à ses pins d'entrée à chaque fin de rendu. Vous pouvez ajouter autant de pins `Input` que nécessaire dans le volet latéral `Node`, et pour chacun d'eux définir un chemin et des options d'export specifiques. Pour l'instant, on a besoin que d'un pin "albedo" avec les réglages par défaut.
 
 ![Illustration du processus d'export de la texture d'Albedo déterministe depuis Blender](images/export_albedo_texture.opti.webp)
 
-Pour fludifier le processus, de régeneration de l'albédo déterministe, on peut faire pointer d'export directement vers un emplacement spécifique du projet Godot. Ainsi, à chaque rendu, la texture sera automatiquement importée dès que Godot reprend le focus. Il faudra bien sûr la "binder" une première fois au uniform `dgbuffer_albedo` de l'Oracle (exactement comme on l'a fait dans le devlog 0). Mais à partir de là, tout devient automatique.
+Pour fludifier le processus de régeneration de l'albédo déterministe, on va faire pointer d'export directement vers un emplacement spécifique du projet Godot. Ainsi, à chaque rendu, la texture sera automatiquement importée dès que Godot reprend le focus. Il faudra bien sûr la "binder" une première fois au uniform `dgbuffer_albedo` de l'Oracle (exactement comme on l'a fait dans le devlog 0). Mais à partir de là, tout devient automatique.
 
 Mettre à jour la texture d'albédo déterministe pour solliciter une nouvelle prophétie reviendra alors à appuyer sur `F12` pour redéclencher le rendu ! 
 
@@ -77,11 +77,11 @@ void fragment() {
 ![Réglage du paramètre Debug Draw de la REnder Target](images/RT_unshaded.opti.webp) 
 <br><br>
 
-- 4. Enfin, "binder" cette render target au `uniform igbuffer_albedo` de l'oracle. Un peu comme nous l'avions faitavec la fausse texture dans le devlog 0, à ceci près que cette fois, la texture n'est pas issue d'un fichier, mais d'un rendu offscreen dans une render target.
+- 4. Enfin, "binder" cette render target au `uniform igbuffer_albedo` de l'oracle. Un peu comme nous l'avions fait avec la fausse texture dans le devlog 0, à ceci près que cette fois, la texture n'est pas issue d'un fichier, mais d'un rendu offscreen dans une render target.
 
 ## IV. Réglages
 Maintenant que nous savons précisément d'où viennent les textures à comparer, nous pouvons commencer à étalonner les logiciels. Pour réviser la prophecie à chaque modification, il suffira de :
-- 1. Presser `F12` dans Blender (uniquement si le réglage concerne Blender)
+- 1. Presser `F12` dans Blender (si le réglage concerne Blender)
 - 2. Puis faire `Play` dans Godot une fois le rendu terminé
 
 ### 1. Espace colorimétrique
@@ -93,7 +93,7 @@ Il s'agit d'un problème d'export. Par défaut, le champ `View` de l'exporter PN
 
 ![gif montrant comment mettre le champs view de l'export png sur standard](images/set_standar_view.gif)
 
-Sélectionner `Standard` à la place donne un bien meilleur résultat :
+Sélectionner `Standard` à la place donne tout dessuite un bien meilleur résultat :
 
 ![Capture de la première prophétie de l'Oracle](images/first_prophecy_revision_1.opti.webp)
 
@@ -104,7 +104,7 @@ On a progressé, mais ce n’est pas encore gagné. En effet, quand on zoome sur
 
 Ce sont des artefacts de compression. En effet, dans un jeu, les textures sont presque toujours compressées. Cela permet d'économiser la mémoire vidéo (VRAM) et d'optimiser les échanges de données entre le CPU et le GPU. La plupart des moteurs de jeu appliquent donc cette compression par défaut dès l'import.
 
-Cependant, les algorithmes utilisés sont pensés pour des textures destinées à habiller des modèles 3D. Dans le cas nominal, ces artefacts sont imperceptibles. Mais pour un affichage plein écran d'une scène complète présentant des variations abruptes au niveau des contours de chaque objet, la détérioration de l'image source est flagrante.
+Cependant, les algorithmes utilisés sont pensés pour des textures destinées à habiller des modèles 3D. Dans ce cas, les artefacts sont imperceptibles. Mais pour un affichage plein écran d'une scène complète présentant des variations abruptes au niveau des contours de chaque objet, la détérioration de l'image source est flagrante.
 
 ![gif alternant l'image source et sa version compressée](images/alternate_vram_compression.webp)
 
@@ -159,3 +159,5 @@ En principe, il faudrait donc convertir nos couleurs dans un espace perceptuelle
 Quoi qu’il en soit, ce petit raccourci ne me paraît pas bien dangereux. S’il s’agissait d’un autre type de données, j’aurais été plus inquiet. Mais pour une texture d’albédo, le "jugé à l’œil" me semble suffisant. Si, plus tard dans le développement, on tombe sur des incohérences visuelles, on se souviendra qu’une source d’erreur potentielle existe ici. Mais pour le POC, on va dire que c’est good enough.
 
 ![Retrospective des différentes étapes](images/gif_alt_goodenough.webp)
+
+Le mois prochain, on fera la même chose pour les textures de profondeur. D'ici là portez vous bien et à bientôt.
