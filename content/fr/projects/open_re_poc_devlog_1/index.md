@@ -1,7 +1,7 @@
 +++
 author = 'Turbo Tartine'
 date = '2025-04-30T13:45:59+01:00'
-draft = true
+draft = false
 title = "OpenRE devlog 1 : Harmonisation de l'Albedo"
 description = 'devlog 1 du projet OpenRE'
 +++
