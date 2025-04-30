@@ -6,7 +6,20 @@
     <description>Recent content in Projets on Turbo Tartine Games</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-fr</language>
-    <lastBuildDate>Mon, 31 Mar 2025 06:31:35 +0200</lastBuildDate><atom:link href="http://localhost:1313/projects/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 30 Apr 2025 13:45:59 +0100</lastBuildDate><atom:link href="http://localhost:1313/projects/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OpenRE devlog 1 : Harmonisation de l&#39;Albedo</title>
+      <link>http://localhost:1313/projects/open_re_poc_devlog_1/</link>
+      <pubDate>Wed, 30 Apr 2025 13:45:59 +0100</pubDate>
+      
+      <guid>http://localhost:1313/projects/open_re_poc_devlog_1/</guid>
+      
+      <description>&lt;h2 id=&#34;i-avant-propos&#34;&gt;I. Avant-propos&lt;/h2&gt;
+&lt;p&gt;Avant de démarrer, je voudrais préciser que, rétrospectivement, je ne suis pas totalement convaincu par le format du premier numéro de cette serie. Je le trouve un peu trop détaillé, peut-être un peu trop &amp;ldquo;&lt;em&gt;storytelling&lt;/em&gt;&amp;rdquo; aussi.
+Mon intention est toujours de proposer des articles personnels et authentiques, mais dans le cadre d&amp;rsquo;un &lt;em&gt;devlog&lt;/em&gt;, il peut être intéressant de rester relativement concis pour ne pas perdre de vue l&amp;rsquo;objectif principal : documenter l&amp;rsquo;avancement du projet.&lt;/p&gt;</description>
+      
+    </item>
+    
     <item>
       <title>OpenRE devlog 0 : Oracle Driven Development</title>
       <link>http://localhost:1313/projects/open_re_poc_devlog_0/</link>
@@ -38,19 +51,6 @@
       &gt;&lt;/iframe&gt;
     &lt;/div&gt;
 &lt;/p&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>Harmonisation de l&#39;Albedo</title>
-      <link>http://localhost:1313/projects/open_re_poc_devlog_1/</link>
-      <pubDate>Sat, 08 Mar 2025 13:45:59 +0100</pubDate>
-      
-      <guid>http://localhost:1313/projects/open_re_poc_devlog_1/</guid>
-      
-      <description>&lt;h2 id=&#34;i-avant-propos&#34;&gt;I. Avant-propos&lt;/h2&gt;
-&lt;p&gt;Avant de démarrer, je voudrais préciser que, rétrospectivement, je ne suis pas totalement convaincu par le format de ce premier numéro. Je le trouve un peu trop détaillé, peut-être même un peu trop &amp;ldquo;storytelling&amp;rdquo;.
-Mon intention reste de proposer des articles personnels et authentiques, mais dans le cadre d&amp;rsquo;un devlog, il peut être intéressant de rester relativement concis pour ne pas perdre de vue l&amp;rsquo;objectif principal : documenter l&amp;rsquo;avancement du projet.&lt;/p&gt;</description>
       
     </item>
     
