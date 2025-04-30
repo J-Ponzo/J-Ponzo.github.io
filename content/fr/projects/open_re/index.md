@@ -221,6 +221,7 @@ Le dépôt de ce POC n'est malheureusement pas public. De toute façon, la codeb
 
 #### Devlogs :
 - [devlog 0 : Oracle Driven Development](projects/open_re_poc_devlog_0)
+- [devlog 1 : Harmonisation de l'Albedo](projects/open_re_poc_devlog_1)
 
 *Cette phase est en cours. Les devlogs suivant seront publiés dès qu’ils seront disponibles.*
 

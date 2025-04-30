@@ -6,7 +6,20 @@
     <description>Recent content in Home on Turbo Tartine Games</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-fr</language>
-    <lastBuildDate>Mon, 31 Mar 2025 06:31:35 +0200</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 30 Apr 2025 13:45:59 +0100</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OpenRE devlog 1 : Harmonisation de l&#39;Albedo</title>
+      <link>http://localhost:1313/projects/open_re_poc_devlog_1/</link>
+      <pubDate>Wed, 30 Apr 2025 13:45:59 +0100</pubDate>
+      
+      <guid>http://localhost:1313/projects/open_re_poc_devlog_1/</guid>
+      
+      <description>&lt;h2 id=&#34;i-avant-propos&#34;&gt;I. Avant-propos&lt;/h2&gt;
+&lt;p&gt;Avant de démarrer, je voudrais préciser que, rétrospectivement, je ne suis pas totalement convaincu par le format du premier numéro de cette serie. Je le trouve un peu trop détaillé, peut-être un peu trop &amp;ldquo;&lt;em&gt;storytelling&lt;/em&gt;&amp;rdquo; aussi.
+Mon intention est toujours de proposer des articles personnels et authentiques, mais dans le cadre d&amp;rsquo;un &lt;em&gt;devlog&lt;/em&gt;, il peut être intéressant de rester relativement concis pour ne pas perdre de vue l&amp;rsquo;objectif principal : documenter l&amp;rsquo;avancement du projet.&lt;/p&gt;</description>
+      
+    </item>
+    
     <item>
       <title>OpenRE devlog 0 : Oracle Driven Development</title>
       <link>http://localhost:1313/projects/open_re_poc_devlog_0/</link>
@@ -113,19 +126,6 @@
       <description>&lt;h2 id=&#34;préembule&#34;&gt;Préembule&lt;/h2&gt;
 &lt;p&gt;Je travaille actuellement sur &lt;strong&gt;OpenRE (Open Retro Engine)&lt;/strong&gt; : une technologie permettant de créer des jeux vidéo en caméra fixe avec des arrière-plans précalculés. Si vous êtes déjà curieux, vous trouverez plus d&amp;rsquo;information sur &lt;a href=&#34;http://localhost:1313/projects/open_re/&#34;&gt;cette page&lt;/a&gt;. Vous pourrez également suivre son avancement à travers les devlogs que je publie régulièrement.&lt;/p&gt;
 &lt;p&gt;Mais il est plus probable que vous vous demandiez : &lt;em&gt;&amp;ldquo;Pourquoi investir du temps et de l&amp;rsquo;énergie dans cette technique du passé ?&amp;rdquo;&lt;/em&gt;, &lt;em&gt;&amp;ldquo;Qu&amp;rsquo;a-t-on à y gagner ?&amp;rdquo;&lt;/em&gt;, &lt;em&gt;&amp;ldquo;Est-ce que le monde en a vraiment besoin ?&amp;rdquo;&lt;/em&gt;. Ou peut-être, que vous n’êtes pas familier avec ce genre vidéoludique un peu oublié et que vous souhaitez découvrir son potentiel.&lt;/p&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>Harmonisation de l&#39;Albedo</title>
-      <link>http://localhost:1313/projects/open_re_poc_devlog_1/</link>
-      <pubDate>Sat, 08 Mar 2025 13:45:59 +0100</pubDate>
-      
-      <guid>http://localhost:1313/projects/open_re_poc_devlog_1/</guid>
-      
-      <description>&lt;h2 id=&#34;i-avant-propos&#34;&gt;I. Avant-propos&lt;/h2&gt;
-&lt;p&gt;Avant de démarrer, je voudrais préciser que, rétrospectivement, je ne suis pas totalement convaincu par le format de ce premier numéro. Je le trouve un peu trop détaillé, peut-être même un peu trop &amp;ldquo;storytelling&amp;rdquo;.
-Mon intention reste de proposer des articles personnels et authentiques, mais dans le cadre d&amp;rsquo;un devlog, il peut être intéressant de rester relativement concis pour ne pas perdre de vue l&amp;rsquo;objectif principal : documenter l&amp;rsquo;avancement du projet.&lt;/p&gt;</description>
       
     </item>
     
