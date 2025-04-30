@@ -6,7 +6,20 @@
     <description>Recent content in Home on Turbo Tartine Games</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-fr</language>
-    <lastBuildDate>Mon, 31 Mar 2025 06:31:35 +0200</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 30 Apr 2025 13:45:59 +0100</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OpenRE devlog 1 : Harmonisation de l&#39;Albedo</title>
+      <link>http://localhost:1313/projects/open_re_poc_devlog_1/</link>
+      <pubDate>Wed, 30 Apr 2025 13:45:59 +0100</pubDate>
+      
+      <guid>http://localhost:1313/projects/open_re_poc_devlog_1/</guid>
+      
+      <description>&lt;h2 id=&#34;i-avant-propos&#34;&gt;I. Avant-propos&lt;/h2&gt;
+&lt;p&gt;Avant de démarrer, je voudrais préciser que, rétrospectivement, je ne suis pas totalement convaincu par le format du premier numéro de cette serie. Je le trouve un peu trop détaillé, peut-être un peu trop &amp;ldquo;&lt;em&gt;storytelling&lt;/em&gt;&amp;rdquo; aussi.
+Mon intention est toujours de proposer des articles personnels et authentiques, mais dans le cadre d&amp;rsquo;un &lt;em&gt;devlog&lt;/em&gt;, il peut être intéressant de rester relativement concis pour ne pas perdre de vue l&amp;rsquo;objectif principal : documenter l&amp;rsquo;avancement du projet.&lt;/p&gt;</description>
+      
+    </item>
+    
     <item>
       <title>OpenRE devlog 0 : Oracle Driven Development</title>
       <link>http://localhost:1313/projects/open_re_poc_devlog_0/</link>
@@ -78,8 +91,11 @@
 &lt;p&gt;Lorsque j&amp;rsquo;ai cherché à développer mon propre jeu en caméra fixe, j’ai rapidement réalisé une chose : les outils et ressources disponibles sur le sujet sont rares. Certes, on trouve quelques tutoriels pour gérer les caméras ou implémenter les déplacements du joueur. Mais je n&amp;rsquo;ai pas trouvé de réponse à la question qui m&amp;rsquo;intéresse réellement : &lt;em&gt;&amp;ldquo;Comment intégrer des éléments interactifs dans des décors précalculés ?&amp;rdquo;&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;J&amp;rsquo;ai donc commencé à bricoler de mon côté pour trouver une solution à ce problème et je pense avoir un début de réponse :
 
+
+    
     &lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
-      &lt;iframe allow=&#34;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share&#34; allowfullscreen=&#34;allowfullscreen&#34; loading=&#34;eager&#34; referrerpolicy=&#34;strict-origin-when-cross-origin&#34; src=&#34;https://www.youtube.com/embed/ok0o0HhgfeY?autoplay=0&amp;amp;controls=1&amp;amp;end=0&amp;amp;loop=0&amp;amp;mute=0&amp;amp;start=0&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; title=&#34;YouTube video&#34;&gt;&lt;/iframe&gt;
+      &lt;iframe allow=&#34;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share&#34; allowfullscreen=&#34;allowfullscreen&#34; loading=&#34;eager&#34; referrerpolicy=&#34;strict-origin-when-cross-origin&#34; src=&#34;https://www.youtube.com/embed/ok0o0HhgfeY?autoplay=0&amp;controls=1&amp;end=0&amp;loop=0&amp;mute=0&amp;start=0&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; title=&#34;YouTube video&#34;
+      &gt;&lt;/iframe&gt;
     &lt;/div&gt;
 &lt;/p&gt;</description>
       
@@ -110,18 +126,6 @@
       <description>&lt;h2 id=&#34;préembule&#34;&gt;Préembule&lt;/h2&gt;
 &lt;p&gt;Je travaille actuellement sur &lt;strong&gt;OpenRE (Open Retro Engine)&lt;/strong&gt; : une technologie permettant de créer des jeux vidéo en caméra fixe avec des arrière-plans précalculés. Si vous êtes déjà curieux, vous trouverez plus d&amp;rsquo;information sur &lt;a href=&#34;http://localhost:1313/projects/open_re/&#34;&gt;cette page&lt;/a&gt;. Vous pourrez également suivre son avancement à travers les devlogs que je publie régulièrement.&lt;/p&gt;
 &lt;p&gt;Mais il est plus probable que vous vous demandiez : &lt;em&gt;&amp;ldquo;Pourquoi investir du temps et de l&amp;rsquo;énergie dans cette technique du passé ?&amp;rdquo;&lt;/em&gt;, &lt;em&gt;&amp;ldquo;Qu&amp;rsquo;a-t-on à y gagner ?&amp;rdquo;&lt;/em&gt;, &lt;em&gt;&amp;ldquo;Est-ce que le monde en a vraiment besoin ?&amp;rdquo;&lt;/em&gt;. Ou peut-être, que vous n’êtes pas familier avec ce genre vidéoludique un peu oublié et que vous souhaitez découvrir son potentiel.&lt;/p&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>Harmonisation de l&#39;Albedo</title>
-      <link>http://localhost:1313/projects/open_re_poc_devlog_1/</link>
-      <pubDate>Sat, 08 Mar 2025 13:45:59 +0100</pubDate>
-      
-      <guid>http://localhost:1313/projects/open_re_poc_devlog_1/</guid>
-      
-      <description>&lt;h2 id=&#34;i-avant-propos&#34;&gt;I. Avant propos&lt;/h2&gt;
-&lt;p&gt;Avant de démarer, je voudrais dire que rétrospectivement, je ne suis pas très convaincu par le format du premier numéro de cette série. Je le trouve un peu trop détaillé, peut être un peu trop &amp;ldquo;story telling&amp;rdquo; aussi. C&amp;rsquo;est toujours une volonté d&amp;rsquo;essayer de faire des articles un peu personels et authentiques. Mais dans le cadre d&amp;rsquo;un devlog, il peut être interessant de rester relativement concis pour ne pas nuire à l&amp;rsquo;objectif principal : documenter l&amp;rsquo;avencement du projet.&lt;/p&gt;</description>
       
     </item>
     
