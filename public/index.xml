@@ -6,7 +6,25 @@
     <description>Recent content in Home on Turbo Tartine Games</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-fr</language>
-    <lastBuildDate>Wed, 30 Apr 2025 13:45:59 +0100</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 28 May 2025 09:01:41 +0200</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OpenRE devlog 2 : Harmonisation de la profondeur</title>
+      <link>http://localhost:1313/projects/open_re_poc_devlog_2/</link>
+      <pubDate>Wed, 28 May 2025 09:01:41 +0200</pubDate>
+      
+      <guid>http://localhost:1313/projects/open_re_poc_devlog_2/</guid>
+      
+      <description>&lt;h2 id=&#34;i-introduction&#34;&gt;I. Introduction&lt;/h2&gt;
+&lt;p&gt;Ce mois ci on va s&amp;rsquo;occuper de l&amp;rsquo;harmonisation des textures de profondeur. Comme pour l&amp;rsquo;albédo du précédent numéro, je vais d&amp;rsquo;abord vous expliquer brièvement comment les textures sont obtenues. Nous parcoureront ensuite les différents réglages effectuées côté Blender et Godot.&lt;/p&gt;
+&lt;p&gt;Notez que jusqu&amp;rsquo;ici, cette étape aura été la plus longue et la plus difficile et ce pour deux raisons :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;la plupart du temps on peut se contanter d&amp;rsquo;une comprehention haut-niveau des objets mathématiques qu&amp;rsquo;on utilise. Les matrices, quaternions et autres bestioles effrayantes sont faciles à dompter lorsqu&amp;rsquo;on comprend à quelle transformation géométriques elles corepondent (translation, rotation, projection etc&amp;hellip;). Il suffit alors de les combiner dans le bon ordre sans forcement comprendre comment ça marche dessous. Seulement voila, parfois on a besoin de comprendre. Et comme je n&amp;rsquo;avais pas fait de math depuis longtemps, la reprise à été un peu rude (mais ça fait du bien de s&amp;rsquo;y remettre)&lt;/li&gt;
+&lt;li&gt;J&amp;rsquo;ai eu du mal à comprendre quelle pass Blender je devais utiliser. En effet, la &amp;ldquo;Z&amp;rdquo; et la &amp;ldquo;Mist&amp;rdquo; donnent des resultat assez similaires visuellement et la documentation ne m&amp;rsquo;a pas vraiment aidé à comprendre la différence entre les 2. J&amp;rsquo;ai donc dû expérimenter pour essayer de deviner à quoi elles corespondaient et dans quel format elles étaient exportées.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Rassurez vous je vais pas couvrir en détail ces points un peu fastidieux. Je me contanterai d&amp;rsquo;évoquer les conclusions que j&amp;rsquo;en ai tiré.&lt;/p&gt;</description>
+      
+    </item>
+    
     <item>
       <title>OpenRE devlog 1 : Harmonisation de l&#39;Albedo</title>
       <link>http://localhost:1313/projects/open_re_poc_devlog_1/</link>
