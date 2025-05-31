@@ -173,43 +173,38 @@ stroke-linejoin="round" class="feather feather-home">
     <li><a href="#i-introduction">I. Introduction</a></li>
     <li><a href="#ii-génération-des-textures">II. Génération des textures</a>
       <ul>
-        <li><a href="#1-depth-déterministe">1. Depth déterministe</a></li>
-        <li><a href="#2-depth-intéractive">2. Depth intéractive</a></li>
+        <li><a href="#1-depth-intéractive">1. Depth intéractive</a></li>
+        <li><a href="#2-depth-déterministe">2. Depth déterministe</a></li>
       </ul>
     </li>
     <li><a href="#iii-réglages">III. Réglages</a>
       <ul>
-        <li><a href="#1-distance-brute">1. Distance brute</a></li>
-        <li><a href="#2-channels-packing">2. Channels packing</a></li>
-        <li><a href="#3-délinéarisation">3. Délinéarisation</a></li>
-        <li><a href="#4-use-hdr-2d">4. Use HDR 2D</a></li>
-        <li><a href="#5-retours-sur-la-mist">5. Retours sur la Mist</a></li>
+        <li><a href="#1-channel-packing">1. Channel packing</a></li>
+        <li><a href="#2-délinéarisation">2. Délinéarisation</a></li>
+        <li><a href="#3-use-hdr-2d">3. Use HDR 2D</a></li>
+        <li><a href="#4-lerreur-de-la-mist">4. L&rsquo;erreur de la Mist</a></li>
       </ul>
     </li>
-    <li><a href="#iv-conclusion">IV. Conclusion</a></li>
+    <li><a href="#iv-retour-sur-les-espaces-de-couleur">IV. Retour sur les espaces de couleur</a></li>
+    <li><a href="#v-conclusion">V. Conclusion</a></li>
   </ul>
 </nav>
     </details>
             <div class="page-content">
                 <h2 id="i-introduction">I. Introduction</h2>
-<p>Ce mois ci on va s&rsquo;occuper de l&rsquo;harmonisation des textures de profondeur. Comme pour l&rsquo;albédo du précédent numéro, je vais d&rsquo;abord vous expliquer brièvement comment les textures sont obtenues. Nous parcoureront ensuite les différents réglages effectuées côté Blender et Godot.</p>
-<p>Notez que jusqu&rsquo;ici, cette étape aura été la plus longue et la plus difficile et ce pour deux raisons :</p>
-<ul>
-<li>la plupart du temps on peut se contanter d&rsquo;une comprehention haut-niveau des objets mathématiques qu&rsquo;on utilise. Les matrices, quaternions et autres bestioles effrayantes sont faciles à dompter lorsqu&rsquo;on comprend à quelle transformation géométriques elles corepondent (translation, rotation, projection etc&hellip;). Il suffit alors de les combiner dans le bon ordre sans forcement comprendre comment ça marche dessous. Seulement voila, parfois on a besoin de comprendre. Et comme je n&rsquo;avais pas fait de math depuis longtemps, la reprise à été un peu rude (mais ça fait du bien de s&rsquo;y remettre)</li>
-<li>J&rsquo;ai eu du mal à comprendre quelle pass Blender je devais utiliser. En effet, la &ldquo;Z&rdquo; et la &ldquo;Mist&rdquo; donnent des resultat assez similaires visuellement et la documentation ne m&rsquo;a pas vraiment aidé à comprendre la différence entre les 2. J&rsquo;ai donc dû expérimenter pour essayer de deviner à quoi elles corespondaient et dans quel format elles étaient exportées.</li>
-</ul>
-<p>Rassurez vous je vais pas couvrir en détail ces points un peu fastidieux. Je me contanterai d&rsquo;évoquer les conclusions que j&rsquo;en ai tiré.</p>
+<p>Le mois dernier nous avions utilisé l&rsquo;oracle pour harmoniser les textures d&rsquo;albédo intéractive et déterminises. Aujourd&rsquo;hui, on prend les mêmes et on recommence, avec la profondeur cette fois ci.</p>
+<p>Travail est similaire, structure similaire. Je vais commencer par expliquer d&rsquo;où viennent nos textures, puis on commencera les réglages en scrutant les présages de l&rsquo;oracle à chaque nouvelle étape.</p>
+<p>Je ne détaillerai pas autant que d&rsquo;habitude les action effectuées dans Blender et Godot. D&rsquo;abord pour rester raccord avec ma volonté d&rsquo;aller vers plus de simplicité (qui a apparament plu d&rsquo;après les retours que j&rsquo;ai pu avoir), mais aussi parce tout va se passer dans les mêmes fenêtres que le mois dernier alors je pense qu&rsquo;on peut alléger un peu les descritpions.</p>
+<p>Ce sera l&rsquo;occasion de s&rsquo;étandre un peu plus sur les peripeties tout en restant dans le un format &ldquo;moins de 10 min&rdquo;. Car comme vous allez le découvrir, cet épisode vient avec sont lot de rebondisements.</p>
 <h2 id="ii-génération-des-textures">II. Génération des textures</h2>
-<h3 id="1-depth-déterministe">1. Depth déterministe</h3>
-<p>Pour générer notre texture de depth déterministe, nous allons evidement nous appuyer sur ce que nous avions fait pour l&rsquo;albédo. La première chose à faire est donc d&rsquo;activer la passe de profondeur pour faire apparaitre le pin correspondant dans le noeud Render Layers du compositor. Malheureusement cette fois ci nous avons 2 candidates dont voici les rendus repectifs dans Blender :</p>
-<p>&lt;comp Z/Mist dans blender&gt;</p>
-<p>Il se trouve que le bon choix était la Z, on va donc partir là dessus dans cet article (bien entandu j&rsquo;avais choisit l&rsquo;autre). Maintenant que nous avons activée la bonne passe, il suffit d&rsquo;ajouter un nouveau pin &ldquo;depth&rdquo; au noeud &ldquo;File Output&rdquo; et de le connecter au pin &ldquo;depth&rdquo; apparu dans le noeud Render Layer.</p>
-<image du compositor>
-<p>A présent les textures d&rsquo;albédo et de profondeur seront exportées automatiquement à l&rsquo;emplacement spécifié à la fin de chaque rendu.</p>
-<h3 id="2-depth-intéractive">2. Depth intéractive</h3>
-<p>La encore on va se baser se ce qui avait été fait pour l&rsquo;albédo et créer une nouvelle render target.</p>
-<image scene avec detph viewport>
-<p>Le post-process utilisé est très similaire à celui de l&rsquo;albédo. La hint_depth_texture est utilisée à la place de la hint_screen_texture mais ce sera la seule différence.</p>
+<p>Pour générer nos textures nous allons bien entandu nous appuyer sur ce que nous avions fait avec l&rsquo;albédo dans le numéro précédent :</p>
+<ul>
+<li>Render target avec un post-process specifique dans la scene Godot pour l&rsquo;interactive</li>
+<li>Export de la passe blender correspondant à la depth pour la déterministe</li>
+</ul>
+<p>Sauf indication contraire, on conservera les réglages déjà effectués (format EXR, pas de compression VRAM etc&hellip;)</p>
+<h3 id="1-depth-intéractive">1. Depth intéractive</h3>
+<p>Le post-process permettant d&rsquo;afficher la profondeur est très similaire à celui de l&rsquo;albédo. En réalité il faut simplement remplacer <code>hint_screen_texture</code> par <code>hint_depth_texture</code> dans les hints du <code>uniform sampler 2D</code> (on changera aussi son nom parce qu&rsquo;on est pas des bêtes)</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
@@ -222,48 +217,76 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="n">texture</span><span class="p">(</span><span class="n">depth_texture</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">.</span><span class="n">xy</span><span class="p">).</span><span class="n">rgb</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>Il n&rsquo;y aura pas besoin de régler Debug Draw sur Unshaded cette fois car la hint_depth_texture n&rsquo;est pas éclairée comme l&rsquo;était la hint_screen_texture.</p>
-<p>Par contre, maintenant qu&rsquo;on a 2 render target, un problème risque de se poser. Etant donné que les quads sur lesquels sont rendus les post-process sont physiquement présent dans la scène (ce qui est une particularité de Godot), il faudra jouer avec les Layer/Cull Mask pour s&rsquo;assurer que l&rsquo;Albedo_Camera ne filme pas la DepthLayer_Quad et inversement.</p>
+</span></span></code></pre></div><p>Il faudra également penser à <strong>ne pas</strong> régler le flag <code>Debug Draw</code> sur <code>Unshaded</code> cette fois ci. Nous avoins fait ça pour retirer l&rsquo;éclérage de la <code>hint_screen_texture</code> pour en extraire l&rsquo;albédo. Mais c&rsquo;était un workaround. La <code>hint_depth_texture</code> est déjà l&rsquo;information dont on a besoin. Il n&rsquo;y a donc rien de plus à faire ici pour l&rsquo;instant.</p>
+<h3 id="2-depth-déterministe">2. Depth déterministe</h3>
+<p>Pour la profondeur déterministe par contre ce n&rsquo;est pas aussi simple. A prèmière vue, deux passes pourraient correspondre à ce qu&rsquo;on cherche : la <code>Z</code> et la <code>Mist</code>. La documentation de Blender ne m&rsquo;ayant pas vraiment aidé à les départager j&rsquo;ai décidé de les rendre toutes les 2 pour les comparer. Voici ce que j&rsquo;ai obtenu :</p>
+<p>&lt;Mist VS Depth&gt;</p>
+<p>Ne comprenant pas vraiment ce que je devais voir avec la <code>Z</code> j&rsquo;ai choisi la <code>Mist</code> par élimination. J&rsquo;ai donc ajouté un pin <code>depth</code> au noeud <code>File Output</code> déjà présant et je l&rsquo;ai relié au pîn <code>Mist</code> apparu sur le noeud <code>Render Layer</code> après activation de la passe correspondante.</p>
+<p>&lt;Compositor avec Mist&gt;</p>
+<p>On peut desormais régénérer les textures d&rsquo;albédo et de profondeur automatiquement à chaque rendu.</p>
 <h2 id="iii-réglages">III. Réglages</h2>
-<p>Bien entandu nous allons nous reservir de l&rsquo;oracle pour valider nos réglages. Il va falloir l&rsquo;étandre pour qu&rsquo;il supporte les maps de profondeur en plus de celles d&rsquo;albédo. Pour rester dans la philosophie détente et format court, je ne vais pas détailler les changements ici. Notez simplement que l&rsquo;on va ajoutéer une fonction pre_processd_d_depth qui nous permettra d&rsquo;agir sur la texture de pronfondeur déterministe avant les étapes de comparaison et d&rsquo;affichage. Pour l&rsquo;instant elle ne fait rien :</p>
+<p>Pour supporter un deuxieme jeu de textures à comparer, il a fallu adapter un peu l&rsquo;oracle. Pour rester simples et concis je ne décrirai pas ces modifications en détail (elles sont plutôt triviales).</p>
+<p>Notez simplement que j&rsquo;ai ajouté une fonction <code>pre_processd_d_depth</code> qui nous permettra d&rsquo;agir sur la texture de profondeur déterministe avant les étapes d&rsquo;affichage et de différence. Pour l&rsquo;instant cette fonction ne fait rien :</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">vec3</span> <span class="n">pre_processd_d_depth</span><span class="p">(</span><span class="k">vec3</span> <span class="n">d_depth</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">d_depth</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>Pour nous faciliter la vie, on va également modifier le far plan de toutes nos caméra (Blender et Godot) pour le ramené à 5m au lieu de 100m. La raison à cela est que l&rsquo;intégralité de notre scène se trouve dans les premiers metres du champs de la caméra. Si on laisse le far plan à 100m, nos valeures de profondeur seront comprésées dans un tout petit fragment de l&rsquo;interval [near - far] et les images seront illisibles car les pixels auront des valeurs ridiculement proches.</p>
-<p>&lt;near plane à 5&gt;</p>
-<p>C&rsquo;est le moment de soliciter une première fois l&rsquo;oracle pour obtenir notre prophecie de départ. Et comme vous pouvez le voire elle est sacrément mauvaise.</p>
-<p>&lt;prophecie d&rsquo;initialisation&gt;</p>
-<h3 id="1-distance-brute">1. Distance brute</h3>
-<p>Si on avait pris la peine d&rsquo;observer la texture déterministe exportée on aurait tout dessuite vu qu&rsquo;elle n&rsquo;a rien à voire avec ce que Blender nous affiche en interne dans sa fenetre de rendu.</p>
-<Blender Z VS Exported depth>
-<p>Difficile d&rsquo;analyser l&rsquo;image à l&rsquo;oeil nu, mais un petit passage dans gimp m&rsquo;a permis d&rsquo;y voir plus claire. En jouant sur courbes de couleur, j&rsquo;ai pu obtenir ceci :</p>
-<gimp analyse>
-<p>On reconnait bien un morceau de la scène, mais c&rsquo;est comme si elle était tronqué à 1m de la caméra. Et en réalité c&rsquo;est exactement ce qu&rsquo;il se passe.</p>
-<p>En effet, la plupart des formats représentent un chanel par un entier entre 0 et 255 (ou un flotant entre 0 et 1). Le format EXR lui supporte des flotants complètement arbitraire (y compris négatifs). Blender prend en compte cette spécificité et en profite pour encoder la distance brute en mètre lorsque ce format est choisi.</p>
-<p>Mais les logiciels qui interprètent le fichier s&rsquo;attendent à une valeur entre 0 et 1. En consequence, tout ce qui est en dessous de 0 devient noir, et tout ce qui est au dessus de 1 blanc.</p>
-<p>Cette propriété de l&rsquo;EXR est surement très interessante pour plein d&rsquo;usages, mais pour nous ce n&rsquo;est pas très pratique. On va donc dire à blender de mapper les valeurs entre 0.1 et 5 avant de les exporter (cela correspond au near et far planes de la caméra).</p>
-<image du map>
-<p>Avec cette nouvelle texture, la prophecie est toujours très mauvaise, mais au moins on commence à distinguer la scène.</p>
-<prophecie>
-<h3 id="2-channels-packing">2. Channels packing</h3>
-<p>En comparant les textures déterministes et intéractive on constate immédiatement les points suivant :</p>
+</span></span></code></pre></div><p>Avant de commencer, nous allons également réduire à 5m le far plane de nos caméra (Blender et Godot). La raison est simple, actuellement ils est réglé sur 100m, mais la géométrie de notre scène est concentré dans les 2 ou 3 première mètres du champs de la caméra. Si on ne fait rien, nos valeurs de profondeur seront compressées dans un fragment minuscule de l&rsquo;interval [near; far]. Ce qui rendrait les images illisible (et vous allez vois que même en faisant ça, il faudra parfois plisser les yeux).</p>
+<h3 id="1-channel-packing">1. Channel packing</h3>
+<p>A ce stade nous n&rsquo;avons pas vraiment besoin de l&rsquo;oracle pour voir ce qui cloche avec nos textures :</p>
 <ul>
-<li>l&rsquo;intéractive est dans les tons rouges et les valeurs lointaines sont représentées en noir</li>
-<li>la déterministe est en noir est blanc et le noir représente les valeurs proches</li>
+<li>Blender exporte la valeur de depth dans tous les cannaux de l&rsquo;image. Ce qui lui donne cet aspect blanchatre</li>
+<li>La hint_depth_texture n&rsquo;utilise que le canal rouge pour encoder la depth. De plus, la valeur semble inversée (le 0 est loin de l&rsquo;écran, alors que le 1 est proche)</li>
 </ul>
-<comparaison cote a cote>
-<p>On en déduit que la depth intéractive est encodée dans le canal rouge de l&rsquo;image et que le 0 indique les valeurs lointaines et le 1 les valeurs proches. La depth déterministe quand à elle est dupliquée dans les 3 cannaux, ce qui lui donne une teinte blanche, et sa valeur est inversées par rapport à l&rsquo;intéractive (le 0 designes les valeurs proches et le 1 les valeurs lointaines).</p>
-<p>On va donc se servir de la founction pre_processd_d_depth pour resoudre cette situation en réorganisant les channels de la manière suivante :</p>
+<p>&lt;Det blanche VS Int Rouge&gt;</p>
+<p>On va donc se servir de la fonction <code>pre_processd_d_depth</code> pour harmoniser tout ça :</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">vec3</span> <span class="n">pre_processd_d_depth</span><span class="p">(</span><span class="k">vec3</span> <span class="n">d_depth</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">d_depth</span><span class="p">.</span><span class="n">r</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>Si on redemande une prophecie maintenant, on aura l&rsquo;impression d&rsquo;avoir régressé. L&rsquo;immage est en effet plus blanche qu&rsquo;à l&rsquo;étape précédente. Mais elle est aussi plus uniforme.</p>
-<prophecie blanche mais plus uniforme>
-<h3 id="3-délinéarisation">3. Délinéarisation</h3>
-<h3 id="4-use-hdr-2d">4. Use HDR 2D</h3>
-<h3 id="5-retours-sur-la-mist">5. Retours sur la Mist</h3>
-<h2 id="iv-conclusion">IV. Conclusion</h2>
-<p>Changer l&rsquo;image Blender plus efficace que preprocess dans Godot. Mais itérations plus longues</p>
+</span></span></code></pre></div><p>Après ce petit ajustement, voici à quoi ressemple notre première prophecie :</p>
+<p>&lt;1_chan_diff&gt;</p>
+<h3 id="2-délinéarisation">2. Délinéarisation</h3>
+<p>Comme l&rsquo;indique la documentation de Godot, la <code>hint_depth_texture</code> n&rsquo;est pas linéaire. En effet, dans un jeu vidéo, il est pratique que la profondeur soit plus précise dans les valeurs proches que dans les valeurs lointaines. Les problème liés à précision étant biensure moins visible en arrière plan. C&rsquo;est pourquoi la matrice de projection déforme la dimention z des fragment de manière à donner du moue au valeurs proches.</p>
+<p>Evidament ça ne nous arrange pas trop parce que la Mist que Blender a exportée est linéaire. Il existe un paramètre <code>Falloff</code> qui permet de changer ça :</p>
+<p>&lt;Blender Mist fallof&gt;</p>
+<p>Malheureusement, il y a une infinité de façons de ne pas être linéaire et aucune des valeurs proposées par Blender ne semblait correspondre à la déformation appliquée par la matrice de projection côté Godot. Je suis donc parti de la definition de cette matrice (trouveable partout sur internet) et j&rsquo;ai fait les calculs&hellip; Je vous fais grâçe de cette partie en ajoutant directement le resultat dans la fonction <code>pre_processd_d_depth</code> (résultat que je n&rsquo;ai pas trouvé du premier je vous rassure).</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">vec3</span> <span class="n">pre_processd_d_depth</span><span class="p">(</span><span class="k">vec3</span> <span class="n">d_depth</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">float</span> <span class="n">z</span> <span class="o">=</span> <span class="n">d_depth</span><span class="p">.</span><span class="n">r</span> <span class="o">*</span> <span class="p">(</span><span class="n">f</span> <span class="o">-</span> <span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">float</span> <span class="n">unlinearized_depth</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span> <span class="o">*</span> <span class="n">f</span> <span class="o">-</span> <span class="n">n</span> <span class="o">*</span> <span class="n">f</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">f</span> <span class="o">-</span> <span class="n">n</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">unlinearized_depth</span> <span class="o">/=</span> <span class="n">z</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">unlinearized_depth</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Après nouvelle solicitation de l&rsquo;oracle, on constate qu&rsquo;on est légèrement mieux mais c&rsquo;est pas encore ça.</p>
+<p>&lt;2_chan_unlin_diff&gt;</p>
+<h3 id="3-use-hdr-2d">3. Use HDR 2D</h3>
+<p>J&rsquo;ai mis un sacré bout de temps à comprendre ce qui n&rsquo;allait pas. Jusqu&rsquo;à ce que par hasard, je coche une case dans Godot qui allait résoudre tous mes problèmes. Cette case, c&rsquo;est <code>Use HDR 2D</code> dans la section <code>Rendering</code> de notre la target.</p>
+<p>&lt;Godot Use HDR 2D&gt;</p>
+<p>A ce moment là je n&rsquo;avais aucune idée de pourquoi ça marchait. Mais l&rsquo;oracle était claire&hellip; ça marchait !</p>
+<p>&lt;3_chan_unlin_hdr_diff&gt;</p>
+<p>Après lecture de la description du paramètre (agrémenté de pas mal d&rsquo;experimentations), je suis arrivé à la conclusion les render target de Godot appliquaient par defaut une correction gamma à l&rsquo;image qu&rsquo;elles produisent. Autrement dit, par defaut ces textures ne sont pas en Linear Color mais en sRGB.</p>
+<p>Je ne sais pas si ce comportement est standard sur d&rsquo;autre moteurs, mais ce qui est sur c&rsquo;est que ce n&rsquo;est pas ce qu&rsquo;on veut dans le cas présent. De manière général en programation graphique, les calculs doivent être fait en Linear Color. La correction gamma n&rsquo;est appliquée qu&rsquo;en bout de chaine juste avant d&rsquo;afficher l&rsquo;image à l&rsquo;écran.</p>
+<p>La depth déterministe de Blender en Linear Color (ce qui est cohérant pour une donnée mathématique), nous devons donc la comparer à une depth intéractive dans le même espace de couleur. Et il se trouve que la case <code>Use HDR 2D</code> permet d&rsquo;avoir une image en Linear Color sans correction gamma.</p>
+<h3 id="4-lerreur-de-la-mist">4. L&rsquo;erreur de la Mist</h3>
+<p>Le nouveau présage est bien meilleur que les précédents. Mais on remarque tout de même la présence de cercle concentriques de plus en plus claires à mesure que l&rsquo;on s&rsquo;éloigne du centre. Pour corriger cet ultime problème, on va devoir revenir sur une erreur commise au tout début de l&rsquo;article. Vous vous souvenez quand on choisit au doigt mouillé la <code>Mist</code> plutôt que la <code>Z</code> ? Et bien perdu ! C&rsquo;était la <code>Z</code>&hellip;</p>
+<p>Nous avons comis un déli de faciesse. En réalité, si la <code>Z</code> exportée était aussi moche, c&rsquo;est parce que nous utilisons le format EXR. Ce format permet de reprsentrer les cannaux par des floatant arbitraires, potentiellement même négatifs. Blender profite de cette propriété pour ecoder la profondeure brute en mètre. Par consequent tout ce qui est à plus d'1m de la caméra apparait completement blanc.</p>
+<p>Il suffit de mapper la valeur de la depth entre le near plane (0.1m) et le far plane (5m) et le tour est joué. Notre <code>Z</code> retrouve son apparence originale.</p>
+<p>&lt;Compositor&gt;</p>
+<p>Un dernier passage chez l&rsquo;oracle nous confirme que c&rsquo;était bien cette passe qu&rsquo;il fallait utiliser. Les artefacts ont disparu et l&rsquo;image prèsque totalement noir. Seuls quelques minuscules point gris trahissent encore le contour du podium.</p>
+<p>&lt;Oracle Victoire&gt;</p>
+<p>On peut certes se féliciter de ce resultat des plus satisfgaisants. Mais qu&rsquo;est ce qui différencie <code>Z</code> et <code>Mist</code> au juste ? Et bien la documentation ne le dit pas et je n&rsquo;ai pas lu le code source de Blender. Mais la nature les artefacts concentriques me laissent penser que la mist est la distance brute entre le fragment et la position du fragment, alors que la <code>Z</code> est le projeté orthogonal de ce fragment sur l&rsquo;axe Z de la caméra.</p>
+<p>&lt;Z vs Mist&gt;</p>
+<h2 id="iv-retour-sur-les-espaces-de-couleur">IV. Retour sur les espaces de couleur</h2>
+<p>Petite parenthese pour discuter un point que j&rsquo;ai volontairement éludé et que vous avez peut être relevé. Pour que les texturent soient dans le même espace de couleur, nous avons du cocher la case <code>Use HDR 2D</code>. Mais alors pourquoi nous n&rsquo;avons pas eu à faire ça pour l&rsquo;albédo dans le numéro précédent ?</p>
+<p>Je me suis égaleme posé cette question. Il s&rsquo;avère que la réponse est toute simple. Nous avions fait une autre erreur qui se compensait avec celle ci (décidément il bourde sur bourde celui là&hellip;). Si vous regardez bien les captures précédentes vous verez que le champs <code>color space</code> du noeud <code>File Output</code> est réglé sur <code>sRGB</code>.</p>
+<p>&lt;Blender sRGB&gt;</p>
+<p>Comme évoqué précédament, les calculs doienvent être fait en Linear Color Space. Ce n&rsquo;est donc pas la bon espace pour notre texture d&rsquo;albédo déterministe. Mais comme la Render Target de la texture intéractive n&rsquo;avait pas <code>Use HDR 2D</code> de cochée, elle était aussi en sRGB. Les 2 textures étaient dans le même mauvais espace de couleur et dans ce cas, même l&rsquo;infini sagesse de l&rsquo;oracle ne peut rien pour nous.</p>
+<p>On va donc cocher la <code>Use HDR 2D</code> de la render target de l&rsquo;albédo et dire à blender d&rsquo;exporter des textures en Linéaire pour corriger ça. Sauf qu&rsquo;on a le choix entre 6 espaces linéaires différents.</p>
+<p>&lt;Blender Linears&gt;</p>
+<p>Après quelques essais, <code>Linear Rec.709</code> est visiblement l&rsquo;espace qu&rsquo;on cherche. Il donne un résultat aussi satisfaisant que le précédent (associé à la case magique bien entandu). On va donc partir là dessus jusqu&rsquo;à nouvel ordre. Mais il reste une dernière question : si l&rsquo;export Blender était réglé sur sRGB tout ce temps, comment se fait il, que la depth déterministe soit bien linéaire ?</p>
+<p>Je pense que blender tiens compte du fait que les passes comme la <code>Mist</code> et la <code>Z</code> ne sont pas des images, mais des données mathématiques auquelles il n&rsquo;y a auccune raison d&rsquo;appliquer des changements d&rsquo;espace. Sur ces passes le champs <code>color space</code> semble inopérant. J&rsquo;ai tester d&rsquo;export de la <code>Z</code> en <code>sRGB</code> et en <code>Linear Rec.709</code>, les 2 images sont rigoureusement identiques.</p>
+<h2 id="v-conclusion">V. Conclusion</h2>
+<p>Comme vous le savez, les premier épisodes de cette serie sont écrit a-posteriori. Ce que je décris ici à en réalité été effectué il y a plusieurs mois. Repasser sur du travail déjà effectué est relativement fastidieux, mais je dois dire que cette seconde passe me permet d&rsquo;affiner ma compréhention des choses, d&rsquo;en découvrir de nouvelles voir même de corriger des erreures qui m&rsquo;avaient échapées.</p>
+<p>Par exemple, l&rsquo;intégralité de l&rsquo;arc sur les espaces de couleur est nouveau. Au premier passage, je n&rsquo;avais pas vraiment questionné la case à coché magique. C&rsquo;était un réglage parmis 1000 autres sur lequel je n&rsquo;étais pas forcement revenu. Mais écrire ces article me force à trouver le sous-ensemble minimal de réglages qui donne le résultat attendu (parce que oui, je teste beaucoup plus de choses que ce que je présente). Et surtout, ça m&rsquo;oblige à réèlement comprendre pourquoi ça marche. Ce qui à beaucoup de valeur pour moi.</p>
+<p>Le mois prochain, on s&rsquo;occupera de l&rsquo;harmonisation des normales. C&rsquo;est le dernier élement qui nous manque pour commencer à implémenter de la lumière. Après ça on va pouvoir faire des choses plus visuelles.</p>
 
             </div>
         </article>

@@ -15,13 +15,9 @@
       <guid>http://localhost:1313/projects/open_re_poc_devlog_2/</guid>
       
       <description>&lt;h2 id=&#34;i-introduction&#34;&gt;I. Introduction&lt;/h2&gt;
-&lt;p&gt;Ce mois ci on va s&amp;rsquo;occuper de l&amp;rsquo;harmonisation des textures de profondeur. Comme pour l&amp;rsquo;albédo du précédent numéro, je vais d&amp;rsquo;abord vous expliquer brièvement comment les textures sont obtenues. Nous parcoureront ensuite les différents réglages effectuées côté Blender et Godot.&lt;/p&gt;
-&lt;p&gt;Notez que jusqu&amp;rsquo;ici, cette étape aura été la plus longue et la plus difficile et ce pour deux raisons :&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;la plupart du temps on peut se contanter d&amp;rsquo;une comprehention haut-niveau des objets mathématiques qu&amp;rsquo;on utilise. Les matrices, quaternions et autres bestioles effrayantes sont faciles à dompter lorsqu&amp;rsquo;on comprend à quelle transformation géométriques elles corepondent (translation, rotation, projection etc&amp;hellip;). Il suffit alors de les combiner dans le bon ordre sans forcement comprendre comment ça marche dessous. Seulement voila, parfois on a besoin de comprendre. Et comme je n&amp;rsquo;avais pas fait de math depuis longtemps, la reprise à été un peu rude (mais ça fait du bien de s&amp;rsquo;y remettre)&lt;/li&gt;
-&lt;li&gt;J&amp;rsquo;ai eu du mal à comprendre quelle pass Blender je devais utiliser. En effet, la &amp;ldquo;Z&amp;rdquo; et la &amp;ldquo;Mist&amp;rdquo; donnent des resultat assez similaires visuellement et la documentation ne m&amp;rsquo;a pas vraiment aidé à comprendre la différence entre les 2. J&amp;rsquo;ai donc dû expérimenter pour essayer de deviner à quoi elles corespondaient et dans quel format elles étaient exportées.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Rassurez vous je vais pas couvrir en détail ces points un peu fastidieux. Je me contanterai d&amp;rsquo;évoquer les conclusions que j&amp;rsquo;en ai tiré.&lt;/p&gt;</description>
+&lt;p&gt;Le mois dernier nous avions utilisé l&amp;rsquo;oracle pour harmoniser les textures d&amp;rsquo;albédo intéractive et déterminises. Aujourd&amp;rsquo;hui, on prend les mêmes et on recommence, avec la profondeur cette fois ci.&lt;/p&gt;
+&lt;p&gt;Travail est similaire, structure similaire. Je vais commencer par expliquer d&amp;rsquo;où viennent nos textures, puis on commencera les réglages en scrutant les présages de l&amp;rsquo;oracle à chaque nouvelle étape.&lt;/p&gt;
+&lt;p&gt;Je ne détaillerai pas autant que d&amp;rsquo;habitude les action effectuées dans Blender et Godot. D&amp;rsquo;abord pour rester raccord avec ma volonté d&amp;rsquo;aller vers plus de simplicité (qui a apparament plu d&amp;rsquo;après les retours que j&amp;rsquo;ai pu avoir), mais aussi parce tout va se passer dans les mêmes fenêtres que le mois dernier alors je pense qu&amp;rsquo;on peut alléger un peu les descritpions.&lt;/p&gt;</description>
       
     </item>
     
