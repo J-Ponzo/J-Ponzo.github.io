@@ -220,9 +220,9 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span></code></pre></div><p>Il faudra également penser à <strong>ne pas</strong> régler le flag <code>Debug Draw</code> sur <code>Unshaded</code> cette fois ci. Nous avoins fait ça pour retirer l&rsquo;éclérage de la <code>hint_screen_texture</code> pour en extraire l&rsquo;albédo. Mais c&rsquo;était un workaround. La <code>hint_depth_texture</code> est déjà l&rsquo;information dont on a besoin. Il n&rsquo;y a donc rien de plus à faire ici pour l&rsquo;instant.</p>
 <h3 id="2-depth-déterministe">2. Depth déterministe</h3>
 <p>Pour la profondeur déterministe par contre ce n&rsquo;est pas aussi simple. A prèmière vue, deux passes pourraient correspondre à ce qu&rsquo;on cherche : la <code>Z</code> et la <code>Mist</code>. La documentation de Blender ne m&rsquo;ayant pas vraiment aidé à les départager j&rsquo;ai décidé de les rendre toutes les 2 pour les comparer. Voici ce que j&rsquo;ai obtenu :</p>
-<p>&lt;Mist VS Depth&gt;</p>
+<p><a href="/projects/open_re_poc_devlog_2/images/z_mist_naive_export.opti.webp"><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_2/images/z_mist_naive_export.opti.webp"></a></p>
 <p>Ne comprenant pas vraiment ce que je devais voir avec la <code>Z</code> j&rsquo;ai choisi la <code>Mist</code> par élimination. J&rsquo;ai donc ajouté un pin <code>depth</code> au noeud <code>File Output</code> déjà présant et je l&rsquo;ai relié au pîn <code>Mist</code> apparu sur le noeud <code>Render Layer</code> après activation de la passe correspondante.</p>
-<p>&lt;Compositor avec Mist&gt;</p>
+<p><a href="/projects/open_re_poc_devlog_2/images/mist_compositor.opti.webp"><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_2/images/mist_compositor.opti.webp"></a></p>
 <p>On peut desormais régénérer les textures d&rsquo;albédo et de profondeur automatiquement à chaque rendu.</p>
 <h2 id="iii-réglages">III. Réglages</h2>
 <p>Pour supporter un deuxieme jeu de textures à comparer, il a fallu adapter un peu l&rsquo;oracle. Pour rester simples et concis je ne décrirai pas ces modifications en détail (elles sont plutôt triviales).</p>
@@ -237,17 +237,17 @@ stroke-linejoin="round" class="feather feather-home">
 <li>Blender exporte la valeur de depth dans tous les cannaux de l&rsquo;image. Ce qui lui donne cet aspect blanchatre</li>
 <li>La hint_depth_texture n&rsquo;utilise que le canal rouge pour encoder la depth. De plus, la valeur semble inversée (le 0 est loin de l&rsquo;écran, alors que le 1 est proche)</li>
 </ul>
-<p>&lt;Det blanche VS Int Rouge&gt;</p>
+<p><a href="/projects/open_re_poc_devlog_2/images/white_det_vs_red_int.opti.webp"><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_2/images/white_det_vs_red_int.opti.webp"></a></p>
 <p>On va donc se servir de la fonction <code>pre_processd_d_depth</code> pour harmoniser tout ça :</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">vec3</span> <span class="n">pre_processd_d_depth</span><span class="p">(</span><span class="k">vec3</span> <span class="n">d_depth</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">d_depth</span><span class="p">.</span><span class="n">r</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>Après ce petit ajustement, voici à quoi ressemple notre première prophecie :</p>
-<p>&lt;1_chan_diff&gt;</p>
+<p><a href="/projects/open_re_poc_devlog_2/images/1_chan_diff.opti.webp"><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_2/images/1_chan_diff.opti.webp"></a></p>
 <h3 id="2-délinéarisation">2. Délinéarisation</h3>
 <p>Comme l&rsquo;indique la documentation de Godot, la <code>hint_depth_texture</code> n&rsquo;est pas linéaire. En effet, dans un jeu vidéo, il est pratique que la profondeur soit plus précise dans les valeurs proches que dans les valeurs lointaines. Les problème liés à précision étant biensure moins visible en arrière plan. C&rsquo;est pourquoi la matrice de projection déforme la dimention z des fragment de manière à donner du moue au valeurs proches.</p>
 <p>Evidament ça ne nous arrange pas trop parce que la Mist que Blender a exportée est linéaire. Il existe un paramètre <code>Falloff</code> qui permet de changer ça :</p>
-<p>&lt;Blender Mist fallof&gt;</p>
+<img alt="Zoom sur le pattern" src="./images/mist_falloff.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 <p>Malheureusement, il y a une infinité de façons de ne pas être linéaire et aucune des valeurs proposées par Blender ne semblait correspondre à la déformation appliquée par la matrice de projection côté Godot. Je suis donc parti de la definition de cette matrice (trouveable partout sur internet) et j&rsquo;ai fait les calculs&hellip; Je vous fais grâçe de cette partie en ajoutant directement le resultat dans la fonction <code>pre_processd_d_depth</code> (résultat que je n&rsquo;ai pas trouvé du premier je vous rassure).</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">vec3</span> <span class="n">pre_processd_d_depth</span><span class="p">(</span><span class="k">vec3</span> <span class="n">d_depth</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="k">float</span> <span class="n">z</span> <span class="o">=</span> <span class="n">d_depth</span><span class="p">.</span><span class="n">r</span> <span class="o">*</span> <span class="p">(</span><span class="n">f</span> <span class="o">-</span> <span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">n</span><span class="p">;</span>
@@ -256,12 +256,12 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">unlinearized_depth</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>Après nouvelle solicitation de l&rsquo;oracle, on constate qu&rsquo;on est légèrement mieux mais c&rsquo;est pas encore ça.</p>
-<p>&lt;2_chan_unlin_diff&gt;</p>
+<p><a href="/projects/open_re_poc_devlog_2/images/2_chan_unlin_diff.opti.webp"><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_2/images/2_chan_unlin_diff.opti.webp"></a></p>
 <h3 id="3-use-hdr-2d">3. Use HDR 2D</h3>
-<p>J&rsquo;ai mis un sacré bout de temps à comprendre ce qui n&rsquo;allait pas. Jusqu&rsquo;à ce que par hasard, je coche une case dans Godot qui allait résoudre tous mes problèmes. Cette case, c&rsquo;est <code>Use HDR 2D</code> dans la section <code>Rendering</code> de notre la target.</p>
-<p>&lt;Godot Use HDR 2D&gt;</p>
+<p>J&rsquo;ai mis un sacré bout de temps à comprendre ce qui n&rsquo;allait pas. Jusqu&rsquo;à ce que par hasard, je coche une case dans Godot qui allait résoudre tous mes problèmes. Cette case, c&rsquo;est <code>Use HDR 2D</code> dans la section <code>Rendering</code> de notre render target.</p>
+<img alt="Zoom sur le pattern" src="./images/godot_use_hdr_2d.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 <p>A ce moment là je n&rsquo;avais aucune idée de pourquoi ça marchait. Mais l&rsquo;oracle était claire&hellip; ça marchait !</p>
-<p>&lt;3_chan_unlin_hdr_diff&gt;</p>
+<p><a href="/projects/open_re_poc_devlog_2/images/3_chan_unlin_hdr_diff.opti.webp"><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_2/images/3_chan_unlin_hdr_diff.opti.webp"></a></p>
 <p>Après lecture de la description du paramètre (agrémenté de pas mal d&rsquo;experimentations), je suis arrivé à la conclusion les render target de Godot appliquaient par defaut une correction gamma à l&rsquo;image qu&rsquo;elles produisent. Autrement dit, par defaut ces textures ne sont pas en Linear Color mais en sRGB.</p>
 <p>Je ne sais pas si ce comportement est standard sur d&rsquo;autre moteurs, mais ce qui est sur c&rsquo;est que ce n&rsquo;est pas ce qu&rsquo;on veut dans le cas présent. De manière général en programation graphique, les calculs doivent être fait en Linear Color. La correction gamma n&rsquo;est appliquée qu&rsquo;en bout de chaine juste avant d&rsquo;afficher l&rsquo;image à l&rsquo;écran.</p>
 <p>La depth déterministe de Blender en Linear Color (ce qui est cohérant pour une donnée mathématique), nous devons donc la comparer à une depth intéractive dans le même espace de couleur. Et il se trouve que la case <code>Use HDR 2D</code> permet d&rsquo;avoir une image en Linear Color sans correction gamma.</p>
@@ -269,18 +269,18 @@ stroke-linejoin="round" class="feather feather-home">
 <p>Le nouveau présage est bien meilleur que les précédents. Mais on remarque tout de même la présence de cercle concentriques de plus en plus claires à mesure que l&rsquo;on s&rsquo;éloigne du centre. Pour corriger cet ultime problème, on va devoir revenir sur une erreur commise au tout début de l&rsquo;article. Vous vous souvenez quand on choisit au doigt mouillé la <code>Mist</code> plutôt que la <code>Z</code> ? Et bien perdu ! C&rsquo;était la <code>Z</code>&hellip;</p>
 <p>Nous avons comis un déli de faciesse. En réalité, si la <code>Z</code> exportée était aussi moche, c&rsquo;est parce que nous utilisons le format EXR. Ce format permet de reprsentrer les cannaux par des floatant arbitraires, potentiellement même négatifs. Blender profite de cette propriété pour ecoder la profondeure brute en mètre. Par consequent tout ce qui est à plus d'1m de la caméra apparait completement blanc.</p>
 <p>Il suffit de mapper la valeur de la depth entre le near plane (0.1m) et le far plane (5m) et le tour est joué. Notre <code>Z</code> retrouve son apparence originale.</p>
-<p>&lt;Compositor&gt;</p>
+<p><a href="/projects/open_re_poc_devlog_2/images/compositor_map_Z.opti.webp"><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_2/images/compositor_map_Z.opti.webp"></a></p>
 <p>Un dernier passage chez l&rsquo;oracle nous confirme que c&rsquo;était bien cette passe qu&rsquo;il fallait utiliser. Les artefacts ont disparu et l&rsquo;image prèsque totalement noir. Seuls quelques minuscules point gris trahissent encore le contour du podium.</p>
-<p>&lt;Oracle Victoire&gt;</p>
+<p><a href="/projects/open_re_poc_devlog_2/images/oracle_victory.opti.webp"><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_2/images/oracle_victory.opti.webp"></a></p>
 <p>On peut certes se féliciter de ce resultat des plus satisfgaisants. Mais qu&rsquo;est ce qui différencie <code>Z</code> et <code>Mist</code> au juste ? Et bien la documentation ne le dit pas et je n&rsquo;ai pas lu le code source de Blender. Mais la nature les artefacts concentriques me laissent penser que la mist est la distance brute entre le fragment et la position du fragment, alors que la <code>Z</code> est le projeté orthogonal de ce fragment sur l&rsquo;axe Z de la caméra.</p>
-<p>&lt;Z vs Mist&gt;</p>
+<p><a href="/projects/open_re_poc_devlog_2/images/mist_vs_Z.opti.webp"><img alt="Zoom sur le pattern" src="/projects/open_re_poc_devlog_2/images/mist_vs_Z.opti.webp"></a></p>
 <h2 id="iv-retour-sur-les-espaces-de-couleur">IV. Retour sur les espaces de couleur</h2>
 <p>Petite parenthese pour discuter un point que j&rsquo;ai volontairement éludé et que vous avez peut être relevé. Pour que les texturent soient dans le même espace de couleur, nous avons du cocher la case <code>Use HDR 2D</code>. Mais alors pourquoi nous n&rsquo;avons pas eu à faire ça pour l&rsquo;albédo dans le numéro précédent ?</p>
 <p>Je me suis égaleme posé cette question. Il s&rsquo;avère que la réponse est toute simple. Nous avions fait une autre erreur qui se compensait avec celle ci (décidément il bourde sur bourde celui là&hellip;). Si vous regardez bien les captures précédentes vous verez que le champs <code>color space</code> du noeud <code>File Output</code> est réglé sur <code>sRGB</code>.</p>
-<p>&lt;Blender sRGB&gt;</p>
+<img alt="Zoom sur le pattern" src="./images/blender_srgb.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 <p>Comme évoqué précédament, les calculs doienvent être fait en Linear Color Space. Ce n&rsquo;est donc pas la bon espace pour notre texture d&rsquo;albédo déterministe. Mais comme la Render Target de la texture intéractive n&rsquo;avait pas <code>Use HDR 2D</code> de cochée, elle était aussi en sRGB. Les 2 textures étaient dans le même mauvais espace de couleur et dans ce cas, même l&rsquo;infini sagesse de l&rsquo;oracle ne peut rien pour nous.</p>
 <p>On va donc cocher la <code>Use HDR 2D</code> de la render target de l&rsquo;albédo et dire à blender d&rsquo;exporter des textures en Linéaire pour corriger ça. Sauf qu&rsquo;on a le choix entre 6 espaces linéaires différents.</p>
-<p>&lt;Blender Linears&gt;</p>
+<img alt="Zoom sur le pattern" src="./images/blender_linears.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 <p>Après quelques essais, <code>Linear Rec.709</code> est visiblement l&rsquo;espace qu&rsquo;on cherche. Il donne un résultat aussi satisfaisant que le précédent (associé à la case magique bien entandu). On va donc partir là dessus jusqu&rsquo;à nouvel ordre. Mais il reste une dernière question : si l&rsquo;export Blender était réglé sur sRGB tout ce temps, comment se fait il, que la depth déterministe soit bien linéaire ?</p>
 <p>Je pense que blender tiens compte du fait que les passes comme la <code>Mist</code> et la <code>Z</code> ne sont pas des images, mais des données mathématiques auquelles il n&rsquo;y a auccune raison d&rsquo;appliquer des changements d&rsquo;espace. Sur ces passes le champs <code>color space</code> semble inopérant. J&rsquo;ai tester d&rsquo;export de la <code>Z</code> en <code>sRGB</code> et en <code>Linear Rec.709</code>, les 2 images sont rigoureusement identiques.</p>
 <h2 id="v-conclusion">V. Conclusion</h2>

@@ -44,11 +44,11 @@ Il faudra également penser à **ne pas** régler le flag `Debug Draw` sur `Unsh
 ### 2. Depth déterministe
 Pour la profondeur déterministe par contre ce n'est pas aussi simple. A prèmière vue, deux passes pourraient correspondre à ce qu'on cherche : la `Z` et la `Mist`. La documentation de Blender ne m'ayant pas vraiment aidé à les départager j'ai décidé de les rendre toutes les 2 pour les comparer. Voici ce que j'ai obtenu :
 
-\<Mist VS Depth>
+[![Zoom sur le pattern](images/z_mist_naive_export.opti.webp)](images/z_mist_naive_export.opti.webp)
 
 Ne comprenant pas vraiment ce que je devais voir avec la `Z` j'ai choisi la `Mist` par élimination. J'ai donc ajouté un pin `depth` au noeud `File Output` déjà présant et je l'ai relié au pîn `Mist` apparu sur le noeud `Render Layer` après activation de la passe correspondante.
 
-\<Compositor avec Mist>
+[![Zoom sur le pattern](images/mist_compositor.opti.webp)](images/mist_compositor.opti.webp)
 
 On peut desormais régénérer les textures d'albédo et de profondeur automatiquement à chaque rendu.
 
@@ -70,7 +70,7 @@ A ce stade nous n'avons pas vraiment besoin de l'oracle pour voir ce qui cloche 
 - Blender exporte la valeur de depth dans tous les cannaux de l'image. Ce qui lui donne cet aspect blanchatre
 - La hint_depth_texture n'utilise que le canal rouge pour encoder la depth. De plus, la valeur semble inversée (le 0 est loin de l'écran, alors que le 1 est proche)
 
-\<Det blanche VS Int Rouge>
+[![Zoom sur le pattern](images/white_det_vs_red_int.opti.webp)](images/white_det_vs_red_int.opti.webp)
 
 On va donc se servir de la fonction `pre_processd_d_depth` pour harmoniser tout ça :
 
@@ -82,14 +82,14 @@ vec3 pre_processd_d_depth(vec3 d_depth) {
 
 Après ce petit ajustement, voici à quoi ressemple notre première prophecie :
 
-\<1_chan_diff>
+[![Zoom sur le pattern](images/1_chan_diff.opti.webp)](images/1_chan_diff.opti.webp)
 
 ### 2. Délinéarisation
 Comme l'indique la documentation de Godot, la `hint_depth_texture` n'est pas linéaire. En effet, dans un jeu vidéo, il est pratique que la profondeur soit plus précise dans les valeurs proches que dans les valeurs lointaines. Les problème liés à précision étant biensure moins visible en arrière plan. C'est pourquoi la matrice de projection déforme la dimention z des fragment de manière à donner du moue au valeurs proches.
 
 Evidament ça ne nous arrange pas trop parce que la Mist que Blender a exportée est linéaire. Il existe un paramètre `Falloff` qui permet de changer ça :
 
-\<Blender Mist fallof>
+<img alt="Zoom sur le pattern" src="./images/mist_falloff.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 
 Malheureusement, il y a une infinité de façons de ne pas être linéaire et aucune des valeurs proposées par Blender ne semblait correspondre à la déformation appliquée par la matrice de projection côté Godot. Je suis donc parti de la definition de cette matrice (trouveable partout sur internet) et j'ai fait les calculs... Je vous fais grâçe de cette partie en ajoutant directement le resultat dans la fonction `pre_processd_d_depth` (résultat que je n'ai pas trouvé du premier je vous rassure).
 
@@ -104,16 +104,16 @@ vec3 pre_processd_d_depth(vec3 d_depth) {
 
 Après nouvelle solicitation de l'oracle, on constate qu'on est légèrement mieux mais c'est pas encore ça.
 
-\<2_chan_unlin_diff>
+[![Zoom sur le pattern](images/2_chan_unlin_diff.opti.webp)](images/2_chan_unlin_diff.opti.webp)
 
 ### 3. Use HDR 2D
-J'ai mis un sacré bout de temps à comprendre ce qui n'allait pas. Jusqu'à ce que par hasard, je coche une case dans Godot qui allait résoudre tous mes problèmes. Cette case, c'est `Use HDR 2D` dans la section `Rendering` de notre la target.
+J'ai mis un sacré bout de temps à comprendre ce qui n'allait pas. Jusqu'à ce que par hasard, je coche une case dans Godot qui allait résoudre tous mes problèmes. Cette case, c'est `Use HDR 2D` dans la section `Rendering` de notre render target.
 
-\<Godot Use HDR 2D>
+<img alt="Zoom sur le pattern" src="./images/godot_use_hdr_2d.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 
 A ce moment là je n'avais aucune idée de pourquoi ça marchait. Mais l'oracle était claire... ça marchait !
 
-\<3_chan_unlin_hdr_diff>
+[![Zoom sur le pattern](images/3_chan_unlin_hdr_diff.opti.webp)](images/3_chan_unlin_hdr_diff.opti.webp)
 
 Après lecture de la description du paramètre (agrémenté de pas mal d'experimentations), je suis arrivé à la conclusion les render target de Godot appliquaient par defaut une correction gamma à l'image qu'elles produisent. Autrement dit, par defaut ces textures ne sont pas en Linear Color mais en sRGB.
 
@@ -128,28 +128,28 @@ Nous avons comis un déli de faciesse. En réalité, si la `Z` exportée était 
 
 Il suffit de mapper la valeur de la depth entre le near plane (0.1m) et le far plane (5m) et le tour est joué. Notre `Z` retrouve son apparence originale. 
 
-\<Compositor>
+[![Zoom sur le pattern](images/compositor_map_Z.opti.webp)](images/compositor_map_Z.opti.webp)
 
 Un dernier passage chez l'oracle nous confirme que c'était bien cette passe qu'il fallait utiliser. Les artefacts ont disparu et l'image prèsque totalement noir. Seuls quelques minuscules point gris trahissent encore le contour du podium.
 
-\<Oracle Victoire>
+[![Zoom sur le pattern](images/oracle_victory.opti.webp)](images/oracle_victory.opti.webp)
 
 On peut certes se féliciter de ce resultat des plus satisfgaisants. Mais qu'est ce qui différencie `Z` et `Mist` au juste ? Et bien la documentation ne le dit pas et je n'ai pas lu le code source de Blender. Mais la nature les artefacts concentriques me laissent penser que la mist est la distance brute entre le fragment et la position du fragment, alors que la `Z` est le projeté orthogonal de ce fragment sur l'axe Z de la caméra.
 
-\<Z vs Mist>
+[![Zoom sur le pattern](images/mist_vs_Z.opti.webp)](images/mist_vs_Z.opti.webp)
 
 ## IV. Retour sur les espaces de couleur
 Petite parenthese pour discuter un point que j'ai volontairement éludé et que vous avez peut être relevé. Pour que les texturent soient dans le même espace de couleur, nous avons du cocher la case `Use HDR 2D`. Mais alors pourquoi nous n'avons pas eu à faire ça pour l'albédo dans le numéro précédent ?
 
 Je me suis égaleme posé cette question. Il s'avère que la réponse est toute simple. Nous avions fait une autre erreur qui se compensait avec celle ci (décidément il bourde sur bourde celui là...). Si vous regardez bien les captures précédentes vous verez que le champs `color space` du noeud `File Output` est réglé sur `sRGB`.
 
-\<Blender sRGB>
+<img alt="Zoom sur le pattern" src="./images/blender_srgb.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 
 Comme évoqué précédament, les calculs doienvent être fait en Linear Color Space. Ce n'est donc pas la bon espace pour notre texture d'albédo déterministe. Mais comme la Render Target de la texture intéractive n'avait pas `Use HDR 2D` de cochée, elle était aussi en sRGB. Les 2 textures étaient dans le même mauvais espace de couleur et dans ce cas, même l'infini sagesse de l'oracle ne peut rien pour nous.
 
 On va donc cocher la `Use HDR 2D` de la render target de l'albédo et dire à blender d'exporter des textures en Linéaire pour corriger ça. Sauf qu'on a le choix entre 6 espaces linéaires différents.
 
-\<Blender Linears>
+<img alt="Zoom sur le pattern" src="./images/blender_linears.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 
 Après quelques essais, `Linear Rec.709` est visiblement l'espace qu'on cherche. Il donne un résultat aussi satisfaisant que le précédent (associé à la case magique bien entandu). On va donc partir là dessus jusqu'à nouvel ordre. Mais il reste une dernière question : si l'export Blender était réglé sur sRGB tout ce temps, comment se fait il, que la depth déterministe soit bien linéaire ?
 
