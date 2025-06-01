@@ -8,7 +8,7 @@ description = 'devlog 2 du projet OpenRE'
 ## I. Introduction
 Le mois dernier nous avions utilisé l'oracle pour harmoniser les textures d'albédo intéractive et déterminises. Aujourd'hui, on va faire la même chose avec la profondeur.
 
-Travail similaire, structure similaire. Je vais commencer par expliquer d'où viennent nos textures, puis on commencera les réglages en surveillant les prophecies de l'oracle à chaque étape.
+Travail similaire, structure similaire. Je vais commencer par expliquer d'où viennent nos textures, puis on se lancera dans les réglages en surveillant les prophecies de l'oracle à chaque étape.
 
 Je ne détaillerai pas autant que d'habitude les action effectuées dans Blender et Godot. D'abord pour rester raccord avec ma volonté de concision et de simplicité (qui semble avoir été apréciée d'après les retours que j'ai eu). Mais aussi parce que ces actions seront très similaires à ce qu'on a fait dans le numéro précédent. On s'économisera donc les description un peu lourdes.
 
@@ -46,7 +46,7 @@ Pour la profondeur déterministe par contre ce n'est pas aussi simple. A prèmi�
 
 [![Zoom sur le pattern](images/z_mist_naive_export.opti.webp)](images/z_mist_naive_export.opti.webp)
 
-Ne comprenant pas vraiment ce que j'étais sensé voir avec la `Z` j'ai choisi la `Mist` par élimination. J'ai donc ajouté un pin `depth` au noeud `File Output` déjà présant et je l'ai relié au pin `Mist` apparu sur le noeud `Render Layer` après activation de la passe correspondante.
+Ne comprenant pas vraiment ce que j'étais sensé voir avec la `Z` j'ai choisi la `Mist` par élimination. J'ai donc ajouté un pin `depth` au noeud `File Output` déjà présant et je l'ai relié au pin `Mist` apparu dans le noeud `Render Layer` après activation de la passe correspondante.
 
 [![Zoom sur le pattern](images/mist_compositor.opti.webp)](images/mist_compositor.opti.webp)
 
@@ -89,7 +89,7 @@ Ca part de loin ! Mais pas de panique on va arranger ça.
 ### 2. Délinéarisation
 Comme l'indique la documentation de Godot, la `hint_depth_texture` n'est pas linéaire. C'est tout à fait normal. Les défauts de rendu liés à la précision (notamment le Z-Fighting) sont toujours moins disgratieux en arrière plan que sous notre nez. C'est pourquoi la matrice de projection déforme la dimention z des fragments de manière à "donner du gras" au valeurs proches.
 
-La Mist que Blender, elle, est exportée par défaut est linéaire. Il existe un paramètre `Falloff` qui permet de changer ça :
+La Mist de Blender, elle, est exportée par défaut est linéaire. Il existe un paramètre `Falloff` qui permet de changer ça :
 
 <img alt="Zoom sur le pattern" src="./images/mist_falloff.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 
@@ -112,7 +112,7 @@ Après nouvelle solicitation de l'oracle, on constate qu'on est légèrement mie
 [![Zoom sur le pattern](images/2_chan_unlin_diff.opti.webp)](images/2_chan_unlin_diff.opti.webp)
 
 ### 3. Use HDR 2D
-Je suis resté ploqué un moment à cette étape. Jusqu'à ce que par hasard, je coche une case dans Godot qui allait résoudre tous mes problèmes. Cette case, c'est `Use HDR 2D` dans la section `Rendering` de notre render target.
+Je suis resté bloqué un moment à cette étape. Jusqu'à ce que par hasard, je coche une case dans Godot qui allait résoudre tous mes problèmes. Cette case, c'est `Use HDR 2D` dans la section `Rendering` de notre render target.
 
 <img alt="Zoom sur le pattern" src="./images/godot_use_hdr_2d.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 
@@ -124,18 +124,18 @@ Après lecture de la description du paramètre (et pas mal d'experimentations), 
 
 Dans un shader, les calculs sont fait en Linear Color. La correction gamma n'est appliquée qu'en bout de chaine juste avant d'afficher l'image à l'écran. C'est pourquoi la depth déterministe de Blender est dans cet espace de couleur. Mais si l'intéractive est en sRGB ça va pas du tout.
 
-Il se trouve que la case `Use HDR 2D` permet entre autres d'avoir une image en Linear Color sans correction gamma.
+Il se trouve que la case `Use HDR 2D` permet entre autres d'avoir une image en Linear Color sans correction gamma. Raison pour laquelle elle améliore nos résultats.
 
 ### 4. Mist or not Mist   
- Le nouveau présage est bien meilleur que les précédents, mais on va devoir se débarasser de ces vilains artefacts. Si on est attentif, on peut remarquer que les cercles sont de plus en plus claire à mesure que l'on s'éloigne du centre. C'est cette observation qui m'a permis de comprendre la différence entre la `Mist` et la `Z`. 
+ Le nouveau présage est bien meilleur que les précédents, mais on va devoir se débarasser de ces vilains artefacts. Si on est attentif, on peut remarquer que les cercles sont de plus en plus claire à mesure que l'on s'éloigne du centre. C'est cette observation qui m'a permis de mieux comprendre la différence entre la `Mist` et la `Z`. 
  
- La documentation ne l'explique pas et je n'ai pas lu le code source de Blender. Je ne suis donc sûr de rien, mais je pense que la `Mist` est la distance entre la caméra et le fragment, alors que la Z est le projeté orthogonal de la position du fragment sur l’axe Z de la caméra.
+ La documentation ne l'explique pas et je n'ai pas lu le code source de Blender. Je ne suis donc pas sûr de ce que j'avance. Mais je pense que la `Mist` est la distance entre la caméra et le fragment, alors que la Z est le projeté orthogonal de la position du fragment sur l’axe Z de la caméra.
 
 [![Zoom sur le pattern](images/mist_vs_Z.opti.webp)](images/mist_vs_Z.opti.webp)
 
-Pour un fragment au centre de l'écran, c'est deux valeurs sont identiques. Mais plus on s'éloigne du centre, plus elles divergent, ce qui explique parfaitement nos artefacts. On a choisit la `Mist` au doigt mouillé parce qu'elle nous plaisait plus. Et ben perdu ! C'était la `Z`... 
+Pour un fragment au centre de l'écran, c'est deux valeurs sont identiques. Mais plus on s'éloigne du centre, plus elles divergent, ce qui explique parfaitement la présence de nos artefacts. On a choisit la `Mist` au doigt mouillé parce qu'elle nous plaisait plus. Et ben perdu ! C'était la `Z`... 
 
-Nous avons donc comis un petit délit de faciesse, mais en réalité, si la `Z` exportée était aussi moche, c’est parce que nous utilisons le format EXR. Dans ce format, les cannaux sont représentés par des floatants arbitraires (potentiellement même négatifs). Blender profite de cette propriété pour ecoder la profondeure exprimée directement en mètres. Par consequent tout ce qui est à plus d'1m de la caméra apparait completement blanc.
+Nous avons donc comis un petit délit de faciesse, mais en réalité, si la `Z` exportée était aussi moche, c’est parce que nous utilisons le format EXR. Dans ce format, les cannaux sont représentés par des floatants arbitraires (potentiellement même négatifs). Blender profite apparament de cette propriété pour ecoder la profondeure exprimée directement en mètres. Par consequent tout ce qui est à plus d'1m de la caméra apparait completement blanc.
 
 Il suffit de mapper la valeur de la depth entre le near plane (0.1m) et le far plane (5m) et le tour est joué. Notre `Z` retrouve son apparence originale. 
 
@@ -148,25 +148,27 @@ Un dernier passage chez l'oracle nous confirme que c'était bien cette passe qu'
 Seuls quelques minuscules point gris trahissent encore le contour du podium. Mais on peut s'arreter là, ce résultat est plus que satisfaisant.
 
 ## IV. Retour sur les espaces de couleur
-Petite parenthese pour discuter un point que j'ai volontairement éludé et que vous avez peut être relevé. Pour que les texturent soient dans le même espace de couleur, nous avons du cocher la case `Use HDR 2D`. Mais alors pourquoi nous n'avons pas eu à faire ça pour l'albédo dans le numéro précédent ?
+Petite parenthese pour discuter un point que j'ai volontairement éludé et que vous avez peut être relevé. Pour que les texturent de depth soient dans le même espace de couleur, nous avons du cocher la case `Use HDR 2D`. Mais alors pourquoi nous n'avons pas eu à faire ça pour l'albédo dans le numéro précédent ?
 
-Je me suis égaleme posé cette question. Il s'avère que la réponse est toute simple. Nous avions fait une autre erreur qui se compensait avec celle ci (décidément il bourde sur bourde celui là...). Si vous regardez bien les captures précédentes vous verez que le champs `color space` du noeud `File Output` est réglé sur `sRGB`.
+Je me suis également posé cette question et après enquète, il s'avère que la réponse est toute simple : c'est une erreur... nous aurions du la cocher... Mais là où c'est fourbe, c'est que cette erreur a été compensée par une autre erreur qu'on se traine depuis le tout début (oui je sais, ça fait beaucoup d'erreures. mais je vous avais prévenu et c'est comme ça qu'on apprend). Si vous regardez bien les captures précédentes vous verrez que le champs `color space` du noeud `File Output` est réglé sur `sRGB`.
 
 <img alt="Zoom sur le pattern" src="./images/blender_srgb.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 
-Comme évoqué précédament, les calculs doienvent être fait en Linear Color Space. Ce n'est donc pas la bon espace pour notre texture d'albédo déterministe. Mais comme la Render Target de la texture intéractive n'avait pas `Use HDR 2D` de cochée, elle était aussi en sRGB. Les 2 textures étaient dans le même mauvais espace de couleur et dans ce cas, même l'infini sagesse de l'oracle ne peut rien pour nous.
+Comme évoqué précédament, les calculs doienvent être fait en Linear Color. Ce n'est donc pas la bon espace pour notre texture d'albédo déterministe. Mais comme la Render Target de la texture intéractive n'avait pas `Use HDR 2D` de cochée, elle était aussi en sRGB. Les 2 textures étaient donc dans le même **mauvais** espace de couleur. Et dans ce cas, même l'infini sagesse de l'oracle ne peut rien pour nous.
 
-On va donc cocher la `Use HDR 2D` de la render target de l'albédo et dire à blender d'exporter des textures en Linéaire pour corriger ça. Sauf qu'on a le choix entre 6 espaces linéaires différents.
+On va donc cocher la `Use HDR 2D` de la render target de l'albédo et dire à blender d'exporter des textures en Linéaire pour corriger cette double faute. Sauf qu'on a le choix entre 6 espaces linéaires différents.
 
 <img alt="Zoom sur le pattern" src="./images/blender_linears.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 
-Après quelques essais, `Linear Rec.709` est visiblement l'espace qu'on cherche. Il donne un résultat aussi satisfaisant que le précédent (associé à la case magique bien entandu). On va donc partir là dessus jusqu'à nouvel ordre. Mais il reste une dernière question : si l'export Blender était réglé sur sRGB tout ce temps, comment se fait il, que la depth déterministe soit bien linéaire ?
+Après quelques essais, `Linear Rec.709` est visiblement l'espace qu'on cherche. Il donne un résultat aussi satisfaisant que le précédent (lorsqu'on l'associe à la case magique bien entandu). On va donc partir là dessus jusqu'à nouvel ordre. Mais il reste une dernière question : si l'export Blender était réglé sur sRGB tout ce temps, comment se fait il, que la depth déterministe soit bien linéaire ?
 
-Je pense que blender tiens compte du fait que les passes comme la `Mist` et la `Z` ne sont pas des images, mais des données mathématiques auquelles il n'y a auccune raison d'appliquer des changements d'espace. Sur ces passes le champs `color space` semble inopérant. J'ai tester d'export de la `Z` en `sRGB` et en `Linear Rec.709`, les 2 images sont rigoureusement identiques.
+Je pense que blender tiens compte du fait que les passes comme la `Mist` et la `Z` ne sont pas des images, mais des données mathématiques auquelles il n'y a aucune raison d'appliquer des changements d'espace. Sur ces passes, le champs `color space` semble inopérant. J'ai tester un export de la `Z` en `sRGB` et en `Linear Rec.709` et les 2 images sont rigoureusement identiques.
 
 ## V. Conclusion 
-Comme vous le savez, les premier épisodes de cette serie sont écrit a-posteriori. Ce que je décris ici à en réalité été effectué il y a plusieurs mois. Repasser sur du travail déjà effectué est relativement fastidieux, mais je dois dire que cette seconde passe me permet d'affiner ma compréhention des choses, d'en découvrir de nouvelles voir même de corriger des erreures qui m'avaient échapées.
+Comme vous le savez, les premier épisodes de cette serie sont écrits en différé. Ce que je décris ici à en réalité été effectué il y a plusieurs mois. Et je peux vous dire que jusqu'à présent, l'harmonisation de la depth aura été le plus gros challenge de ce POC. Je ne suis pas mécontant d'en être venu à bout.
 
-Par exemple, l'intégralité de l'arc sur les espaces de couleur est nouveau. Au premier passage, je n'avais pas vraiment questionné la case à coché magique. C'était un réglage parmis 1000 autres sur lequel je n'étais pas forcement revenu. Mais écrire ces article me force à trouver le sous-ensemble minimal de réglages qui donne le résultat attendu (parce que oui, je teste beaucoup plus de choses que ce que je présente). Et surtout, ça m'oblige à réèlement comprendre pourquoi ça marche. Ce qui à beaucoup de valeur pour moi.
+Par ailleurs, repasser sur du travail déjà effectué est toujours aussi fastidieux, mais je dois dire que cette seconde passe me permet d'affiner ma compréhention des choses et de corriger des erreures qui m'avaient échapées.
+
+Par exemple, l'intégralité de l'arc sur les espaces de couleur est nouveau. Au premier passage, je n'avais pas vraiment questionné la case à cocher magique. C'était un réglage parmis 1000 autres sur lequel je n'étais pas forcement revenu. Mais écrire ces article me force à trouver le sous-ensemble minimal de réglages qui donne le résultat attendu (parce que oui, je teste beaucoup plus de choses que ce que je présente). Et surtout, ça m'oblige à réèlement comprendre pourquoi ça marche. Ce qui à mon sens est primordiale. 
 
 Le mois prochain, on s'occupera de l'harmonisation des normales. C'est le dernier élement qui nous manque pour commencer à implémenter de la lumière. Après ça on va pouvoir faire des choses plus visuelles. J'espère que ce nouveau numéro vous aura plu et je vous dis à bientôt pour de nouvelles aventures !
