@@ -126,22 +126,26 @@ Dans un shader, les calculs sont fait en Linear Color. La correction gamma n'est
 
 Il se trouve que la case `Use HDR 2D` permet entre autres d'avoir une image en Linear Color sans correction gamma.
 
-### 4. L'erreur de la Mist    
- Le nouveau présage est bien meilleur que les précédents. Mais on remarque tout de même la présence de cercle concentriques de plus en plus claires à mesure que l'on s'éloigne du centre. Pour corriger cet ultime problème, on va devoir revenir sur une erreur commise au tout début de l'article. Vous vous souvenez quand on choisit au doigt mouillé la `Mist` plutôt que la `Z` ? Et bien perdu ! C'était la `Z`...             
+### 4. Mist or not Mist   
+ Le nouveau présage est bien meilleur que les précédents, mais on va devoir se débarasser de ces vilains artefacts. Si on est attentif, on peut remarquer que les cercles sont de plus en plus claire à mesure que l'on s'éloigne du centre. C'est cette observation qui m'a permis de comprendre la différence entre la `Mist` et la `Z`. 
+ 
+ La documentation ne l'explique pas et je n'ai pas lu le code source de Blender. Je ne suis donc sûr de rien, mais je pense que la `Mist` est la distance entre la caméra et le fragment, alors que la Z est le projeté orthogonal de la position du fragment sur l’axe Z de la caméra.
 
-Nous avons comis un déli de faciesse. En réalité, si la `Z` exportée était aussi moche, c'est parce que nous utilisons le format EXR. Ce format permet de reprsentrer les cannaux par des floatant arbitraires, potentiellement même négatifs. Blender profite de cette propriété pour ecoder la profondeure brute en mètre. Par consequent tout ce qui est à plus d'1m de la caméra apparait completement blanc.
+[![Zoom sur le pattern](images/mist_vs_Z.opti.webp)](images/mist_vs_Z.opti.webp)
+
+Pour un fragment au centre de l'écran, c'est deux valeurs sont identiques. Mais plus on s'éloigne du centre, plus elles divergent, ce qui explique parfaitement nos artefacts. On a choisit la `Mist` au doigt mouillé parce qu'elle nous plaisait plus. Et ben perdu ! C'était la `Z`... 
+
+Nous avons donc comis un petit délit de faciesse, mais en réalité, si la `Z` exportée était aussi moche, c’est parce que nous utilisons le format EXR. Dans ce format, les cannaux sont représentés par des floatants arbitraires (potentiellement même négatifs). Blender profite de cette propriété pour ecoder la profondeure exprimée directement en mètres. Par consequent tout ce qui est à plus d'1m de la caméra apparait completement blanc.
 
 Il suffit de mapper la valeur de la depth entre le near plane (0.1m) et le far plane (5m) et le tour est joué. Notre `Z` retrouve son apparence originale. 
 
 [![Zoom sur le pattern](images/compositor_map_Z.opti.webp)](images/compositor_map_Z.opti.webp)
 
-Un dernier passage chez l'oracle nous confirme que c'était bien cette passe qu'il fallait utiliser. Les artefacts ont disparu et l'image prèsque totalement noir. Seuls quelques minuscules point gris trahissent encore le contour du podium.
+Un dernier passage chez l'oracle nous confirme que c'était bien cette passe qu'il fallait utiliser. Les artefacts ont disparu et l'image est prèsque totalement noir.
 
 [![Zoom sur le pattern](images/oracle_victory.opti.webp)](images/oracle_victory.opti.webp)
 
-On peut certes se féliciter de ce resultat des plus satisfgaisants. Mais qu'est ce qui différencie `Z` et `Mist` au juste ? Et bien la documentation ne le dit pas et je n'ai pas lu le code source de Blender. Mais la nature les artefacts concentriques me laissent penser que la mist est la distance brute entre le fragment et la position du fragment, alors que la `Z` est le projeté orthogonal de ce fragment sur l'axe Z de la caméra.
-
-[![Zoom sur le pattern](images/mist_vs_Z.opti.webp)](images/mist_vs_Z.opti.webp)
+Seuls quelques minuscules point gris trahissent encore le contour du podium. Mais on peut s'arreter là, ce résultat est plus que satisfaisant.
 
 ## IV. Retour sur les espaces de couleur
 Petite parenthese pour discuter un point que j'ai volontairement éludé et que vous avez peut être relevé. Pour que les texturent soient dans le même espace de couleur, nous avons du cocher la case `Use HDR 2D`. Mais alors pourquoi nous n'avons pas eu à faire ça pour l'albédo dans le numéro précédent ?
@@ -165,4 +169,4 @@ Comme vous le savez, les premier épisodes de cette serie sont écrit a-posterio
 
 Par exemple, l'intégralité de l'arc sur les espaces de couleur est nouveau. Au premier passage, je n'avais pas vraiment questionné la case à coché magique. C'était un réglage parmis 1000 autres sur lequel je n'étais pas forcement revenu. Mais écrire ces article me force à trouver le sous-ensemble minimal de réglages qui donne le résultat attendu (parce que oui, je teste beaucoup plus de choses que ce que je présente). Et surtout, ça m'oblige à réèlement comprendre pourquoi ça marche. Ce qui à beaucoup de valeur pour moi.
 
-Le mois prochain, on s'occupera de l'harmonisation des normales. C'est le dernier élement qui nous manque pour commencer à implémenter de la lumière. Après ça on va pouvoir faire des choses plus visuelles. 
+Le mois prochain, on s'occupera de l'harmonisation des normales. C'est le dernier élement qui nous manque pour commencer à implémenter de la lumière. Après ça on va pouvoir faire des choses plus visuelles. J'espère que ce nouveau numéro vous aura plu et je vous dis à bientôt pour de nouvelles aventures !
