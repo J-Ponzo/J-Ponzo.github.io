@@ -1,7 +1,7 @@
 +++
 author = 'Turbo Tartine'
 date = '2025-05-28T09:01:41+02:00'
-draft = true
+draft = false
 title = "OpenRE devlog 2 : Harmonisation de la profondeur"
 description = 'devlog 2 du projet OpenRE'
 +++
