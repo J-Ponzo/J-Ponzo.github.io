@@ -6,7 +6,21 @@
     <description>Recent content in Projets on Turbo Tartine Games</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-fr</language>
-    <lastBuildDate>Wed, 30 Apr 2025 13:45:59 +0100</lastBuildDate><atom:link href="http://localhost:1313/projects/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 28 May 2025 09:01:41 +0200</lastBuildDate><atom:link href="http://localhost:1313/projects/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OpenRE devlog 2 : Harmonisation de la profondeur</title>
+      <link>http://localhost:1313/projects/open_re_poc_devlog_2/</link>
+      <pubDate>Wed, 28 May 2025 09:01:41 +0200</pubDate>
+      
+      <guid>http://localhost:1313/projects/open_re_poc_devlog_2/</guid>
+      
+      <description>&lt;h2 id=&#34;i-introduction&#34;&gt;I. Introduction&lt;/h2&gt;
+&lt;p&gt;Le mois dernier nous avions utilisé l&amp;rsquo;oracle pour harmoniser les textures d&amp;rsquo;albédo interactive et déterministe. Aujourd&amp;rsquo;hui, on va faire la même chose avec la profondeur.&lt;/p&gt;
+&lt;p&gt;Travail similaire, structure similaire. Je vais commencer par expliquer d&amp;rsquo;où viennent nos textures, puis on se lancera dans les réglages en surveillant les prophéties de l&amp;rsquo;oracle à chaque étape.&lt;/p&gt;
+&lt;p&gt;Je ne détaillerai pas autant que d&amp;rsquo;habitude les actions effectuées dans Blender et Godot. D&amp;rsquo;abord pour rester raccord avec ma volonté de concision et de simplicité (qui semble avoir été appréciée d&amp;rsquo;après les retours que j&amp;rsquo;ai eus). Mais aussi parce que ces actions seront très similaires à ce qu&amp;rsquo;on a fait dans le numéro précédent. On s&amp;rsquo;économisera donc les descriptions un peu lourdes.&lt;/p&gt;</description>
+      
+    </item>
+    
     <item>
       <title>OpenRE devlog 1 : Harmonisation de l&#39;Albedo</title>
       <link>http://localhost:1313/projects/open_re_poc_devlog_1/</link>
