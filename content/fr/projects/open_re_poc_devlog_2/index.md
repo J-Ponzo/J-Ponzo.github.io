@@ -16,7 +16,7 @@ Ce sera l'occasion de s'étendre un peu plus sur les péripéties sans pour auta
 
 ## II. Génération des textures
 Pour générer nos textures nous allons nous appuyer sur ce que nous avions fait avec l'albédo dans le numéro précédent :
-- Render target avec un post-process spécifique dans la scène Godot pour l'interactive
+- [Render target](/pages/glossary/#render-target) avec un [post-process](/pages/glossary/#post-process) spécifique dans la scène Godot pour l'interactive
 - Export de la passe Blender correspondant à la depth pour la déterministe
 
 Sauf indication contraire, on conservera les réglages déjà effectués (format EXR, pas de compression VRAM etc...)
@@ -90,7 +90,7 @@ Après ce petit ajustement, voici à quoi ressemble notre première prophétie :
 Pour rappel, un pixel blanc veut dire "différent" et un pixel noir "idendique". On part donc de loin ! Mais pas de panique, on va arranger ça.
 
 ### 2. Délinéarisation
-Comme l'indique la documentation de Godot, la `hint_depth_texture` n'est pas linéaire. C'est tout à fait normal. Les défauts de rendu liés à la précision (notamment le Z-Fighting) sont toujours moins disgracieux en arrière-plan que sous notre nez. C'est pourquoi la matrice de projection déforme la dimension z des fragments de manière à "donner du gras" aux valeurs proches.
+Comme l'indique la documentation de Godot, la `hint_depth_texture` n'est pas linéaire. C'est tout à fait normal. Les défauts de rendu liés à la précision (notamment le Z-Fighting) sont toujours moins disgracieux en arrière-plan que sous notre nez. C'est pourquoi la matrice de projection déforme la dimension z des [fragments](/pages/glossary/#fragment-shader) de manière à "donner du gras" aux valeurs proches.
 
 La Mist de Blender, elle, est exportée par défaut en linéaire. Il existe un paramètre `Falloff` qui permet de changer ça :
 
@@ -127,7 +127,7 @@ Je suis resté bloqué un moment à cette étape. Jusqu'à ce que par hasard, je
 
 Après lecture de la description du paramètre (et pas mal d'expérimentations), je suis arrivé à la conclusion que les render targets de Godot appliquent par défaut une correction gamma aux images qu'elles produisent. Autrement dit, par défaut ces textures ne sont pas en Linear Color mais en sRGB.
 
-Dans un shader, les calculs sont faits en Linear Color. La correction gamma n'est appliquée qu'en bout de chaîne juste avant d'afficher l'image à l'écran. C'est pourquoi la depth déterministe de Blender est dans cet espace de couleur. Mais si l'interactive est en sRGB ça ne va pas du tout.
+Dans un [shader](/pages/glossary/#shader), les calculs sont faits en Linear Color. La correction gamma n'est appliquée qu'en bout de chaîne juste avant d'afficher l'image à l'écran. C'est pourquoi la depth déterministe de Blender est dans cet espace de couleur. Mais si l'interactive est en sRGB ça ne va pas du tout.
 
 Il se trouve que la case `Use HDR 2D` permet entre autres d'avoir une image en Linear Color sans correction gamma. Raison pour laquelle elle améliore nos résultats.
 
