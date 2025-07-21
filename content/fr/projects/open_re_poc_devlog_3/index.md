@@ -50,19 +50,19 @@ La passe à activer est assez evidente cette fois ci. Elle s'appel sobrement : `
 - On ajoute un pin `normal` au noeud `File Output` du `Compositor`
 - On relie les 2 et on appuie sur `F12` pour générer le rendu
 
-<img compositor>
+[![Capture d'écran montrant comment activer la normal pass de Cycles](images/active_normal_pass.opti.webp)](images/active_normal_pass.opti.webp)
 
 A ma grande surprise, l'image obtenue ressemble à ça :
 
-<normal buggée>
+[![Capture montrant le resultat buggé de l'export de la normal pass de blender](images/normal0002_raw.opti.webp)](images/normal0002_raw.opti.webp)
 
 Ce n'est evidament pas ce qu'on veut. Je pense qu'il s'agit d'un bug de Blender car le contournement est pour le moins suspect : ajouter un noeud qui ne fait rien entre les 2 pins.
 
-<img add 0>
+[![Capture d'écran montrant comment fixer le bug d'export de la normal pass](images/fix_blend_bug.opti.webp)](images/fix_blend_bug.opti.webp)
 
 Le noeud `Add` ajoute à la normal la couleur noir (0, 0, 0, 1). Lorsqu'on fait ça, le rendu est correcte :
 
-<img correcte>
+[![Capture montrant la normal pass fixée](images/raw_d_normal.opti.webp)](images/raw_d_normal.opti.webp)
 
 ## III. Réglages
 Cette fois encore, il a fallu modifier l'oracle pour qu'il supporte la comparaison des textures de normales. Sans entrer dans les détails, j'ai ajouté une fonction de pré-traitement pour chacune des textures :
@@ -90,7 +90,7 @@ Si on compare les textures en l'état, on remarque immédiatement que les couleu
 - certaines face sont noir
 - les faces oposées à un face noir sont systématiquement colorées
 
-<img comp det / int raw>
+[![Comparaison côte à côte des textures de normales interactive et déterministe](images/first_compare_det_int.opti.webp)](images/first_compare_det_int.opti.webp)
 
 Quand on y réfléchi c'est parfaitement normal car contrairement à une couleur, un vecteur peut avoir des composant négatifs. Lorsqu'on essai de les visualiser, ces derniers sont clampés à 0 et un vecteur n'ayant que des valeurs négatives apparait donc noir.
 
@@ -135,7 +135,7 @@ vec3 compute_normal_difference(vec3 d_frag, vec3 i_frag) {
 
 Les couleurs sont toujours aux fraises, mais on a fait un premier pas. Et surtout, on peut maintenant visualiser correctement la texture déterministe sans avoir à deviner ce qu'il se passe dans les zones noires.
 
-<img comp det / int pack>
+[![Comparaison côte à côte des textures de normales interactive et déterministe (packée)](images/packed_compare_det_int.opti.webp)](images/packed_compare_det_int.opti.webp)
 
 ### 2. View vs World
 Une question qu'il faut toujours se poser quand on écrit un shader, c'est : "dans quel espace sont exprimées mes données". En effet il y a 2 écoles :
@@ -161,6 +161,12 @@ vec3 pre_process_i_normal(vec3 i_normal, mat4 inv_view_matrix) {
 Vous noterez qu'on effectue un "unpacking" avant le changement d'espace (ce qui est normal) mais qu'on "repack" juste derière pour pouvoir visualiser la texture correctement. Il faudra donc conserer le "redépackage" du calcul de comparaison ajouté à l'étape précédente.
 
 Par ailleurs, si vous vous demandez comment on obtient le parametre `inv_view_matrix` qui nous permet de changer d'espace, c'est très simple. Godot expose à ses shaders la matrice `INV_VIEW_MATRIX`. Mais elle n'est accessible que depuis `void fragment()` (le main du fragment shader dans le langage de shading de Godot). Il faut donc la passer en parametre.
+
+Obervons maintenant la différence entre les 2 espaces :
+
+[![Comparaison animée des textures déterministes en world space et view space](images/compare_view_world.gif)](images/compare_view_world.gif)
+
+Elle est visible mais pas très prononcée. Cela s'explique par le fait que notre caméra est presque alignée avec le repère. Dans ce cas `VIEW_SPACE` et `WORLD_SPACE` sont très proches vis à vis de la rotation. Cela aurait été beaucoup plus flagrant si la caméra regardait dans une autre direction. Cela illustre bien l'importance d'avoir plusieurs scènes de test. Certaines différences étant difficiles à détecter si on se place dans des cas particuliers.
 
 ### 3. Permutations du repère
 Evidement Blender et Godot n'utilisent pas le même repère. Le "up vector" de Godot est l'axe Y alors que celui de Blender est l'axe Z. C'est la raisons pour laquelle les couleurs représentant les normales ne match pas : les cannaux sont en quelques sortes inversés. Il faut donc reorganiser tout ça dans `pre_process_d_normal`. En comparant les gizmos des 2 logiciels, je suis arrivé à la conclusion que la bonne permutation était la suivante :
@@ -218,7 +224,7 @@ vec3 pre_process_d_normal(vec3 d_normal) {
 
 A partir de là il suffit de faire play, de régler le `visualisation_mode` de l'oracle sur `D_TEXTURE_ONLY` et d'incrémenter `dbg_permut_idx` dans l'éditeur jusqu'à ce que l'image soit noir.
 
-
+<gif total>
 
 Bon d'accord l'image 11 n'est completement noir, mais elle sort quand même bien du lot :
 - Elle est globalement plus sombre
@@ -243,7 +249,7 @@ Ok... c'est exactement la même en faite... Maintenant qu'on a comparé l'entré
 ### 4. Normalisation
 J'ai mis un moment à résoudre l'énigme. J'ai même envisagé l'idée de resortir la carte "Good Enough". Après tout le présage n'est pas bien pire que celui qu'on avait accépté pour l'albédo et quand on compare les textures actuelles, elle sont quand même très proche.
 
-<img determinist / interactive>
+[![Comparaison animée des textures interactive et déterministe en l'état](images/no_normalize_comp.gif)](images/no_normalize_comp.gif)
 
 Mais dans le cas des normales on ne peut pas se contanter d'un jugé à l'oeuil. On les représente par des couleurs pour pouvoir le visualiser facilement mais il faut garder à l'esprit que ce sont en réalité des données mathématique qui interviennent dans des calculs complexes. Le risque d'accumuler de l'erreur au fils des opérations est trop grand. Il faut faire mieux !
 
@@ -260,7 +266,8 @@ float angle = acos(dot(v1, v2));
 J'igniore pourquoi, mais il s'avère que les normales fournies par Blender et Godot ne sont pas toujours égales à 1. Pour le mettre en évidence, j'ai temporairement modifié les fonctions `pre_process_i_normal` et `pre_process_d_normal` de manière à ce que l'on puisse visualiser l'erreur grossie 100 fois :
 
 ```glsl 
-vec3 pre_process_i_normal(vec3 i_normal, mat4 inv_view_matrix) {	
+vec3 pre_process_i_normal(vec3 i_normal, mat4 inv_view_matrix) {
+	i_normal = i_normal * 2.0 - 1.0;	// Unpack
 	float norm_err = (1.0 - length(i_normal)) * 100.0;
 	return vec3(norm_err, norm_err, norm_err);
 }
@@ -273,7 +280,7 @@ vec3 pre_process_d_normal(vec3 d_normal) {
 
 Le résultat est sans appel. Dans un cas comme dans l'autre, les normales ne sont pas toujours des vecteurs unitaires :
 
-<img err norm>
+[![Comparaison côte à côte des erreures de taille de normal grossies 100x. A gauche, blender est mauvais principalement sur les angles. A droite godot est bruité sur les surface courbe et sur les murs de gauche et le sol produites](images/err_comp.opti.webp)](images/err_comp.opti.webp)
 
 Si on normalise les vecteurs avant le calcule de l'angle, on obtien un présage de bien meilleur qualité :
 
@@ -292,6 +299,6 @@ vec3 compute_normal_difference(vec3 d_frag, vec3 i_frag) {
 
 [![2nd prophecie de l'oracle. Tout est bien noir à l'exception des contours. On voit apparaitre de légers paternes semblant suivre la géométrie des faces sur les surfaces courbes](images/normalize.PNG)](images/normalize.PNG)
 
-On notera la présence de patèrnes sur les surface courbes. Les motifs semble suivrent les faces qui composent la géométrie. Je pense que ça vient de la façon dont les 2 logiciels calcule les normales aux sommets. C'est toujours plus ou moins une moyenne des normales des faces adjacentes, mais il existe plusieurs heuristique pour pondérer cette moyenne (prorata des surface, des angles, mix des 2 etc...). Il ont dû tout simplement en choisir des différentes mais ce ne sera pas un probleme pour nous. Si notre bottle-neck est l'heurisique choisie c'est qu'on peut s'arréter là. On est suffisament précis.
+On notera la présence de patèrnes sur les surface courbes. Les motifs semble suivrent les faces qui composent la géométrie. Je pense que ça vient de la façon dont les 2 logiciels calcule les normales aux sommets. C'est toujours plus ou moins une moyenne des normales des faces adjacentes, mais il existe plusieurs heuristique pour pondérer cette moyenne (prorata des surface, des angles, mix des 2 etc...). Il ont dû tout simplement en choisir des différentes mais ce ne sera pas un probleme pour nous. Si notre bottle-neck est l'heurisique choisie on peut s'arréter là. On est bien assez précis.
 
 ## IV. Conclusion 
