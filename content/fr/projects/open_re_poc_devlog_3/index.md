@@ -224,9 +224,9 @@ vec3 pre_process_d_normal(vec3 d_normal) {
 
 A partir de là il suffit de faire play, de régler le `visualisation_mode` de l'oracle sur `D_TEXTURE_ONLY` et d'incrémenter `dbg_permut_idx` dans l'éditeur jusqu'à ce que l'image soit noir.
 
-<gif total>
+[![Capture d'écran montrant comment fixer le bug d'export de la normal pass](images/all_permuts.webp)](images/all_permuts.webp)
 
-Bon d'accord l'image 11 n'est completement noir, mais elle sort quand même bien du lot :
+Bon d'accord l'image 11 n'est pas completement noir, mais elle sort quand même bien du lot :
 - Elle est globalement plus sombre
 - C'est la seule à n'avoir aucune face completement blanche
 - Elle ressemble quand même beaucoup à la première permutation qu'on a essayé ... c'est quoi la formule ? ...
