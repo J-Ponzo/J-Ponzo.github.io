@@ -148,7 +148,7 @@ J'ai été surpris de ne pas trouver l'info dans leurs documentations respective
 - Si les couleurs varient avec l'angle => on est en `VIEW_SPACE`
 - Si les couleurs ne bougent pas => on est en `WORLD_SPACE`
 
-Il se trouve que Blender est en `WORLD_SPACE` et Godot en `VIEW_SPACE`. Je préfère travailler en `WORLD_SPACE`, on va donc utiliser `pre_process_d_normal` pour effectuer le changement d'espace côté Godot :
+Il se trouve que Blender est en `WORLD_SPACE` et Godot en `VIEW_SPACE`. Je préfère travailler en `WORLD_SPACE`, on va donc utiliser `pre_process_i_normal` pour effectuer le changement d'espace côté Godot :
 
 ```glsl
 vec3 pre_process_i_normal(vec3 i_normal, mat4 inv_view_matrix) {	
@@ -166,7 +166,7 @@ Obervons maintenant la différence entre les 2 espaces :
 
 [![Comparaison animée des textures déterministes en world space et view space](images/compare_view_world.gif)](images/compare_view_world.gif)
 
-Elle est visible mais pas très prononcée. Cela s'explique par le fait que notre caméra est presque alignée avec le repère. Dans ce cas `VIEW_SPACE` et `WORLD_SPACE` sont très proches vis à vis de la rotation. Cela aurait été beaucoup plus flagrant si la caméra regardait dans une autre direction. Cela illustre bien l'importance d'avoir plusieurs scènes de test. Certaines différences étant difficiles à détecter si on se place dans des cas particuliers.
+Elle est visible mais pas très prononcée. Cela s'explique par le fait que notre caméra est presque alignée avec le repère. Dans ce cas `VIEW_SPACE` et `WORLD_SPACE` sont très proches vis à vis de la rotation. Cela aurait été beaucoup plus flagrant si la caméra regardait dans une autre direction. Cela illustre bien l'importance d'avoir plusieurs scènes de test. Certaines différences étant difficiles à détecter si on se place dans des cas particuliers sans s'en rendre compte.
 
 ### 3. Permutations du repère
 Evidement Blender et Godot n'utilisent pas le même repère. Le "up vector" de Godot est l'axe Y alors que celui de Blender est l'axe Z. C'est la raisons pour laquelle les couleurs représentant les normales ne match pas : les cannaux sont en quelques sortes inversés. Il faut donc reorganiser tout ça dans `pre_process_d_normal`. En comparant les gizmos des 2 logiciels, je suis arrivé à la conclusion que la bonne permutation était la suivante :
