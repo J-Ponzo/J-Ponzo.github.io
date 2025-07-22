@@ -86,7 +86,7 @@ vec3 compute_normal_difference(vec3 d_frag, vec3 i_frag) {
 }
 ```
 ### 1. Normal Packing / Unpacking
-Si on compare les textures en l'état, on remarque immédiatement que les couleurs sont très différentes, mais pas seulement. Si on observe la texture déterministe, on constate aussi que :
+Si on compare les textures en l'état, on remarque que les couleurs sont très différentes, mais pas seulement. Si on observe la texture déterministe, on constate aussi que :
 - certaines face sont noir
 - les faces oposées à un face noir sont systématiquement colorées
 
@@ -226,7 +226,7 @@ A partir de là il suffit de faire play, de régler le `visualisation_mode` de l
 
 [![Capture d'écran montrant comment fixer le bug d'export de la normal pass](images/all_permuts.webp)](images/all_permuts.webp)
 
-Bon d'accord l'image 11 n'est pas completement noir, mais elle sort quand même bien du lot :
+Bon d'accord l'image 11 n'est pas completement noire, mais elle sort quand même bien du lot :
 - Elle est globalement plus sombre
 - C'est la seule à n'avoir aucune face completement blanche
 - Elle ressemble quand même beaucoup à la première permutation qu'on a essayé ... c'est quoi la formule ? ...
