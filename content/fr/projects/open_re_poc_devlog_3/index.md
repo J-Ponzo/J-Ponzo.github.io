@@ -6,7 +6,7 @@ title = "OpenRE devlog 3 : Harmonisation des normales"
 description = 'devlog 3 du projet OpenRE'
 +++
 ## I. Introduction
-Si vous êtes un lecteur du future et que vous lisez ces develogs d'une traite, vous avez surement la structure des précédents numéros en tête. Mais si vous les découvrez au fur et à mesure (ou que vous aviez fait une petite pause), un petit rappel me parait approprié.
+Si vous êtes un lecteur du future et que vous lisez ces develogs d'une traite, vous avez surement la structure des précédents numéros en tête. Mais si vous les découvrez au fur et à mesure, un petit rappel me semble approprié.
 
 Depuis le début de cette serie nous avons entrepris d'harmoniser les différents jeux de textures issues de Blender et Godot qui composent nos G-Buffers déterministe et interactif. Jusqu'ici nous avons traité :
 - l'albédo
@@ -21,10 +21,10 @@ Aujourd'hui nous allons nous occuper des textures de normales. Et comme à chaqu
 - une seconde partie présentant les ajustement effectués pour avoir des textures bien en phase 
 
 ## II. Génération des textures
-Comme d'habitude, on va utiliser une passe Cycle dédiée côté déterministe, et une [Render target](/pages/glossary/#render-target) avec un [post-process](/pages/glossary/#post-process) côté interactif. 
+Une fois n'est pas coutume, nous allons utiliser une nouvelle passe Cycle dédiée côté déterministe, et une [Render target](/pages/glossary/#render-target) avec un [post-process](/pages/glossary/#post-process) côté interactif. 
 
 ### 1. Normal intéractive
-Commençons tout dessuite avec le post-process. Cette fois, la texture qui nous intéresse est `hint_normal_roughness_texture`. Voici le code complet :
+Commençons tout dessuite avec le post-process. Cette fois, la texture qui nous intéresse est la `hint_normal_roughness_texture`. Voici le code complet :
 
 ```glsl
 shader_type spatial;
@@ -45,7 +45,7 @@ void fragment() {
 Rien de particulier ici. On ignore simplement la roughness stoqué dans le composant `w` de la `hint_normal_roughness_texture` parce qu'on en a pas besoin.
 
 ### 2. Normal déterministe
-La passe à activer est assez evidente cette fois ci. Elle s'appel sobrement : `Normal`. Comme à l'acoutumée :
+La passe à activer est ici assez evidente. Elle s'appel tout simplement : `Normal`. Vous commencez à avoir l'habitude maintenant :
 - On active la passe `Normal` depuis le panneau latéral
 - On ajoute un pin `normal` au noeud `File Output` du `Compositor`
 - On relie les 2 et on appuie sur `F12` pour générer le rendu
@@ -56,11 +56,11 @@ A ma grande surprise, l'image obtenue ressemble à ça :
 
 [![Capture montrant le resultat buggé de l'export de la normal pass de blender](images/normal0002_raw.opti.webp)](images/normal0002_raw.opti.webp)
 
-Ce n'est evidament pas ce qu'on veut. Je pense qu'il s'agit d'un bug de Blender car le contournement est pour le moins suspect : ajouter un noeud qui ne fait rien entre les 2 pins.
+Ce n'est evidament pas ce qu'on veut. Je pense qu'il s'agit d'un bug de Blender car le contournement est pour le moins suspect :
 
 [![Capture d'écran montrant comment fixer le bug d'export de la normal pass](images/fix_blend_bug.opti.webp)](images/fix_blend_bug.opti.webp)
 
-Le noeud `Add` ajoute à la normal la couleur noir (0, 0, 0, 1). Lorsqu'on fait ça, le rendu est correcte :
+Il suffit d'ajouter un noeud qui ne fait rien du tout entre les 2 pins. Par exemple le noeud `Add` dans l'illistration ci-dessus qui ajoute à la normal la couleur noir (0, 0, 0). Lorsqu'on fait ça, le rendu redevient cohérent :
 
 [![Capture montrant la normal pass fixée](images/raw_d_normal.opti.webp)](images/raw_d_normal.opti.webp)
 
@@ -94,9 +94,9 @@ Si on compare les textures en l'état, on remarque que les couleurs sont très d
 
 Quand on y réfléchi c'est parfaitement normal car contrairement à une couleur, un vecteur peut avoir des composant négatifs. Lorsqu'on essai de les visualiser, ces derniers sont clampés à 0 et un vecteur n'ayant que des valeurs négatives apparait donc noir.
 
-Non seulement ce n'est pas pratique pour la visualisation mais surtout la plupart des formats d'images ne permetent pas d'encoder des valeures négatives. Ici ce n'est pas le cas car on utilise EXR, mais avec un autre format, les valeurs seraient carrement clampée à l'export et la donnée serait tout simplement perdu.
+Non seulement ce n'est pas pratique pour la visualisation mais surtout la plupart des formats d'images ne permetent pas d'encoder des valeures négatives. Ici ce n'est pas le cas car on utilise EXR, mais avec un autre format, les valeurs seraient clampée à l'export et la donnée serait tout simplement perdu.
 
-La solution usuelle à ce probleme est de projeter les composants des normales de l'interval [-1, 1] à l'interval [0, 1] avant d'exporter ("normal packing"). Pour retrouver nos normales et faire nos calculs dans le shader après import de la texture ainsi packée, il suffit d'effectuer l'opération inverse ("normal unpacking").
+La solution usuelle à ce probleme est de projeter les composants des normales de l'interval [-1, 1] vers l'interval [0, 1] avant d'exporter. On appel ce procédé le "normal packing". Par la suite, pour retrouver nos normales et faire nos calculs dans le shader après import, il suffit d'effectuer l'opération inverse ("normal unpacking").
 
 ```glsl
 // ... Normal generation ...
@@ -142,7 +142,7 @@ Une question qu'il faut toujours se poser quand on écrit un shader, c'est : "da
 - faire les calcules en `VIEW_SPACE` (l'espace de la caméra)
 - faire les calcules en `WORLD_SPACE` (l'espace de la scène)
 
-Les 2 options sont parfaitement valides, mais évidement il faut choisir et s'assurer que toutes les données soient bien conforme à ce choix (et les changer d'espace si nécessaire). Il est donc primordial de savoir dans quel espace Blender et Godot expriment leurs normales.
+Les 2 options sont parfaitement viables, mais évidement il faut choisir et s'assurer que toutes les données soient bien conforme à ce choix (et les changer d'espace si ce n'est pas le cas). Il est donc primordial de savoir dans quel espace Blender et Godot expriment leurs normales.
 
 J'ai été surpris de ne pas trouver l'info dans leurs documentations respectives. Mais heureusement ce n'est pas très difficile à déterminer. Il suffit de faire varier l'angle de la caméra et d'observer les couleurs qui représentent les normales :
 - Si les couleurs varient avec l'angle => on est en `VIEW_SPACE`
@@ -158,7 +158,7 @@ vec3 pre_process_i_normal(vec3 i_normal, mat4 inv_view_matrix) {
 }
 ```
 
-Vous noterez qu'on effectue un "unpacking" avant le changement d'espace (ce qui est normal) mais qu'on "repack" juste derière pour pouvoir visualiser la texture correctement. Il faudra donc conserer le "redépackage" du calcul de comparaison ajouté à l'étape précédente.
+Vous noterez qu'on effectue un "unpacking" avant le changement d'espace, ce qui est normal. Mais il ne faut pas oublier de "repack" juste près pour pouvoir visualiser la texture correctement.
 
 Par ailleurs, si vous vous demandez comment on obtient le parametre `inv_view_matrix` qui nous permet de changer d'espace, c'est très simple. Godot expose à ses shaders la matrice `INV_VIEW_MATRIX`. Mais elle n'est accessible que depuis `void fragment()` (le main du fragment shader dans le langage de shading de Godot). Il faut donc la passer en parametre.
 
@@ -184,7 +184,7 @@ Malheureusement, l'Oracle n'avait pas l'aire d'accord. En effet, sur la prophéc
 
 [![1er prophecie de l'oracle. Le mur gauche ainsi que le sol sont trè claires](images/no_normalize.opti.webp)](images/no_normalize.opti.webp)
 
-Ma vie étant visiblement un mensonge, j'ai essayé d'autres permutations un peu au hasard. Vous savez ce moment où on ne comprend pas son erreur et où on commence à changer un signes par ci ... inverser des termes par là ... (je sens d'ici les regard desaprobateurs mais je sais que vous le faites aussi ;)). 
+Ma vie étant visiblement un mensonge, j'ai essayé d'autres permutations un peu au hasard. Vous savez ce moment où on ne comprend pas son erreur et où on commence à changer un signes par ci ... inverser des termes par là ... (je sens d'ici les regard desaprobateurs mais je sais que vous le faites aussi 😅). 
 
 Comme souvent ça ne m'a pas mené bien loin. Mais ça ne veut pas dire que "le random programming" c'est mal en sois. Il faut juste le faire bien ! C'est à dire guider pas un raisonnement et pas par la flème.
 
@@ -302,3 +302,13 @@ vec3 compute_normal_difference(vec3 d_frag, vec3 i_frag) {
 On notera la présence de patèrnes sur les surface courbes. Les motifs semble suivrent les faces qui composent la géométrie. Je pense que ça vient de la façon dont les 2 logiciels calcule les normales aux sommets. C'est toujours plus ou moins une moyenne des normales des faces adjacentes, mais il existe plusieurs heuristique pour pondérer cette moyenne (prorata des surface, des angles, mix des 2 etc...). Il ont dû tout simplement en choisir des différentes mais ce ne sera pas un probleme pour nous. Si notre bottle-neck est l'heurisique choisie on peut s'arréter là. On est bien assez précis.
 
 ## IV. Conclusion 
+L'harmonisation des normale aura été plutôt facile. Mis à part le coup des normes non unitaires et le possible bug de blender, je m'attendais à peu près à touts les réglages effectués. Les questions d'espace, de repère ainsi que ces histoires de packing sont en effet assez usuelles en programmation graphique. Ce sont des pièges auxquels on fini par penser naturellement après être tombé dedans 10 fois.
+
+Nous disposons donc desormais d'une calibration satifaisante de nos Blender et Godot pour les maps suivantes :
+- albédo
+- depth
+- normales
+
+Ce sont les données minimales nécessaires à une première implémentation de la lumière. On va donc pouvoir laisser l'oracle un peu tranquille et commencer à intégrer de vrais elements intératifs par dessus un arrière plan déterministe et voire comment on gèrer l'illumination dans les 2 sens.
+
+C'est donc dans le prochain numéro que les pièces vont enfin commencer à s'assembler. J'ai hate de trouver un peu de temps pour m'y ateler... alors à très vite, je l'espère !
