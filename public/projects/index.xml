@@ -6,7 +6,20 @@
     <description>Recent content in Projets on Turbo Tartine Games</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-fr</language>
-    <lastBuildDate>Wed, 28 May 2025 09:01:41 +0200</lastBuildDate><atom:link href="http://localhost:1313/projects/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 15 Jul 2025 09:38:25 +0200</lastBuildDate><atom:link href="http://localhost:1313/projects/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OpenRE devlog 3 : Harmonisation des normales</title>
+      <link>http://localhost:1313/projects/open_re_poc_devlog_3/</link>
+      <pubDate>Tue, 15 Jul 2025 09:38:25 +0200</pubDate>
+      
+      <guid>http://localhost:1313/projects/open_re_poc_devlog_3/</guid>
+      
+      <description>&lt;h2 id=&#34;i-introduction&#34;&gt;I. Introduction&lt;/h2&gt;
+&lt;p&gt;Si vous êtes un lecteur du futur et que vous lisez ces develogs d&amp;rsquo;une traite, vous avez sûrement la structure des précédents numéros en tête. Mais si vous les découvrez au fur et à mesure, un petit rappel me semble approprié.&lt;/p&gt;
+&lt;p&gt;Depuis le début de cette série, nous avons entrepris d&amp;rsquo;harmoniser les différents jeux de textures issus de Blender et Godot qui composent nos G-Buffers déterministes et interactifs. Jusqu&amp;rsquo;ici, nous avons traité :&lt;/p&gt;</description>
+      
+    </item>
+    
     <item>
       <title>OpenRE devlog 2 : Harmonisation de la profondeur</title>
       <link>http://localhost:1313/projects/open_re_poc_devlog_2/</link>
