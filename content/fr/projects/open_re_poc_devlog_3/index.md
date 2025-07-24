@@ -1,10 +1,13 @@
 +++
 author = 'Turbo Tartine'
 date = '2025-07-15T09:38:25+02:00'
-draft = true
+draft = false
 title = "OpenRE devlog 3 : Harmonisation des normales"
 description = 'devlog 3 du projet OpenRE'
 +++
+
+[⬅️ Vers Précédent : "OpenRE devlog 2 : Harmonisation de la profondeur"](projects/open_re_poc_devlog_2)
+
 ## I. Introduction
 Si vous êtes un lecteur du futur et que vous lisez ces develogs d'une traite, vous avez sûrement la structure des précédents numéros en tête. Mais si vous les découvrez au fur et à mesure, un petit rappel me semble approprié.
 
@@ -138,7 +141,7 @@ Les couleurs sont toujours aux fraises, mais on a fait un premier pas. Et surtou
 [![Comparaison côte à côte des textures de normales interactive et déterministe (packée)](images/packed_compare_det_int.opti.webp)](images/packed_compare_det_int.opti.webp)
 
 ### 2. View vs World
-Une question qu'il faut toujours se poser quand on écrit un shader, c'est : "dans quel espace sont exprimées mes données". En effet, il y a deux écoles :
+Une question qu'il faut toujours se poser quand on écrit un [shader](/pages/glossary/#shader), c'est : "dans quel espace sont exprimées mes données". En effet, il y a deux écoles :
 - faire les calculs en `VIEW_SPACE` (l'espace de la caméra)
 - faire les calculs en `WORLD_SPACE` (l'espace de la scène)
 
@@ -160,7 +163,7 @@ vec3 pre_process_i_normal(vec3 i_normal, mat4 inv_view_matrix) {
 
 Vous noterez qu'on effectue un "unpacking" avant le changement d'espace, ce qui est normal. Mais il ne faut pas oublier de "repack" juste après pour pouvoir visualiser la texture correctement.
 
-Par ailleurs, si vous vous demandez comment on obtient le paramètre `inv_view_matrix` qui nous permet de changer d'espace, c'est très simple. Godot expose à ses shaders la matrice `INV_VIEW_MATRIX`. Mais elle n'est accessible que depuis `void fragment()` (le main du fragment shader dans le langage de shading de Godot). Il faut donc la passer en paramètre.
+Par ailleurs, si vous vous demandez comment on obtient le paramètre `inv_view_matrix` qui nous permet de changer d'espace, c'est très simple. Godot expose à ses shaders la matrice `INV_VIEW_MATRIX`. Mais elle n'est accessible que depuis `void fragment()` (le main du [fragment shader](/pages/glossary/#fragment-shader) dans le langage de shading de Godot). Il faut donc la passer en paramètre.
 
 Observons maintenant la différence entre les deux espaces :
 
@@ -299,12 +302,12 @@ vec3 compute_normal_difference(vec3 d_frag, vec3 i_frag) {
 
 [![2nd prophecie de l'oracle. Tout est bien noir à l'exception des contours. On voit apparaitre de légers paternes semblant suivre la géométrie des faces sur les surfaces courbes](images/normalize.PNG)](images/normalize.PNG)
 
-On notera la présence de motifs sur les surfaces courbes. Les motifs semblent suivre les faces qui composent la géométrie. Je pense que ça vient de la façon dont les deux logiciels calculent les normales aux sommets. C'est toujours plus ou moins une moyenne des normales des faces adjacentes, mais il existe plusieurs heuristiques pour pondérer cette moyenne (prorata des surfaces, des angles, mix des deux, etc.). Godot et Blender n'utilisent certainement pas la même, mais ce ne sera pas un problème pour nous. Si notre bottleneck est l'heuristique choisie, on peut s'arrêter là. On est bien assez précis.
+On notera la présence de motifs sur les surfaces courbes. Les motifs semblent suivre les [face](/pages/glossary/#face) qui composent la géométrie du [mesh](/pages/glossary/#mesh). Je pense que ça vient de la façon dont les deux logiciels calculent les normales des [vertex](/pages/glossary/#vertex). C'est toujours plus ou moins une moyenne des normales des faces adjacentes, mais il existe plusieurs heuristiques pour pondérer cette moyenne (prorata des surfaces, des angles, mix des deux, etc.). Godot et Blender n'utilisent certainement pas la même, mais ce ne sera pas un problème pour nous. Si notre bottleneck est l'heuristique choisie, on peut s'arrêter là. On est bien assez précis.
 
 ## IV. Conclusion 
 L'harmonisation des normales aura été plutôt facile. Mis à part le coup des normes non unitaires et le possible bug de Blender, je m'attendais à peu près à tous les réglages effectués. Les questions d'espace, de repère ainsi que ces histoires de packing sont en effet assez usuelles en programmation graphique. Ce sont des pièges auxquels on finit par penser naturellement après être tombé dedans 10 fois.
 
-Nous disposons donc désormais d'une calibration satisfaisante de nos Blender et Godot pour les maps suivantes :
+Nous disposons donc désormais d'une calibration satisfaisante de Blender et Godot pour les maps suivantes :
 - albédo
 - depth
 - normales

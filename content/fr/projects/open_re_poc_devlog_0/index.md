@@ -309,4 +309,4 @@ D'ailleurs, je peux déjà annoncer le sujet du prochain numéro ! Dans le proch
 
 D’ici là, prenez soin de vous, et j'espère que ce premier *devlog* vous aura plu. N’hésitez pas à me faire vos retours !
 
-
+<div style="text-align: right"><a href="../open_re_poc_devlog_1">Vers Suivant : "OpenRE devlog 1 : Harmonisation de l'Albedo" ➡️</a></div>

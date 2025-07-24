@@ -5,6 +5,9 @@ draft = false
 title = "OpenRE devlog 2 : Harmonisation de la profondeur"
 description = 'devlog 2 du projet OpenRE'
 +++
+
+[⬅️ Vers Précédent : "OpenRE devlog 1 : Harmonisation de l'Albedo"](projects/open_re_poc_devlog_1)
+
 ## I. Introduction
 Le mois dernier nous avions utilisé l'oracle pour harmoniser les textures d'albédo interactive et déterministe. Aujourd'hui, on va faire la même chose avec la profondeur.
 
@@ -179,3 +182,5 @@ Par ailleurs, repasser sur du travail déjà effectué est toujours aussi fastid
 Par exemple, l'intégralité de l'arc sur les espaces de couleur est nouveau. Au premier passage, je n'avais pas vraiment questionné la case à cocher magique. C'était un réglage parmi 1000 autres sur lequel je n'étais pas forcément revenu. Mais écrire ces articles me force à trouver le sous-ensemble minimal de réglages qui donne le résultat attendu (parce que oui, je teste beaucoup plus de choses que ce que je présente). Et surtout, ça m'oblige à réellement comprendre pourquoi ça marche. Ce qui à mon sens est primordial.
 
 Le mois prochain, on s'occupera de l'harmonisation des normales. C'est le dernier élément qui nous manque pour commencer à implémenter de la lumière. Après ça on va pouvoir faire des choses plus visuelles. J'espère que ce nouveau numéro vous aura plu et je vous dis à bientôt pour de nouvelles aventures !
+
+<div style="text-align: right"><a href="../open_re_poc_devlog_3">Vers Suivant : "OpenRE devlog 3 : Harmonisation des normales" ➡️</a></div>
