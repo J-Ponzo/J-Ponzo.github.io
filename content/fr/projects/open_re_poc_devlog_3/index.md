@@ -1,10 +1,13 @@
 +++
 author = 'Turbo Tartine'
 date = '2025-07-15T09:38:25+02:00'
-draft = true
+draft = false
 title = "OpenRE devlog 3 : Harmonisation des normales"
 description = 'devlog 3 du projet OpenRE'
 +++
+
+[⬅️ Vers Précédent : "OpenRE devlog 2 : Harmonisation de la profondeur"](projects/open_re_poc_devlog_2)
+
 ## I. Introduction
 Si vous êtes un lecteur du futur et que vous lisez ces develogs d'une traite, vous avez sûrement la structure des précédents numéros en tête. Mais si vous les découvrez au fur et à mesure, un petit rappel me semble approprié.
 
