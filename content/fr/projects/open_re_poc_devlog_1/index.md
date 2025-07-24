@@ -5,6 +5,9 @@ draft = false
 title = "OpenRE devlog 1 : Harmonisation de l'Albedo"
 description = 'devlog 1 du projet OpenRE'
 +++
+
+[⬅️ Vers Précédent : "OpenRE devlog 0 : Oracle Driven Development"](projects/open_re_poc_devlog_0)
+
 ## I. Avant-propos
 Avant de démarrer, je voudrais préciser que, rétrospectivement, je ne suis pas totalement convaincu par le format du premier numéro de cette serie. Je le trouve un peu trop détaillé, peut-être un peu trop "*storytelling*" aussi.
 Mon intention est toujours de proposer des articles personnels et authentiques, mais dans le cadre d'un *devlog*, il peut être intéressant de rester relativement concis pour ne pas perdre de vue l'objectif principal : documenter l'avancement du projet.
@@ -163,3 +166,5 @@ Quoi qu’il en soit, ce petit raccourci ne me paraît pas bien dangereux. S’i
 ![Retrospective des différentes étapes](images/gif_alt_goodenough.webp)
 
 Le mois prochain, on fera la même chose pour les textures de profondeur. D'ici là portez vous bien et à bientôt.
+
+<div style="text-align: right"><a href="../open_re_poc_devlog_2">Vers Suivant : "OpenRE devlog 2 : Harmonisation de la profondeur" ➡️</a></div>
