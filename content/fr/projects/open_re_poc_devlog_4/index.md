@@ -9,7 +9,7 @@ description = 'devlog 4 du projet OpenRE'
 [⬅️ Vers Précédent : "OpenRE devlog 3 : Harmonisation des normales"](projects/open_re_poc_devlog_3)
 
 ## I. Introduction
-Grâce au travail effectué jusqu'ici, nous sommes en mesure d'effectuer nos premiers rendus. Pour cela nous allons partir de la scène actuelle à laquelle nous allons ajouter un peu de mouvement mais surtout : de la lumière.
+Grâce au travail effectué jusqu'ici, nous sommes en mesure de faire nos premiers rendus. Pour cela nous allons partir de la scène actuelle à laquelle nous allons ajouter un peu de mouvement mais surtout, de la lumière.
 
 Comme d'habitude nous adopteront une aproche intérative. Nous commenceront par la version la plus rudimentaire possible que nous complexifieront petit à petit jusqu'à atteindre notre but. A la fin nous auront un rendu en temps réèl cohérent et comprenant :
 - de la géométrie déterministe (pré-rendue dans Blender)
@@ -34,7 +34,7 @@ Enfin, nous allons desactiver l'oracle et créer un nouveau post-process `ore_co
 A présent voyons un peu de quoi est fait ce post-process.
 
 ### 2. Shader du compositor
-Attention, pavé en approche ! Ne vous inquiétez pas on va reprendre ça moint par point, mais sans plus de cérémonie, voici la première itération du shader :
+Attention, pavé en approche ! Ne vous inquiétez pas on va reprendre ça point par point, mais sans plus de cérémonie, voici la première itération du shader :
 
 ```glsl
 // USUAL GODOT POST-PROCESS STUFF
@@ -90,7 +90,7 @@ void fragment() {
 }
 ```
 
-#### 2.1. Definition habituelle d'un post-process :
+#### 2.1. Definition habituelle d'un post-process
 On en a déjà parlé, ces premières lignes sont les même pour tous les post-process.
 
 ```glsl
@@ -103,7 +103,7 @@ void vertex() {
 }
 ```
 
-#### 2.2. Include des helpers de l'oracle :
+#### 2.2. Include des helpers de l'oracle
 ```glsl  
 // HELPER FUNCTIONS FROM THE ORACLE
 #include "pre_process_utils.gdshaderinc"
@@ -137,7 +137,7 @@ vec3 pre_process_d_normal(vec3 d_normal) {
 
 Le lecteur attentif aura remarqué qu'on ne repack plus les normales directement dans le pré-process. En effet, avoir des valeurs entre 0 et 1 n'est utile que pour la visualisation. Dans le cas général, on veut la vrai normal prête à l'emplois. C'est pourquoi il est plus logique pour l'Oracle de repacker lui même en dehors du pré-process.
 
-#### 2.3. Parmètres d'entrée :
+#### 2.3. Parmètres d'entrée
 Comme évoqué dans la section précédente, le post-process `ore_compositor` va prendre en entrée des `uniforms` correspondant aux 2 G-Buffers plus quelques paramètres additionnels relatifs à la scène.
 
 ```glsl
@@ -158,7 +158,7 @@ Pour l'instant, on a besoin :
 - des paramètres near et far de la caméra active
 - des texture de depth et d'albédo issues des G-Buffers intéractif et détermniste
 
-#### 2.4. Echantillonage des G-Buffers :
+#### 2.4. Echantillonage des G-Buffers
 Chaque map est échantillonée pour récupérer le fragment correspondant. Dans la foulée on applique les fameux pre-traitements nécessaires (ici au framents de la depth)
 
 ```glsl
@@ -178,7 +178,7 @@ void fragment() {
 }
 ```
 
-#### 2.5. Selection des fragment :
+#### 2.5. Selection des fragment
 Ensuite, on se base sur la valeur de la depth pour déterminer si le fragment courant appartien à la scène intéractive ou déterministe. On en profite pour assigner les fragments correspondant aux variable `depth_frag` et `albedo_frag` qui seront celles utilisées dans la suite du shader.
 
 ```glsl
@@ -202,7 +202,7 @@ void fragment() {
 }
 ```
 
-#### 2.6. Affichage du fragment final :
+#### 2.6. Affichage du fragment final
 ```glsl
 void fragment() {
 	...
@@ -214,7 +214,7 @@ void fragment() {
 
 Bon, ok... on était pas obligé d'assigner la depth si on renvoit directement l'albedo. Mais pas d'inquiétude, on anticipe juste un peu sur la suite.
 
-### 3. Resultat
+#### 2.7 Resultat
 Et voilà un magnifique chapaï unlit :
 
 <vidéo du rendu unlite>
@@ -224,16 +224,24 @@ Oui je sais c'est sacrément moche sans lumière. Mais au moins on peut constate
 Mission accomplie ! Place à la lumière maintenant.
 
 ## III. Lumière intéractive
-blabla roto-lumière qui clignote
+Dans ce numéro, on va se limiter à des sources ponctuelles (OmniLight en terminologie Godot). Les autres types de lumières seront traités dans des devlogs ulterieurs.
+
+Ajoutons donc une OmniLight à la scène intéractive. Cette dernière se verra assigner un script qui la fait orbiter autour du podium et modifie periodiquement sa couleur et son intensité.
+
+Pour faciliter sa localisation, elle sera materialisée par une petite sphere blanche. Ce n'est pas primodial pour le resultat final, mais c'est un petit artifice qui m'a pas mal aidé à débugger le shader.
 
 ### 1. "Distance-only" lighting
+Avant d'implémenter de la "vrai" lumière, on va utiliser un modèle d'illumination pas du tout homologué qui se base uniquement sur l'atténuation de l'intensité lumineuse en fonction de la distance. 
+
+Cela nous permet de passer par une étape intermédiaire un peu plus simple qui ignore l'orientation des surfaces et nous autorise donc à ne pas nous occuper des normales tout dessuite. Mais vous allez voir, il y a suffisement à dire sur cette étape. 
+
+Pour vous donner une vue globale voici les modifications nécessaire à son implémentation. Si vous avez la motivation de décortiquer ça d'un bloc, faites vous plaisir. Mais sinon, comme d'habitude, on va y aller en douceur dans les sections suivantes.
+
 ```glsl
 // USUAL GODOT POST-PROCESS CODE
 // HELPER FUNCTIONS FROM THE ORACLE
 // SCENE UNIFORMS
 ...
-uniform vec3 cam_position;
-
 uniform int nb_plights;
 uniform vec3 plight_position[8];
 uniform vec3 plight_color[8];
@@ -276,6 +284,90 @@ void fragment() {
 	ALBEDO = diffuse_contrib + specular_contrib;
 }
 ```
+
+#### 1.1. Paramètres des lumières
+D'abord il faut que notre post-process prenne en entrée les parametres de la lumière. A savoir :
+- sa position
+- sa couleur
+- son intensité
+
+Pour l'instant il n'y a qu'une seule lumière, mais on compte ben en ajouter d'autres alors on va préparer le terrain dès maintenant en déclarant des tableaux plutôt que des variables simples. 
+
+```glsl
+// SCENE UNIFORMS
+uniform float cam_near;
+uniform float cam_far;
+
+uniform int nb_plights;
+uniform vec3 plight_position[8];
+uniform vec3 plight_color[8];
+uniform float plight_intensity[8];
+```
+
+Une petite minute, pourquoi est ce qu'on a besoin d'un entier et de 3 tableaux pour stoquer ça ? Un peut pas plutôt utiliser un tableau dynamique qui contidrait des structure ?
+
+Il faut savoir qu'en GLSL, les tableaux sont très limités : leur taille doit être connue à la compilation, et sous le capot ils sont souvent gérés comme une succession de variables simples. C’est plus une commodité syntaxique qu’un véritable type de données dynamique comme on en a l'habitude sur du code CPU. 
+
+Le seul moyen d'implémenter des tableaux réèlement dynamiques est d'utiliser un SSBO (Shader Storage Buffer Objects). Mais en `GDShader` (le langage de shading de Godot) ni les SSBO ni les structures ne sont supportées. Raison pour laquelle on est bloqué avec 3 tableaux de taille fixe et un entier pour encoder leur taille effective.
+
+#### 1.2. Calcule de la position du fragment
+Ensuite, pour pouvoir calculer la distance entre la source de lumière et le fragment, il faut connaitre la position de ce dernier. Nous connaissons sa profondeur `depth_frag` et Godot nous fournis sa position à l'écran à travers la variable `SCREEN_UV`. Nous pouvons en déduire sa coordonée en espace [NDC](définir cet espace).
+
+A partir de là, il suffit d'appliquer la serie de transformations inverse au pipeline normal pour passer du NDC au world space.
+
+```glsl
+	// WORLD POSITION FROM DEPTH
+	vec3 ndc = vec3((SCREEN_UV * 2.0) - 1.0, depth_frag);
+	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * vec4(ndc, 1.0);
+	world.xyz /= world.w;
+	vec3 frag_position = world.xyz;
+```
+Vous vous demandez peut-être à quoi sert la ligne `world.xyz /= world.w;`. Il va falloir me faire confiance sur ce coup, parce que je ne vais pas faire un cours de math sur les coordonnées homogènes. D’abord parce que ce serait très long et un peu austère. Mais en toute honnêteté, c’est surtout un sujet complexe que je ne maîtrise pas totalement. (D’ailleurs, si vous avez de bonnes ressources, n’hésitez pas à les partager en commentaire !)
+
+Sans rentrer dans les détails, voici ce que j’en comprends : l’idée est de passer dans un espace de dimension supérieure pour profiter de propriétés mathématiques plus interessantes. En programations graphiques on est principalement interessé par :
+- L'existance de la PERSPECTIVE_MATRIX
+- La possibilité de modéliser la translation comme une multiplication de matrices
+- La posibilité de différentier une position d'une direction
+
+C'est pourquoi les API graphiques fonctionnent dans cet espace plutôt que dans l’espace euclidien classique. Pour passer d’une coordonnée euclidienne à une coordonnée homogène, il suffit d’ajouter une composante égale à 1 pour une position, ou 0 pour une direction. Ainsi en 3D, le vecteur (x, y, z) devient (x, y, z, 1) ou (x, y, z, 0). 
+
+Pour revenir d’une coordonnée homogène à une coordonnée euclidienne, on divise tous les composants par le dernier. Par exemple, (x, y, z, w) devient (x/w, y/w, z/w). C'est exactement de là que vient la ligne magique : `world.xyz /= world.w;`.
+
+#### 1.3. Calcule de la lumière
+acc diff + spec mais que diff dans ce devlog
+Inverse square law
+callcule diff contrib
+pré-déclaration de diffuse_contrib  et specular_contrib 
+
+```glsl
+void fragment() {
+	...
+	
+	vec3 diffuse_contrib = vec3(0.0);
+	vec3 specular_contrib = vec3(0.0);
+	
+	...
+	
+	// ACCUMULATE LIGHT CONTRIBUTIONS
+	for(int i = 0; i < nb_plights; i++) {
+		vec3 light_vec = plight_position[i] - frag_position;
+		float d2 = length(light_vec);
+		d2 = pow(d2, 2.0);
+		float attenuation = 1.0 / d2;
+
+		vec3 L = normalize(light_vec);
+		vec3 C = plight_color[i];
+		float I = plight_intensity[i];
+		diffuse_contrib += C * I * albedo_frag * attenuation;
+		//specular_contrib += NOT IMPLEMENTED YET
+	}
+	
+	// FINAL FRAGMENT COLOR
+	ALBEDO = diffuse_contrib + specular_contrib;
+}
+```
+
+#### 1.4 Resultat
 
 ### 2. Lambertian lighting
 ```glsl
