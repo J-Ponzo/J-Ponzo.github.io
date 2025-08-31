@@ -221,24 +221,32 @@ Oui je sais c'est pas très impressionnant sans lumière. Mais au moins on peut 
 
 Mission accomplie ! Place à la lumière maintenant.
 
-## IV. Première implémentation de la lumière
+## IV. Un premier modèle d'illumination
+Avant de nous attaquer à de la "vrai" lumière, nous allons utiliser un modèle d'illumination pas du tout homologué basé uniquement sur l'atténuation de l'intensité selon de la distance. En particulier, ce modèle ignore l'orientation des surfaces. Ce n'est pas du tout photoréaliste mais cela produit une rendu très lisse et doux qui je trouve se marie très bien avec certaines DA stylisées.
 
-## V. Conclusion
+< img the porcupine>
 
+Pour nous, ce sera l'occasion de passer par une étape intermédiaire un peu plus simple, ce qui nous permetra de bien détailler chaque points. Et on va commencer par une petite parenthèse sur ce qu'est la "inverse square law".
 
-## III. Lumière intéractive
-Dans ce numéro, on va se limiter à des sources ponctuelles (OmniLight en terminologie Godot). Les autres types de lumières seront traités dans des devlogs ulterieurs.
+### 1. Inverse Square law
+La inverse square law est une loie qui s'applique à différentes quantité physiques dont l'intensité lumineuse iradiant d'une source ponctuelle. Elle dit que "l'intensitée lumineuse en un point de l'espace est inversement proportionnel au carré de la distance qui sépare ce point de la source". Ou de manière plus compacte : I = I0 / d² (avec I0 l'intensité de la source et d la distance)
 
-Ajoutons donc une OmniLight à la scène intéractive. Cette dernière se verra assigner un script qui la fait orbiter autour du podium et modifie periodiquement sa couleur et son intensité.
+Une façon de se représenter cette relation c'est de penser à une sphere centrée sur la source lumineuse. Les photons iradient de la source lumineuse en ligne droite dans toutes les directions et entrent en collision avec la sphere. Ces collisions sont réparties de manière uniforme sur toute la surface de la sphere. 
 
-Pour faciliter sa localisation, elle sera materialisée par une petite sphere blanche. Ce n'est pas primodial pour le resultat final, mais c'est un petit artifice qui m'a pas mal aidé à débugger le shader.
+Imaginez maintenant que cette sphere grossi. Le nombre de photons qui entrent en collision avec elle est toujours le même, car la quantité de lumière émise par la source ne dépend pas de la sphere. En revanche, la surface à éclairer est maintenant plus grande. La quantitée de lumière reçue au m² est donc plus faible.
 
-### 1. "Distance-only" lighting
-Avant d'implémenter de la "vrai" lumière, on va utiliser un modèle d'illumination pas du tout homologué qui se base uniquement sur l'atténuation de l'intensité lumineuse en fonction de la distance. 
+< img inverse square law>
 
-Cela nous permet de passer par une étape intermédiaire un peu plus simple qui ignore l'orientation des surfaces et nous autorise donc à ne pas nous occuper des normales tout dessuite. Mais vous allez voir, il y a suffisement à dire sur cette étape. 
+La décroisance de la concentration de photons sur notre sphere est donc directement reliée à la croissance de sa surface. Et la surface d'une sphere est proportionnelle au carré de son rayon (S = 4πr²).
 
-Pour vous donner une vue globale voici les modifications nécessaire à son implémentation. Si vous avez la motivation de décortiquer ça d'un bloc, faites vous plaisir. Mais sinon, comme d'habitude, on va y aller en douceur dans les sections suivantes.
+Bref, c'est la loi qu'on va utiliser pour modéliser notre lumière.
+
+### 2. Implémentation
+Avant toute chose, nous allons ajouter une OmniLight à la scène intéractive. Cette dernière se verra assigner un script qui la fait orbiter autour du podium et modifie periodiquement sa couleur et son intensité.
+
+Pour faciliter sa localisation, elle sera materialisée par une petite sphere blanche. Ce n'est pas primodial pour le resultat final, mais c'est un petit artifice qui m'a pas mal aidé à débugger.
+
+Nous pouvons maintenant reprendre le shader pour qu'il implémente le "distance-only lighting" que nous venons de décrire. Pour vous donner un apperçu global, voici les modifications apportées :
 
 ```glsl
 // USUAL GODOT POST-PROCESS CODE
@@ -276,7 +284,6 @@ void fragment() {
 		d2 = pow(d2, 2.0);
 		float attenuation = 1.0 / d2;
 
-		vec3 L = normalize(light_vec);
 		vec3 C = plight_color[i];
 		float I = plight_intensity[i];
 		diffuse_contrib += C * I * albedo_frag * attenuation;
@@ -288,13 +295,15 @@ void fragment() {
 }
 ```
 
+Mais comme d'habitude, on va expliquer tout ça en douceur.
+
 #### 1.1. Paramètres des lumières
 D'abord il faut que notre post-process prenne en entrée les parametres de la lumière. A savoir :
 - sa position
 - sa couleur
 - son intensité
 
-Pour l'instant il n'y a qu'une seule lumière, mais on compte ben en ajouter d'autres alors on va préparer le terrain dès maintenant en déclarant des tableaux plutôt que des variables simples. 
+Pour l'instant il n'y a qu'une seule lumière, mais on compte bein en ajouter d'autres un jour alors on va préparer le terrain dès maintenant en déclarant des tableaux plutôt que des variables simples. 
 
 ```glsl
 // SCENE UNIFORMS
@@ -307,7 +316,7 @@ uniform vec3 plight_color[8];
 uniform float plight_intensity[8];
 ```
 
-Une petite minute, pourquoi est ce qu'on a besoin d'un entier et de 3 tableaux pour stoquer ça ? Un peut pas plutôt utiliser un tableau dynamique qui contidrait des structure ?
+Une petite minute, pourquoi a-t-on besoin d'un entier et de 3 tableaux pour stoquer ça ? Ce ne serait pas plus partique d'utiliser un tableau dynamique de structures ?
 
 Il faut savoir qu'en GLSL, les tableaux sont très limités : leur taille doit être connue à la compilation, et sous le capot ils sont souvent gérés comme une succession de variables simples. C’est plus une commodité syntaxique qu’un véritable type de données dynamique comme on en a l'habitude sur du code CPU. 
 
@@ -337,10 +346,11 @@ C'est pourquoi les API graphiques fonctionnent dans cet espace plutôt que dans 
 Pour revenir d’une coordonnée homogène à une coordonnée euclidienne, on divise tous les composants par le dernier. Par exemple, (x, y, z, w) devient (x/w, y/w, z/w). C'est exactement de là que vient la ligne magique : `world.xyz /= world.w;`.
 
 #### 1.3. Calcule de la lumière
-acc diff + spec mais que diff dans ce devlog
-Inverse square law
-callcule diff contrib
-pré-déclaration de diffuse_contrib  et specular_contrib 
+Pour obtenir la couleur final du fragment, nous allons parcourir notre tableau de lumière et accumuler les contribution lumineuses de chacune d'elle. Dans la plupart des modèles d'illumination, chaque contribution est composée d'une partie diffuse et d'une partie spéculaire.
+
+La partie diffuse est la partie de la lumière que la matière disperce dans toutes les directions. C'est elle qui nous permet de percevoir la couleur de l'objet. La partie speculaire représente la partie qui est refléchie plus majoritairement dans une direction particulière. C'est ce qui produit des reflets brillants. Un mirroir par exemple est une matière completement spéculaire. Il renvoit la lumière dans une direction bien précise et ne la diffuse pas comme le ferait une balle en caoutchouc.
+
+Le resultat final est la somme des contributions diffuses et spéculaires accumulées.
 
 ```glsl
 void fragment() {
@@ -358,7 +368,6 @@ void fragment() {
 		d2 = pow(d2, 2.0);
 		float attenuation = 1.0 / d2;
 
-		vec3 L = normalize(light_vec);
 		vec3 C = plight_color[i];
 		float I = plight_intensity[i];
 		diffuse_contrib += C * I * albedo_frag * attenuation;
@@ -370,138 +379,35 @@ void fragment() {
 }
 ```
 
-#### 1.4 Resultat
+Comme vous pouvez le constater, notre modèle du pauvre fait l'impasse sur la spéculaire. On pourrait bricoler quelque chose "en dur" pour faire illusion, mais nos G-Buffers actuels ne contiennent pas encore les propriétés de la matière nécessaire au calcule de la contribution spéculaire. On a bien l'albédo, mais il ne nous permet que de calculer la diffuse :
 
-### 2. Lambertian lighting
 ```glsl
-// USUAL GODOT POST-PROCESS CODE
-// HELPER FUNCTIONS FROM THE ORACLE
-// SCENE UNIFORMS
-// INTERACTIVE G-BUFFER
-...
-uniform sampler2D i_normal_map : filter_nearest;
-
-// DETERMINIST G-BUFFER
-...
-uniform sampler2D d_normal_map : filter_nearest;
-
-void fragment() {
-	// SAMPLE G-BUFFERs
-	...
-	vec3 i_normal_frag = texture(i_normal_map, SCREEN_UV).rgb;
-	
-	...
-	vec3 d_normal_frag = texture(d_normal_map, SCREEN_UV).rgb;
-	
-	
-	// DATA HARMONIZATION
-	...
-	d_normal_frag = pre_process_d_normal(d_normal_frag);
-	i_normal_frag = pre_process_i_normal(i_normal_frag, INV_VIEW_MATRIX);
-	
-	// DATA SELECTION (according to depth)
-	...
-	vec3 albedo_frag, normal_frag;
-	if(is_frag_interactive) {
-		...
-		normal_frag = i_normal_frag;
-	}
-	else {
-		...
-		normal_frag = d_normal_frag;
-	}
-	
-	// WORLD POSITION FROM DEPTH
-	// ACCUMULATE LIGHT CONTRIBUTIONS
-	for(int i = 0; i < nb_plights; i++) {
-		...
-		float NdotL = max(dot(normal_frag, L), 0.0);
-		diffuse_contrib += NdotL * C * I * albedo_frag * attenuation;
+		vec3 C = plight_color[i];
+		float I = plight_intensity[i];
+		diffuse_contrib += C * I * albedo_frag * attenuation;
 		//specular_contrib += NOT IMPLEMENTED YET
-	}
-	
-	// FINAL FRAGMENT COLOR
-	ALBEDO = diffuse_contrib + specular_contrib;
-}
 ```
 
-## IV. Lumière déterministe
+Mais de la même manière que l'on se traine un tableau pour notre unique lumière, on déclare la variable `specular_contrib` pour préparer l'avenir.
 
-### 1. Generation des textures d'illumination
+Par ailleurs, vous pouvez remarquer que le facteur d'attenuation est bien calculé par application de l'inverse square law :
 
-### 2. Intégration au compositor
 ```glsl
-// USUAL GODOT POST-PROCESS CODE
-// HELPER FUNCTIONS FROM THE ORACLE
-// SCENE UNIFORMS
-// INTERACTIVE G-BUFFER
-// DETERMINIST G-BUFFER
-...
-uniform sampler2D d_diff_dir_map : filter_nearest;
-uniform sampler2D d_diff_ind_map : filter_nearest;
-uniform sampler2D d_gloss_color_map : filter_nearest;
-uniform sampler2D d_gloss_dir_map : filter_nearest;
-uniform sampler2D d_gloss_ind_map : filter_nearest;
-
-void fragment() {
-	// SAMPLE G-BUFFERs
-	...
-	vec3 d_diff_dir_frag = texture(d_diff_dir_map, SCREEN_UV).rgb;
-	vec3 d_diff_ind_frag = texture(d_diff_ind_map, SCREEN_UV).rgb;
-	vec3 d_gloss_color_frag = texture(d_gloss_color_map, SCREEN_UV).rgb;
-	vec3 d_gloss_dir_frag = texture(d_gloss_dir_map, SCREEN_UV).rgb;
-	vec3 d_gloss_ind_frag = texture(d_gloss_ind_map, SCREEN_UV).rgb;
-	
-	// DATA HARMONIZATION
-	// DATA SELECTION (according to depth)
-	...
-	if(is_frag_interactive) {
-		...
-	}
-	else {
-		...
-		vec3 d_diff_light = d_diff_dir_frag + d_diff_ind_frag;
-		vec3 d_gloss_light = d_gloss_dir_frag + d_gloss_ind_frag;
-		diffuse_contrib += d_diffuse_color_frag * d_diff_light;
-		specular_contrib += d_gloss_color_frag * d_gloss_light;
-	}
-	
-	// WORLD POSITION FROM DEPTH
-	// ACCUMULATE LIGHT CONTRIBUTIONS
-	// FINAL FRAGMENT COLOR
-	ALBEDO = diffuse_contrib + specular_contrib;
-}
+		vec3 light_vec = plight_position[i] - frag_position;
+		float d2 = length(light_vec);
+		d2 = pow(d2, 2.0);
+		float attenuation = 1.0 / d2;
 ```
 
-### 3. Denoising
+Ce qui nous donne le resultat suivant :
 
-### 4. Double exposition
-```glsl
-// USUAL GODOT POST-PROCESS CODE
-// HELPER FUNCTIONS FROM THE ORACLE
-// SCENE UNIFORMS
-...
-uniform bool plight_isInteractive[8];
+< video distance only>
 
-// INTERACTIVE G-BUFFER
-// DETERMINIST G-BUFFER
-...
+## IV. Conclusion
+Comme on a pu le voire en image, ce modele d'illumination marche très bien dans "Days of the Porcupine", mais il faut avouer que sur notre scène il est un peu fade. Le rendu est très plat et avec des couleurs pleines comme celles-ci, on a du mal à distinguer le relief. 
 
-void fragment() {
-	// SAMPLE G-BUFFERs
-	// DATA HARMONIZATION
-	// DATA SELECTION (according to depth)
-	// WORLD POSITION FROM DEPTH
-	// ACCUMULATE LIGHT CONTRIBUTIONS
-	for(int i = 0; i < nb_plights; i++) {
-		if(!is_frag_interactive && !plight_isInteractive[i])
-			continue;
-		...
-	}
-	
-	// FINAL FRAGMENT COLOR
-	ALBEDO = diffuse_contrib + specular_contrib;
-}
-```
+Bien entandu nous améliorerons ça dans la Part II en imlémentant un nouveau modèle plus classique qui correspondra surement mieux à vos attentes. Nous ajouteront également de la lumière déterministe préalablement rendue par Blender.
 
-## IV. Conclusion 
+Maintenant que j'y pense, j'avais dis dans le précédent devlog que nous avions besoin des normales pour implémenter la lumière. Mais étant donné que nous avons ignoré l'orientation des surfaces, on en a finalement pas eu besoin. C'est domage, ça veut dire qu'on aurait pu traiter le sujet un poil plus tôt dans la série. 
+
+A ma décharge, je n'avais pas prévu de couper ce numéro ici. La preuve que même en écrivant depuis le futur, on pense quand même pas à tout.
