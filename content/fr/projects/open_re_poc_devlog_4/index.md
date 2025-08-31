@@ -17,11 +17,10 @@ Comme d'habitude nous adopteront une aproche intérative. Nous commenceront par 
 - de la lumière déterministe (affectant aussi la géométrie intéractive)
 - de la lumière intéractive (affectant aussi la géométrie déterministe)
 
-## II. Géométrie interactive
-Dans cette première partie, nous allons laisser de côté la lumière pour nous concentrer sur la géométrie. L'objectif est d'avoir un premier rendu unlit d'une scène intéractive intégré à une scène déterministe. Le tout biensure en respectant la profondeur, c'est à dire que quelque soit le monde (intéractif ou déterministe), ce qui est devant est bien rendu par dessus ce qui est derrière.
+Ou du moins c'est ce que je pensais faire à l'origine. Mais durant la rédaction de ce numéro, je me suis rendu compte que j'avais peut être un peu sous estimé le morceau. J'ai donc décider de le couper en 2. Dans cette première partie, nous ne traiterons pas la lumière déterministe, est seulement partiellement l'intéractive. On gardera ça pour le mois prochain.
 
-### 1. Préparation de la scène
-Jusqu'ici, nous avons cherché à comparer des scènes identiques dans le but d'étaloner Godot et Blender afin qu'ils produisent des données bien harmonisées. Mais dans un usage normal, la géométrie du monde intéractif est bien entandu différente de celle du monde déterministe. Dans Godot, on va donc cacher les éléments de la scène précédement importée depuis Blender (qui sera notre scène déterministe).
+## II. Préparation de la scène
+usqu'ici, nous avons cherché à comparer des scènes identiques dans le but d'étaloner Godot et Blender afin qu'ils produisent des données bien harmonisées. Mais dans un usage normal, la géométrie du monde intéractif est bien entandu différente de celle du monde déterministe. Dans Godot, on va donc cacher les éléments de la scène précédement importée depuis Blender (qui sera notre scène déterministe).
 
 <Godot element cachés>
 
@@ -33,8 +32,10 @@ Enfin, nous allons desactiver l'oracle et créer un nouveau post-process `ore_co
 
 A présent voyons un peu de quoi est fait ce post-process.
 
-### 2. Shader du compositor
-Attention, pavé en approche ! Ne vous inquiétez pas on va reprendre ça point par point, mais sans plus de cérémonie, voici la première itération du shader :
+## III. Composition de la Géométrie
+Dans cette première itértation du shader de composition, nous allons laisser de côté la lumière pour nous concentrer sur la géométrie. L'objectif est d'avoir un premier rendu unlit d'une scène intéractive intégré à une scène déterministe. Le tout biensure en respectant la profondeur, c'est à dire que quelque soit le monde (intéractif ou déterministe), ce qui est devant est bien rendu par dessus ce qui est derrière.
+
+Attention, pavé en approche ! Voici le code complet de cette première version du shader :
 
 ```glsl
 // USUAL GODOT POST-PROCESS STUFF
@@ -90,7 +91,9 @@ void fragment() {
 }
 ```
 
-#### 2.1. Definition habituelle d'un post-process
+Ne vous inquiétez pas, on va le disequer ensemble dans les sections suivantes.
+
+### 1. Definition habituelle d'un post-process
 On en a déjà parlé, ces premières lignes sont les même pour tous les post-process.
 
 ```glsl
@@ -103,7 +106,7 @@ void vertex() {
 }
 ```
 
-#### 2.2. Include des helpers de l'oracle
+### 2. Include des helpers de l'oracle
 ```glsl  
 // HELPER FUNCTIONS FROM THE ORACLE
 #include "pre_process_utils.gdshaderinc"
@@ -135,10 +138,8 @@ vec3 pre_process_d_normal(vec3 d_normal) {
 }
 ```
 
-Le lecteur attentif aura remarqué qu'on ne repack plus les normales directement dans le pré-process. En effet, avoir des valeurs entre 0 et 1 n'est utile que pour la visualisation. Dans le cas général, on veut la vrai normal prête à l'emplois. C'est pourquoi il est plus logique pour l'Oracle de repacker lui même en dehors du pré-process.
-
-#### 2.3. Parmètres d'entrée
-Comme évoqué dans la section précédente, le post-process `ore_compositor` va prendre en entrée des `uniforms` correspondant aux 2 G-Buffers plus quelques paramètres additionnels relatifs à la scène.
+### 3. Parmètres d'entrée
+Comme évoqué précédement, le post-process va prendre en entrée des `uniforms` correspondant aux deux G-Buffers, plus quelques paramètres additionnels relatifs à la scène.
 
 ```glsl
 // SCENE UNIFORMS
@@ -158,8 +159,8 @@ Pour l'instant, on a besoin :
 - des paramètres near et far de la caméra active
 - des texture de depth et d'albédo issues des G-Buffers intéractif et détermniste
 
-#### 2.4. Echantillonage des G-Buffers
-Chaque map est échantillonée pour récupérer le fragment correspondant. Dans la foulée on applique les fameux pre-traitements nécessaires (ici au framents de la depth)
+### 4. Echantillonage des G-Buffers
+Chaque map est échantillonée pour récupérer le fragment correspondant. Dans la foulée on applique les fameux pre-traitements.
 
 ```glsl
 void fragment() {
@@ -178,8 +179,8 @@ void fragment() {
 }
 ```
 
-#### 2.5. Selection des fragment
-Ensuite, on se base sur la valeur de la depth pour déterminer si le fragment courant appartien à la scène intéractive ou déterministe. On en profite pour assigner les fragments correspondant aux variable `depth_frag` et `albedo_frag` qui seront celles utilisées dans la suite du shader.
+### 5. Selection des fragment
+Ensuite, on se base sur la valeur de la depth pour déterminer si le fragment courant appartien à la scène intéractive ou déterministe. On en profite alors pour assigner les fragments correspondant aux variable `depth_frag` et `albedo_frag` qui seront celles utilisées dans la suite du shader.
 
 ```glsl
 void fragment() {
@@ -202,7 +203,7 @@ void fragment() {
 }
 ```
 
-#### 2.6. Affichage du fragment final
+### 6. Affichage du fragment final
 ```glsl
 void fragment() {
 	...
@@ -212,16 +213,18 @@ void fragment() {
 }
 ```
 
-Bon, ok... on était pas obligé d'assigner la depth si on renvoit directement l'albedo. Mais pas d'inquiétude, on anticipe juste un peu sur la suite.
-
-#### 2.7 Resultat
-Et voilà un magnifique chapaï unlit :
+Bon d'accord. la "suite du shader" est pour l'instant un peu courte. On ne fait qu'afficher directement l'albédo du fragment selectionné. On ne se sert même pas de `depth_frag`. Mais ne vous inquiétez pas ça va venir. Pour l'heure je vous propose d'admirer ce magnifique chapaï !
 
 <vidéo du rendu unlite>
 
-Oui je sais c'est sacrément moche sans lumière. Mais au moins on peut constater que la sélection de fragment selon la profondeur est correcte. En effet, les parties du chapaï qui se trouvent sous podium sont bien invisible tandis que le rest est rendu par dessus l'arrière plan.
+Oui je sais c'est pas très impressionnant sans lumière. Mais au moins on peut constater que la sélection de fragment selon la profondeur est correcte. En effet, les parties du chapaï qui se trouvent sous podium sont bien invisible tandis que le rest est correctement rendu par dessus l'arrière plan.
 
 Mission accomplie ! Place à la lumière maintenant.
+
+## IV. Première implémentation de la lumière
+
+## V. Conclusion
+
 
 ## III. Lumière intéractive
 Dans ce numéro, on va se limiter à des sources ponctuelles (OmniLight en terminologie Godot). Les autres types de lumières seront traités dans des devlogs ulterieurs.
