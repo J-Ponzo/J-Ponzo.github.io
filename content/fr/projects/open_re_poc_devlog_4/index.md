@@ -11,16 +11,16 @@ description = 'devlog 4 du projet OpenRE'
 ## I. Introduction
 Grâce au travail effectué jusqu'ici, nous sommes en mesure de faire nos premiers rendus. Pour cela nous allons partir de la scène actuelle à laquelle nous allons ajouter un peu de mouvement mais surtout, de la lumière.
 
-Comme d'habitude nous adopteront une aproche intérative. Nous commenceront par la version la plus rudimentaire possible que nous complexifieront petit à petit jusqu'à atteindre notre but. A la fin nous auront un rendu en temps réèl cohérent et comprenant :
+Comme d'habitude nous adopteront une aproche intérative. Nous commenceront par la version la plus rudimentaire possible que nous complexifieront petit à petit jusqu'à atteindre notre but. A la fin nous auront un rendu en temps réèl cohérent comprenant :
 - de la géométrie déterministe (pré-rendue dans Blender)
 - de la géométrie intéractive (rendue en temps réèl par Godot)
 - de la lumière déterministe (affectant aussi la géométrie intéractive)
 - de la lumière intéractive (affectant aussi la géométrie déterministe)
 
-Ou du moins c'est ce que je pensais faire à l'origine. Mais durant la rédaction de ce numéro, je me suis rendu compte que j'avais peut être un peu sous estimé le morceau. J'ai donc décider de le couper en 2. Dans cette première partie, nous ne traiterons pas la lumière déterministe, est seulement partiellement l'intéractive. On gardera ça pour le mois prochain.
+Ou du moins c'est ce que je prévoyais à l'origine. Mais me suis rendu compte en cours de route que j'avais peut être un peu sous estimé le morceau. J'ai donc décider de le couper en 2. Dans cette première partie, nous ne traiterons donc pas la lumière déterministe, et seulement partiellement l'intéractive. Mais ce n'est que partie remise biensure.
 
 ## II. Préparation de la scène
-usqu'ici, nous avons cherché à comparer des scènes identiques dans le but d'étaloner Godot et Blender afin qu'ils produisent des données bien harmonisées. Mais dans un usage normal, la géométrie du monde intéractif est bien entandu différente de celle du monde déterministe. Dans Godot, on va donc cacher les éléments de la scène précédement importée depuis Blender (qui sera notre scène déterministe).
+Jusqu'ici, nous avons cherché à comparer des scènes identiques dans le but d'étaloner Godot et Blender afin qu'ils produisent des données bien harmonisées. Mais dans un usage normal, la géométrie du monde intéractif est bien entandu différente de celle du monde déterministe. Dans Godot, on va donc cacher les éléments de la scène précédement importée depuis Blender (qui sera notre scène déterministe).
 
 <img alt="Capture du dock scene de Godot dans lequel tous les mesh issus de la simple-scene.blend ont été masqués" src="./images/hide_det_scn.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 
@@ -165,6 +165,8 @@ Pour l'instant, on a besoin :
 - des paramètres near et far de la caméra active
 - des texture de depth et d'albédo issues des G-Buffers intéractif et détermniste
 
+L'albédo déterministe est ici appelé `d_diffuse_color_map` car c'est son nom dans la terminologie Blender. Mais il s'agit bien de la même chose.
+
 ### 4. Echantillonage des G-Buffers
 Chaque map est échantillonée pour récupérer le fragment correspondant. Dans la foulée on applique les fameux pre-traitements.
 
@@ -186,7 +188,7 @@ void fragment() {
 ```
 
 ### 5. Selection des fragment
-Ensuite, on se base sur la valeur de la depth pour déterminer si le fragment courant appartien à la scène intéractive ou déterministe. On en profite alors pour assigner les fragments correspondant aux variable `depth_frag` et `albedo_frag` qui seront celles utilisées dans la suite du shader.
+Ensuite, on se base sur la valeur de la depth pour déterminer si le fragment courant appartien à la scène intéractive ou déterministe. On en profite alors pour assigner les données géométriques correspondantes aux variable `depth_frag` et `albedo_frag` que l'on utilisera dans la suite du shader.
 
 ```glsl
 void fragment() {
@@ -219,26 +221,28 @@ void fragment() {
 }
 ```
 
-Bon d'accord. la "suite du shader" est pour l'instant un peu courte. On ne fait qu'afficher directement l'albédo du fragment selectionné. On ne se sert même pas de `depth_frag`. Mais ne vous inquiétez pas ça va venir. Pour l'heure je vous propose d'admirer ce magnifique chapaï !
+Bon d'accord. la "suite du shader" est pour l'instant un peu courte. On ne fait qu'afficher directement l'albédo du monde selectionné. On ne se sert même pas de `depth_frag`. Mais ne vous inquiétez pas ça va venir. Pour l'heure je vous propose d'admirer ce magnifique chapaï !
 
 <vidéo du rendu unlite>
 
-Oui je sais c'est pas très impressionnant sans lumière. Mais au moins on peut constater que la sélection de fragment selon la profondeur est correcte. En effet, les parties du chapaï qui se trouvent sous podium sont bien invisible tandis que le rest est correctement rendu par dessus l'arrière plan.
+Oui je sais c'est pas très impressionnant sans lumière. Mais au moins on peut constater que la sélection du monde selon la profondeur est correcte. En effet, les parties du chapaï qui se trouvent sous podium sont bien invisible tandis que le rest est correctement rendu par dessus l'arrière plan.
 
 Mission accomplie ! Place à la lumière maintenant.
 
 ## IV. Un premier modèle d'illumination
-Avant de nous attaquer à de la "vrai" lumière, nous allons utiliser un modèle d'illumination pas du tout homologué basé uniquement sur l'atténuation de l'intensité selon de la distance. En particulier, ce modèle ignore l'orientation des surfaces. Ce n'est pas du tout photoréaliste mais cela produit une rendu très lisse et doux qui je trouve se marie très bien avec certaines DA stylisées.
+Avant de nous attaquer à de la "vrai" lumière, nous allons utiliser un modèle d'illumination pas du tout homologué basé uniquement sur l'atténuation de l'intensité selon la distance. En particulier, ce modèle ignore l'orientation des surfaces. Ce n'est pas du tout photoréaliste mais cela produit un rendu que je trouve très interessant et qui se marie très bien à des DA stylisées.
 
-[![Extrait de la présentation "Art of the Porcupine" par Theresa Latzko. A gauche un vertex lighting classic. A droite le distance-only lighting](images/days_of_porcupine.opti.webp)](images/days_of_porcupine.opti.webp)
-*Extrait de la présentation "Art of the Porcupine" par Theresa Latzko. A gauche un vertex lighting classic. A droite le distance-only lighting*
+J'ai découvert cette technique dans un talk de Theresa Latzko que j'avais trouvé très inspirant. Elle y décrit en détail comment elle à défini la direction artistique et implémenté le rendu de son jeu "Days of the  Porcupine". Si cela vous interesse voici le lien : https://www.youtube.com/watch?v=RoqDqHdBI2Y
 
-Pour nous, ce sera l'occasion de passer par une étape intermédiaire un peu plus simple, ce qui nous permetra de bien détailler chaque points. Et on va commencer par une petite parenthèse sur ce qu'est la "inverse square law".
+[![Extrait de la présentation "Art of the Porcupine" par Theresa Latzko. A gauche un vertex lighting classic. A droite le fameux distance-only lighting](images/days_of_porcupine.opti.webp)](images/days_of_porcupine.opti.webp)
+*Extrait de la présentation "Art of the Porcupine" par Theresa Latzko. A gauche un vertex lighting classic. A droite le fameux distance-only lighting*
+
+Nous n'irons pas aussi loin qu'elle car nous visons une DA plutôt réaliste. Mais lui emprunter cette idée nous permet de passer par une étape intermédiaire un peu plus simple d'un point de vu tecnique. Ce qui nous laisse d'autant plus te temps pour bien détailler chaque points. Et on va commencer tout dessuite par une petite parenthèse au sujet de la "inverse square law".
 
 ### 1. Inverse Square law
 La inverse square law est une loie qui s'applique à différentes quantité physiques dont l'intensité lumineuse iradiant d'une source ponctuelle. Elle dit que "l'intensitée lumineuse en un point de l'espace est inversement proportionnel au carré de la distance qui sépare ce point de la source". Ou de manière plus compacte : I = I0 / d² (avec I0 l'intensité de la source et d la distance)
 
-Une façon de se représenter cette relation c'est de penser à une sphere centrée sur la source lumineuse. Les photons iradient de la source lumineuse en ligne droite dans toutes les directions et entrent en collision avec la sphere. Ces collisions sont réparties de manière uniforme sur toute la surface de la sphere. 
+Une façon de se représenter cette relation, c'est de penser à une sphere centrée sur la source lumineuse. Les photons iradient de la source lumineuse en ligne droite dans toutes les directions et entrent en collision avec la sphere. Ces collisions sont réparties de manière uniforme sur toute la surface de la sphere. 
 
 Imaginez maintenant que cette sphere grossi. Le nombre de photons qui entrent en collision avec elle est toujours le même, car la quantité de lumière émise par la source ne dépend pas de la sphere. En revanche, la surface à éclairer est maintenant plus grande. La quantitée de lumière reçue au m² est donc plus faible.
 
@@ -249,13 +253,13 @@ La décroisance de la concentration de photons sur notre sphere est donc directe
 Bref, c'est la loi qu'on va utiliser pour modéliser notre lumière.
 
 ### 2. Implémentation
-Avant toute chose, nous allons ajouter une OmniLight à la scène intéractive. Cette dernière se verra assigner un script qui la fait orbiter autour du podium et modifie periodiquement sa couleur et son intensité.
+Avant toute chose, nous devons ajouter une OmniLight à la scène intéractive. Cette dernière se verra assigner un script qui modifie periodiquement sa couleur et son intensité, et qui la fait orbiter autour de notre... instalation d'art contemporain (de piètre inspiration) ?
 
 [![Gif de l'editeur de godot montrant une light orbitant autours du chapaï](images/rotolight-anim.webp)](images/rotolight-anim.webp)
 
-Pour faciliter sa localisation, elle sera materialisée par une petite sphere blanche. Ce n'est pas primodial pour le resultat final, mais c'est un petit artifice qui m'a pas mal aidé à débugger.
+Pour faciliter la localisation de notre lumière, elle sera materialisée par une petite sphere blanche. Ce n'est pas primodial pour le resultat final, mais c'est un petit artifice qui m'a pas mal aidé à débugger.
 
-Nous pouvons maintenant reprendre le shader pour qu'il implémente le "distance-only lighting" que nous venons de décrire. Pour vous donner un apperçu global, voici les modifications apportées :
+Nous pouvons maintenant reprendre le shader pour qu'il implémente le "distance-only lighting" décrit précédement. Pour vous donner un apperçu global, voici les modifications apportées :
 
 ```glsl
 // USUAL GODOT POST-PROCESS CODE
@@ -307,7 +311,7 @@ void fragment() {
 Mais comme d'habitude, on va expliquer tout ça en douceur.
 
 #### 1.1. Paramètres des lumières
-D'abord il faut que notre post-process prenne en entrée les parametres de la lumière. A savoir :
+D'abord on doit fournir à notre post-process entrée les parametres de la lumière. A savoir :
 - sa position
 - sa couleur
 - son intensité
@@ -388,7 +392,7 @@ void fragment() {
 }
 ```
 
-Comme vous pouvez le constater, notre modèle du pauvre fait l'impasse sur la spéculaire. On pourrait bricoler quelque chose "en dur" pour faire illusion, mais nos G-Buffers actuels ne contiennent pas encore les propriétés de la matière nécessaire au calcule de la contribution spéculaire. On a bien l'albédo, mais il ne nous permet que de calculer la diffuse :
+Comme vous pouvez le constater, notre modèle du pauvre fait l'impasse sur la spéculaire. On pourrait bricoler quelque chose "en dur" pour faire illusion, mais nos G-Buffers actuels ne contiennent pas encore les propriétés de la matière nécessaire au calcule de la contribution spéculaire.
 
 ```glsl
 		vec3 C = plight_color[i];
@@ -397,7 +401,7 @@ Comme vous pouvez le constater, notre modèle du pauvre fait l'impasse sur la sp
 		//specular_contrib += NOT IMPLEMENTED YET
 ```
 
-Mais de la même manière que l'on se traine un tableau pour notre unique lumière, on déclare la variable `specular_contrib` pour préparer l'avenir.
+Mais de la même manière que l'on se traine des tableau pour notre unique lumière, on va déclarer une variable `specular_contrib` pour préparer l'avenir.
 
 Par ailleurs, vous pouvez remarquer que le facteur d'attenuation est bien calculé par application de l'inverse square law :
 
@@ -415,8 +419,8 @@ Ce qui nous donne le resultat suivant :
 ## IV. Conclusion
 Comme on a pu le voire en image, ce modele d'illumination marche très bien dans "Days of the Porcupine", mais il faut avouer que sur notre scène il est un peu fade. Le rendu est très plat et avec des couleurs pleines comme celles-ci, on a du mal à distinguer le relief. 
 
-Bien entandu nous améliorerons ça dans la Part II en imlémentant un nouveau modèle plus classique qui correspondra surement mieux à vos attentes. Nous ajouteront également de la lumière déterministe préalablement rendue par Blender.
+Bien entandu nous améliorerons ça dans la Part II en imlémentant un nouveau modèle un peu plus proche de notre objectif final. Nous ajouteront également de la lumière déterministe préalablement rendue par Blender.
 
 Maintenant que j'y pense, j'avais dis dans le précédent devlog que nous avions besoin des normales pour implémenter la lumière. Mais étant donné que nous avons ignoré l'orientation des surfaces, on en a finalement pas eu besoin. C'est domage, ça veut dire qu'on aurait pu traiter le sujet un poil plus tôt dans la série. 
 
-A ma décharge, je n'avais pas prévu de couper ce numéro ici. La preuve que même en écrivant depuis le futur, on pense quand même pas à tout.
+A ma décharge, je n'avais pas prévu de couper ce numéro ici. La preuve que même en écrivant depuis le futur, on peut quand même arriver à se planter 😅.
