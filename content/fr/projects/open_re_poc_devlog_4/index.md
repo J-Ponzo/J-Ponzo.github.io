@@ -26,7 +26,7 @@ usqu'ici, nous avons cherché à comparer des scènes identiques dans le but d'�
 
 On va ensuite ajouter de nouveaux meshes, et comme ces meshes font partie du monde intéractif, on ne se privera pas de les faire bouger.
 
-<Géométrie intéractive rendue avec godot>
+[![Gif de l'editeur de godot montrant un agencement de primitives géométriques de couleurs unies qui tournent sure elle meme. Il y a un arceau qui ressemble à la porte des étoiles et un cube jaune au centre](images/int_geometry-anim.webp)](images/int_geometry-anim.webp)
 
 Enfin, nous allons desactiver l'oracle et créer un nouveau post-process `ore_compositor` qui sera chargé de fusionner les 2 scènes en temps réèl. Comme l'oracle, il prendra en entrée les maps des G-Buffers déterministe et interactif. Mais il aura également besoin de données suplémentaires relatives à la scène : les propriétés de la caméra active et plus tard des lumières.
 
@@ -250,6 +250,8 @@ Bref, c'est la loi qu'on va utiliser pour modéliser notre lumière.
 
 ### 2. Implémentation
 Avant toute chose, nous allons ajouter une OmniLight à la scène intéractive. Cette dernière se verra assigner un script qui la fait orbiter autour du podium et modifie periodiquement sa couleur et son intensité.
+
+[![Gif de l'editeur de godot montrant une light orbitant autours du chapaï](images/rotolight-anim.webp)](images/rotolight-anim.webp)
 
 Pour faciliter sa localisation, elle sera materialisée par une petite sphere blanche. Ce n'est pas primodial pour le resultat final, mais c'est un petit artifice qui m'a pas mal aidé à débugger.
 
