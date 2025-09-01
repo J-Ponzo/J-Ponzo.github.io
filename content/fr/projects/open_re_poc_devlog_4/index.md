@@ -22,13 +22,19 @@ Ou du moins c'est ce que je pensais faire à l'origine. Mais durant la rédactio
 ## II. Préparation de la scène
 usqu'ici, nous avons cherché à comparer des scènes identiques dans le but d'étaloner Godot et Blender afin qu'ils produisent des données bien harmonisées. Mais dans un usage normal, la géométrie du monde intéractif est bien entandu différente de celle du monde déterministe. Dans Godot, on va donc cacher les éléments de la scène précédement importée depuis Blender (qui sera notre scène déterministe).
 
-<Godot element cachés>
+<img alt="Capture du dock scene de Godot dans lequel tous les mesh issus de la simple-scene.blend ont été masqués" src="./images/hide_det_scn.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 
 On va ensuite ajouter de nouveaux meshes, et comme ces meshes font partie du monde intéractif, on ne se privera pas de les faire bouger.
 
 <Géométrie intéractive rendue avec godot>
 
 Enfin, nous allons desactiver l'oracle et créer un nouveau post-process `ore_compositor` qui sera chargé de fusionner les 2 scènes en temps réèl. Comme l'oracle, il prendra en entrée les maps des G-Buffers déterministe et interactif. Mais il aura également besoin de données suplémentaires relatives à la scène : les propriétés de la caméra active et plus tard des lumières.
+
+<img alt="Capture du dock Inspector de Godot dans lequel on peut voir les parametres du post-process ore_compositor" src="./images/ore_compositor.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
+
+On oubliera pas de desactiver le post-process quad de l'oracle et d'activer celui du compositor à la place.
+
+<img alt="Capture du dock scene de Godot dans lequel le post-process quad de l'oracle est masqué tandis que celui du ore_compositor est actif" src="./images/replace_oracle.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 
 A présent voyons un peu de quoi est fait ce post-process.
 
@@ -224,7 +230,8 @@ Mission accomplie ! Place à la lumière maintenant.
 ## IV. Un premier modèle d'illumination
 Avant de nous attaquer à de la "vrai" lumière, nous allons utiliser un modèle d'illumination pas du tout homologué basé uniquement sur l'atténuation de l'intensité selon de la distance. En particulier, ce modèle ignore l'orientation des surfaces. Ce n'est pas du tout photoréaliste mais cela produit une rendu très lisse et doux qui je trouve se marie très bien avec certaines DA stylisées.
 
-< img the porcupine>
+[![Extrait de la présentation "Art of the Porcupine" par Theresa Latzko. A gauche un vertex lighting classic. A droite le distance-only lighting](images/days_of_porcupine.opti.webp)](images/days_of_porcupine.opti.webp)
+*Extrait de la présentation "Art of the Porcupine" par Theresa Latzko. A gauche un vertex lighting classic. A droite le distance-only lighting*
 
 Pour nous, ce sera l'occasion de passer par une étape intermédiaire un peu plus simple, ce qui nous permetra de bien détailler chaque points. Et on va commencer par une petite parenthèse sur ce qu'est la "inverse square law".
 
@@ -235,7 +242,7 @@ Une façon de se représenter cette relation c'est de penser à une sphere centr
 
 Imaginez maintenant que cette sphere grossi. Le nombre de photons qui entrent en collision avec elle est toujours le même, car la quantité de lumière émise par la source ne dépend pas de la sphere. En revanche, la surface à éclairer est maintenant plus grande. La quantitée de lumière reçue au m² est donc plus faible.
 
-< img inverse square law>
+[![Illustration de l'inverse square law](images/Inverse_square_law.opti.webp)](images/Inverse_square_law.opti.webp)
 
 La décroisance de la concentration de photons sur notre sphere est donc directement reliée à la croissance de sa surface. Et la surface d'une sphere est proportionnelle au carré de son rayon (S = 4πr²).
 
