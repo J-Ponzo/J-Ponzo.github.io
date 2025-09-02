@@ -223,7 +223,14 @@ void fragment() {
 
 Bon d'accord. la "suite du shader" est pour l'instant un peu courte. On ne fait qu'afficher directement l'albédo du monde selectionné. On ne se sert même pas de `depth_frag`. Mais ne vous inquiétez pas ça va venir. Pour l'heure je vous propose d'admirer ce magnifique chapaï !
 
-<vidéo du rendu unlite>
+{{< rawhtml >}} 
+
+<video width="100%" controls muted loop playsinline autoplay>
+    <source src="videos/unlit_chapai.mp4" type="video/mp4">
+    Your browser does not support the video tag.  
+</video>
+
+{{< /rawhtml >}}
 
 Oui je sais c'est pas très impressionnant sans lumière. Mais au moins on peut constater que la sélection du monde selon la profondeur est correcte. En effet, les parties du chapaï qui se trouvent sous podium sont bien invisible tandis que le rest est correctement rendu par dessus l'arrière plan.
 
@@ -414,7 +421,14 @@ Par ailleurs, vous pouvez remarquer que le facteur d'attenuation est bien calcul
 
 Ce qui nous donne le resultat suivant :
 
-< video distance only>
+{{< rawhtml >}} 
+
+<video width="100%" controls muted loop playsinline autoplay>
+    <source src="videos/distance_only_light.mp4" type="video/mp4">
+    Your browser does not support the video tag.  
+</video>
+
+{{< /rawhtml >}}
 
 ## IV. Conclusion
 Comme on a pu le voire en image, ce modele d'illumination marche très bien dans "Days of the Porcupine", mais il faut avouer que sur notre scène il est un peu fade. Le rendu est très plat et avec des couleurs pleines comme celles-ci, on a du mal à distinguer le relief. 
