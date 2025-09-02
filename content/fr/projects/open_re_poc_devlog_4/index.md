@@ -247,7 +247,7 @@ J'ai découvert cette technique dans un talk de Theresa Latzko que j'avais trouv
 Nous n'irons pas aussi loin qu'elle car nous visons une DA plutôt réaliste. Mais lui emprunter cette idée nous permet de passer par une étape intermédiaire un peu plus simple d'un point de vu tecnique. Ce qui nous laisse d'autant plus te temps pour bien détailler chaque points. Et on va commencer tout dessuite par une petite parenthèse au sujet de la "inverse square law".
 
 ### 1. Inverse Square law
-La inverse square law est une loie qui s'applique à différentes quantité physiques dont l'intensité lumineuse iradiant d'une source ponctuelle. Elle dit que "l'intensitée lumineuse en un point de l'espace est inversement proportionnel au carré de la distance qui sépare ce point de la source". Ou de manière plus compacte : I = I0 / d² (avec I0 l'intensité de la source et d la distance)
+La inverse square law est une loie qui s'applique à différentes quantité physiques dont l'intensité lumineuse iradiant d'une source ponctuelle. Elle dit que "l'intensitée lumineuse en un point de l'espace est inversement proportionnel au carré de la distance qui sépare ce point de la source". Ou de manière plus compacte : `I = I0 / d²` (avec `I0` l'intensité de la source et `d` la distance)
 
 Une façon de se représenter cette relation, c'est de penser à une sphere centrée sur la source lumineuse. Les photons iradient de la source lumineuse en ligne droite dans toutes les directions et entrent en collision avec la sphere. Ces collisions sont réparties de manière uniforme sur toute la surface de la sphere. 
 
@@ -256,6 +256,8 @@ Imaginez maintenant que cette sphere grossi. Le nombre de photons qui entrent en
 [![Illustration de l'inverse square law](images/Inverse_square_law.opti.webp)](images/Inverse_square_law.opti.webp)
 
 La décroisance de la concentration de photons sur notre sphere est donc directement reliée à la croissance de sa surface. Et la surface d'une sphere est proportionnelle au carré de son rayon (S = 4πr²).
+
+Si ça ne vous parle pas, vous pouvez aussi penser à un ballon de baudruche. Si un dessin est imprimé dessus, on peu voir les couleurs devenir de plus en plus fades à mesure qu'on le gonfle. C'est un peu "avec les main" comme exemple, mais "ça fait allusion". La quantité d'encre à la surface du balon est fixe, mais quand sa surface augment, il y a moins d'encre au cm².
 
 Bref, c'est la loi qu'on va utiliser pour modéliser notre lumière.
 
