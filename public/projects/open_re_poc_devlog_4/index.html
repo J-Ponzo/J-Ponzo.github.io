@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.140.2">
+<meta name="generator" content="Hugo 0.137.0">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re_poc_devlog_4/">
@@ -172,23 +172,23 @@ stroke-linejoin="round" class="feather feather-home">
   <ul>
     <li><a href="#i-introduction">I. Introduction</a></li>
     <li><a href="#ii-préparation-de-la-scène">II. Préparation de la scène</a></li>
-    <li><a href="#iii-composition-de-la-géométrie">III. Composition de la Géométrie</a>
+    <li><a href="#iii-composition-de-la-géométrie">III. Composition de la géométrie</a>
       <ul>
-        <li><a href="#1-definition-habituelle-dun-post-process">1. Definition habituelle d&rsquo;un post-process</a></li>
-        <li><a href="#2-include-des-helpers-de-loracle">2. Include des helpers de l&rsquo;oracle</a></li>
+        <li><a href="#1-définition-habituelle-dun-post-process">1. Définition habituelle d’un post-process</a></li>
+        <li><a href="#2-inclusion-des-helpers-de-loracle">2. Inclusion des <em>helpers</em> de l’oracle</a></li>
         <li><a href="#3-parmètres-dentrée">3. Parmètres d&rsquo;entrée</a></li>
         <li><a href="#4-echantillonage-des-g-buffers">4. Echantillonage des G-Buffers</a></li>
         <li><a href="#5-selection-des-fragment">5. Selection des fragment</a></li>
         <li><a href="#6-affichage-du-fragment-final">6. Affichage du fragment final</a></li>
       </ul>
     </li>
-    <li><a href="#iv-un-premier-modèle-dillumination">IV. Un premier modèle d&rsquo;illumination</a>
+    <li><a href="#iv-un-premier-modèle-dillumination">IV. Un premier modèle d’illumination</a>
       <ul>
-        <li><a href="#1-inverse-square-law">1. Inverse Square law</a></li>
+        <li><a href="#1-inverse-square-law">1. Inverse Square Law</a></li>
         <li><a href="#2-implémentation">2. Implémentation</a>
           <ul>
             <li><a href="#11-paramètres-des-lumières">1.1. Paramètres des lumières</a></li>
-            <li><a href="#12-calcule-de-la-position-du-fragment">1.2. Calcule de la position du fragment</a></li>
+            <li><a href="#12-calcul-de-la-position-du-fragment">1.2. Calcul de la position du fragment</a></li>
             <li><a href="#13-calcule-de-la-lumière">1.3. Calcule de la lumière</a></li>
           </ul>
         </li>
@@ -201,27 +201,27 @@ stroke-linejoin="round" class="feather feather-home">
             <div class="page-content">
                 <p><a href="/projects/open_re_poc_devlog_3/">⬅️ Vers Précédent : &ldquo;OpenRE devlog 3 : Harmonisation des normales&rdquo;</a></p>
 <h2 id="i-introduction">I. Introduction</h2>
-<p>Grâce au travail effectué jusqu&rsquo;ici, nous sommes en mesure de faire nos premiers rendus. Pour cela nous allons partir de la scène actuelle à laquelle nous allons ajouter un peu de mouvement mais surtout, de la lumière.</p>
-<p>Comme d&rsquo;habitude nous adopteront une aproche intérative. Nous commenceront par la version la plus rudimentaire possible que nous complexifieront petit à petit jusqu&rsquo;à atteindre notre but. A la fin nous auront un rendu en temps réèl cohérent comprenant :</p>
+<p>Grâce au travail effectué jusqu’ici, nous sommes en mesure de réaliser nos premiers rendus. Pour cela, nous allons partir de la scène actuelle, à laquelle nous ajouterons un peu de mouvement, mais surtout de la lumière.
+Comme d’habitude, nous adopterons une approche itérative : nous commencerons par la version la plus rudimentaire possible, que nous complexifierons petit à petit jusqu’à atteindre notre objectif. À la fin, nous aurons un rendu en temps réel cohérent, comprenant :</p>
 <ul>
 <li>de la géométrie déterministe (pré-rendue dans Blender)</li>
-<li>de la géométrie intéractive (rendue en temps réèl par Godot)</li>
-<li>de la lumière déterministe (affectant aussi la géométrie intéractive)</li>
-<li>de la lumière intéractive (affectant aussi la géométrie déterministe)</li>
+<li>de la géométrie interactive (rendue en temps réel par Godot)</li>
+<li>de la lumière déterministe (affectant aussi la géométrie interactive)</li>
+<li>de la lumière interactive (affectant aussi la géométrie déterministe)</li>
 </ul>
-<p>Ou du moins c&rsquo;est ce que je prévoyais à l&rsquo;origine. Mais me suis rendu compte en cours de route que j&rsquo;avais peut être un peu sous estimé le morceau. J&rsquo;ai donc décider de le couper en 2. Dans cette première partie, nous ne traiterons donc pas la lumière déterministe, et seulement partiellement l&rsquo;intéractive. Mais ce n&rsquo;est que partie remise biensure.</p>
+<p>Ou du moins, c’est ce que je prévoyais à l’origine. Mais je me suis rendu compte en cours de route que j’avais peut-être un peu sous-estimé le morceau. J&rsquo;ai donc décider de le traiter en 2 fois. Dans cette première partie, nous n&rsquo;aborderont pas la lumière déterministe, et seulement partiellement la lumière interactive. Mais ce n’est que partie remise, bien sûr.</p>
 <h2 id="ii-préparation-de-la-scène">II. Préparation de la scène</h2>
-<p>Jusqu&rsquo;ici, nous avons cherché à comparer des scènes identiques dans le but d&rsquo;étaloner Godot et Blender afin qu&rsquo;ils produisent des données bien harmonisées. Mais dans un usage normal, la géométrie du monde intéractif est bien entandu différente de celle du monde déterministe. Dans Godot, on va donc cacher les éléments de la scène précédement importée depuis Blender (qui sera notre scène déterministe).</p>
+<p>Jusqu&rsquo;ici, nous avons cherché à comparer des scènes identiques dans le but d&rsquo;étaloner Godot et Blender afin qu&rsquo;ils produisent des données bien harmonisées. Mais évidement dans un usage normal, le monde interactif diffère du déterministe. Dans Godot, nous allons donc masquer les éléments de la scène précédemment importée depuis Blender (qui sera notre scène déterministe).</p>
 <img alt="Capture du dock scene de Godot dans lequel tous les mesh issus de la simple-scene.blend ont été masqués" src="./images/hide_det_scn.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
-<p>On va ensuite ajouter de nouveaux meshes, et comme ces meshes font partie du monde intéractif, on ne se privera pas de les faire bouger.</p>
-<p><a href="/projects/open_re_poc_devlog_4/images/int_geometry-anim.webp"><img src="/projects/open_re_poc_devlog_4/images/int_geometry-anim.webp" alt="Gif de l&rsquo;editeur de godot montrant un agencement de primitives géométriques de couleurs unies qui tournent sure elle meme. Il y a un arceau qui ressemble à la porte des étoiles et un cube jaune au centre"></a></p>
-<p>Enfin, nous allons desactiver l&rsquo;oracle et créer un nouveau post-process <code>ore_compositor</code> qui sera chargé de fusionner les 2 scènes en temps réèl. Comme l&rsquo;oracle, il prendra en entrée les maps des G-Buffers déterministe et interactif. Mais il aura également besoin de données suplémentaires relatives à la scène : les propriétés de la caméra active et plus tard des lumières.</p>
+<p>On va ensuite ajouter de nouveaux meshes. Et comme ces meshes constituent le monde intéractif, on ne se privera pas de les animer.</p>
+<p><a href="/projects/open_re_poc_devlog_4/images/int_geometry-anim.webp"><img alt="Gif de l&rsquo;editeur de godot montrant un agencement de primitives géométriques de couleurs unies qui tournent sure elle meme. Il y a un arceau qui ressemble à la porte des étoiles et un cube jaune au centre" src="/projects/open_re_poc_devlog_4/images/int_geometry-anim.webp"></a></p>
+<p>Enfin, nous allons desactiver l’oracle et créer un nouveau post-process <code>ore_compositor</code> chargé de fusionner les deux scènes en temps réel. Comme l’oracle, il prendra en entrée les maps des G-Buffers déterministe et interactif, mais il aura également besoin de données supplémentaires relatives à la scène : les propriétés de la caméra active et, plus tard, celles des lumières.</p>
 <img alt="Capture du dock Inspector de Godot dans lequel on peut voir les parametres du post-process ore_compositor" src="./images/ore_compositor.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
-<p>On oubliera pas de desactiver le post-process quad de l&rsquo;oracle et d&rsquo;activer celui du compositor à la place.</p>
+<p>On oubliera pas de désactiver le post-process quad de l’oracle et d’activer celui du compositor à la place.</p>
 <img alt="Capture du dock scene de Godot dans lequel le post-process quad de l'oracle est masqué tandis que celui du ore_compositor est actif" src="./images/replace_oracle.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
-<p>A présent voyons un peu de quoi est fait ce post-process.</p>
-<h2 id="iii-composition-de-la-géométrie">III. Composition de la Géométrie</h2>
-<p>Dans cette première itértation du shader de composition, nous allons laisser de côté la lumière pour nous concentrer sur la géométrie. L&rsquo;objectif est d&rsquo;avoir un premier rendu unlit d&rsquo;une scène intéractive intégré à une scène déterministe. Le tout biensure en respectant la profondeur, c&rsquo;est à dire que quelque soit le monde (intéractif ou déterministe), ce qui est devant est bien rendu par dessus ce qui est derrière.</p>
+<p>Voyons à présent de quoi est fait ce post-process.</p>
+<h2 id="iii-composition-de-la-géométrie">III. Composition de la géométrie</h2>
+<p>Dans cette première itération, nous nous concentrons uniquement sur la géométrie, en laissant de côté la lumière. L’objectif est simple : obtenir un rendu <em>unlit</em> où la scène interactive s’intègre naturellement à la scène déterministe, en respectant la profondeur.</p>
 <p>Attention, pavé en approche ! Voici le code complet de cette première version du shader :</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// USUAL GODOT POST-PROCESS STUFF</span>
 </span></span><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
@@ -274,9 +274,9 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="c1">// FINAL FRAGMENT COLOR</span>
 </span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">albedo_frag</span><span class="p">.</span><span class="n">rgb</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>Ne vous inquiétez pas, on va le disequer ensemble dans les sections suivantes.</p>
-<h3 id="1-definition-habituelle-dun-post-process">1. Definition habituelle d&rsquo;un post-process</h3>
-<p>On en a déjà parlé, ces premières lignes sont les même pour tous les post-process.</p>
+</span></span></code></pre></div><p>Ne vous inquiétez pas, nous allons le disséquer ensemble dans les sections suivantes.</p>
+<h3 id="1-définition-habituelle-dun-post-process">1. Définition habituelle d’un post-process</h3>
+<p>Nous en avons déjà parlé : ces premières lignes sont identiques pour tous les post-process.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// USUAL GODOT POST-PROCESS STUFF</span>
 </span></span><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
@@ -284,10 +284,10 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">vertex</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="n">POSITION</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">VERTEX</span><span class="p">.</span><span class="n">xy</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><h3 id="2-include-des-helpers-de-loracle">2. Include des helpers de l&rsquo;oracle</h3>
+</span></span></code></pre></div><h3 id="2-inclusion-des-helpers-de-loracle">2. Inclusion des <em>helpers</em> de l’oracle</h3>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// HELPER FUNCTIONS FROM THE ORACLE</span>
 </span></span><span class="line"><span class="cl"><span class="cp">#include &#34;pre_process_utils.gdshaderinc&#34;</span>
-</span></span></code></pre></div><p>Rappelez-vous, pour harmoniser les données, l&rsquo;Oracle appliquait des pre-traitements à certaines maps. J&rsquo;ai extrait et regroupées ces fonctions dans le fichier <code>pre_process_utils.gdshaderinc</code> que nous incluons ici. De cette manière si nous modifions ces pre-traitements ils resteront valides pour les 2 post-process. Voici son contenu :</p>
+</span></span></code></pre></div><p>Rappelez-vous : pour harmoniser les données, l’Oracle appliquait des prétraitements à certaines maps. J’ai extrait et regroupé ces fonctions dans le fichier <code>pre_process_utils.gdshaderinc</code>, que nous incluons ici. Ainsi, si nous modifions ces prétraitements, ils resteront valides pour les deux post-process. Voici son contenu :</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">vec3</span> <span class="n">pre_process_i_depth</span><span class="p">(</span><span class="k">vec3</span> <span class="n">i_depth</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">i_depth</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
@@ -310,7 +310,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">d_normal</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h3 id="3-parmètres-dentrée">3. Parmètres d&rsquo;entrée</h3>
-<p>Comme évoqué précédement, le post-process va prendre en entrée des <code>uniforms</code> correspondant aux deux G-Buffers, plus quelques paramètres additionnels relatifs à la scène.</p>
+<p>Comme évoqué précédemment, le post-process prend en entrée des uniforms correspondant aux deux G-Buffers, ainsi que quelques paramètres supplémentaires relatifs à la scène.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// SCENE UNIFORMS</span>
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_near</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_far</span><span class="p">;</span>
@@ -322,14 +322,14 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="c1">// DETERMINIST G-BUFFER</span>
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_diffuse_color_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
-</span></span></code></pre></div><p>Pour l&rsquo;instant, on a besoin :</p>
+</span></span></code></pre></div><p>Pour l’instant, nous avons besoin :</p>
 <ul>
-<li>des paramètres near et far de la caméra active</li>
-<li>des texture de depth et d&rsquo;albédo issues des G-Buffers intéractif et détermniste</li>
+<li>des paramètres <em>near</em> et <em>far</em> de la caméra active</li>
+<li>des textures de <em>depth</em> et d’<em>albedo</em> issues des G-Buffers interactif et déterministe.</li>
 </ul>
-<p>L&rsquo;albédo déterministe est ici appelé <code>d_diffuse_color_map</code> car c&rsquo;est son nom dans la terminologie Blender. Mais il s&rsquo;agit bien de la même chose.</p>
+<p>L’albedo déterministe est ici nommé <code>d_diffuse_color_map</code>, car c’est son nom dans la terminologie Blender. Mais il s’agit bien de la même chose.</p>
 <h3 id="4-echantillonage-des-g-buffers">4. Echantillonage des G-Buffers</h3>
-<p>Chaque map est échantillonée pour récupérer le fragment correspondant. Dans la foulée on applique les fameux pre-traitements.</p>
+<p>Chaque map est échantillonnée pour récupérer le fragment correspondant. Dans la foulée, nous appliquons les prétraitements.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="c1">// SAMPLE G-BUFFERs</span>
 </span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
@@ -345,7 +345,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h3 id="5-selection-des-fragment">5. Selection des fragment</h3>
-<p>Ensuite, on se base sur la valeur de la depth pour déterminer si le fragment courant appartien à la scène intéractive ou déterministe. On en profite alors pour assigner les données géométriques correspondantes aux variable <code>depth_frag</code> et <code>albedo_frag</code> que l&rsquo;on utilisera dans la suite du shader.</p>
+<p>Ensuite, nous utilisons la profondeur pour déterminer lequel des deux mondes occlude l&rsquo;autre. Nous assignons alors les données correspondant au monde visible aux variables <code>depth_frag</code> et <code>albedo_frag</code>, que nous utiliserons dans la suite du shader.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="p">...</span>
 </span></span><span class="line"><span class="cl">	
@@ -371,7 +371,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="c1">// FINAL FRAGMENT COLOR</span>
 </span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">albedo_frag</span><span class="p">.</span><span class="n">rgb</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>Bon d&rsquo;accord. la &ldquo;suite du shader&rdquo; est pour l&rsquo;instant un peu courte. On ne fait qu&rsquo;afficher directement l&rsquo;albédo du monde selectionné. On ne se sert même pas de <code>depth_frag</code>. Mais ne vous inquiétez pas ça va venir. Pour l&rsquo;heure je vous propose d&rsquo;admirer ce magnifique chapaï !</p>
+</span></span></code></pre></div><p>Bon, d’accord, la « suite du shader » est pour l’instant un peu courte. Nous ne faisons qu’afficher directement l’albedo du monde sélectionné, sans même utiliser <code>depth_frag</code>. Mais ne vous inquiétez pas, ça viendra. Pour l’heure, je vous propose d’admirer ce magnifique chapaï !</p>
 
  
 
@@ -381,27 +381,26 @@ stroke-linejoin="round" class="feather feather-home">
 </video>
 
 
-<p>Oui je sais c&rsquo;est pas très impressionnant sans lumière. Mais au moins on peut constater que la sélection du monde selon la profondeur est correcte. En effet, les parties du chapaï qui se trouvent sous podium sont bien invisible tandis que le rest est correctement rendu par dessus l&rsquo;arrière plan.</p>
-<p>Mission accomplie ! Place à la lumière maintenant.</p>
-<h2 id="iv-un-premier-modèle-dillumination">IV. Un premier modèle d&rsquo;illumination</h2>
-<p>Avant de nous attaquer à de la &ldquo;vrai&rdquo; lumière, nous allons utiliser un modèle d&rsquo;illumination pas du tout homologué basé uniquement sur l&rsquo;atténuation de l&rsquo;intensité selon la distance. En particulier, ce modèle ignore l&rsquo;orientation des surfaces. Ce n&rsquo;est pas du tout photoréaliste mais cela produit un rendu que je trouve très interessant et qui se marie très bien à des DA stylisées.</p>
-<p>J&rsquo;ai découvert cette technique dans un talk de Theresa Latzko que j&rsquo;avais trouvé très inspirant. Elle y décrit en détail comment elle à défini la direction artistique et implémenté le rendu de son jeu &ldquo;Days of the  Porcupine&rdquo;. Si cela vous interesse voici le lien : <a href="https://www.youtube.com/watch?v=RoqDqHdBI2Y">https://www.youtube.com/watch?v=RoqDqHdBI2Y</a></p>
-<p><a href="/projects/open_re_poc_devlog_4/images/days_of_porcupine.opti.webp"><img src="/projects/open_re_poc_devlog_4/images/days_of_porcupine.opti.webp" alt="Extrait de la présentation &ldquo;Art of the Porcupine&rdquo; par Theresa Latzko. A gauche un vertex lighting classic. A droite le fameux distance-only lighting"></a>
+<p>Oui, je sais, ce n’est pas très impressionnant sans lumière. Mais au moins, nous pouvons constater que la sélection du monde selon la profondeur est correcte : les parties du chapaï qui se trouvent sous le podium sont bien invisibles, tandis que le reste est correctement rendu par-dessus l’arrière-plan.</p>
+<p>Mission accomplie ! Place à la lumière, maintenant.</p>
+<h2 id="iv-un-premier-modèle-dillumination">IV. Un premier modèle d’illumination</h2>
+<p>Avant de nous attaquer à un éclairage plus conventionnel, nous allons explorer un modèle d&rsquo;illumination pas du tout homologué basé uniquement sur l’atténuation de la lumière en fonction de la distance. Ce modèle ignore délibérément l’orientation des surfaces. Bien sûr, il n’est pas photoréaliste, mais il offre un rendu stylisé des plus intéressants.</p>
+<p>Si vous voulez voir à quoi cela ressemble entre les mains d’une artiste compétente (ce que je ne suis pas vraiment), je vous conseille <a href="https://www.youtube.com/watch?v=RoqDqHdBI2Y">ce <em>talk</em></a> de Theresa Latzko. Elle y explique les choix artistiques et l’implémentation technique derrière la direction artistique de son jeu « Days of the Porcupine » (si vous vous demandez, oui, je lui ai complètement piqué l’idée, mouhahaha !).</p>
+<p><a href="/projects/open_re_poc_devlog_4/images/days_of_porcupine.opti.webp"><img alt="Extrait de la présentation &ldquo;Art of the Porcupine&rdquo; par Theresa Latzko. A gauche un vertex lighting classic. A droite le fameux distance-only lighting" src="/projects/open_re_poc_devlog_4/images/days_of_porcupine.opti.webp"></a>
 <em>Extrait de la présentation &ldquo;Art of the Porcupine&rdquo; par Theresa Latzko. A gauche un vertex lighting classic. A droite le fameux distance-only lighting</em></p>
-<p>Nous n&rsquo;irons pas aussi loin qu&rsquo;elle car nous visons une DA plutôt réaliste. Mais lui emprunter cette idée nous permet de passer par une étape intermédiaire un peu plus simple d&rsquo;un point de vu tecnique. Ce qui nous laisse d&rsquo;autant plus te temps pour bien détailler chaque points. Et on va commencer tout dessuite par une petite parenthèse au sujet de la &ldquo;inverse square law&rdquo;.</p>
-<h3 id="1-inverse-square-law">1. Inverse Square law</h3>
-<p>La inverse square law est une loie qui s&rsquo;applique à différentes quantité physiques dont l&rsquo;intensité lumineuse iradiant d&rsquo;une source ponctuelle. Elle dit que &ldquo;l&rsquo;intensitée lumineuse en un point de l&rsquo;espace est inversement proportionnel au carré de la distance qui sépare ce point de la source&rdquo;. Ou de manière plus compacte : <code>I = I0 / d²</code> (avec <code>I0</code> l&rsquo;intensité de la source et <code>d</code> la distance)</p>
-<p>Une façon de se représenter cette relation, c&rsquo;est de penser à une sphere centrée sur la source lumineuse. Les photons iradient de la source lumineuse en ligne droite dans toutes les directions et entrent en collision avec la sphere. Ces collisions sont réparties de manière uniforme sur toute la surface de la sphere.</p>
-<p>Imaginez maintenant que cette sphere grossi. Le nombre de photons qui entrent en collision avec elle est toujours le même, car la quantité de lumière émise par la source ne dépend pas de la sphere. En revanche, la surface à éclairer est maintenant plus grande. La quantitée de lumière reçue au m² est donc plus faible.</p>
-<p><a href="/projects/open_re_poc_devlog_4/images/Inverse_square_law.opti.webp"><img src="/projects/open_re_poc_devlog_4/images/Inverse_square_law.opti.webp" alt="Illustration de l&rsquo;inverse square law"></a></p>
-<p>La décroisance de la concentration de photons sur notre sphere est donc directement reliée à la croissance de sa surface. Et la surface d&rsquo;une sphere est proportionnelle au carré de son rayon (S = 4πr²).</p>
-<p>Si ça ne vous parle pas, vous pouvez aussi penser à un ballon de baudruche. Si un dessin est imprimé dessus, on peu voir les couleurs devenir de plus en plus fades à mesure qu&rsquo;on le gonfle. C&rsquo;est un peu &ldquo;avec les main&rdquo; comme exemple, mais &ldquo;ça fait allusion&rdquo;. La quantité d&rsquo;encre à la surface du balon est fixe, mais quand sa surface augment, il y a moins d&rsquo;encre au cm².</p>
+<p>Nous n&rsquo;irons pas aussi loin qu&rsquo;elle car nous visons quelque chose de plutôt réaliste. Mais passer par cette étape intermédiaire nous permettra de nous étandre sur certains détails. Et on va commencer tout de suite par une petite parenthèse sur « l&rsquo;inverse square law ».</p>
+<h3 id="1-inverse-square-law">1. Inverse Square Law</h3>
+<p>La « inverse square law » est une loi physique qui s’applique à différentes quantités, dont l’intensité lumineuse irradiant d’une source ponctuelle. Elle dit que « l’intensité lumineuse en un point de l’espace est inversement proportionnelle au carré de la distance séparant ce point de la source ». Ou de manière plus compacte : <code>I = I0 / d²</code> (avec <code>I0</code> l&rsquo;intensité de la source et <code>d</code> la distance)</p>
+<p>Pour visualiser cette relation, imaginez une sphère centrée sur la source lumineuse. Les photons s’échappent de la source en ligne droite dans toutes les directions et entrent en collision avec la sphère. Ces collisions sont uniformément réparties sur toute sa surface.</p>
+<p>Maintenant, imaginez que cette sphère grandisse. Le nombre de photons qui la frappent reste constant, car la quantité de lumière émise par la source ne dépend pas de la taille de la sphère. En revanche, la surface à éclairer augmente. La quantitée de lumière au m² est donc plus faible.</p>
+<p><a href="/projects/open_re_poc_devlog_4/images/Inverse_square_law.opti.webp"><img alt="Illustration de l&rsquo;inverse square law" src="/projects/open_re_poc_devlog_4/images/Inverse_square_law.opti.webp"></a></p>
+<p>Cette décroissance de la concentration de photons est directement liée à l’augmentation de la surface. Or, la surface d’une sphère est proportionnelle au carré de son rayon (<code>S = 4πr²</code>).</p>
+<p>Si cette explication ne vous parle pas, pensez à un ballon de baudruche avec un motif imprimé dessus. En le gonflant, le motif s’étire et pâlit. C&rsquo;est un peu « avec les mains » comme exemple, mais ça illustre bien le principe : la quantité d’encre à la surface du ballon reste la même, mais elle se répartit sur une surface plus grande.</p>
 <p>Bref, c&rsquo;est la loi qu&rsquo;on va utiliser pour modéliser notre lumière.</p>
 <h3 id="2-implémentation">2. Implémentation</h3>
-<p>Avant toute chose, nous devons ajouter une OmniLight à la scène intéractive. Cette dernière se verra assigner un script qui modifie periodiquement sa couleur et son intensité, et qui la fait orbiter autour de notre&hellip; instalation d&rsquo;art contemporain (de piètre inspiration) ?</p>
-<p><a href="/projects/open_re_poc_devlog_4/images/rotolight-anim.webp"><img src="/projects/open_re_poc_devlog_4/images/rotolight-anim.webp" alt="Gif de l&rsquo;editeur de godot montrant une light orbitant autours du chapaï"></a></p>
-<p>Pour faciliter la localisation de notre lumière, elle sera materialisée par une petite sphere blanche. Ce n&rsquo;est pas primodial pour le resultat final, mais c&rsquo;est un petit artifice qui m&rsquo;a pas mal aidé à débugger.</p>
-<p>Nous pouvons maintenant reprendre le shader pour qu&rsquo;il implémente le &ldquo;distance-only lighting&rdquo; décrit précédement. Pour vous donner un apperçu global, voici les modifications apportées :</p>
+<p>Commençons par ajouter une OmniLight à la scène interactive. Un script la fera orbiter autour de notre structure, tout en altérant périodiquement sa couleur et son intensité. Une petite sphère blanche la matérialisera pour faciliter le débogage.</p>
+<p><a href="/projects/open_re_poc_devlog_4/images/rotolight-anim.webp"><img alt="Gif de l&rsquo;editeur de godot montrant une light orbitant autours du chapaï" src="/projects/open_re_poc_devlog_4/images/rotolight-anim.webp"></a></p>
+<p>Nous pouvons maintenant reprendre le shader pour y implémenter le fameux « distance-only lighting » de Days of the Porcupine. Pour un aperçu global, voici les modifications apportées :</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// USUAL GODOT POST-PROCESS CODE</span>
 </span></span><span class="line"><span class="cl"><span class="c1">// HELPER FUNCTIONS FROM THE ORACLE</span>
 </span></span><span class="line"><span class="cl"><span class="c1">// SCENE UNIFORMS</span>
@@ -446,15 +445,15 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="c1">// FINAL FRAGMENT COLOR</span>
 </span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">diffuse_contrib</span> <span class="o">+</span> <span class="n">specular_contrib</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>Mais comme d&rsquo;habitude, on va expliquer tout ça en douceur.</p>
+</span></span></code></pre></div><p>Comme d’habitude, nous allons expliquer tout cela en douceur.</p>
 <h4 id="11-paramètres-des-lumières">1.1. Paramètres des lumières</h4>
-<p>D&rsquo;abord on doit fournir à notre post-process entrée les parametres de la lumière. A savoir :</p>
+<p>D&rsquo;abord on fourni à notre post-process les paramètres de la lumière :</p>
 <ul>
-<li>sa position</li>
-<li>sa couleur</li>
-<li>son intensité</li>
+<li>position</li>
+<li>couleur</li>
+<li>intensité</li>
 </ul>
-<p>Pour l&rsquo;instant il n&rsquo;y a qu&rsquo;une seule lumière, mais on compte bein en ajouter d&rsquo;autres un jour alors on va préparer le terrain dès maintenant en déclarant des tableaux plutôt que des variables simples.</p>
+<p>Bien qu’on en ait qu’une seule pour l’instant, nous anticipons dès maintenant l’ajout de nouvelles lumières en utilisant des tableaux plutôt que des variables simples.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// SCENE UNIFORMS</span>
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_near</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_far</span><span class="p">;</span>
@@ -463,30 +462,38 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">vec3</span> <span class="n">plight_position</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">vec3</span> <span class="n">plight_color</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">plight_intensity</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
-</span></span></code></pre></div><p>Une petite minute, pourquoi a-t-on besoin d&rsquo;un entier et de 3 tableaux pour stoquer ça ? Ce ne serait pas plus partique d&rsquo;utiliser un tableau dynamique de structures ?</p>
-<p>Il faut savoir qu&rsquo;en GLSL, les tableaux sont très limités : leur taille doit être connue à la compilation, et sous le capot ils sont souvent gérés comme une succession de variables simples. C’est plus une commodité syntaxique qu’un véritable type de données dynamique comme on en a l&rsquo;habitude sur du code CPU.</p>
-<p>Le seul moyen d&rsquo;implémenter des tableaux réèlement dynamiques est d&rsquo;utiliser un SSBO (Shader Storage Buffer Objects). Mais en <code>GDShader</code> (le langage de shading de Godot) ni les SSBO ni les structures ne sont supportées. Raison pour laquelle on est bloqué avec 3 tableaux de taille fixe et un entier pour encoder leur taille effective.</p>
-<h4 id="12-calcule-de-la-position-du-fragment">1.2. Calcule de la position du fragment</h4>
-<p>Ensuite, pour pouvoir calculer la distance entre la source de lumière et le fragment, il faut connaitre la position de ce dernier. Nous connaissons sa profondeur <code>depth_frag</code> et Godot nous fournis sa position à l&rsquo;écran à travers la variable <code>SCREEN_UV</code>. Nous pouvons en déduire sa coordonée en espace [NDC](définir cet espace).</p>
-<p>A partir de là, il suffit d&rsquo;appliquer la serie de transformations inverse au pipeline normal pour passer du NDC au world space.</p>
+</span></span></code></pre></div><p><strong>Trois tableaux et un entier ? Pourquoi tant de haine ?!!</strong></p>
+<p>&ldquo;Pourquoi ne pas utiliser un tableau de structures, comme dans n&rsquo;importe quel langage ?&rdquo; Bonne question ! En GLSL, les tableaux sont très limités : leur taille doit être connue à la compilation, et en réalité, derière le rideau, ils sont souvent gérés comme une suite de variables simples. C’est plus une commodité d’écriture qu’une vrai structure de donnée.</p>
+<p>La seule solution pour avoir des tableaux dynamiques, ce serait d’utiliser des SSBO (Shader Storage Buffer Objects). Sauf que… GDShader (le langage de shader de Godot) ne supporte ni les SSBO ni les structures. On est donc coincés avec trois tableaux de taille fixe et un entier pour savoir combien de lumières on a au total.</p>
+<h4 id="12-calcul-de-la-position-du-fragment">1.2. Calcul de la position du fragment</h4>
+<p>Pour calculer la distance entre la lumière et le fragment, il faut d’abord connaître sa position dans le monde. Nous disposons déjà de sa profondeur (<code>depth_frag</code>), et Godot nous fournit sa position à l’écran via la variable <code>SCREEN_UV</code>. Nous pouvons en déduire la coordonée du fragment en espace [NDC](définir cet espace).</p>
+<p>À partir de là, il suffit d’appliquer la série de transformations inverses du pipeline normal pour passer de NDC à <em>world space</em> :</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl">	<span class="c1">// WORLD POSITION FROM DEPTH</span>
 </span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">ndc</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">((</span><span class="n">SCREEN_UV</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">depth_frag</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">	<span class="k">vec4</span> <span class="n">world</span> <span class="o">=</span> <span class="n">INV_VIEW_MATRIX</span> <span class="o">*</span> <span class="n">INV_PROJECTION_MATRIX</span> <span class="o">*</span> <span class="k">vec4</span><span class="p">(</span><span class="n">ndc</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">	<span class="n">world</span><span class="p">.</span><span class="n">xyz</span> <span class="o">/=</span> <span class="n">world</span><span class="p">.</span><span class="n">w</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">frag_position</span> <span class="o">=</span> <span class="n">world</span><span class="p">.</span><span class="n">xyz</span><span class="p">;</span>
-</span></span></code></pre></div><p>Vous vous demandez peut-être à quoi sert la ligne <code>world.xyz /= world.w;</code>. Il va falloir me faire confiance sur ce coup, parce que je ne vais pas faire un cours de math sur les coordonnées homogènes. D’abord parce que ce serait très long et un peu austère. Mais en toute honnêteté, c’est surtout un sujet complexe que je ne maîtrise pas totalement. (D’ailleurs, si vous avez de bonnes ressources, n’hésitez pas à les partager en commentaire !)</p>
-<p>Sans rentrer dans les détails, voici ce que j’en comprends : l’idée est de passer dans un espace de dimension supérieure pour profiter de propriétés mathématiques plus interessantes. En programations graphiques on est principalement interessé par :</p>
+</span></span></code></pre></div><p><strong>Mais à quoi sert la ligne :</strong> <code>world.xyz /= world.w</code> <strong>?</strong></p>
+<p>Vous n&rsquo;avez surement pas envie que je vous assome avec un cours sur les coordonnées homogènes. J&rsquo;avoue que ça tombe très bien par car c&rsquo;est un sujet complexe que je ne maitrise pas totalement 😅 (ressources bienvenues dans les commentaires au passage !).</p>
+<p>Pour faire simple, voici ce que je pense en avoir compris : l&rsquo;idée est de passer dans un espace de dimention supérieure qui offre des avantages mathématiques pratiques. En programmation graphique, cela permet notamment de :</p>
 <ul>
-<li>L&rsquo;existance de la PERSPECTIVE_MATRIX</li>
-<li>La possibilité de modéliser la translation comme une multiplication de matrices</li>
-<li>La posibilité de différentier une position d&rsquo;une direction</li>
+<li>Faire la distinction entre une position et une direction</li>
+<li>Modéliser la translation comme une multiplication matricielle</li>
+<li>Avoir accès à la matrice de perspective</li>
 </ul>
-<p>C&rsquo;est pourquoi les API graphiques fonctionnent dans cet espace plutôt que dans l’espace euclidien classique. Pour passer d’une coordonnée euclidienne à une coordonnée homogène, il suffit d’ajouter une composante égale à 1 pour une position, ou 0 pour une direction. Ainsi en 3D, le vecteur (x, y, z) devient (x, y, z, 1) ou (x, y, z, 0).</p>
-<p>Pour revenir d’une coordonnée homogène à une coordonnée euclidienne, on divise tous les composants par le dernier. Par exemple, (x, y, z, w) devient (x/w, y/w, z/w). C&rsquo;est exactement de là que vient la ligne magique : <code>world.xyz /= world.w;</code>.</p>
+<p>C’est pour ces raisons que les API graphiques utilisent cet espace plutôt que l’espace euclidien classique. Pour convertir une coordonnée euclidienne en coordonnée homogène, on ajoute simplement une composante supplémentaire :</p>
+<ul>
+<li>1 pour une position : 	(x, y, z) =&gt; (x, y, z, 1)</li>
+<li>0 pour une direction  : 	(x, y, z) =&gt; (x, y, z, 0)</li>
+</ul>
+<p>Pour revenir à une coordonnée euclidienne depuis une coordonnée homogène, on divise chaque composante par w : (x, y, z, w) =&gt; (x/w, y/w, z/w).</p>
+<p>C’est de là que vient la ligne magique : <code>world.xyz /= world.w;</code>.</p>
 <h4 id="13-calcule-de-la-lumière">1.3. Calcule de la lumière</h4>
-<p>Pour obtenir la couleur final du fragment, nous allons parcourir notre tableau de lumière et accumuler les contribution lumineuses de chacune d&rsquo;elle. Dans la plupart des modèles d&rsquo;illumination, chaque contribution est composée d&rsquo;une partie diffuse et d&rsquo;une partie spéculaire.</p>
-<p>La partie diffuse est la partie de la lumière que la matière disperce dans toutes les directions. C&rsquo;est elle qui nous permet de percevoir la couleur de l&rsquo;objet. La partie speculaire représente la partie qui est refléchie plus majoritairement dans une direction particulière. C&rsquo;est ce qui produit des reflets brillants. Un mirroir par exemple est une matière completement spéculaire. Il renvoit la lumière dans une direction bien précise et ne la diffuse pas comme le ferait une balle en caoutchouc.</p>
-<p>Le resultat final est la somme des contributions diffuses et spéculaires accumulées.</p>
+<p>Pour déterminer la couleur finale du fragment, nous allons parcourir notre tableau de lumières et accumuler chacune de leurs contributions. Dans la plupart des modèles d’éclairage, chaque contribution se compose de deux parties :</p>
+<ul>
+<li>La diffuse : partie de la lumière dispersée dans toutes les directions, qui nous permet de percevoir la couleur de l’objet (comme une balle en caoutchouc).</li>
+<li>La spéculaire : partie de la lumière réfléchie principalement dans une direction privilégiée produisant les reflets (par exemple, un mirroir est un objet completement spéculaire)</li>
+</ul>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="p">...</span>
 </span></span><span class="line"><span class="cl">	
@@ -511,18 +518,17 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="c1">// FINAL FRAGMENT COLOR</span>
 </span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">diffuse_contrib</span> <span class="o">+</span> <span class="n">specular_contrib</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>Comme vous pouvez le constater, notre modèle du pauvre fait l&rsquo;impasse sur la spéculaire. On pourrait bricoler quelque chose &ldquo;en dur&rdquo; pour faire illusion, mais nos G-Buffers actuels ne contiennent pas encore les propriétés de la matière nécessaire au calcule de la contribution spéculaire.</p>
+</span></span></code></pre></div><p>Comme vous pouvez le constater, notre modèle du pauvre fait l&rsquo;impasse sur la spéculaire. La raison à cela, c&rsquo;est que nos G-Buffers actuels ne contiennent pas encore les données nécessaires pour calculer cette composante. Mais comme pour les tableaux de lumière, nous déclarons déjà <code>specular_contrib</code> en prévision des futures améliorations.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">C</span> <span class="o">=</span> <span class="n">plight_color</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
 </span></span><span class="line"><span class="cl">		<span class="k">float</span> <span class="n">I</span> <span class="o">=</span> <span class="n">plight_intensity</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
 </span></span><span class="line"><span class="cl">		<span class="n">diffuse_contrib</span> <span class="o">+=</span> <span class="n">C</span> <span class="o">*</span> <span class="n">I</span> <span class="o">*</span> <span class="n">albedo_frag</span> <span class="o">*</span> <span class="n">attenuation</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">		<span class="c1">//specular_contrib += NOT IMPLEMENTED YET</span>
-</span></span></code></pre></div><p>Mais de la même manière que l&rsquo;on se traine des tableau pour notre unique lumière, on va déclarer une variable <code>specular_contrib</code> pour préparer l&rsquo;avenir.</p>
-<p>Par ailleurs, vous pouvez remarquer que le facteur d&rsquo;attenuation est bien calculé par application de l&rsquo;inverse square law :</p>
+</span></span></code></pre></div><p>Par ailleurs, vous pouvez remarquer que le facteur d’atténuation est bien calculé en appliquant l&rsquo;<em>inverse square law</em> :</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">light_vec</span> <span class="o">=</span> <span class="n">plight_position</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">frag_position</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">		<span class="k">float</span> <span class="n">d2</span> <span class="o">=</span> <span class="n">length</span><span class="p">(</span><span class="n">light_vec</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">		<span class="n">d2</span> <span class="o">=</span> <span class="n">pow</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">		<span class="k">float</span> <span class="n">attenuation</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">d2</span><span class="p">;</span>
-</span></span></code></pre></div><p>Ce qui nous donne le resultat suivant :</p>
+</span></span></code></pre></div><p>Ce qui nous donne le résultat suivant :</p>
 
  
 
@@ -533,10 +539,10 @@ stroke-linejoin="round" class="feather feather-home">
 
 
 <h2 id="iv-conclusion">IV. Conclusion</h2>
-<p>Comme on a pu le voire en image, ce modele d&rsquo;illumination marche très bien dans &ldquo;Days of the Porcupine&rdquo;, mais il faut avouer que sur notre scène il est un peu fade. Le rendu est très plat et avec des couleurs pleines comme celles-ci, on a du mal à distinguer le relief.</p>
-<p>Bien entandu nous améliorerons ça dans la Part II en imlémentant un nouveau modèle un peu plus proche de notre objectif final. Nous ajouteront également de la lumière déterministe préalablement rendue par Blender.</p>
-<p>Maintenant que j&rsquo;y pense, j&rsquo;avais dis dans le précédent devlog que nous avions besoin des normales pour implémenter la lumière. Mais étant donné que nous avons ignoré l&rsquo;orientation des surfaces, on en a finalement pas eu besoin. C&rsquo;est domage, ça veut dire qu&rsquo;on aurait pu traiter le sujet un poil plus tôt dans la série.</p>
-<p>A ma décharge, je n&rsquo;avais pas prévu de couper ce numéro ici. La preuve que même en écrivant depuis le futur, on peut quand même arriver à se planter 😅.</p>
+<p>Comme on a pu le voir en image, ce modèle d&rsquo;illumination marche très bien dans « Days of the Porcupine », mais il faut avouer que sur notre scène, il est un peu fade. Le rendu est très plat, et avec des couleurs pleines comme celles-ci, on a du mal à distinguer le relief.</p>
+<p>Bien entendu, nous améliorerons cela dans la Partie II en implémentant un nouveau modèle un peu plus proche de notre objectif final. Nous ajouterons également de la lumière déterministe, préalablement rendue par Blender.</p>
+<p>Une petite réflexion en passant ! Dans le précédent devlog, j’avais mentionné que nous aurions besoin des normales pour implémenter la lumière. Finalement, comme nous avons ignoré l’orientation des surfaces, elles ne se sont pas révélées nécessaires dans cette permière partie. Dommage, cela signifie que nous aurions pu aborder ce sujet un peu plus tôt dans la série.</p>
+<p>À ma décharge, je n’avais pas prévu de couper ce numéro ici. La preuve que même en écrivant depuis le futur, on peut quand même arriver à se planter 😅.</p>
 
             </div>
         </article>
