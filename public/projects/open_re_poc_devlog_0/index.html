@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.137.0">
+<meta name="generator" content="Hugo 0.140.2">
 
     
     <meta property="og:url" content="http://localhost:1313/projects/open_re_poc_devlog_0/">
@@ -214,7 +214,7 @@ stroke-linejoin="round" class="feather feather-home">
 <h3 id="2-shit-happens">2. Shit happens</h3>
 <p>Petite particularité concernant les premiers articles de la série : il s&rsquo;agira de rétro-<em>devlogs</em>. En effet, j’ai démarré ce projet il y a déjà plusieurs mois, sans trop savoir où j’allais. Je n&rsquo;étais pas sûr que mes expérimentations mèneraient quelque part et, de toute façon, l&rsquo;idée même de tenir un blog ne m&rsquo;avait pas encore traversé l&rsquo;esprit.</p>
 <p>Durant cette période, il se trouve que le dépôt Git a pris feu (suite à une sombre histoire de fichiers Blender beaucoup trop volumineux). Je sais qu&rsquo;il existe des méthodes douces pour régler ce genre de problème, mais j&rsquo;avoue que, sur le moment, je ne voyais pas trop l&rsquo;intérêt. J&rsquo;ai donc bêtement supprimé le dépôt pour en recréer un avec ma copie locale (après avoir fait le nécessaire pour mieux gérer mes scènes).</p>
-<p><img alt="Image générée par IA d&rsquo;un dépôt Git sinistré par un fichier Blender trop gros" src="/projects/open_re_poc_devlog_0/images/shit-happens.opti.webp">
+<p><img src="/projects/open_re_poc_devlog_0/images/shit-happens.opti.webp" alt="Image générée par IA d&rsquo;un dépôt Git sinistré par un fichier Blender trop gros">
 <em>Image générée par IA d&rsquo;un dépôt Git sinistré par un fichier Blender trop gros</em></p>
 <p>Résultat : j’ai perdu l’historique du projet. Je ne peux donc plus restaurer les premières versions pour analyser ce que j&rsquo;avais fait. Réaliser des captures d&rsquo;écran de mes résultats originaux est également impossible. Ces premiers numéros seront donc des reconstitutions.</p>
 <h2 id="part-i--problématique-de-lharmonisation-des-données">Part I : Problématique de l&rsquo;harmonisation des données</h2>
@@ -234,7 +234,7 @@ margin-right: auto;" /></p>
 <p>À la manière d&rsquo;un oracle, cette moulinette va formuler des prophéties parfois cryptiques en réponse aux questions qu&rsquo;on lui pose. Mais interprétés correctement, ces présages nous aideront à avancer dans notre périple.</p>
 <h3 id="1-comment-ça-marche-">1. Comment ça marche ?</h3>
 <p>Si Godot et Blender sont bien sur la même longueur d&rsquo;onde, les G-Buffers qu&rsquo;ils produisent à partir d&rsquo;une même scène devraient être identiques. C&rsquo;est ce que nous allons chercher à vérifier avec l&rsquo;aide de l&rsquo;oracle. Son rôle sera de comparer les G-Buffers qu&rsquo;on lui donne et de nous délivrer une image à partir de laquelle on devra déduire son verdict.</p>
-<p><img alt="Image illustrant le protocole de validation" src="/projects/open_re_poc_devlog_0/images/oracle_schema_update.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_0/images/oracle_schema_update.opti.webp" alt="Image illustrant le protocole de validation"></p>
 <p>Mais trêve de métaphores. Concrètement, cet oracle est un <a href="/pages/glossary/#post-process"><em>post-process</em></a> du nom de <code>oracle.gdshader</code>. Il prend en entrée :</p>
 <ul>
 <li>les textures des deux G-Buffers</li>
@@ -248,8 +248,8 @@ margin-right: auto;" /></p>
 <p>Si l&rsquo;oracle affiche une image entièrement  noire pour chaque type de texture, c&rsquo;est gagné : les G-Buffers sont identiques.</p>
 <h3 id="2-mise-en-place-dune-scène-de-test">2. Mise en place d’une scène de test</h3>
 <p>Pour commencer, j’ai créé une petite scène dans Blender, composée de quelques primitives et d’une caméra. Ensuite, je l’ai reproduite à l’identique dans Godot. L’opération est triviale, étant donné que Godot prend en charge le format de scène de Blender. Il suffit d’importer le fichier <code>.blend</code> et de l’ajouter à une scène vide.</p>
-<p><img alt="Illustration représentant la SimpleScene dans Blender" src="/projects/open_re_poc_devlog_0/images/simpleBlend.opti.webp"><br>
-<img alt="Illustration représentant la SimpleScene dans Godot" src="/projects/open_re_poc_devlog_0/images/simpleGodot.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_0/images/simpleBlend.opti.webp" alt="Illustration représentant la SimpleScene dans Blender"><br>
+<img src="/projects/open_re_poc_devlog_0/images/simpleGodot.opti.webp" alt="Illustration représentant la SimpleScene dans Godot"></p>
 <p>Comme vous pouvez le voir sur les captures, il s&rsquo;agit d&rsquo;une Cornell box basique avec un petit podium au centre, sur lequel nous pourrons mettre en scène ce dont nous aurons besoin le moment venu. Dans ce <em>devlog</em>, nous allons nous contenter de mettre en place l&rsquo;environnement. Il n&rsquo;y a donc rien sur le podium pour l&rsquo;instant.</p>
 <h3 id="3-implémentation-de-loracle">3. Implémentation de l’Oracle</h3>
 <p>Voyons maintenant de quoi est fait notre oracle. Sans plus de cérémonie, voici son code source. C&rsquo;est un petit pavé, mais ne vous inquiétez pas, nous allons le décortiquer ensemble.</p>
@@ -412,14 +412,14 @@ margin-right: auto;" /></p>
 </span></span></code></pre></div><p>La fonction <code>compute_difference(...)</code> ne renvoie plus systématiquement <code>ERROR_COLOR</code>. Lorsque le type de données à comparer est réglé sur  <code>ALBEDO_TYPE</code>, la fonction <code>compute_albedo_difference(...)</code> est invoquée à la place. Elle effectue une simple distance euclidienne entre les deux couleurs.</p>
 <h3 id="2-assignation-des-textures">2. Assignation des textures</h3>
 <p>La génération des textures d&rsquo;albédo déterministe et interactive est malheureusement hors <em>scope</em> pour aujourd&rsquo;hui. On va simplement considérer qu&rsquo;on les a déjà et qu&rsquo;elles ont été obtenues à partir d&rsquo;un Godot et d&rsquo;un Blender dans leur paramétrage d&rsquo;usine, sans toucher à plus que le strict nécessaire. Les voici :</p>
-<p><img alt="images du <em>file system</em> contenant les 2 textures" src="/projects/open_re_poc_devlog_0/images/fake_textures.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_0/images/fake_textures.opti.webp" alt="images du file system contenant les 2 textures"></p>
 <p>À partir de là, il ne reste plus qu&rsquo;à les assigner aux <em>uniforms</em> correspondants dans <code>oracle.gdshader</code> et à régler <code>data_type</code> sur 0 (qui correspond à <code>ALBEDO_TYPE</code>).</p>
 <p><img alt="Inspector de godot dans lequel on peut voir data_type réglé sur 0 et les 2 textures bindées à D_Buffer et G_Buffer" src="./images/bind_textures.opti.webp" style="display: block; margin-left: auto;
 margin-right: auto;" /></p>
 <h3 id="3-cest-maintenant--cest-maintenant-">3. C&rsquo;est maintenant ! C&rsquo;est maintenant !</h3>
 <p>Le type de données à comparer est bien réglé sur Albedo. Nos textures sont en place, correctement générées (faites-moi confiance…) et associées aux <em>uniforms</em> du <em>shader</em>. Elles proviennent de deux scènes rigoureusement identiques issues du même fichier. Si l&rsquo;importeur de Godot a bien fait son travail en traduisant les données de Blender, nous devrions obtenir une prophétie rassurante… c&rsquo;est-à-dire un bel écran noir.</p>
 <p>Qu&rsquo;est-ce qui pourrait mal se passer ?</p>
-<p><img alt="Capture de la première prophétie de l&rsquo;Oracle" src="/projects/open_re_poc_devlog_0/images/first_prophecy.opti.webp"></p>
+<p><img src="/projects/open_re_poc_devlog_0/images/first_prophecy.opti.webp" alt="Capture de la première prophétie de l&rsquo;Oracle"></p>
 <p>Oh nooo !!!</p>
 <p>Quelle surprise ! L&rsquo;image n&rsquo;est pas noire (qui aurait pu s&rsquo;en douter ?!). Rassurez-vous, l&rsquo;importeur fonctionne très bien, le problème vient d&rsquo;ailleurs. Il va falloir trouver ce qui cloche et le corriger. Mais ce sera pour une autre fois, car nous arrivons à la fin de ce <em>devlog</em>. (Oui… je dois garder un peu de temps pour le dev, sinon il n&rsquo;y aura plus rien à raconter.)</p>
 <h2 id="conclusion-">Conclusion :</h2>
@@ -432,7 +432,7 @@ margin-right: auto;" /></p>
 <p>Mais reconnaissons quand même un avantage à la situation : le TurboTartine du futur, malgré ses problèmes de mémoire, sait à peu près ce qu&rsquo;il a fait ensuite, ce qui aide à structurer tout ça.</p>
 <p>D&rsquo;ailleurs, je peux déjà annoncer le sujet du prochain numéro ! Dans le prochain <em>devlog</em>, nous allons utiliser l&rsquo;oracle pour harmoniser les textures d&rsquo;albédo de nos G-Buffers (qui l&rsquo;eût cru hein ?).</p>
 <p>D’ici là, prenez soin de vous, et j&rsquo;espère que ce premier <em>devlog</em> vous aura plu. N’hésitez pas à me faire vos retours !</p>
-
+<div style="text-align: right"><a href="../open_re_poc_devlog_1">Vers Suivant : "OpenRE devlog 1 : Harmonisation de l'Albedo" ➡️</a></div>
             </div>
         </article>
 <hr style="margin-top: 40px; margin-bottom: 40px;" />

@@ -3,12 +3,15 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/</loc>
-    <lastmod>2025-07-15T09:38:25+02:00</lastmod>
+    <lastmod>2025-08-28T08:43:37+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/projects/open_re_poc_devlog_3/</loc>
-    <lastmod>2025-07-15T09:38:25+02:00</lastmod>
+    <loc>http://localhost:1313/projects/open_re_poc_devlog_4/</loc>
+    <lastmod>2025-08-28T08:43:37+02:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/projects/</loc>
+    <lastmod>2025-08-28T08:43:37+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/projects/open_re_poc_devlog_3/</loc>
     <lastmod>2025-07-15T09:38:25+02:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/projects/open_re_poc_devlog_2/</loc>

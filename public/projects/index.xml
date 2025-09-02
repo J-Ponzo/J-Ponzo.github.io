@@ -6,7 +6,21 @@
     <description>Recent content in Projets on Turbo Tartine Games</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-fr</language>
-    <lastBuildDate>Tue, 15 Jul 2025 09:38:25 +0200</lastBuildDate><atom:link href="http://localhost:1313/projects/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 28 Aug 2025 08:43:37 +0200</lastBuildDate><atom:link href="http://localhost:1313/projects/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OpenRE devlog 4 : Fusion des mondes. Part I</title>
+      <link>http://localhost:1313/projects/open_re_poc_devlog_4/</link>
+      <pubDate>Thu, 28 Aug 2025 08:43:37 +0200</pubDate>
+      
+      <guid>http://localhost:1313/projects/open_re_poc_devlog_4/</guid>
+      
+      <description>&lt;p&gt;&lt;a href=&#34;http://localhost:1313/projects/open_re_poc_devlog_3/&#34;&gt;⬅️ Vers Précédent : &amp;ldquo;OpenRE devlog 3 : Harmonisation des normales&amp;rdquo;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;i-introduction&#34;&gt;I. Introduction&lt;/h2&gt;
+&lt;p&gt;Grâce au travail effectué jusqu&amp;rsquo;ici, nous sommes en mesure de faire nos premiers rendus. Pour cela nous allons partir de la scène actuelle à laquelle nous allons ajouter un peu de mouvement mais surtout, de la lumière.&lt;/p&gt;
+&lt;p&gt;Comme d&amp;rsquo;habitude nous adopteront une aproche intérative. Nous commenceront par la version la plus rudimentaire possible que nous complexifieront petit à petit jusqu&amp;rsquo;à atteindre notre but. A la fin nous auront un rendu en temps réèl cohérent comprenant :&lt;/p&gt;</description>
+      
+    </item>
+    
     <item>
       <title>OpenRE devlog 3 : Harmonisation des normales</title>
       <link>http://localhost:1313/projects/open_re_poc_devlog_3/</link>
@@ -14,7 +28,8 @@
       
       <guid>http://localhost:1313/projects/open_re_poc_devlog_3/</guid>
       
-      <description>&lt;h2 id=&#34;i-introduction&#34;&gt;I. Introduction&lt;/h2&gt;
+      <description>&lt;p&gt;&lt;a href=&#34;http://localhost:1313/projects/open_re_poc_devlog_2/&#34;&gt;⬅️ Vers Précédent : &amp;ldquo;OpenRE devlog 2 : Harmonisation de la profondeur&amp;rdquo;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;i-introduction&#34;&gt;I. Introduction&lt;/h2&gt;
 &lt;p&gt;Si vous êtes un lecteur du futur et que vous lisez ces develogs d&amp;rsquo;une traite, vous avez sûrement la structure des précédents numéros en tête. Mais si vous les découvrez au fur et à mesure, un petit rappel me semble approprié.&lt;/p&gt;
 &lt;p&gt;Depuis le début de cette série, nous avons entrepris d&amp;rsquo;harmoniser les différents jeux de textures issus de Blender et Godot qui composent nos G-Buffers déterministes et interactifs. Jusqu&amp;rsquo;ici, nous avons traité :&lt;/p&gt;</description>
       
@@ -27,7 +42,8 @@
       
       <guid>http://localhost:1313/projects/open_re_poc_devlog_2/</guid>
       
-      <description>&lt;h2 id=&#34;i-introduction&#34;&gt;I. Introduction&lt;/h2&gt;
+      <description>&lt;p&gt;&lt;a href=&#34;http://localhost:1313/projects/open_re_poc_devlog_1/&#34;&gt;⬅️ Vers Précédent : &amp;ldquo;OpenRE devlog 1 : Harmonisation de l&amp;rsquo;Albedo&amp;rdquo;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;i-introduction&#34;&gt;I. Introduction&lt;/h2&gt;
 &lt;p&gt;Le mois dernier nous avions utilisé l&amp;rsquo;oracle pour harmoniser les textures d&amp;rsquo;albédo interactive et déterministe. Aujourd&amp;rsquo;hui, on va faire la même chose avec la profondeur.&lt;/p&gt;
 &lt;p&gt;Travail similaire, structure similaire. Je vais commencer par expliquer d&amp;rsquo;où viennent nos textures, puis on se lancera dans les réglages en surveillant les prophéties de l&amp;rsquo;oracle à chaque étape.&lt;/p&gt;
 &lt;p&gt;Je ne détaillerai pas autant que d&amp;rsquo;habitude les actions effectuées dans Blender et Godot. D&amp;rsquo;abord pour rester raccord avec ma volonté de concision et de simplicité (qui semble avoir été appréciée d&amp;rsquo;après les retours que j&amp;rsquo;ai eus). Mais aussi parce que ces actions seront très similaires à ce qu&amp;rsquo;on a fait dans le numéro précédent. On s&amp;rsquo;économisera donc les descriptions un peu lourdes.&lt;/p&gt;</description>
@@ -41,7 +57,8 @@
       
       <guid>http://localhost:1313/projects/open_re_poc_devlog_1/</guid>
       
-      <description>&lt;h2 id=&#34;i-avant-propos&#34;&gt;I. Avant-propos&lt;/h2&gt;
+      <description>&lt;p&gt;&lt;a href=&#34;http://localhost:1313/projects/open_re_poc_devlog_0/&#34;&gt;⬅️ Vers Précédent : &amp;ldquo;OpenRE devlog 0 : Oracle Driven Development&amp;rdquo;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;i-avant-propos&#34;&gt;I. Avant-propos&lt;/h2&gt;
 &lt;p&gt;Avant de démarrer, je voudrais préciser que, rétrospectivement, je ne suis pas totalement convaincu par le format du premier numéro de cette serie. Je le trouve un peu trop détaillé, peut-être un peu trop &amp;ldquo;&lt;em&gt;storytelling&lt;/em&gt;&amp;rdquo; aussi.
 Mon intention est toujours de proposer des articles personnels et authentiques, mais dans le cadre d&amp;rsquo;un &lt;em&gt;devlog&lt;/em&gt;, il peut être intéressant de rester relativement concis pour ne pas perdre de vue l&amp;rsquo;objectif principal : documenter l&amp;rsquo;avancement du projet.&lt;/p&gt;</description>
       
@@ -71,11 +88,8 @@ Mon intention est toujours de proposer des articles personnels et authentiques, 
 &lt;p&gt;Lorsque j&amp;rsquo;ai cherché à développer mon propre jeu en caméra fixe, j’ai rapidement réalisé une chose : les outils et ressources disponibles sur le sujet sont rares. Certes, on trouve quelques tutoriels pour gérer les caméras ou implémenter les déplacements du joueur. Mais je n&amp;rsquo;ai pas trouvé de réponse à la question qui m&amp;rsquo;intéresse réellement : &lt;em&gt;&amp;ldquo;Comment intégrer des éléments interactifs dans des décors précalculés ?&amp;rdquo;&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;J&amp;rsquo;ai donc commencé à bricoler de mon côté pour trouver une solution à ce problème et je pense avoir un début de réponse :
 
-
-    
     &lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
-      &lt;iframe allow=&#34;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share&#34; allowfullscreen=&#34;allowfullscreen&#34; loading=&#34;eager&#34; referrerpolicy=&#34;strict-origin-when-cross-origin&#34; src=&#34;https://www.youtube.com/embed/ok0o0HhgfeY?autoplay=0&amp;controls=1&amp;end=0&amp;loop=0&amp;mute=0&amp;start=0&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; title=&#34;YouTube video&#34;
-      &gt;&lt;/iframe&gt;
+      &lt;iframe allow=&#34;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share&#34; allowfullscreen=&#34;allowfullscreen&#34; loading=&#34;eager&#34; referrerpolicy=&#34;strict-origin-when-cross-origin&#34; src=&#34;https://www.youtube.com/embed/ok0o0HhgfeY?autoplay=0&amp;amp;controls=1&amp;amp;end=0&amp;amp;loop=0&amp;amp;mute=0&amp;amp;start=0&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; title=&#34;YouTube video&#34;&gt;&lt;/iframe&gt;
     &lt;/div&gt;
 &lt;/p&gt;</description>
       
