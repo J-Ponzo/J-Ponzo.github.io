@@ -220,7 +220,7 @@ void fragment() {
 }
 ```
 
-Bon, d’accord, la « suite du shader » est pour l’instant un peu courte. Nous ne faisons qu’afficher directement l’albedo du monde sélectionné, sans même utiliser `depth_frag`. Mais ne vous inquiétez pas, ça viendra. Pour l’heure, je vous propose d’admirer ce magnifique chapaï !
+Bon, d’accord, la "suite du shader" est pour l’instant un peu courte. Nous ne faisons qu’afficher directement l’albedo du monde sélectionné, sans même utiliser `depth_frag`. Mais ne vous inquiétez pas, ça viendra. Pour l’heure, je vous propose d’admirer ce magnifique chapaï !
 
 {{< rawhtml >}} 
 
@@ -240,13 +240,13 @@ Avant de nous attaquer à un éclairage plus conventionnel, nous allons explorer
 
 Si vous voulez voir à quoi cela ressemble entre les mains d’une artiste compétente (ce que je ne suis pas vraiment), je vous conseille [ce *talk*](https://www.youtube.com/watch?v=RoqDqHdBI2Y) de Theresa Latzko. Elle y explique les choix artistiques et l’implémentation technique derrière la direction artistique de son jeu « Days of the Porcupine » (si vous vous demandez, oui, je lui ai complètement piqué l’idée, mouhahaha !).
 
-[![Extrait de la présentation "Art of the Porcupine" par Theresa Latzko. A gauche un vertex lighting classic. A droite le fameux distance-only lighting](images/days_of_porcupine.opti.webp)](images/days_of_porcupine.opti.webp)
-*Extrait de la présentation "Art of the Porcupine" par Theresa Latzko. A gauche un vertex lighting classic. A droite le fameux distance-only lighting*
+[![Extrait de la présentation « Art of the Porcupine » par Theresa Latzko. A gauche un vertex lighting classic. A droite le fameux distance-only lighting](images/days_of_porcupine.opti.webp)](images/days_of_porcupine.opti.webp)
+*Extrait de la présentation « Art of the Porcupine » par Theresa Latzko. A gauche un vertex lighting classic. A droite le fameux "*distance-only lighting*"
 
-Nous n'irons pas aussi loin qu'elle car nous visons quelque chose de plutôt réaliste. Mais passer par cette étape intermédiaire nous permettra de nous étandre sur certains détails. Et on va commencer tout de suite par une petite parenthèse sur « l'inverse square law ».
+Nous n'irons pas aussi loin qu'elle car nous visons quelque chose de plutôt réaliste. Mais passer par cette étape intermédiaire nous permettra de nous étandre sur certains détails. Et on va commencer tout de suite par une petite parenthèse sur *l'inverse square law*.
 
 ### 1. Inverse Square Law
-La « inverse square law » est une loi physique qui s’applique à différentes quantités, dont l’intensité lumineuse irradiant d’une source ponctuelle. Elle dit que « l’intensité lumineuse en un point de l’espace est inversement proportionnelle au carré de la distance séparant ce point de la source ». Ou de manière plus compacte : `I = I0 / d²` (avec `I0` l'intensité de la source et `d` la distance)
+La *inverse square law* est une loi physique qui s’applique à différentes quantités, dont l’intensité lumineuse irradiant d’une source ponctuelle. Elle dit que  "l’intensité lumineuse en un point de l’espace est inversement proportionnelle au carré de la distance séparant ce point de la source". Ou de manière plus compacte : `I = I0 / d²` (avec `I0` l'intensité de la source et `d` la distance)
 
 Pour visualiser cette relation, imaginez une sphère centrée sur la source lumineuse. Les photons s’échappent de la source en ligne droite dans toutes les directions et entrent en collision avec la sphère. Ces collisions sont uniformément réparties sur toute sa surface. 
 
@@ -256,7 +256,7 @@ Maintenant, imaginez que cette sphère grandisse. Le nombre de photons qui la fr
 
 Cette décroissance de la concentration de photons est directement liée à l’augmentation de la surface. Or, la surface d’une sphère est proportionnelle au carré de son rayon (`S = 4πr²`).
 
-Si cette explication ne vous parle pas, pensez à un ballon de baudruche avec un motif imprimé dessus. En le gonflant, le motif s’étire et pâlit. C'est un peu « avec les mains » comme exemple, mais ça illustre bien le principe : la quantité d’encre à la surface du ballon reste la même, mais elle se répartit sur une surface plus grande.
+Si cette explication ne vous parle pas, pensez à un ballon de baudruche avec un motif imprimé dessus. En le gonflant, le motif s’étire et pâlit. C'est un peu "avec les mains" comme exemple, mais ça illustre bien le principe : la quantité d’encre à la surface du ballon reste la même, mais elle se répartit sur une surface plus grande.
 
 Bref, c'est la loi qu'on va utiliser pour modéliser notre lumière.
 
@@ -265,7 +265,7 @@ Commençons par ajouter une OmniLight à la scène interactive. Un script la fer
 
 [![Gif de l'editeur de godot montrant une light orbitant autours du chapaï](images/rotolight-anim.webp)](images/rotolight-anim.webp)
 
-Nous pouvons maintenant reprendre le shader pour y implémenter le fameux « distance-only lighting » de Days of the Porcupine. Pour un aperçu global, voici les modifications apportées :
+Nous pouvons maintenant reprendre le shader pour y implémenter le fameux "*distance-only lighting*" de « Days of the Porcupine ». Pour un aperçu global, voici les modifications apportées :
 
 ```glsl
 // USUAL GODOT POST-PROCESS CODE
