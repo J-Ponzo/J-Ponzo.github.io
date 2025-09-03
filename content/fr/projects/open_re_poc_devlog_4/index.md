@@ -292,7 +292,8 @@ void fragment() {
 	// DATA SELECTION (according to depth)
 	// WORLD POSITION FROM DEPTH
 	vec3 ndc = vec3((SCREEN_UV * 2.0) - 1.0, depth_frag);
-	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * vec4(ndc, 1.0);
+	vec4 clip = vec4(ndc, 1.0);
+	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * clip;
 	world.xyz /= world.w;
 	vec3 frag_position = world.xyz;
 	
@@ -342,20 +343,25 @@ uniform float plight_intensity[8];
 La seule solution pour avoir des tableaux dynamiques, ce serait d’utiliser des SSBO (Shader Storage Buffer Objects). Sauf que… GDShader (le langage de shader de Godot) ne supporte ni les SSBO ni les structures. On est donc coincés avec trois tableaux de taille fixe et un entier pour savoir combien de lumières on a au total.
 
 #### 1.2. Calcul de la position du fragment
-Pour calculer la distance entre la lumière et le fragment, il faut d’abord connaître sa position dans le monde. Nous disposons déjà de sa profondeur (`depth_frag`), et Godot nous fournit sa position à l’écran via la variable `SCREEN_UV`. Nous pouvons en déduire la coordonée du fragment en espace [NDC](définir cet espace).
+Pour calculer la distance entre la lumière et le fragment, il faut d’abord connaître sa position dans le monde. Et pour obtenir cette dernière, il faut comprendre ce que j’appelle la "*coordinate transformation chain*".  Il s’agit de la succession de changements d’espaces qui font passer les vertices des coordonnées locales de l’objet à l’espace écran.
 
-À partir de là, il suffit d’appliquer la série de transformations inverses du pipeline normal pour passer de NDC à *world space* :
+[![Schéma décrivant la coordinate transformation chain changeant successivement d'espace dans cet ordre : object space, world_space, view space, clip space, NDC space, screen space](images/transform_chain.opti.webp)](images/transform_chain.opti.webp)
+
+Nous disposons déjà de la profondeur du fragment (`depth_frag`), et Godot nous fournit sa position à l’écran via la variable `SCREEN_UV`. Nous pouvons en déduire la coordonée en espace NDC (*Native Device Coordinate*).
+
+À partir de là, il suffit d’inverser le tronçon de la "*coordinate transformation chain*" qui nous intéresse, et de l'appliquer à notre *Native Device Coordinate* pour avoir la position du fragment en *world space* :
 
 ```glsl
 	// WORLD POSITION FROM DEPTH
 	vec3 ndc = vec3((SCREEN_UV * 2.0) - 1.0, depth_frag);
-	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * vec4(ndc, 1.0);
+	vec4 clip = vec4(ndc, 1.0);
+	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * clip;
 	world.xyz /= world.w;
 	vec3 frag_position = world.xyz;
 ```
 **Mais à quoi sert la ligne :** `world.xyz /= world.w` **?**
 
-Vous n'avez surement pas envie que je vous assome avec un cours sur les coordonnées homogènes. J'avoue que ça tombe très bien par car c'est un sujet complexe que je ne maitrise pas totalement 😅 (ressources bienvenues dans les commentaires au passage !).
+Vous n'avez surement pas envie que je vous assome avec un cours sur les coordonnées homogènes. J'avoue que ça tombe très bien car c'est un sujet complexe que je ne maitrise pas totalement 😅 (ressources bienvenues dans les commentaires au passage !).
 
 Pour faire simple, voici ce que je pense en avoir compris : l'idée est de passer dans un espace de dimention supérieure qui offre des avantages mathématiques pratiques. En programmation graphique, cela permet notamment de :
 - Faire la distinction entre une position et une direction
