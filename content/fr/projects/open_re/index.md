@@ -224,6 +224,7 @@ Le dépôt de ce POC n'est malheureusement pas public. De toute façon, la codeb
 - [devlog 1 : Harmonisation de l'Albedo](projects/open_re_poc_devlog_1)
 - [devlog 2 : Harmonisation de la profondeur](projects/open_re_poc_devlog_2)
 - [devlog 3 : Harmonisation des normales](projects/open_re_poc_devlog_3)
+- [devlog 4 : OpenRE devlog 4 : Fusion des mondes. Part I](projects/open_re_poc_devlog_4)
 
 *Cette phase est en cours. Les devlogs suivant seront publiés dès qu’ils seront disponibles.*
 
