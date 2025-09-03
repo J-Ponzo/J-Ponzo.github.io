@@ -210,6 +210,7 @@ stroke-linejoin="round" class="feather feather-home">
     <li><a href="#smaa">SMAA</a></li>
     <li><a href="#ssao">SSAO</a></li>
     <li><a href="#taa">TAA</a></li>
+    <li><a href="#unlit">Unlit</a></li>
     <li><a href="#uv-attribute">UV Attribute</a></li>
     <li><a href="#vertex">Vertex</a></li>
     <li><a href="#vertex-color-attribute">Vertex Color Attribute</a></li>
@@ -786,6 +787,30 @@ margin-right: auto;" /></p>
 <hr>
 <h2 id="taa">TAA</h2>
 <p>🔗 {<a href="/pages/glossary/#anti-aliasing">anti-aliasing</a>} {<a href="/pages/glossary/#post-process">post-process</a>}</p>
+<hr>
+<p>Le TAA (Temporal Anti-Aliasing) est une technique d&rsquo;<a href="/pages/glossary/#anti-aliasing">anti-aliasing</a> appliquée en <a href="/pages/glossary/#post-process">post-process</a>. Elle consiste à exploiter les <a href="/pages/glossary/#frame">frames</a> précédentes pour lisser l&rsquo;image.</p>
+<p>Avantages  :</p>
+<ul>
+<li>Rendu très précis : les contours sont bien lissés et le reste de l&rsquo;image reste net.</li>
+<li>Compatible avec un deferred renderer (moteur graphique utilisant une architcture particulière permettant le <a href="/pages/glossary/#deferred-lighting">deferred lighting</a>)</li>
+</ul>
+<p>Inconvénients :</p>
+<ul>
+<li>Sujet au ghosting (effet de traînées floues sur les objets en mouvement).</li>
+<li>Peut être plus coûteux en ressources par rapport à d&rsquo;autres techniques.</li>
+</ul>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<h2 id="unlit">Unlit</h2>
+<p>🔗 {<a href="/pages/glossary/#shader">shader</a>}</p>
+<p>Un <a href="/pages/glossary/#shader">shader</a> <em>unlit</em> est un shader qui ne tient pas compte de la lumière et affiche directement les couleurs des objets.</p>
+<p><img alt="Gif comparant le rendu des shader lit et unlit" src="/pages/glossary/images/lit_unlit_comp.gif"></p>
 <hr>
 <p>Le TAA (Temporal Anti-Aliasing) est une technique d&rsquo;<a href="/pages/glossary/#anti-aliasing">anti-aliasing</a> appliquée en <a href="/pages/glossary/#post-process">post-process</a>. Elle consiste à exploiter les <a href="/pages/glossary/#frame">frames</a> précédentes pour lisser l&rsquo;image.</p>
 <p>Avantages  :</p>
