@@ -315,3 +315,5 @@ Nous disposons donc désormais d'une calibration satisfaisante de Blender et God
 Ce sont les données minimales nécessaires à une première implémentation de la lumière. On va donc pouvoir laisser l'Oracle un peu tranquille et commencer à intégrer de vrais éléments interactifs par-dessus un arrière-plan déterministe et voir comment on gère l'illumination dans les deux sens.
 
 C'est donc dans le prochain numéro que les pièces vont enfin commencer à s'assembler. J'ai hâte de trouver un peu de temps pour m'y atteler... alors à très vite, je l'espère !
+
+<div style="text-align: right"><a href="../open_re_poc_devlog_4">Vers Suivant : "OpenRE devlog 4 : Fusion des mondes. Part I" ➡️</a></div>

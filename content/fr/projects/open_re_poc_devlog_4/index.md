@@ -1,7 +1,7 @@
 +++
 author = 'Turbo Tartine'
 date = '2025-08-28T08:43:37+02:00'
-draft = true
+draft = false
 title = "OpenRE devlog 4 : Fusion des mondes. Part I"
 description = 'devlog 4 du projet OpenRE'
 +++
@@ -21,26 +21,26 @@ Ou du moins, c’est ce que je prévoyais à l’origine. Mais je me suis rendu 
 ## II. Préparation de la scène
 Jusqu'ici, nous avons cherché à comparer des scènes identiques dans le but d'étaloner Godot et Blender afin qu'ils produisent des données bien harmonisées. Mais évidement dans un usage normal, le monde interactif diffère du déterministe. Dans Godot, nous allons donc masquer les éléments de la scène précédemment importée depuis Blender (qui sera notre scène déterministe).
 
-<img alt="Capture du dock scene de Godot dans lequel tous les mesh issus de la simple-scene.blend ont été masqués" src="./images/hide_det_scn.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
+<img alt="Capture du dock scene de Godot dans lequel tous les [mesh](/pages/glossary/#mesh) issus de la simple-scene.blend ont été masqués" src="./images/hide_det_scn.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 
 On va ensuite ajouter de nouveaux meshes. Et comme ces meshes constituent le monde intéractif, on ne se privera pas de les animer.
 
 [![Gif de l'editeur de godot montrant un agencement de primitives géométriques de couleurs unies qui tournent sure elle meme. Il y a un arceau qui ressemble à la porte des étoiles et un cube jaune au centre](images/int_geometry-anim.webp)](images/int_geometry-anim.webp)
 
-Enfin, nous allons desactiver l’oracle et créer un nouveau post-process `ore_compositor` chargé de fusionner les deux scènes en temps réel. Comme l’oracle, il prendra en entrée les maps des G-Buffers déterministe et interactif, mais il aura également besoin de données supplémentaires relatives à la scène : les propriétés de la caméra active et, plus tard, celles des lumières.
+Enfin, nous allons desactiver l’oracle et créer un nouveau [post-process](/pages/glossary/#post-process) `ore_compositor` chargé de fusionner les deux scènes en temps réel. Comme l’oracle, il prendra en entrée les maps des G-Buffers déterministe et interactif, mais il aura également besoin de données supplémentaires relatives à la scène : les propriétés de la caméra active et, plus tard, celles des lumières.
 
 <img alt="Capture du dock Inspector de Godot dans lequel on peut voir les parametres du post-process ore_compositor" src="./images/ore_compositor.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 
-On oubliera pas de désactiver le post-process quad de l’oracle et d’activer celui du compositor à la place.
+On oubliera pas de désactiver le post-process [quad](/pages/glossary/#quad) de l’oracle et d’activer celui du compositor à la place.
 
 <img alt="Capture du dock scene de Godot dans lequel le post-process quad de l'oracle est masqué tandis que celui du ore_compositor est actif" src="./images/replace_oracle.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 
 Voyons à présent de quoi est fait ce post-process.
 
 ## III. Composition de la géométrie
-Dans cette première itération, nous nous concentrons uniquement sur la géométrie, en laissant de côté la lumière. L’objectif est simple : obtenir un rendu *unlit* où la scène interactive s’intègre naturellement à la scène déterministe, en respectant la profondeur.
+Dans cette première itération, nous nous concentrons uniquement sur la géométrie, en laissant de côté la lumière. L’objectif est simple : obtenir un rendu [*unlit*](/pages/glossary/#unlit) où la scène interactive s’intègre naturellement à la scène déterministe, en respectant la profondeur.
 
-Attention, pavé en approche ! Voici le code complet de cette première version du shader :
+Attention, pavé en approche ! Voici le code complet de cette première version du [shader](/pages/glossary/#shader) :
 
 ```glsl
 // USUAL GODOT POST-PROCESS STUFF
@@ -241,7 +241,7 @@ Avant de nous attaquer à un éclairage plus conventionnel, nous allons explorer
 Si vous voulez voir à quoi cela ressemble entre les mains d’une artiste compétente (ce que je ne suis pas vraiment), je vous conseille [ce *talk*](https://www.youtube.com/watch?v=RoqDqHdBI2Y) de Theresa Latzko. Elle y explique les choix artistiques et l’implémentation technique derrière la direction artistique de son jeu « Days of the Porcupine » (si vous vous demandez, oui, je lui ai complètement piqué l’idée, mouhahaha !).
 
 [![Extrait de la présentation « Art of the Porcupine » par Theresa Latzko. A gauche un vertex lighting classic. A droite le fameux distance-only lighting](images/days_of_porcupine.opti.webp)](images/days_of_porcupine.opti.webp)
-*Extrait de la présentation « Art of the Porcupine » par Theresa Latzko. A gauche un vertex lighting classic. A droite le fameux "*distance-only lighting*"
+*Extrait de la présentation « Art of the Porcupine » par Theresa Latzko. A gauche un [vertex lighting](/pages/glossary/#vertex-lighting) classic. A droite le fameux "*distance-only lighting*"
 
 Nous n'irons pas aussi loin qu'elle car nous visons quelque chose de plutôt réaliste. Mais passer par cette étape intermédiaire nous permettra de nous étandre sur certains détails. Et on va commencer tout de suite par une petite parenthèse sur *l'inverse square law*.
 
@@ -338,12 +338,12 @@ uniform float plight_intensity[8];
 
 **Trois tableaux et un entier ? Pourquoi tant de haine ?!!**
 
-"Pourquoi ne pas utiliser un tableau de structures, comme dans n'importe quel langage ?" Bonne question ! En GLSL, les tableaux sont très limités : leur taille doit être connue à la compilation, et en réalité, derière le rideau, ils sont souvent gérés comme une suite de variables simples. C’est plus une commodité d’écriture qu’une vrai structure de donnée.
+"Pourquoi ne pas utiliser un tableau de structures, comme dans n'importe quel langage [CPU](/pages/glossary/#cpu) ?" Bonne question ! En GLSL, les tableaux sont très limités : leur taille doit être connue à la compilation, et en réalité, derière le rideau, ils sont souvent gérés comme une suite de variables simples. C’est plus une commodité d’écriture qu’une vrai structure de donnée.
 
 La seule solution pour avoir des tableaux dynamiques, ce serait d’utiliser des SSBO (Shader Storage Buffer Objects). Sauf que… GDShader (le langage de shader de Godot) ne supporte ni les SSBO ni les structures. On est donc coincés avec trois tableaux de taille fixe et un entier pour savoir combien de lumières on a au total.
 
 #### 1.2. Calcul de la position du fragment
-Pour calculer la distance entre la lumière et le fragment, il faut d’abord connaître sa position dans le monde. Et pour obtenir cette dernière, il faut comprendre ce que j’appelle la "*coordinate transformation chain*".  Il s’agit de la succession de changements d’espaces qui font passer les vertices des coordonnées locales de l’objet à l’espace écran.
+Pour calculer la distance entre la lumière et le fragment, il faut d’abord connaître sa position dans le monde. Et pour obtenir cette dernière, il faut comprendre ce que j’appelle la "*coordinate transformation chain*".  Il s’agit de la succession de changements d’espaces qui font passer les [vertex](/pages/glossary/#vertex) des coordonnées locales de l’objet à l’espace écran.
 
 [![Schéma décrivant la coordinate transformation chain changeant successivement d'espace dans cet ordre : object space, world_space, view space, clip space, NDC space, screen space](images/transform_chain.opti.webp)](images/transform_chain.opti.webp)
 
