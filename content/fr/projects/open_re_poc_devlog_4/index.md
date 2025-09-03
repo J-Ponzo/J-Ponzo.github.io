@@ -220,7 +220,7 @@ void fragment() {
 }
 ```
 
-Bon, d’accord, la « suite du shader » est pour l’instant un peu courte. Nous ne faisons qu’afficher directement l’albedo du monde sélectionné, sans même utiliser `depth_frag`. Mais ne vous inquiétez pas, ça viendra. Pour l’heure, je vous propose d’admirer ce magnifique chapaï !
+Bon, d’accord, la "suite du shader" est pour l’instant un peu courte. Nous ne faisons qu’afficher directement l’albedo du monde sélectionné, sans même utiliser `depth_frag`. Mais ne vous inquiétez pas, ça viendra. Pour l’heure, je vous propose d’admirer ce magnifique chapaï !
 
 {{< rawhtml >}} 
 
@@ -240,13 +240,13 @@ Avant de nous attaquer à un éclairage plus conventionnel, nous allons explorer
 
 Si vous voulez voir à quoi cela ressemble entre les mains d’une artiste compétente (ce que je ne suis pas vraiment), je vous conseille [ce *talk*](https://www.youtube.com/watch?v=RoqDqHdBI2Y) de Theresa Latzko. Elle y explique les choix artistiques et l’implémentation technique derrière la direction artistique de son jeu « Days of the Porcupine » (si vous vous demandez, oui, je lui ai complètement piqué l’idée, mouhahaha !).
 
-[![Extrait de la présentation "Art of the Porcupine" par Theresa Latzko. A gauche un vertex lighting classic. A droite le fameux distance-only lighting](images/days_of_porcupine.opti.webp)](images/days_of_porcupine.opti.webp)
-*Extrait de la présentation "Art of the Porcupine" par Theresa Latzko. A gauche un vertex lighting classic. A droite le fameux distance-only lighting*
+[![Extrait de la présentation « Art of the Porcupine » par Theresa Latzko. A gauche un vertex lighting classic. A droite le fameux distance-only lighting](images/days_of_porcupine.opti.webp)](images/days_of_porcupine.opti.webp)
+*Extrait de la présentation « Art of the Porcupine » par Theresa Latzko. A gauche un vertex lighting classic. A droite le fameux "*distance-only lighting*"
 
-Nous n'irons pas aussi loin qu'elle car nous visons quelque chose de plutôt réaliste. Mais passer par cette étape intermédiaire nous permettra de nous étandre sur certains détails. Et on va commencer tout de suite par une petite parenthèse sur « l'inverse square law ».
+Nous n'irons pas aussi loin qu'elle car nous visons quelque chose de plutôt réaliste. Mais passer par cette étape intermédiaire nous permettra de nous étandre sur certains détails. Et on va commencer tout de suite par une petite parenthèse sur *l'inverse square law*.
 
 ### 1. Inverse Square Law
-La « inverse square law » est une loi physique qui s’applique à différentes quantités, dont l’intensité lumineuse irradiant d’une source ponctuelle. Elle dit que « l’intensité lumineuse en un point de l’espace est inversement proportionnelle au carré de la distance séparant ce point de la source ». Ou de manière plus compacte : `I = I0 / d²` (avec `I0` l'intensité de la source et `d` la distance)
+La *inverse square law* est une loi physique qui s’applique à différentes quantités, dont l’intensité lumineuse irradiant d’une source ponctuelle. Elle dit que  "l’intensité lumineuse en un point de l’espace est inversement proportionnelle au carré de la distance séparant ce point de la source". Ou de manière plus compacte : `I = I0 / d²` (avec `I0` l'intensité de la source et `d` la distance)
 
 Pour visualiser cette relation, imaginez une sphère centrée sur la source lumineuse. Les photons s’échappent de la source en ligne droite dans toutes les directions et entrent en collision avec la sphère. Ces collisions sont uniformément réparties sur toute sa surface. 
 
@@ -256,7 +256,7 @@ Maintenant, imaginez que cette sphère grandisse. Le nombre de photons qui la fr
 
 Cette décroissance de la concentration de photons est directement liée à l’augmentation de la surface. Or, la surface d’une sphère est proportionnelle au carré de son rayon (`S = 4πr²`).
 
-Si cette explication ne vous parle pas, pensez à un ballon de baudruche avec un motif imprimé dessus. En le gonflant, le motif s’étire et pâlit. C'est un peu « avec les mains » comme exemple, mais ça illustre bien le principe : la quantité d’encre à la surface du ballon reste la même, mais elle se répartit sur une surface plus grande.
+Si cette explication ne vous parle pas, pensez à un ballon de baudruche avec un motif imprimé dessus. En le gonflant, le motif s’étire et pâlit. C'est un peu "avec les mains" comme exemple, mais ça illustre bien le principe : la quantité d’encre à la surface du ballon reste la même, mais elle se répartit sur une surface plus grande.
 
 Bref, c'est la loi qu'on va utiliser pour modéliser notre lumière.
 
@@ -265,7 +265,7 @@ Commençons par ajouter une OmniLight à la scène interactive. Un script la fer
 
 [![Gif de l'editeur de godot montrant une light orbitant autours du chapaï](images/rotolight-anim.webp)](images/rotolight-anim.webp)
 
-Nous pouvons maintenant reprendre le shader pour y implémenter le fameux « distance-only lighting » de Days of the Porcupine. Pour un aperçu global, voici les modifications apportées :
+Nous pouvons maintenant reprendre le shader pour y implémenter le fameux "*distance-only lighting*" de « Days of the Porcupine ». Pour un aperçu global, voici les modifications apportées :
 
 ```glsl
 // USUAL GODOT POST-PROCESS CODE
@@ -292,7 +292,8 @@ void fragment() {
 	// DATA SELECTION (according to depth)
 	// WORLD POSITION FROM DEPTH
 	vec3 ndc = vec3((SCREEN_UV * 2.0) - 1.0, depth_frag);
-	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * vec4(ndc, 1.0);
+	vec4 clip = vec4(ndc, 1.0);
+	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * clip;
 	world.xyz /= world.w;
 	vec3 frag_position = world.xyz;
 	
@@ -342,20 +343,25 @@ uniform float plight_intensity[8];
 La seule solution pour avoir des tableaux dynamiques, ce serait d’utiliser des SSBO (Shader Storage Buffer Objects). Sauf que… GDShader (le langage de shader de Godot) ne supporte ni les SSBO ni les structures. On est donc coincés avec trois tableaux de taille fixe et un entier pour savoir combien de lumières on a au total.
 
 #### 1.2. Calcul de la position du fragment
-Pour calculer la distance entre la lumière et le fragment, il faut d’abord connaître sa position dans le monde. Nous disposons déjà de sa profondeur (`depth_frag`), et Godot nous fournit sa position à l’écran via la variable `SCREEN_UV`. Nous pouvons en déduire la coordonée du fragment en espace [NDC](définir cet espace).
+Pour calculer la distance entre la lumière et le fragment, il faut d’abord connaître sa position dans le monde. Et pour obtenir cette dernière, il faut comprendre ce que j’appelle la "*coordinate transformation chain*".  Il s’agit de la succession de changements d’espaces qui font passer les vertices des coordonnées locales de l’objet à l’espace écran.
 
-À partir de là, il suffit d’appliquer la série de transformations inverses du pipeline normal pour passer de NDC à *world space* :
+[![Schéma décrivant la coordinate transformation chain changeant successivement d'espace dans cet ordre : object space, world_space, view space, clip space, NDC space, screen space](images/transform_chain.opti.webp)](images/transform_chain.opti.webp)
+
+Nous disposons déjà de la profondeur du fragment (`depth_frag`), et Godot nous fournit sa position à l’écran via la variable `SCREEN_UV`. Nous pouvons en déduire la coordonée en espace NDC (*Native Device Coordinate*).
+
+À partir de là, il suffit d’inverser le tronçon de la "*coordinate transformation chain*" qui nous intéresse, et de l'appliquer à notre *Native Device Coordinate* pour avoir la position du fragment en *world space* :
 
 ```glsl
 	// WORLD POSITION FROM DEPTH
 	vec3 ndc = vec3((SCREEN_UV * 2.0) - 1.0, depth_frag);
-	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * vec4(ndc, 1.0);
+	vec4 clip = vec4(ndc, 1.0);
+	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * clip;
 	world.xyz /= world.w;
 	vec3 frag_position = world.xyz;
 ```
 **Mais à quoi sert la ligne :** `world.xyz /= world.w` **?**
 
-Vous n'avez surement pas envie que je vous assome avec un cours sur les coordonnées homogènes. J'avoue que ça tombe très bien par car c'est un sujet complexe que je ne maitrise pas totalement 😅 (ressources bienvenues dans les commentaires au passage !).
+Vous n'avez surement pas envie que je vous assome avec un cours sur les coordonnées homogènes. J'avoue que ça tombe très bien car c'est un sujet complexe que je ne maitrise pas totalement 😅 (ressources bienvenues dans les commentaires au passage !).
 
 Pour faire simple, voici ce que je pense en avoir compris : l'idée est de passer dans un espace de dimention supérieure qui offre des avantages mathématiques pratiques. En programmation graphique, cela permet notamment de :
 - Faire la distinction entre une position et une direction

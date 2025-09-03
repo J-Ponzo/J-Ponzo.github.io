@@ -749,6 +749,36 @@ Inconvénients :
 ---
 ---
 
+## Unlit
+🔗 {[shader](/pages/glossary/#shader)}
+
+Un [shader](/pages/glossary/#shader) *unlit* est un shader qui ne tient pas compte de la lumière et affiche directement les couleurs des objets.
+
+![Gif comparant le rendu des shader lit et unlit](images/lit_unlit_comp.gif)
+
+---
+
+Le TAA (Temporal Anti-Aliasing) est une technique d'[anti-aliasing](/pages/glossary/#anti-aliasing) appliquée en [post-process](/pages/glossary/#post-process). Elle consiste à exploiter les [frames](/pages/glossary/#frame) précédentes pour lisser l'image.
+
+Avantages  :
+- Rendu très précis : les contours sont bien lissés et le reste de l'image reste net.
+- Compatible avec un deferred renderer (moteur graphique utilisant une architcture particulière permettant le [deferred lighting](/pages/glossary/#deferred-lighting))
+
+Inconvénients :
+- Sujet au ghosting (effet de traînées floues sur les objets en mouvement).
+- Peut être plus coûteux en ressources par rapport à d'autres techniques.
+
+---
+---
+---
+---
+---
+---
+---
+---
+
+
+
 ## UV Attribute
 🔗 {[vertex](/pages/glossary/#vertex)} {[rasterisation](/pages/glossary/#rasterisation)} {[normal attribute](/pages/glossary/#normal-attribute) - [vertex color attribute](/pages/glossary/#vertex-color-attribute)}
 
@@ -856,3 +886,5 @@ Après cette étape, on peut considérer que les vertex forment une sorte d'imag
 ---
 ---
 ---
+
+
