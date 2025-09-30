@@ -16,9 +16,14 @@ Aujourd'hui nous allons :
 - Calculer de la lumière déterministe dans Blender et l'intégrer a notre scène
 
 ## II. Le modèle de Lambert
+Le modèle de Lambert suppose que les surfaces réfléchissent la lumière de manière égale dans toutes les directions. Cela veut dire que la quantité de lumière en un point ne dépend pas du point de vue de l'observateur. En réalité, elle dépend de l'angle selon lequel le rayon frappe la surface.
 
 ### 1. Principe
+Une façon de se représenter le phénomene, c'est d'imaginer un faiseau de lumière parfaitement vertical qui éclaire une surface parfaitement horizontale. Le cercle dans lequel les photons percutent la surface cohincide avec la section du faiseau.
 
+Si maitenant le faiseau est incliné, ce cercle devient un ovale. De là on peut tirer une conclusion similaire à la inverse square law de la partie I. La surface de cet oval est plus grande que celle du cercle alors que la quantité de photons emis reste la même. La concentration de lumière est donc plus faible.
+
+Au plus l'angle est rasant, au plus l'oval s'étire et augmente sa surface. L'intensité lumineuse perçue est donc fonction de l'angle d'incidence de la lumière. La fonction exacte selon laquelle la surface évolue n'est pas intuitif, mais on va fair confiance à Mr Lambert en affirmant que : I = I0 * max(N.L, 0.0) (avec I0 l’intensité de la source, N le vecteur Normal, et L l'inverse de la direction de la lumière)
 ### 2. Implémentation
 ```glsl
 // USUAL GODOT POST-PROCESS CODE
