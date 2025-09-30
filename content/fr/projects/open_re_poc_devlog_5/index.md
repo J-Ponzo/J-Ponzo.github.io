@@ -9,7 +9,7 @@ description = 'devlog 5 du projet OpenRE'
 [⬅️ Vers Précédent : "OpenRE devlog 3 : Harmonisation des normales"](projects/open_re_poc_devlog_3)
 
 ## I. Introduction
-Bienvenue dans la deuxième partie de "fusion des mondes" ! Le mois dernier nous avions mélangé de la géométrie intéractive et déterministe en nous basant sur les textures de profondeur. Nous avions ensuite éclairé tout ça avec une point light interactive qui clignotait en orbitant autour de la scène. L'implémentation de l'éclairage était 
+Bienvenue dans la deuxième partie de "fusion des mondes" ! Le mois dernier nous avions mélangé de la géométrie intéractive à de la déterministe en nous basant sur les textures de profondeur. Nous avions ensuite éclairé tout ça avec une point light interactive qui clignotait en orbitant autour de la scène. L'implémentation de l'éclairage était basé uniquement sur la distance.
 
 Aujourd'hui nous allons :
 - Enrichire le modèle d'illumination en prenant en compte l'orientation des surfaces
@@ -21,9 +21,10 @@ Le modèle de Lambert suppose que les surfaces réfléchissent la lumière de ma
 ### 1. Principe
 Une façon de se représenter le phénomene, c'est d'imaginer un faiseau de lumière parfaitement vertical qui éclaire une surface parfaitement horizontale. Le cercle dans lequel les photons percutent la surface cohincide avec la section du faiseau.
 
-Si maitenant le faiseau est incliné, ce cercle devient un ovale. De là on peut tirer une conclusion similaire à la inverse square law de la partie I. La surface de cet oval est plus grande que celle du cercle alors que la quantité de photons emis reste la même. La concentration de lumière est donc plus faible.
+Si maitenant le faiseau est incliné, ce cercle devient une elipse. De là on peut tirer une conclusion similaire à ce qu'on avait dit dans la partie I au sujet de l'inverse square law : la surface de l'elipse est superieure à celle du cercle alors que la quantité de photons emis reste la même. La concentration de lumière est donc plus faible. Et au plus l'angle est rasant, au plus l'oval s'étire et augmente sa surface. L'intensité lumineuse perçue est donc fonction de l'angle d'incidence de la lumière. 
 
-Au plus l'angle est rasant, au plus l'oval s'étire et augmente sa surface. L'intensité lumineuse perçue est donc fonction de l'angle d'incidence de la lumière. La fonction exacte selon laquelle la surface évolue n'est pas intuitif, mais on va fair confiance à Mr Lambert en affirmant que : I = I0 * max(N.L, 0.0) (avec I0 l’intensité de la source, N le vecteur Normal, et L l'inverse de la direction de la lumière)
+La modalité exacte selon laquelle la surface évolue en fonction de l'ancle n'est pas intuitive. Mais on va fair confiance à Mr Lambert en affirmant que : I = I0 * max(N.L, 0.0) (avec I0 l’intensité de la source, N le vecteur Normal, et L l'inverse de la direction de la lumière)
+
 ### 2. Implémentation
 ```glsl
 // USUAL GODOT POST-PROCESS CODE
