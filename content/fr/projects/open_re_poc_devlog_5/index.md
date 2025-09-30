@@ -9,6 +9,11 @@ description = 'devlog 5 du projet OpenRE'
 [⬅️ Vers Précédent : "OpenRE devlog 3 : Harmonisation des normales"](projects/open_re_poc_devlog_3)
 
 ## I. Introduction
+Bienvenue dans la deuxième partie de "fusion des mondes" ! Le mois dernier nous avions mélangé de la géométrie intéractive et déterministe en nous basant sur les textures de profondeur. Nous avions ensuite éclairé tout ça avec une point light interactive qui clignotait en orbitant autour de la scène. L'implémentation de l'éclairage était 
+
+Aujourd'hui nous allons :
+- Enrichire le modèle d'illumination en prenant en compte l'orientation des surfaces
+- Calculer de la lumière déterministe dans Blender et l'intégrer a notre scène
 
 ## II. Le modèle de Lambert
 
