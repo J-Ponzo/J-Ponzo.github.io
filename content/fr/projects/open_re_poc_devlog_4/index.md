@@ -5,8 +5,23 @@ draft = false
 title = "OpenRE devlog 4 : Fusion des mondes. Part I"
 description = 'devlog 4 du projet OpenRE'
 +++
-
 [⬅️ Vers Précédent : "OpenRE devlog 3 : Harmonisation des normales"](projects/open_re_poc_devlog_3)
+
+{{< togglecode >}}
+```glsl {#code-compact}
+	...
+	vec3 interesting_var = vec3(0.0);
+	...
+```
+
+```glsl {#code-full .hidden}
+#define SHADOW 1
+
+void fragment() {
+	vec3 interesting_var = vec3(0.0);
+}
+```
+{{< /togglecode >}}
 
 ## I. Introduction
 Grâce au travail effectué jusqu’ici, nous sommes en mesure de réaliser nos premiers rendus. Pour cela, nous allons partir de la scène actuelle, à laquelle nous ajouterons un peu de mouvement, mais surtout de la lumière.
