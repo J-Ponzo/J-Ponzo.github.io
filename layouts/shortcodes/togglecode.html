@@ -1,0 +1,11 @@
+<!-- {{ $loaded := .Page.Scratch.Get "togglecode_loaded" }} -->
+<!-- {{ if not $loaded }} -->
+  <!-- <link rel="stylesheet" href="/css/togglecode.css"> -->
+  <!-- <script src="/js/togglecode.js" defer></script> -->
+  <!-- {{ .Page.Scratch.Set "togglecode_loaded" true }} -->
+<!-- {{ end }} -->
+
+<div class="togglecode">
+  {{ .Inner | markdownify }}
+  <button class="toggle-btn" onclick="toggleCode(this)">Full Code</button>
+</div>

@@ -1,40 +1,45 @@
 +++
 author = 'Turbo Tartine'
 date = '2025-08-28T08:43:37+02:00'
-draft = true
+draft = false
 title = "OpenRE devlog 4 : Fusion des mondes. Part I"
 description = 'devlog 4 du projet OpenRE'
 +++
-
 [⬅️ Vers Précédent : "OpenRE devlog 3 : Harmonisation des normales"](projects/open_re_poc_devlog_3)
 
 ## I. Introduction
-Grâce au travail effectué jusqu'ici, nous sommes en mesure de faire nos premiers rendus. Pour cela nous allons partir de la scène actuelle à laquelle nous allons ajouter un peu de mouvement mais surtout, de la lumière.
-
-Comme d'habitude nous adopteront une aproche intérative. Nous commenceront par la version la plus rudimentaire possible que nous complexifieront petit à petit jusqu'à atteindre notre but. A la fin nous auront un rendu en temps réèl cohérent et comprenant :
+Grâce au travail effectué jusqu’ici, nous sommes en mesure de réaliser nos premiers rendus. Pour cela, nous allons partir de la scène actuelle, à laquelle nous ajouterons un peu de mouvement, mais surtout de la lumière.
+Comme d’habitude, nous adopterons une approche itérative : nous commencerons par la version la plus rudimentaire possible, que nous complexifierons petit à petit jusqu’à atteindre notre objectif. À la fin, nous aurons un rendu en temps réel cohérent, comprenant :
 - de la géométrie déterministe (pré-rendue dans Blender)
-- de la géométrie intéractive (rendue en temps réèl par Godot)
-- de la lumière déterministe (affectant aussi la géométrie intéractive)
-- de la lumière intéractive (affectant aussi la géométrie déterministe)
+- de la géométrie interactive (rendue en temps réel par Godot)
+- de la lumière déterministe (affectant aussi la géométrie interactive)
+- de la lumière interactive (affectant aussi la géométrie déterministe)
 
-## II. Géométrie interactive
-Dans cette première partie, nous allons laisser de côté la lumière pour nous concentrer sur la géométrie. L'objectif est d'avoir un premier rendu unlit d'une scène intéractive intégré à une scène déterministe. Le tout biensure en respectant la profondeur, c'est à dire que quelque soit le monde (intéractif ou déterministe), ce qui est devant est bien rendu par dessus ce qui est derrière.
+Ou du moins, c’est ce que je prévoyais à l’origine. Mais je me suis rendu compte en cours de route que j’avais peut-être un peu sous-estimé le morceau. J'ai donc décider de le traiter en 2 fois. Dans cette première partie, nous n'aborderont pas la lumière déterministe, et seulement partiellement la lumière interactive. Mais ce n’est que partie remise, bien sûr.
 
-### 1. Préparation de la scène
-Jusqu'ici, nous avons cherché à comparer des scènes identiques dans le but d'étaloner Godot et Blender afin qu'ils produisent des données bien harmonisées. Mais dans un usage normal, la géométrie du monde intéractif est bien entandu différente de celle du monde déterministe. Dans Godot, on va donc cacher les éléments de la scène précédement importée depuis Blender (qui sera notre scène déterministe).
+## II. Préparation de la scène
+Jusqu'ici, nous avons cherché à comparer des scènes identiques dans le but d'étaloner Godot et Blender afin qu'ils produisent des données bien harmonisées. Mais évidement dans un usage normal, le monde interactif diffère du déterministe. Dans Godot, nous allons donc masquer les éléments de la scène précédemment importée depuis Blender (qui sera notre scène déterministe).
 
-<Godot element cachés>
+<img alt="Capture du dock scene de Godot dans lequel tous les [mesh](/pages/glossary/#mesh) issus de la simple-scene.blend ont été masqués" src="./images/hide_det_scn.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 
-On va ensuite ajouter de nouveaux meshes, et comme ces meshes font partie du monde intéractif, on ne se privera pas de les faire bouger.
+On va ensuite ajouter de nouveaux meshes. Et comme ces meshes constituent le monde intéractif, on ne se privera pas de les animer.
 
-<Géométrie intéractive rendue avec godot>
+[![Gif de l'editeur de godot montrant un agencement de primitives géométriques de couleurs unies qui tournent sure elle meme. Il y a un arceau qui ressemble à la porte des étoiles et un cube jaune au centre](images/int_geometry-anim.webp)](images/int_geometry-anim.webp)
 
-Enfin, nous allons desactiver l'oracle et créer un nouveau post-process `ore_compositor` qui sera chargé de fusionner les 2 scènes en temps réèl. Comme l'oracle, il prendra en entrée les maps des G-Buffers déterministe et interactif. Mais il aura également besoin de données suplémentaires relatives à la scène : les propriétés de la caméra active et plus tard des lumières.
+Enfin, nous allons desactiver l’oracle et créer un nouveau [post-process](/pages/glossary/#post-process) `ore_compositor` chargé de fusionner les deux scènes en temps réel. Comme l’oracle, il prendra en entrée les maps des G-Buffers déterministe et interactif, mais il aura également besoin de données supplémentaires relatives à la scène : les propriétés de la caméra active et, plus tard, celles des lumières.
 
-A présent voyons un peu de quoi est fait ce post-process.
+<img alt="Capture du dock Inspector de Godot dans lequel on peut voir les parametres du post-process ore_compositor" src="./images/ore_compositor.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
 
-### 2. Shader du compositor
-Attention, pavé en approche ! Ne vous inquiétez pas on va reprendre ça point par point, mais sans plus de cérémonie, voici la première itération du shader :
+On oubliera pas de désactiver le post-process [quad](/pages/glossary/#quad) de l’oracle et d’activer celui du compositor à la place.
+
+<img alt="Capture du dock scene de Godot dans lequel le post-process quad de l'oracle est masqué tandis que celui du ore_compositor est actif" src="./images/replace_oracle.opti.webp" style="display: block; margin-left: auto; margin-right: auto;" /> 
+
+Voyons à présent de quoi est fait ce post-process.
+
+## III. Composition de la géométrie
+Dans cette première itération, nous nous concentrons uniquement sur la géométrie, en laissant de côté la lumière. L’objectif est simple : obtenir un rendu [*unlit*](/pages/glossary/#unlit) où la scène interactive s’intègre naturellement à la scène déterministe, en respectant la profondeur.
+
+Attention, pavé en approche ! Voici le code complet de cette première version du [shader](/pages/glossary/#shader) :
 
 ```glsl
 // USUAL GODOT POST-PROCESS STUFF
@@ -89,11 +94,13 @@ void fragment() {
 	ALBEDO = albedo_frag.rgb;
 }
 ```
+Ne vous inquiétez pas, nous allons le disséquer ensemble dans les sections suivantes.
 
-#### 2.1. Definition habituelle d'un post-process
-On en a déjà parlé, ces premières lignes sont les même pour tous les post-process.
+### 1. Définition habituelle d’un post-process
+Nous en avons déjà parlé : ces premières lignes sont identiques pour tous les post-process.
 
-```glsl
+{{< togglecode >}}
+```glsl {#code-compact}
 // USUAL GODOT POST-PROCESS STUFF
 shader_type spatial;
 render_mode unshaded, fog_disabled;
@@ -103,13 +110,124 @@ void vertex() {
 }
 ```
 
-#### 2.2. Include des helpers de l'oracle
-```glsl  
+```glsl {#code-full .hidden hl_lines=[1,2,3,4,5,6,7]}
+// USUAL GODOT POST-PROCESS STUFF
+shader_type spatial;
+render_mode unshaded, fog_disabled;
+
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+// HELPER FUNCTIONS FROM THE ORACLE
+#include "pre_process_utils.gdshaderinc"
+
+// SCENE UNIFORMS
+uniform float cam_near;
+uniform float cam_far;
+
+// INTERACTIVE G-BUFFER
+uniform sampler2D i_depth_map : filter_nearest;
+uniform sampler2D i_albedo_map : filter_nearest;
+
+// DETERMINIST G-BUFFER
+uniform sampler2D d_depth_map : filter_nearest;
+uniform sampler2D d_diffuse_color_map : filter_nearest;
+
+void fragment() {
+	// SAMPLE G-BUFFERs
+	vec3 i_depth_frag = texture(i_depth_map, SCREEN_UV).rgb;
+	vec3 i_albedo_frag = texture(i_albedo_map, SCREEN_UV).rgb;
+	
+	vec3 d_depth_frag = texture(d_depth_map, SCREEN_UV).rgb;
+	vec3 d_diffuse_color_frag = texture(d_diffuse_color_map, SCREEN_UV).rgb;
+	
+	// DATA HARMONIZATION
+	i_depth_frag = pre_process_i_depth(i_depth_frag);
+	d_depth_frag = pre_process_d_depth(d_depth_frag, cam_near, cam_far);
+	
+	// DATA SELECTION (according to depth)
+	float depth_frag;
+	vec3 albedo_frag;
+	bool is_frag_interactive = d_depth_frag.r < i_depth_frag.r;
+	if(is_frag_interactive) {
+		depth_frag = i_depth_frag.r;
+		albedo_frag = i_albedo_frag;
+	}
+	else {
+		depth_frag = d_depth_frag.r;
+		albedo_frag = d_diffuse_color_frag;
+	}
+	
+	// FINAL FRAGMENT COLOR
+	ALBEDO = albedo_frag.rgb;
+}
+```
+{{< /togglecode >}}
+
+### 2. Inclusion des *helpers* de l’oracle
+
+{{< togglecode >}}
+```glsl {#code-compact}
 // HELPER FUNCTIONS FROM THE ORACLE
 #include "pre_process_utils.gdshaderinc"
 ```
 
-Rappelez-vous, pour harmoniser les données, l'Oracle appliquait des pre-traitements à certaines maps. J'ai extrait et regroupées ces fonctions dans le fichier `pre_process_utils.gdshaderinc` que nous incluons ici. De cette manière si nous modifions ces pre-traitements ils resteront valides pour les 2 post-process. Voici son contenu :
+```glsl {#code-full .hidden hl_lines=[9,10]}
+// USUAL GODOT POST-PROCESS STUFF
+shader_type spatial;
+render_mode unshaded, fog_disabled;
+
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+// HELPER FUNCTIONS FROM THE ORACLE
+#include "pre_process_utils.gdshaderinc"
+
+// SCENE UNIFORMS
+uniform float cam_near;
+uniform float cam_far;
+
+// INTERACTIVE G-BUFFER
+uniform sampler2D i_depth_map : filter_nearest;
+uniform sampler2D i_albedo_map : filter_nearest;
+
+// DETERMINIST G-BUFFER
+uniform sampler2D d_depth_map : filter_nearest;
+uniform sampler2D d_diffuse_color_map : filter_nearest;
+
+void fragment() {
+	// SAMPLE G-BUFFERs
+	vec3 i_depth_frag = texture(i_depth_map, SCREEN_UV).rgb;
+	vec3 i_albedo_frag = texture(i_albedo_map, SCREEN_UV).rgb;
+	
+	vec3 d_depth_frag = texture(d_depth_map, SCREEN_UV).rgb;
+	vec3 d_diffuse_color_frag = texture(d_diffuse_color_map, SCREEN_UV).rgb;
+	
+	// DATA HARMONIZATION
+	i_depth_frag = pre_process_i_depth(i_depth_frag);
+	d_depth_frag = pre_process_d_depth(d_depth_frag, cam_near, cam_far);
+	
+	// DATA SELECTION (according to depth)
+	float depth_frag;
+	vec3 albedo_frag;
+	bool is_frag_interactive = d_depth_frag.r < i_depth_frag.r;
+	if(is_frag_interactive) {
+		depth_frag = i_depth_frag.r;
+		albedo_frag = i_albedo_frag;
+	}
+	else {
+		depth_frag = d_depth_frag.r;
+		albedo_frag = d_diffuse_color_frag;
+	}
+	
+	// FINAL FRAGMENT COLOR
+	ALBEDO = albedo_frag.rgb;
+}
+```
+{{< /togglecode >}}
+Rappelez-vous : pour harmoniser les données, l’Oracle appliquait des prétraitements à certaines maps. J’ai extrait et regroupé ces fonctions dans le fichier `pre_process_utils.gdshaderinc`, que nous incluons ici. Ainsi, si nous modifions ces prétraitements, ils resteront valides pour les deux post-process. Voici son contenu :
 
 ```glsl
 vec3 pre_process_i_depth(vec3 i_depth) {
@@ -135,12 +253,11 @@ vec3 pre_process_d_normal(vec3 d_normal) {
 }
 ```
 
-Le lecteur attentif aura remarqué qu'on ne repack plus les normales directement dans le pré-process. En effet, avoir des valeurs entre 0 et 1 n'est utile que pour la visualisation. Dans le cas général, on veut la vrai normal prête à l'emplois. C'est pourquoi il est plus logique pour l'Oracle de repacker lui même en dehors du pré-process.
+### 3. Parmètres d'entrée
+Comme évoqué précédemment, le post-process prend en entrée des uniforms correspondant aux deux G-Buffers, ainsi que quelques paramètres supplémentaires relatifs à la scène.
 
-#### 2.3. Parmètres d'entrée
-Comme évoqué dans la section précédente, le post-process `ore_compositor` va prendre en entrée des `uniforms` correspondant aux 2 G-Buffers plus quelques paramètres additionnels relatifs à la scène.
-
-```glsl
+{{< togglecode >}}
+```glsl {#code-compact}
 // SCENE UNIFORMS
 uniform float cam_near;
 uniform float cam_far;
@@ -154,14 +271,71 @@ uniform sampler2D d_depth_map : filter_nearest;
 uniform sampler2D d_diffuse_color_map : filter_nearest;
 ```
 
-Pour l'instant, on a besoin :
-- des paramètres near et far de la caméra active
-- des texture de depth et d'albédo issues des G-Buffers intéractif et détermniste
+```glsl {#code-full .hidden hl_lines=[12,13,14,15,16,17,18,19,20,21,22]}
+// USUAL GODOT POST-PROCESS STUFF
+shader_type spatial;
+render_mode unshaded, fog_disabled;
 
-#### 2.4. Echantillonage des G-Buffers
-Chaque map est échantillonée pour récupérer le fragment correspondant. Dans la foulée on applique les fameux pre-traitements nécessaires (ici au framents de la depth)
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
 
-```glsl
+// HELPER FUNCTIONS FROM THE ORACLE
+#include "pre_process_utils.gdshaderinc"
+
+// SCENE UNIFORMS
+uniform float cam_near;
+uniform float cam_far;
+
+// INTERACTIVE G-BUFFER
+uniform sampler2D i_depth_map : filter_nearest;
+uniform sampler2D i_albedo_map : filter_nearest;
+
+// DETERMINIST G-BUFFER
+uniform sampler2D d_depth_map : filter_nearest;
+uniform sampler2D d_diffuse_color_map : filter_nearest;
+
+void fragment() {
+	// SAMPLE G-BUFFERs
+	vec3 i_depth_frag = texture(i_depth_map, SCREEN_UV).rgb;
+	vec3 i_albedo_frag = texture(i_albedo_map, SCREEN_UV).rgb;
+	
+	vec3 d_depth_frag = texture(d_depth_map, SCREEN_UV).rgb;
+	vec3 d_diffuse_color_frag = texture(d_diffuse_color_map, SCREEN_UV).rgb;
+	
+	// DATA HARMONIZATION
+	i_depth_frag = pre_process_i_depth(i_depth_frag);
+	d_depth_frag = pre_process_d_depth(d_depth_frag, cam_near, cam_far);
+	
+	// DATA SELECTION (according to depth)
+	float depth_frag;
+	vec3 albedo_frag;
+	bool is_frag_interactive = d_depth_frag.r < i_depth_frag.r;
+	if(is_frag_interactive) {
+		depth_frag = i_depth_frag.r;
+		albedo_frag = i_albedo_frag;
+	}
+	else {
+		depth_frag = d_depth_frag.r;
+		albedo_frag = d_diffuse_color_frag;
+	}
+	
+	// FINAL FRAGMENT COLOR
+	ALBEDO = albedo_frag.rgb;
+}
+```
+{{< /togglecode >}}
+Pour l’instant, nous avons besoin :
+- des paramètres *near* et *far* de la caméra active
+- des textures de *depth* et d’*albedo* issues des G-Buffers interactif et déterministe.
+
+L’albedo déterministe est ici nommé `d_diffuse_color_map`, car c’est son nom dans la terminologie Blender. Mais il s’agit bien de la même chose.
+
+### 4. Echantillonage des G-Buffers
+Chaque map est échantillonnée pour récupérer le fragment correspondant. Dans la foulée, nous appliquons les prétraitements.
+
+{{< togglecode >}}
+```glsl {#code-compact}
 void fragment() {
 	// SAMPLE G-BUFFERs
 	vec3 i_depth_frag = texture(i_depth_map, SCREEN_UV).rgb;
@@ -178,10 +352,66 @@ void fragment() {
 }
 ```
 
-#### 2.5. Selection des fragment
-Ensuite, on se base sur la valeur de la depth pour déterminer si le fragment courant appartien à la scène intéractive ou déterministe. On en profite pour assigner les fragments correspondant aux variable `depth_frag` et `albedo_frag` qui seront celles utilisées dans la suite du shader.
+```glsl {#code-full .hidden hl_lines=[24,51,25,26,27,28,29,30,31,32,33,34]}
+// USUAL GODOT POST-PROCESS STUFF
+shader_type spatial;
+render_mode unshaded, fog_disabled;
 
-```glsl
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+// HELPER FUNCTIONS FROM THE ORACLE
+#include "pre_process_utils.gdshaderinc"
+
+// SCENE UNIFORMS
+uniform float cam_near;
+uniform float cam_far;
+
+// INTERACTIVE G-BUFFER
+uniform sampler2D i_depth_map : filter_nearest;
+uniform sampler2D i_albedo_map : filter_nearest;
+
+// DETERMINIST G-BUFFER
+uniform sampler2D d_depth_map : filter_nearest;
+uniform sampler2D d_diffuse_color_map : filter_nearest;
+
+void fragment() {
+	// SAMPLE G-BUFFERs
+	vec3 i_depth_frag = texture(i_depth_map, SCREEN_UV).rgb;
+	vec3 i_albedo_frag = texture(i_albedo_map, SCREEN_UV).rgb;
+	
+	vec3 d_depth_frag = texture(d_depth_map, SCREEN_UV).rgb;
+	vec3 d_diffuse_color_frag = texture(d_diffuse_color_map, SCREEN_UV).rgb;
+	
+	// DATA HARMONIZATION
+	i_depth_frag = pre_process_i_depth(i_depth_frag);
+	d_depth_frag = pre_process_d_depth(d_depth_frag, cam_near, cam_far);
+	
+	// DATA SELECTION (according to depth)
+	float depth_frag;
+	vec3 albedo_frag;
+	bool is_frag_interactive = d_depth_frag.r < i_depth_frag.r;
+	if(is_frag_interactive) {
+		depth_frag = i_depth_frag.r;
+		albedo_frag = i_albedo_frag;
+	}
+	else {
+		depth_frag = d_depth_frag.r;
+		albedo_frag = d_diffuse_color_frag;
+	}
+	
+	// FINAL FRAGMENT COLOR
+	ALBEDO = albedo_frag.rgb;
+}
+```
+{{< /togglecode >}}
+
+### 5. Selection des fragment
+Ensuite, nous utilisons la profondeur pour déterminer lequel des deux mondes occlude l'autre. Nous assignons alors les données correspondant au monde visible aux variables `depth_frag` et `albedo_frag`, que nous utiliserons dans la suite du shader.
+
+{{< togglecode >}}
+```glsl {#code-compact}
 void fragment() {
 	...
 	
@@ -202,8 +432,64 @@ void fragment() {
 }
 ```
 
-#### 2.6. Affichage du fragment final
-```glsl
+```glsl {#code-full .hidden hl_lines=[24,51,36,37,38,39,40,41,42,43,44,45,46,47]}
+// USUAL GODOT POST-PROCESS STUFF
+shader_type spatial;
+render_mode unshaded, fog_disabled;
+
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+// HELPER FUNCTIONS FROM THE ORACLE
+#include "pre_process_utils.gdshaderinc"
+
+// SCENE UNIFORMS
+uniform float cam_near;
+uniform float cam_far;
+
+// INTERACTIVE G-BUFFER
+uniform sampler2D i_depth_map : filter_nearest;
+uniform sampler2D i_albedo_map : filter_nearest;
+
+// DETERMINIST G-BUFFER
+uniform sampler2D d_depth_map : filter_nearest;
+uniform sampler2D d_diffuse_color_map : filter_nearest;
+
+void fragment() {
+	// SAMPLE G-BUFFERs
+	vec3 i_depth_frag = texture(i_depth_map, SCREEN_UV).rgb;
+	vec3 i_albedo_frag = texture(i_albedo_map, SCREEN_UV).rgb;
+	
+	vec3 d_depth_frag = texture(d_depth_map, SCREEN_UV).rgb;
+	vec3 d_diffuse_color_frag = texture(d_diffuse_color_map, SCREEN_UV).rgb;
+	
+	// DATA HARMONIZATION
+	i_depth_frag = pre_process_i_depth(i_depth_frag);
+	d_depth_frag = pre_process_d_depth(d_depth_frag, cam_near, cam_far);
+	
+	// DATA SELECTION (according to depth)
+	float depth_frag;
+	vec3 albedo_frag;
+	bool is_frag_interactive = d_depth_frag.r < i_depth_frag.r;
+	if(is_frag_interactive) {
+		depth_frag = i_depth_frag.r;
+		albedo_frag = i_albedo_frag;
+	}
+	else {
+		depth_frag = d_depth_frag.r;
+		albedo_frag = d_diffuse_color_frag;
+	}
+	
+	// FINAL FRAGMENT COLOR
+	ALBEDO = albedo_frag.rgb;
+}
+```
+{{< /togglecode >}}
+
+### 6. Affichage du fragment final
+{{< togglecode >}}
+```glsl {#code-compact}
 void fragment() {
 	...
 	
@@ -212,134 +498,475 @@ void fragment() {
 }
 ```
 
-Bon, ok... on était pas obligé d'assigner la depth si on renvoit directement l'albedo. Mais pas d'inquiétude, on anticipe juste un peu sur la suite.
+```glsl {#code-full .hidden hl_lines=[24,51,49,50]}
+// USUAL GODOT POST-PROCESS STUFF
+shader_type spatial;
+render_mode unshaded, fog_disabled;
 
-#### 2.7 Resultat
-Et voilà un magnifique chapaï unlit :
-
-<vidéo du rendu unlite>
-
-Oui je sais c'est sacrément moche sans lumière. Mais au moins on peut constater que la sélection de fragment selon la profondeur est correcte. En effet, les parties du chapaï qui se trouvent sous podium sont bien invisible tandis que le rest est rendu par dessus l'arrière plan.
-
-Mission accomplie ! Place à la lumière maintenant.
-
-## III. Lumière intéractive
-Dans ce numéro, on va se limiter à des sources ponctuelles (OmniLight en terminologie Godot). Les autres types de lumières seront traités dans des devlogs ulterieurs.
-
-Ajoutons donc une OmniLight à la scène intéractive. Cette dernière se verra assigner un script qui la fait orbiter autour du podium et modifie periodiquement sa couleur et son intensité.
-
-Pour faciliter sa localisation, elle sera materialisée par une petite sphere blanche. Ce n'est pas primodial pour le resultat final, mais c'est un petit artifice qui m'a pas mal aidé à débugger le shader.
-
-### 1. "Distance-only" lighting
-Avant d'implémenter de la "vrai" lumière, on va utiliser un modèle d'illumination pas du tout homologué qui se base uniquement sur l'atténuation de l'intensité lumineuse en fonction de la distance. 
-
-Cela nous permet de passer par une étape intermédiaire un peu plus simple qui ignore l'orientation des surfaces et nous autorise donc à ne pas nous occuper des normales tout dessuite. Mais vous allez voir, il y a suffisement à dire sur cette étape. 
-
-Pour vous donner une vue globale voici les modifications nécessaire à son implémentation. Si vous avez la motivation de décortiquer ça d'un bloc, faites vous plaisir. Mais sinon, comme d'habitude, on va y aller en douceur dans les sections suivantes.
-
-```glsl
-// USUAL GODOT POST-PROCESS CODE
-// HELPER FUNCTIONS FROM THE ORACLE
-// SCENE UNIFORMS
-...
-uniform int nb_plights;
-uniform vec3 plight_position[8];
-uniform vec3 plight_color[8];
-uniform float plight_intensity[8];
-
-// INTERACTIVE G-BUFFER
-// DETERMINIST G-BUFFER
-...
-
-void fragment() {
-	// SAMPLE G-BUFFERs
-	// DATA HARMONIZATION
-	...
-	
-	vec3 diffuse_contrib = vec3(0.0);
-	vec3 specular_contrib = vec3(0.0);
-	
-	// DATA SELECTION (according to depth)
-	// WORLD POSITION FROM DEPTH
-	vec3 ndc = vec3((SCREEN_UV * 2.0) - 1.0, depth_frag);
-	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * vec4(ndc, 1.0);
-	world.xyz /= world.w;
-	vec3 frag_position = world.xyz;
-	
-	// ACCUMULATE LIGHT CONTRIBUTIONS
-	for(int i = 0; i < nb_plights; i++) {
-		vec3 light_vec = plight_position[i] - frag_position;
-		float d2 = length(light_vec);
-		d2 = pow(d2, 2.0);
-		float attenuation = 1.0 / d2;
-
-		vec3 L = normalize(light_vec);
-		vec3 C = plight_color[i];
-		float I = plight_intensity[i];
-		diffuse_contrib += C * I * albedo_frag * attenuation;
-		//specular_contrib += NOT IMPLEMENTED YET
-	}
-	
-	// FINAL FRAGMENT COLOR
-	ALBEDO = diffuse_contrib + specular_contrib;
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
 }
-```
 
-#### 1.1. Paramètres des lumières
-D'abord il faut que notre post-process prenne en entrée les parametres de la lumière. A savoir :
-- sa position
-- sa couleur
-- son intensité
+// HELPER FUNCTIONS FROM THE ORACLE
+#include "pre_process_utils.gdshaderinc"
 
-Pour l'instant il n'y a qu'une seule lumière, mais on compte ben en ajouter d'autres alors on va préparer le terrain dès maintenant en déclarant des tableaux plutôt que des variables simples. 
-
-```glsl
 // SCENE UNIFORMS
 uniform float cam_near;
 uniform float cam_far;
 
+// INTERACTIVE G-BUFFER
+uniform sampler2D i_depth_map : filter_nearest;
+uniform sampler2D i_albedo_map : filter_nearest;
+
+// DETERMINIST G-BUFFER
+uniform sampler2D d_depth_map : filter_nearest;
+uniform sampler2D d_diffuse_color_map : filter_nearest;
+
+void fragment() {
+	// SAMPLE G-BUFFERs
+	vec3 i_depth_frag = texture(i_depth_map, SCREEN_UV).rgb;
+	vec3 i_albedo_frag = texture(i_albedo_map, SCREEN_UV).rgb;
+	
+	vec3 d_depth_frag = texture(d_depth_map, SCREEN_UV).rgb;
+	vec3 d_diffuse_color_frag = texture(d_diffuse_color_map, SCREEN_UV).rgb;
+	
+	// DATA HARMONIZATION
+	i_depth_frag = pre_process_i_depth(i_depth_frag);
+	d_depth_frag = pre_process_d_depth(d_depth_frag, cam_near, cam_far);
+	
+	// DATA SELECTION (according to depth)
+	float depth_frag;
+	vec3 albedo_frag;
+	bool is_frag_interactive = d_depth_frag.r < i_depth_frag.r;
+	if(is_frag_interactive) {
+		depth_frag = i_depth_frag.r;
+		albedo_frag = i_albedo_frag;
+	}
+	else {
+		depth_frag = d_depth_frag.r;
+		albedo_frag = d_diffuse_color_frag;
+	}
+	
+	// FINAL FRAGMENT COLOR
+	ALBEDO = albedo_frag.rgb;
+}
+```
+{{< /togglecode >}}
+Bon, d’accord, la "suite du shader" est pour l’instant un peu courte. Nous ne faisons qu’afficher directement l’albedo du monde sélectionné, sans même utiliser `depth_frag`. Mais ne vous inquiétez pas, ça viendra. Pour l’heure, je vous propose d’admirer ce magnifique chapaï !
+
+{{< rawhtml >}} 
+
+<video width="100%" controls muted loop playsinline autoplay>
+    <source src="videos/unlit_chapai.mp4" type="video/mp4">
+    Your browser does not support the video tag.  
+</video>
+
+{{< /rawhtml >}}
+
+Oui, je sais, ce n’est pas très impressionnant sans lumière. Mais au moins, nous pouvons constater que la sélection du monde selon la profondeur est correcte : les parties du chapaï qui se trouvent sous le podium sont bien invisibles, tandis que le reste est correctement rendu par-dessus l’arrière-plan.
+
+Mission accomplie ! Place à la lumière, maintenant.
+
+## IV. Un premier modèle d’illumination
+Avant de nous attaquer à un éclairage plus conventionnel, nous allons explorer un modèle d'illumination pas du tout homologué basé uniquement sur l’atténuation de la lumière en fonction de la distance. Ce modèle ignore délibérément l’orientation des surfaces. Bien sûr, il n’est pas photoréaliste, mais il offre un rendu stylisé des plus intéressants.
+
+Si vous voulez voir à quoi cela ressemble entre les mains d’une artiste compétente (ce que je ne suis pas vraiment), je vous conseille [ce *talk*](https://www.youtube.com/watch?v=RoqDqHdBI2Y) de Theresa Latzko. Elle y explique les choix artistiques et l’implémentation technique derrière la direction artistique de son jeu « Days of the Porcupine » (si vous vous demandez, oui, je lui ai complètement piqué l’idée, mouhahaha !).
+
+[![Extrait de la présentation « Art of the Porcupine » par Theresa Latzko. A gauche un vertex lighting classic. A droite le fameux distance-only lighting](images/days_of_porcupine.opti.webp)](images/days_of_porcupine.opti.webp)
+*Extrait de la présentation « Art of the Porcupine » par Theresa Latzko. A gauche un [vertex lighting](/pages/glossary/#vertex-lighting) classic. A droite le fameux "*distance-only lighting*"
+
+Nous n'irons pas aussi loin qu'elle car nous visons quelque chose de plutôt réaliste. Mais passer par cette étape intermédiaire nous permettra de nous étandre sur certains détails. Et on va commencer tout de suite par une petite parenthèse sur *l'inverse square law*.
+
+### 1. Inverse Square Law
+La *inverse square law* est une loi physique qui s’applique à différentes quantités, dont l’intensité lumineuse irradiant d’une source ponctuelle. Elle dit que  "l’intensité lumineuse en un point de l’espace est inversement proportionnelle au carré de la distance séparant ce point de la source". Ou de manière plus compacte : `I = I0 / d²` (avec `I0` l'intensité de la source et `d` la distance)
+
+Pour visualiser cette relation, imaginez une sphère centrée sur la source lumineuse. Les photons s’échappent de la source en ligne droite dans toutes les directions et entrent en collision avec la sphère. Ces collisions sont uniformément réparties sur toute sa surface. 
+
+Maintenant, imaginez que cette sphère grandisse. Le nombre de photons qui la frappent reste constant, car la quantité de lumière émise par la source ne dépend pas de la taille de la sphère. En revanche, la surface à éclairer augmente. La quantitée de lumière au m² est donc plus faible.
+
+[![Illustration de l'inverse square law](images/Inverse_square_law.opti.webp)](images/Inverse_square_law.opti.webp)
+
+Cette décroissance de la concentration de photons est directement liée à l’augmentation de la surface. Or, la surface d’une sphère est proportionnelle au carré de son rayon (`S = 4πr²`).
+
+Si cette explication ne vous parle pas, pensez à un ballon de baudruche avec un motif imprimé dessus. En le gonflant, le motif s’étire et pâlit. C'est un peu "avec les mains" comme exemple, mais ça illustre bien le principe : la quantité d’encre à la surface du ballon reste la même, mais elle se répartit sur une surface plus grande.
+
+Bref, c'est la loi qu'on va utiliser pour modéliser notre lumière.
+
+### 2. Implémentation
+Commençons par ajouter une OmniLight à la scène interactive. Un script la fera orbiter autour de notre structure, tout en altérant périodiquement sa couleur et son intensité. Une petite sphère blanche la matérialisera pour faciliter le débogage.
+
+[![Gif de l'editeur de godot montrant une light orbitant autours du chapaï](images/rotolight-anim.webp)](images/rotolight-anim.webp)
+
+Nous pouvons maintenant reprendre le shader pour y implémenter le fameux "*distance-only lighting*" de « Days of the Porcupine ». Pour un aperçu global, voici les modifications apportées :
+{{< togglecode >}}
+```glsl {#code-compact}
+// USUAL GODOT POST-PROCESS CODE
+// HELPER FUNCTIONS FROM THE ORACLE
+// SCENE UNIFORMS
+...
+uniform int nb_plights;
+uniform vec3 plight_position[8];
+uniform vec3 plight_color[8];
+uniform float plight_intensity[8];
+
+// INTERACTIVE G-BUFFER
+// DETERMINIST G-BUFFER
+...
+
+void fragment() {
+	// SAMPLE G-BUFFERs
+	// DATA HARMONIZATION
+	...
+	
+	vec3 diffuse_contrib = vec3(0.0);
+	vec3 specular_contrib = vec3(0.0);
+	
+	// DATA SELECTION (according to depth)
+	// WORLD POSITION FROM DEPTH
+	vec3 ndc = vec3((SCREEN_UV * 2.0) - 1.0, depth_frag);
+	vec4 clip = vec4(ndc, 1.0);
+	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * clip;
+	world.xyz /= world.w;
+	vec3 frag_position = world.xyz;
+	
+	// ACCUMULATE LIGHT CONTRIBUTIONS
+	for(int i = 0; i < nb_plights; i++) {
+		vec3 light_vec = plight_position[i] - frag_position;
+		float d2 = length(light_vec);
+		d2 = pow(d2, 2.0);
+		float attenuation = 1.0 / d2;
+
+		vec3 C = plight_color[i];
+		float I = plight_intensity[i];
+		diffuse_contrib += C * I * albedo_frag * attenuation;
+		//specular_contrib += NOT IMPLEMENTED YET
+	}
+	
+	// FINAL FRAGMENT COLOR
+	ALBEDO = diffuse_contrib + specular_contrib;
+}
+```
+
+```glsl {#code-full .hidden hl_lines=[15,16,17,18,28,78,40,41,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77]}
+// USUAL GODOT POST-PROCESS STUFF
+shader_type spatial;
+render_mode unshaded, fog_disabled;
+
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+// HELPER FUNCTIONS FROM THE ORACLE
+#include "pre_process_utils.gdshaderinc"
+
+// SCENE UNIFORMS
+uniform float cam_near;
+uniform float cam_far;
+uniform int nb_plights;
+uniform vec3 plight_position[8];
+uniform vec3 plight_color[8];
+uniform float plight_intensity[8];
+
+// INTERACTIVE G-BUFFER
+uniform sampler2D i_depth_map : filter_nearest;
+uniform sampler2D i_albedo_map : filter_nearest;
+
+// DETERMINIST G-BUFFER
+uniform sampler2D d_depth_map : filter_nearest;
+uniform sampler2D d_diffuse_color_map : filter_nearest;
+
+void fragment() {
+	// SAMPLE G-BUFFERs
+	vec3 i_depth_frag = texture(i_depth_map, SCREEN_UV).rgb;
+	vec3 i_albedo_frag = texture(i_albedo_map, SCREEN_UV).rgb;
+	
+	vec3 d_depth_frag = texture(d_depth_map, SCREEN_UV).rgb;
+	vec3 d_diffuse_color_frag = texture(d_diffuse_color_map, SCREEN_UV).rgb;
+	
+	// DATA HARMONIZATION
+	i_depth_frag = pre_process_i_depth(i_depth_frag);
+	d_depth_frag = pre_process_d_depth(d_depth_frag, cam_near, cam_far);
+	
+	vec3 diffuse_contrib = vec3(0.0);
+	vec3 specular_contrib = vec3(0.0);
+	
+	// DATA SELECTION (according to depth)
+	float depth_frag;
+	vec3 albedo_frag;
+	bool is_frag_interactive = d_depth_frag.r < i_depth_frag.r;
+	if(is_frag_interactive) {
+		depth_frag = i_depth_frag.r;
+		albedo_frag = i_albedo_frag;
+	}
+	else {
+		depth_frag = d_depth_frag.r;
+		albedo_frag = d_diffuse_color_frag;
+	}
+	
+	// WORLD POSITION FROM DEPTH
+	vec3 ndc = vec3((SCREEN_UV * 2.0) - 1.0, depth_frag);
+	vec4 clip = vec4(ndc, 1.0);
+	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * clip;
+	world.xyz /= world.w;
+	vec3 frag_position = world.xyz;
+	
+	// ACCUMULATE LIGHT CONTRIBUTIONS
+	for(int i = 0; i < nb_plights; i++) {
+		vec3 light_vec = plight_position[i] - frag_position;
+		float d2 = length(light_vec);
+		d2 = pow(d2, 2.0);
+		float attenuation = 1.0 / d2;
+
+		vec3 C = plight_color[i];
+		float I = plight_intensity[i];
+		diffuse_contrib += C * I * albedo_frag * attenuation;
+		//specular_contrib += NOT IMPLEMENTED YET
+	}
+	
+	// FINAL FRAGMENT COLOR
+	ALBEDO = diffuse_contrib + specular_contrib;
+}
+```
+{{< /togglecode >}}
+Comme d’habitude, nous allons expliquer tout cela en douceur.
+
+#### 1.1. Paramètres des lumières
+D'abord on fourni à notre post-process les paramètres de la lumière :
+- position
+- couleur
+- intensité
+
+Bien qu’on en ait qu’une seule pour l’instant, nous anticipons dès maintenant l’ajout de nouvelles lumières en utilisant des tableaux plutôt que des variables simples.
+
+{{< togglecode >}}
+```glsl {#code-compact hl_lines=[4,5,6,7]}
+// SCENE UNIFORMS
+uniform float cam_near;
+uniform float cam_far;
 uniform int nb_plights;
 uniform vec3 plight_position[8];
 uniform vec3 plight_color[8];
 uniform float plight_intensity[8];
 ```
 
-Une petite minute, pourquoi est ce qu'on a besoin d'un entier et de 3 tableaux pour stoquer ça ? Un peut pas plutôt utiliser un tableau dynamique qui contidrait des structure ?
+```glsl {#code-full .hidden hl_lines=[15,16,17,18]}
+// USUAL GODOT POST-PROCESS STUFF
+shader_type spatial;
+render_mode unshaded, fog_disabled;
 
-Il faut savoir qu'en GLSL, les tableaux sont très limités : leur taille doit être connue à la compilation, et sous le capot ils sont souvent gérés comme une succession de variables simples. C’est plus une commodité syntaxique qu’un véritable type de données dynamique comme on en a l'habitude sur du code CPU. 
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
 
-Le seul moyen d'implémenter des tableaux réèlement dynamiques est d'utiliser un SSBO (Shader Storage Buffer Objects). Mais en `GDShader` (le langage de shading de Godot) ni les SSBO ni les structures ne sont supportées. Raison pour laquelle on est bloqué avec 3 tableaux de taille fixe et un entier pour encoder leur taille effective.
+// HELPER FUNCTIONS FROM THE ORACLE
+#include "pre_process_utils.gdshaderinc"
 
-#### 1.2. Calcule de la position du fragment
-Ensuite, pour pouvoir calculer la distance entre la source de lumière et le fragment, il faut connaitre la position de ce dernier. Nous connaissons sa profondeur `depth_frag` et Godot nous fournis sa position à l'écran à travers la variable `SCREEN_UV`. Nous pouvons en déduire sa coordonée en espace [NDC](définir cet espace).
+// SCENE UNIFORMS
+uniform float cam_near;
+uniform float cam_far;
+uniform int nb_plights;
+uniform vec3 plight_position[8];
+uniform vec3 plight_color[8];
+uniform float plight_intensity[8];
 
-A partir de là, il suffit d'appliquer la serie de transformations inverse au pipeline normal pour passer du NDC au world space.
+// INTERACTIVE G-BUFFER
+uniform sampler2D i_depth_map : filter_nearest;
+uniform sampler2D i_albedo_map : filter_nearest;
 
-```glsl
+// DETERMINIST G-BUFFER
+uniform sampler2D d_depth_map : filter_nearest;
+uniform sampler2D d_diffuse_color_map : filter_nearest;
+
+void fragment() {
+	// SAMPLE G-BUFFERs
+	vec3 i_depth_frag = texture(i_depth_map, SCREEN_UV).rgb;
+	vec3 i_albedo_frag = texture(i_albedo_map, SCREEN_UV).rgb;
+	
+	vec3 d_depth_frag = texture(d_depth_map, SCREEN_UV).rgb;
+	vec3 d_diffuse_color_frag = texture(d_diffuse_color_map, SCREEN_UV).rgb;
+	
+	// DATA HARMONIZATION
+	i_depth_frag = pre_process_i_depth(i_depth_frag);
+	d_depth_frag = pre_process_d_depth(d_depth_frag, cam_near, cam_far);
+	
+	vec3 diffuse_contrib = vec3(0.0);
+	vec3 specular_contrib = vec3(0.0);
+	
+	// DATA SELECTION (according to depth)
+	float depth_frag;
+	vec3 albedo_frag;
+	bool is_frag_interactive = d_depth_frag.r < i_depth_frag.r;
+	if(is_frag_interactive) {
+		depth_frag = i_depth_frag.r;
+		albedo_frag = i_albedo_frag;
+	}
+	else {
+		depth_frag = d_depth_frag.r;
+		albedo_frag = d_diffuse_color_frag;
+	}
+	
 	// WORLD POSITION FROM DEPTH
 	vec3 ndc = vec3((SCREEN_UV * 2.0) - 1.0, depth_frag);
-	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * vec4(ndc, 1.0);
+	vec4 clip = vec4(ndc, 1.0);
+	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * clip;
 	world.xyz /= world.w;
 	vec3 frag_position = world.xyz;
+	
+	// ACCUMULATE LIGHT CONTRIBUTIONS
+	for(int i = 0; i < nb_plights; i++) {
+		vec3 light_vec = plight_position[i] - frag_position;
+		float d2 = length(light_vec);
+		d2 = pow(d2, 2.0);
+		float attenuation = 1.0 / d2;
+
+		vec3 C = plight_color[i];
+		float I = plight_intensity[i];
+		diffuse_contrib += C * I * albedo_frag * attenuation;
+		//specular_contrib += NOT IMPLEMENTED YET
+	}
+	
+	// FINAL FRAGMENT COLOR
+	ALBEDO = diffuse_contrib + specular_contrib;
+}
 ```
-Vous vous demandez peut-être à quoi sert la ligne `world.xyz /= world.w;`. Il va falloir me faire confiance sur ce coup, parce que je ne vais pas faire un cours de math sur les coordonnées homogènes. D’abord parce que ce serait très long et un peu austère. Mais en toute honnêteté, c’est surtout un sujet complexe que je ne maîtrise pas totalement. (D’ailleurs, si vous avez de bonnes ressources, n’hésitez pas à les partager en commentaire !)
+{{< /togglecode >}}
 
-Sans rentrer dans les détails, voici ce que j’en comprends : l’idée est de passer dans un espace de dimension supérieure pour profiter de propriétés mathématiques plus interessantes. En programations graphiques on est principalement interessé par :
-- L'existance de la PERSPECTIVE_MATRIX
-- La possibilité de modéliser la translation comme une multiplication de matrices
-- La posibilité de différentier une position d'une direction
+**Trois tableaux et un entier ? Pourquoi tant de haine ?!!**
 
-C'est pourquoi les API graphiques fonctionnent dans cet espace plutôt que dans l’espace euclidien classique. Pour passer d’une coordonnée euclidienne à une coordonnée homogène, il suffit d’ajouter une composante égale à 1 pour une position, ou 0 pour une direction. Ainsi en 3D, le vecteur (x, y, z) devient (x, y, z, 1) ou (x, y, z, 0). 
+"Pourquoi ne pas utiliser un tableau de structures, comme dans n'importe quel langage [CPU](/pages/glossary/#cpu) ?" Bonne question ! En GLSL, les tableaux sont très limités : leur taille doit être connue à la compilation, et en réalité, derière le rideau, ils sont souvent gérés comme une suite de variables simples. C’est plus une commodité d’écriture qu’une vrai structure de donnée.
 
-Pour revenir d’une coordonnée homogène à une coordonnée euclidienne, on divise tous les composants par le dernier. Par exemple, (x, y, z, w) devient (x/w, y/w, z/w). C'est exactement de là que vient la ligne magique : `world.xyz /= world.w;`.
+La seule solution pour avoir des tableaux dynamiques, ce serait d’utiliser des SSBO (Shader Storage Buffer Objects). Sauf que… GDShader (le langage de shader de Godot) ne supporte ni les SSBO ni les structures. On est donc coincés avec trois tableaux de taille fixe et un entier pour savoir combien de lumières on a au total.
+
+#### 1.2. Calcul de la position du fragment
+Pour calculer la distance entre la lumière et le fragment, il faut d’abord connaître sa position dans le monde. Et pour obtenir cette dernière, il faut comprendre ce que j’appelle la "*coordinate transformation chain*".  Il s’agit de la succession de changements d’espaces qui font passer les [vertex](/pages/glossary/#vertex) des coordonnées locales de l’objet à l’espace écran.
+
+[![Schéma décrivant la coordinate transformation chain changeant successivement d'espace dans cet ordre : object space, world_space, view space, clip space, NDC space, screen space](images/transform_chain.opti.webp)](images/transform_chain.opti.webp)
+
+Nous disposons déjà de la profondeur du fragment (`depth_frag`), et Godot nous fournit sa position à l’écran via la variable `SCREEN_UV`. Nous pouvons en déduire la coordonée en espace NDC (*Native Device Coordinate*).
+
+À partir de là, il suffit d’inverser le tronçon de la "*coordinate transformation chain*" qui nous intéresse, et de l'appliquer à notre *Native Device Coordinate* pour avoir la position du fragment en *world space* :
+
+{{< togglecode >}}
+```glsl {#code-compact}
+void fragment() {
+	...
+	
+	// WORLD POSITION FROM DEPTH
+	vec3 ndc = vec3((SCREEN_UV * 2.0) - 1.0, depth_frag);
+	vec4 clip = vec4(ndc, 1.0);
+	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * clip;
+	world.xyz /= world.w;
+	vec3 frag_position = world.xyz;
+		
+	...
+}
+```
+
+```glsl {#code-full .hidden hl_lines=[28,78,56,57,58,59,60,61]}
+// USUAL GODOT POST-PROCESS STUFF
+shader_type spatial;
+render_mode unshaded, fog_disabled;
+
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+// HELPER FUNCTIONS FROM THE ORACLE
+#include "pre_process_utils.gdshaderinc"
+
+// SCENE UNIFORMS
+uniform float cam_near;
+uniform float cam_far;
+uniform int nb_plights;
+uniform vec3 plight_position[8];
+uniform vec3 plight_color[8];
+uniform float plight_intensity[8];
+
+// INTERACTIVE G-BUFFER
+uniform sampler2D i_depth_map : filter_nearest;
+uniform sampler2D i_albedo_map : filter_nearest;
+
+// DETERMINIST G-BUFFER
+uniform sampler2D d_depth_map : filter_nearest;
+uniform sampler2D d_diffuse_color_map : filter_nearest;
+
+void fragment() {
+	// SAMPLE G-BUFFERs
+	vec3 i_depth_frag = texture(i_depth_map, SCREEN_UV).rgb;
+	vec3 i_albedo_frag = texture(i_albedo_map, SCREEN_UV).rgb;
+	
+	vec3 d_depth_frag = texture(d_depth_map, SCREEN_UV).rgb;
+	vec3 d_diffuse_color_frag = texture(d_diffuse_color_map, SCREEN_UV).rgb;
+	
+	// DATA HARMONIZATION
+	i_depth_frag = pre_process_i_depth(i_depth_frag);
+	d_depth_frag = pre_process_d_depth(d_depth_frag, cam_near, cam_far);
+	
+	vec3 diffuse_contrib = vec3(0.0);
+	vec3 specular_contrib = vec3(0.0);
+	
+	// DATA SELECTION (according to depth)
+	float depth_frag;
+	vec3 albedo_frag;
+	bool is_frag_interactive = d_depth_frag.r < i_depth_frag.r;
+	if(is_frag_interactive) {
+		depth_frag = i_depth_frag.r;
+		albedo_frag = i_albedo_frag;
+	}
+	else {
+		depth_frag = d_depth_frag.r;
+		albedo_frag = d_diffuse_color_frag;
+	}
+	
+	// WORLD POSITION FROM DEPTH
+	vec3 ndc = vec3((SCREEN_UV * 2.0) - 1.0, depth_frag);
+	vec4 clip = vec4(ndc, 1.0);
+	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * clip;
+	world.xyz /= world.w;
+	vec3 frag_position = world.xyz;
+	
+	// ACCUMULATE LIGHT CONTRIBUTIONS
+	for(int i = 0; i < nb_plights; i++) {
+		vec3 light_vec = plight_position[i] - frag_position;
+		float d2 = length(light_vec);
+		d2 = pow(d2, 2.0);
+		float attenuation = 1.0 / d2;
+
+		vec3 C = plight_color[i];
+		float I = plight_intensity[i];
+		diffuse_contrib += C * I * albedo_frag * attenuation;
+		//specular_contrib += NOT IMPLEMENTED YET
+	}
+	
+	// FINAL FRAGMENT COLOR
+	ALBEDO = diffuse_contrib + specular_contrib;
+}
+```
+{{< /togglecode >}}
+**Mais à quoi sert la ligne :** `world.xyz /= world.w` **?**
+
+Vous n'avez surement pas envie que je vous assome avec un cours sur les coordonnées homogènes. J'avoue que ça tombe très bien car c'est un sujet complexe que je ne maitrise pas totalement 😅 (ressources bienvenues dans les commentaires au passage !).
+
+Pour faire simple, voici ce que je pense en avoir compris : l'idée est de passer dans un espace de dimention supérieure qui offre des avantages mathématiques pratiques. En programmation graphique, cela permet notamment de :
+- Faire la distinction entre une position et une direction
+- Modéliser la translation comme une multiplication matricielle
+- Avoir accès à la matrice de perspective
+
+C’est pour ces raisons que les API graphiques utilisent cet espace plutôt que l’espace euclidien classique. Pour convertir une coordonnée euclidienne en coordonnée homogène, on ajoute simplement une composante supplémentaire :
+- 1 pour une position : 	(x, y, z) => (x, y, z, 1)
+- 0 pour une direction  : 	(x, y, z) => (x, y, z, 0)
+
+Pour revenir à une coordonnée euclidienne depuis une coordonnée homogène, on divise chaque composante par w : (x, y, z, w) => (x/w, y/w, z/w).
+
+C’est de là que vient la ligne magique : `world.xyz /= world.w;`.
 
 #### 1.3. Calcule de la lumière
-acc diff + spec mais que diff dans ce devlog
-Inverse square law
-callcule diff contrib
-pré-déclaration de diffuse_contrib  et specular_contrib 
+Pour déterminer la couleur finale du fragment, nous allons parcourir notre tableau de lumières et accumuler chacune de leurs contributions. Dans la plupart des modèles d’éclairage, chaque contribution se compose de deux parties :
+- La diffuse : partie de la lumière dispersée dans toutes les directions, qui nous permet de percevoir la couleur de l’objet (comme une balle en caoutchouc).
+- La spéculaire : partie de la lumière réfléchie principalement dans une direction privilégiée produisant les reflets (par exemple, un mirroir est un objet completement spéculaire)
 
-```glsl
+{{< togglecode >}}
+```glsl {#code-compact}
 void fragment() {
 	...
 	
@@ -355,7 +982,6 @@ void fragment() {
 		d2 = pow(d2, 2.0);
 		float attenuation = 1.0 / d2;
 
-		vec3 L = normalize(light_vec);
 		vec3 C = plight_color[i];
 		float I = plight_intensity[i];
 		diffuse_contrib += C * I * albedo_frag * attenuation;
@@ -367,53 +993,79 @@ void fragment() {
 }
 ```
 
-#### 1.4 Resultat
+```glsl {#code-full .hidden hl_lines=[28,78,40,41,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77]}
+// USUAL GODOT POST-PROCESS STUFF
+shader_type spatial;
+render_mode unshaded, fog_disabled;
 
-### 2. Lambertian lighting
-```glsl
-// USUAL GODOT POST-PROCESS CODE
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
 // HELPER FUNCTIONS FROM THE ORACLE
+#include "pre_process_utils.gdshaderinc"
+
 // SCENE UNIFORMS
+uniform float cam_near;
+uniform float cam_far;
+uniform int nb_plights;
+uniform vec3 plight_position[8];
+uniform vec3 plight_color[8];
+uniform float plight_intensity[8];
+
 // INTERACTIVE G-BUFFER
-...
-uniform sampler2D i_normal_map : filter_nearest;
+uniform sampler2D i_depth_map : filter_nearest;
+uniform sampler2D i_albedo_map : filter_nearest;
 
 // DETERMINIST G-BUFFER
-...
-uniform sampler2D d_normal_map : filter_nearest;
+uniform sampler2D d_depth_map : filter_nearest;
+uniform sampler2D d_diffuse_color_map : filter_nearest;
 
 void fragment() {
 	// SAMPLE G-BUFFERs
-	...
-	vec3 i_normal_frag = texture(i_normal_map, SCREEN_UV).rgb;
+	vec3 i_depth_frag = texture(i_depth_map, SCREEN_UV).rgb;
+	vec3 i_albedo_frag = texture(i_albedo_map, SCREEN_UV).rgb;
 	
-	...
-	vec3 d_normal_frag = texture(d_normal_map, SCREEN_UV).rgb;
-	
+	vec3 d_depth_frag = texture(d_depth_map, SCREEN_UV).rgb;
+	vec3 d_diffuse_color_frag = texture(d_diffuse_color_map, SCREEN_UV).rgb;
 	
 	// DATA HARMONIZATION
-	...
-	d_normal_frag = pre_process_d_normal(d_normal_frag);
-	i_normal_frag = pre_process_i_normal(i_normal_frag, INV_VIEW_MATRIX);
+	i_depth_frag = pre_process_i_depth(i_depth_frag);
+	d_depth_frag = pre_process_d_depth(d_depth_frag, cam_near, cam_far);
+	
+	vec3 diffuse_contrib = vec3(0.0);
+	vec3 specular_contrib = vec3(0.0);
 	
 	// DATA SELECTION (according to depth)
-	...
-	vec3 albedo_frag, normal_frag;
+	float depth_frag;
+	vec3 albedo_frag;
+	bool is_frag_interactive = d_depth_frag.r < i_depth_frag.r;
 	if(is_frag_interactive) {
-		...
-		normal_frag = i_normal_frag;
+		depth_frag = i_depth_frag.r;
+		albedo_frag = i_albedo_frag;
 	}
 	else {
-		...
-		normal_frag = d_normal_frag;
+		depth_frag = d_depth_frag.r;
+		albedo_frag = d_diffuse_color_frag;
 	}
 	
 	// WORLD POSITION FROM DEPTH
+	vec3 ndc = vec3((SCREEN_UV * 2.0) - 1.0, depth_frag);
+	vec4 clip = vec4(ndc, 1.0);
+	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * clip;
+	world.xyz /= world.w;
+	vec3 frag_position = world.xyz;
+	
 	// ACCUMULATE LIGHT CONTRIBUTIONS
 	for(int i = 0; i < nb_plights; i++) {
-		...
-		float NdotL = max(dot(normal_frag, L), 0.0);
-		diffuse_contrib += NdotL * C * I * albedo_frag * attenuation;
+		vec3 light_vec = plight_position[i] - frag_position;
+		float d2 = length(light_vec);
+		d2 = pow(d2, 2.0);
+		float attenuation = 1.0 / d2;
+
+		vec3 C = plight_color[i];
+		float I = plight_intensity[i];
+		diffuse_contrib += C * I * albedo_frag * attenuation;
 		//specular_contrib += NOT IMPLEMENTED YET
 	}
 	
@@ -421,84 +1073,97 @@ void fragment() {
 	ALBEDO = diffuse_contrib + specular_contrib;
 }
 ```
+{{< /togglecode >}}
+Comme vous pouvez le constater, notre modèle du pauvre fait l'impasse sur la spéculaire. La raison à cela, c'est que nos G-Buffers actuels ne contiennent pas encore les données nécessaires pour calculer cette composante. Mais comme pour les tableaux de lumière, nous déclarons déjà `specular_contrib` en prévision des futures améliorations.
 
-## IV. Lumière déterministe
-
-### 1. Generation des textures d'illumination
-
-### 2. Intégration au compositor
-```glsl
-// USUAL GODOT POST-PROCESS CODE
-// HELPER FUNCTIONS FROM THE ORACLE
-// SCENE UNIFORMS
-// INTERACTIVE G-BUFFER
-// DETERMINIST G-BUFFER
-...
-uniform sampler2D d_diff_dir_map : filter_nearest;
-uniform sampler2D d_diff_ind_map : filter_nearest;
-uniform sampler2D d_gloss_color_map : filter_nearest;
-uniform sampler2D d_gloss_dir_map : filter_nearest;
-uniform sampler2D d_gloss_ind_map : filter_nearest;
-
-void fragment() {
-	// SAMPLE G-BUFFERs
-	...
-	vec3 d_diff_dir_frag = texture(d_diff_dir_map, SCREEN_UV).rgb;
-	vec3 d_diff_ind_frag = texture(d_diff_ind_map, SCREEN_UV).rgb;
-	vec3 d_gloss_color_frag = texture(d_gloss_color_map, SCREEN_UV).rgb;
-	vec3 d_gloss_dir_frag = texture(d_gloss_dir_map, SCREEN_UV).rgb;
-	vec3 d_gloss_ind_frag = texture(d_gloss_ind_map, SCREEN_UV).rgb;
-	
-	// DATA HARMONIZATION
-	// DATA SELECTION (according to depth)
-	...
-	if(is_frag_interactive) {
-		...
-	}
-	else {
-		...
-		vec3 d_diff_light = d_diff_dir_frag + d_diff_ind_frag;
-		vec3 d_gloss_light = d_gloss_dir_frag + d_gloss_ind_frag;
-		diffuse_contrib += d_diffuse_color_frag * d_diff_light;
-		specular_contrib += d_gloss_color_frag * d_gloss_light;
-	}
-	
-	// WORLD POSITION FROM DEPTH
-	// ACCUMULATE LIGHT CONTRIBUTIONS
-	// FINAL FRAGMENT COLOR
-	ALBEDO = diffuse_contrib + specular_contrib;
-}
+{{< togglecode >}}
+```glsl {#code-compact}
+		vec3 C = plight_color[i];
+		float I = plight_intensity[i];
+		diffuse_contrib += C * I * albedo_frag * attenuation;
+		//specular_contrib += NOT IMPLEMENTED YET
 ```
 
-### 3. Denoising
-
-### 4. Double exposition
-```glsl
-// USUAL GODOT POST-PROCESS CODE
-// HELPER FUNCTIONS FROM THE ORACLE
-// SCENE UNIFORMS
-...
-uniform bool plight_isInteractive[8];
-
-// INTERACTIVE G-BUFFER
-// DETERMINIST G-BUFFER
-...
-
+```glsl {#code-full .hidden hl_lines=[16,17,18,19]}
 void fragment() {
-	// SAMPLE G-BUFFERs
-	// DATA HARMONIZATION
-	// DATA SELECTION (according to depth)
-	// WORLD POSITION FROM DEPTH
+	...
+	
+	vec3 diffuse_contrib = vec3(0.0);
+	vec3 specular_contrib = vec3(0.0);
+	
+	...
+	
 	// ACCUMULATE LIGHT CONTRIBUTIONS
 	for(int i = 0; i < nb_plights; i++) {
-		if(!is_frag_interactive && !plight_isInteractive[i])
-			continue;
-		...
+		vec3 light_vec = plight_position[i] - frag_position;
+		float d2 = length(light_vec);
+		d2 = pow(d2, 2.0);
+		float attenuation = 1.0 / d2;
+
+		vec3 C = plight_color[i];
+		float I = plight_intensity[i];
+		diffuse_contrib += C * I * albedo_frag * attenuation;
+		//specular_contrib += NOT IMPLEMENTED YET
 	}
 	
 	// FINAL FRAGMENT COLOR
 	ALBEDO = diffuse_contrib + specular_contrib;
 }
 ```
+{{< /togglecode >}}
+Par ailleurs, vous pouvez remarquer que le facteur d’atténuation est bien calculé en appliquant l'*inverse square law* :
 
-## IV. Conclusion 
+{{< togglecode >}}
+```glsl {#code-compact}
+		vec3 light_vec = plight_position[i] - frag_position;
+		float d2 = length(light_vec);
+		d2 = pow(d2, 2.0);
+		float attenuation = 1.0 / d2;
+```
+
+```glsl {#code-full .hidden hl_lines=[11,12,13,14]}
+void fragment() {
+	...
+	
+	vec3 diffuse_contrib = vec3(0.0);
+	vec3 specular_contrib = vec3(0.0);
+	
+	...
+	
+	// ACCUMULATE LIGHT CONTRIBUTIONS
+	for(int i = 0; i < nb_plights; i++) {
+		vec3 light_vec = plight_position[i] - frag_position;
+		float d2 = length(light_vec);
+		d2 = pow(d2, 2.0);
+		float attenuation = 1.0 / d2;
+
+		vec3 C = plight_color[i];
+		float I = plight_intensity[i];
+		diffuse_contrib += C * I * albedo_frag * attenuation;
+		//specular_contrib += NOT IMPLEMENTED YET
+	}
+	
+	// FINAL FRAGMENT COLOR
+	ALBEDO = diffuse_contrib + specular_contrib;
+}
+```
+{{< /togglecode >}}
+Ce qui nous donne le résultat suivant :
+
+{{< rawhtml >}} 
+
+<video width="100%" controls muted loop playsinline autoplay>
+    <source src="videos/distance_only_light.mp4" type="video/mp4">
+    Your browser does not support the video tag.  
+</video>
+
+{{< /rawhtml >}}
+
+## IV. Conclusion
+Comme on a pu le voir en image, ce modèle d'illumination marche très bien dans « Days of the Porcupine », mais il faut avouer que sur notre scène, il est un peu fade. Le rendu est très plat, et avec des couleurs pleines comme celles-ci, on a du mal à distinguer le relief.
+
+Bien entendu, nous améliorerons cela dans la Partie II en implémentant un nouveau modèle un peu plus proche de notre objectif final. Nous ajouterons également de la lumière déterministe, préalablement rendue par Blender.
+
+Une petite réflexion en passant ! Dans le précédent devlog, j’avais mentionné que nous aurions besoin des normales pour implémenter la lumière. Finalement, comme nous avons ignoré l’orientation des surfaces, elles ne se sont pas révélées nécessaires dans cette permière partie. Dommage, cela signifie que nous aurions pu aborder ce sujet un peu plus tôt dans la série.
+
+À ma décharge, je n’avais pas prévu de couper ce numéro ici. La preuve que même en écrivant depuis le futur, on peut quand même arriver à se planter 😅.
