@@ -178,7 +178,7 @@ void fragment() {
 ```
 {{< /togglecode >}}
 
-#### 1.1. Normales en entrée
+#### 1.1. Introduction des normales
 Pour calculer l'angle d'incidence de la lumière, on va avoir besoin des normales.
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[6,10,15,18,22,23,28,32,36,43,44]}
@@ -403,6 +403,7 @@ void fragment() {
 
 #### 1.3. Selection de la normale
 On selectionne en suite la normale du monde visible. Toujours en se basant sur la profondeur.
+
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[5,9,13]}
 void fragment() {
@@ -518,6 +519,7 @@ void fragment() {
 
 #### 1.4. Application du cosinus de Lambert
 Et enfin on applique le terme Lambertien `NdotL` qui est le cosinus de l'angle formé par la normale et la direction de la lumière.
+
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[7,8]}
 void fragment() {
@@ -627,13 +629,21 @@ void fragment() {
 ```
 {{< /togglecode >}}
 
-Les valeurs négative indiquent une lumière "en dessous" de la surface éclairée. Une telle lumière doit être ignorée, et non "absorber" la lumière accumulée. C'est pourquoi vous noterez que la valeur de `NdotL` est clampée. 
+Les valeurs négative indiquent une lumière "en dessous" de la surface éclairée. Une telle lumière doit être ignorée, et non "absorber" la lumière accumulée. C'est pourquoi vous noterez que la valeur de `NdotL` est clampée.
+
+#### 1.5. Résultat
+Cette implémentation nous donne un meilleur sens du relief que le modèle précédent. On a pas encore de lumière spéculaire, mais l'amélioration est déjà perceptible.
+
+
+
+Maintenant, place à la lumière déterministe.
 
 ## III. Lumière déterministe
 
 ### 1. Generation des textures d'illumination
 
 ### 2. Intégration au compositor
+C'est maintenant une habitude, voici d'abord le code complet du shader que l'on s'apprete à détailler.
 ```glsl
 // USUAL GODOT POST-PROCESS CODE
 // HELPER FUNCTIONS FROM THE ORACLE
@@ -677,9 +687,63 @@ void fragment() {
 }
 ```
 
+#### 2.1. Introduction des maps déterministe
+On doit binsure passer au shader les textures générées dans Blender via des uniforms.
+
+[code]
+
+On en ajoute que 5 car `d_diff_dir_map` est déjà là (c'est notre albédo)
+
+#### 2.2. Echantillonage des maps déterministe
+On échantillonne nos maps de la même manière que les autres. Cette fois il n'y a pas d'harmonisation a effectuer car ces données sont exclusivent au monde déterministe.
+
+[code]
+
+#### 2.3. Reconstitution de la lumière déterministe
+Ici nous allons initialiser les variable `diffuse_contrib` et `specular_contrib` selon la formule indiquée dans la documention de Blender.
+
+[blender compo]
+
+Blender utilise le terme "glossy", mais ne vous laissez pas perturber pour si peu. C'est un synonyme de "specular". Par ailleurs, notez que la lumière déterministe ne doit pas s'appliquer aux fragments intéractifs (raison pour laquelle on initialise les variables dans le `else`).
+
+[code]
+
+Ainsi, la suite du shader accumule naturellement la lumière interactive par dessus la lumière déterministe que l'on vient de reconstituer, et on obtien le résultat suivant :
+
+[code]
+
 ### 3. Denoising
+Si on regarde de près, on peut voir que les ombres déterministes ne sont pas très précises.
+
+[ombre floue]
+
+Quand on regarde les maps générées par blender, on comprend vite pourquoi.
+
+[blender maps]
+
+"Garbage in => garbage out !". Il n'y a pas de miracle, si vos données d'entrées ne sont pas propres, aucune chance d'avoir quelque chose de bien en sortie.
+
+**Mais pourquoi Blender fait un rendu tout flou d'abord ?**
+
+Et bien c'est parfaitement normal. Toutes les images générées par ray tracing sont bruitées. Si on veut de la netteté, il faut les denoiser. Biensure, Blender est capable de faire ça. Il ne le fait simplement pas par defaut.
+
+[blender denoise]
+
+Il suffit d'utiliser le boeud `Denoiser` dans le `Compositeur` et le tour est joué.
+
+[blender maps denoisées]
+
+Evidement le denoising augment le temps de rendu. Mais c'est le prix pour avoir un rendu bien net.
+
+[ombre net]
 
 ### 4. Double exposition
+Le resultat actuel est plutôt pas mal. Mais si vous avez l'oeil, vous aurez surement remarqué que la lumière déterministe est un peu sur vitaminée. En effet, elle brûle un peu ce qui se trouve à son voisinage direct.
+
+[godot det light burn]
+
+Là raison est simple. Notre shader actuel ne fait pas de distinction selon type de lumière lors de l'accumulation des contributions. Pour un pixel interactif c'est exactement ce qu'on veut. En effet, les contributions déterministes doivent bien affecter les eléments interactifs. Mais pous un pixels déterministe, c'est un probleme. La contribution a déjà été prise en compte lors de l'initialisation de `diffuse_contrib` et `specular_contrib` avec les maps d'illumination haute qualité de Blender. Avec l'ac
+
 ```glsl
 // USUAL GODOT POST-PROCESS CODE
 // HELPER FUNCTIONS FROM THE ORACLE
