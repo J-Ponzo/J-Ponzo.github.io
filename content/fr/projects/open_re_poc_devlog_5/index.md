@@ -21,7 +21,11 @@ Le modèle de Lambert suppose que les surfaces réfléchissent la lumière de ma
 ### 1. Principe
 Une façon de se représenter le phénomene, c'est d'imaginer un faiseau de lumière parfaitement vertical qui éclaire une surface parfaitement horizontale. Le cercle dans lequel les photons percutent la surface cohincide avec la section du faiseau.
 
+[Schema cercle]
+
 Si maitenant le faiseau est incliné, ce cercle devient une elipse. De là on peut tirer une conclusion similaire à ce qu'on avait dit dans la partie I au sujet de l'inverse square law : la surface de l'elipse est superieure à celle du cercle alors que la quantité de photons emis reste la même. La concentration de lumière est donc plus faible. Et au plus l'angle est rasant, au plus l'elipse s'étire et augmente sa surface. L'intensité lumineuse perçue est donc fonction de l'angle d'incidence de la lumière. 
+
+[Schema elipse]
 
 La modalité exacte selon laquelle la surface évolue en fonction de l'ancle n'est pas intuitive. Mais on va fair confiance à Mr Lambert en affirmant que : I = I0 * max(N.L, 0.0) (avec I0 l’intensité de la source, N le vecteur Normal, et L l'inverse de la direction de la lumière)
 
@@ -518,7 +522,7 @@ void fragment() {
 {{< /togglecode >}}
 
 #### 1.4. Application du cosinus de Lambert
-Et enfin on applique le terme Lambertien `NdotL` qui est le cosinus de l'angle formé par la normale et la direction de la lumière.
+Enfin, on applique à notre calcule le terme Lambertien `NdotL` qui est le cosinus de l'angle formé par la normale et la direction de la lumière.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[7,8]}
@@ -629,12 +633,12 @@ void fragment() {
 ```
 {{< /togglecode >}}
 
-Les valeurs négative indiquent une lumière "en dessous" de la surface éclairée. Une telle lumière doit être ignorée, et non "absorber" la lumière accumulée. C'est pourquoi vous noterez que la valeur de `NdotL` est clampée.
+Si la valeur du cosinus est négative, cela veut dire que la surface est éclairée "par l'arrière". Dans ce cas, la source ne contribue pas à l'illumination. Mais sommer une valeurs négative aura pour effet "d'absorber" la lumière déjà accumulée. Ce n'est pas ce qu'on peut, c'est pourquoi `NdotL` doit être clampé.
 
 #### 1.5. Résultat
 Cette implémentation nous donne un meilleur sens du relief que le modèle précédent. On a pas encore de lumière spéculaire, mais l'amélioration est déjà perceptible.
 
-
+[video]
 
 Maintenant, place à la lumière déterministe.
 
@@ -710,7 +714,7 @@ Blender utilise le terme "glossy", mais ne vous laissez pas perturber pour si pe
 
 Ainsi, la suite du shader accumule naturellement la lumière interactive par dessus la lumière déterministe que l'on vient de reconstituer, et on obtien le résultat suivant :
 
-[code]
+[video]
 
 ### 3. Denoising
 Si on regarde de près, on peut voir que les ombres déterministes ne sont pas très précises.
@@ -738,11 +742,19 @@ Evidement le denoising augment le temps de rendu. Mais c'est le prix pour avoir 
 [ombre net]
 
 ### 4. Double exposition
-Le resultat actuel est plutôt pas mal. Mais si vous avez l'oeil, vous aurez surement remarqué que la lumière déterministe est un peu sur vitaminée. En effet, elle brûle un peu ce qui se trouve à son voisinage direct.
+Le resultat actuel est plutôt pas mal. Mais si vous avez l'oeil, vous aurez surement remarqué que la lumière déterministe est un peu sur vitaminée.
 
 [godot det light burn]
 
-Là raison est simple. Notre shader actuel ne fait pas de distinction selon type de lumière lors de l'accumulation des contributions. Pour un pixel interactif c'est exactement ce qu'on veut. En effet, les contributions déterministes doivent bien affecter les eléments interactifs. Mais pous un pixels déterministe, c'est un probleme. La contribution a déjà été prise en compte lors de l'initialisation de `diffuse_contrib` et `specular_contrib` avec les maps d'illumination haute qualité de Blender. Avec l'ac
+Là raison est simple. Notre shader ne fait pas de distinction selon type de lumière lors de l'accumulation des contributions. Pour un pixel interactif c'est exactement ce qu'on veut : si un personnage s'approche d'une source déterministe, on a envie que sa lumière l'affecte.
+
+Mais pour un pixel déterministe, c'est un probleme ! En effet, l'accumulation des lumières déterministes sur l'environnement déterministe à déjà été calculés par Blender. Elle est stoqué dans les maps d'illumination que l'on vient d'intégrer. 
+
+Comme le calcul est refait sans distinction côté Godot, ces lumières sont prises en compte 2 fois. C'est pour ça qu'elles patatent aussi fort (d'ailleurs si vous êtes attentif, vous remarquerez qu'elles brûlent le monde déterministe mais pas les élements interactifs).
+
+[godot det light burn zoom]
+
+Le shader à donc besoin de savoir à quel monde appartiennent les lumières qu'il traite. On lui fait part de cet information à travers le uniform `plight_isInteractive`. Il s'en sert lors de l'accumulation pour filtrer le cas problématique.
 
 ```glsl
 // USUAL GODOT POST-PROCESS CODE
@@ -771,5 +783,9 @@ void fragment() {
 	ALBEDO = diffuse_contrib + specular_contrib;
 }
 ```
+
+Ce qui nous laisse avec ce magnifique rendu :
+
+[video]
 
 ## IV. Conclusion 
