@@ -21,11 +21,11 @@ Le modèle de Lambert suppose que les surfaces réfléchissent la lumière de ma
 ### 1. Principe
 Une façon de se représenter le phénomene, c'est d'imaginer un faiseau de lumière parfaitement vertical qui éclaire une surface parfaitement horizontale. Le cercle dans lequel les photons percutent la surface cohincide avec la section du faiseau.
 
-[![Schéma d'un vaiseau de lumière éclairant un plan orthogonal. Le projeté de sa section au sol est circulaire](images/circle_ray.opti.webp)](images/circle_ray.opti.webp)
+<img alt="Schéma d'un vaiseau de lumière éclairant un plan orthogonal. Le projeté de sa section au sol est circulaire" src="./images/circle_ray.opti.webp" style="width:66%; display: block; margin-left: auto; margin-right: auto;" /> 
 
 Si maitenant le faiseau est incliné, ce cercle devient une elipse. De là on peut tirer une conclusion similaire à ce qu'on avait dit dans la partie I au sujet de l'inverse square law : la surface de l'elipse est superieure à celle du cercle alors que la quantité de photons emis reste la même. La concentration de lumière est donc plus faible. Et au plus l'angle est rasant, au plus l'elipse s'étire et augmente sa surface. L'intensité lumineuse perçue est donc fonction de l'angle d'incidence de la lumière. 
 
-[![Schéma d'un vaiseau de lumière rasant éclairant le même plan. Le projeté de sa section au sol est une élipse](images/elipse_ray.opti.webp)](images/elipse_ray.opti.webp)
+![Schéma d'un vaiseau de lumière rasant éclairant le même plan. Le projeté de sa section au sol est une élipse](images/elipse_ray.opti.webp)
 
 La modalité exacte selon laquelle la surface évolue en fonction de l'ancle n'est pas intuitive. Mais on va fair confiance à Mr Lambert en affirmant que : I = I0 * max(N.L, 0.0) (avec I0 l’intensité de la source, N le vecteur Normal, et L l'inverse de la direction de la lumière)
 
