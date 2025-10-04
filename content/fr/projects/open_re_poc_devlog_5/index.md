@@ -636,11 +636,17 @@ void fragment() {
 Si la valeur du cosinus est négative, cela veut dire que la surface est éclairée "par l'arrière". Dans ce cas, la source ne contribue pas à l'illumination. Mais sommer une valeurs négative aura pour effet "d'absorber" la lumière déjà accumulée. Ce n'est pas ce qu'on peut, c'est pourquoi `NdotL` doit être clampé.
 
 #### 1.5. Résultat
-Cette implémentation nous donne un meilleur sens du relief que le modèle précédent. On a pas encore de lumière spéculaire, mais l'amélioration est déjà perceptible.
+Cette implémentation nous donne un meilleur sens du relief grâce à un éclairage plus nuancé et aux self shadows qui se déssinent sur les faces non-exposées. 
 
 [video]
 
-Maintenant, place à la lumière déterministe.
+Les ombre sont un peu sharp pour l'instant. Ca fait pas très naturel. Dans la vrai vie, quand un rayon de lumière percute une surface, certains photons rebondissent et vont s'écraser ailleurs. On parle alors de lumière indirect. 
+
+Contrairement à la lumière directe qui voyage en ligne droite, la lumière indirecte peut donc contourner les obstacles par rebonds successifs. Ainsi, elle peut affecter n'importe quelle surface, notament les faces non-exposées. Son intensitée est moins forte car on perd de l'énergie à chaque rebond (tous les photons ne sont pas réfléchis). Mais c'est gràce à elle que dans la réalité, les ombres ne sont jamais completement noir.
+
+[schéma indirect]
+
+Notez que nos lumières déterministes ne sont pas sujetes à ce problème car elles prennent en compte l'éclairage indirecte. C'est un des aspects qui les rend si interessante malgré le fait qu'on ne peut pas les déplacer comme on veut. Voyons comment elle fonctionnent.
 
 ## III. Lumière déterministe
 
