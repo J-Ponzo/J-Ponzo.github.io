@@ -289,6 +289,7 @@ void fragment() {
 }
 ```
 {{< /togglecode >}}
+
 On introduit donc les uniforms `i_normal_map` et `d_normal_map` qui proviennent respectivement des G-Buffers interactif et déterministe.
 
 #### 1.2. Echantillonage des normales
@@ -653,8 +654,10 @@ Notez que nos lumières déterministes ne sont pas sujetes à ce problème car e
 ### 1. Generation des textures d'illumination
 
 ### 2. Intégration au compositor
-C'est maintenant une habitude, voici d'abord le code complet du shader que l'on s'apprete à détailler.
-```glsl
+C'est maintenant une habitude, voici d'un bloc la totalité des ajout que l'on s'apprete à détailler.
+
+{{< togglecode >}}
+```glsl {#code-compact hl_lines=[7,8,9,10,11 , 16,17,18,19,20 , 30,31,32,33]}
 // USUAL GODOT POST-PROCESS CODE
 // HELPER FUNCTIONS FROM THE ORACLE
 // SCENE UNIFORMS
@@ -697,17 +700,362 @@ void fragment() {
 }
 ```
 
+```glsl {#code-full .hidden hl_lines=[29,30,31,32,33 , 44,45,46,47,48 , 74,75,76,77]}
+// USUAL GODOT POST-PROCESS STUFF
+shader_type spatial;
+render_mode unshaded, fog_disabled;
+
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+// HELPER FUNCTIONS FROM THE ORACLE
+#include "pre_process_utils.gdshaderinc"
+
+// SCENE UNIFORMS
+uniform float cam_near;
+uniform float cam_far;
+uniform int nb_plights;
+uniform vec3 plight_position[8];
+uniform vec3 plight_color[8];
+uniform float plight_intensity[8];
+
+// INTERACTIVE G-BUFFER
+uniform sampler2D i_depth_map : filter_nearest;
+uniform sampler2D i_albedo_map : filter_nearest;
+uniform sampler2D i_normal_map : filter_nearest;
+
+// DETERMINIST G-BUFFER
+uniform sampler2D d_depth_map : filter_nearest;
+uniform sampler2D d_diffuse_color_map : filter_nearest;
+uniform sampler2D d_normal_map : filter_nearest;
+uniform sampler2D d_diff_dir_map : filter_nearest;
+uniform sampler2D d_diff_ind_map : filter_nearest;
+uniform sampler2D d_gloss_color_map : filter_nearest;
+uniform sampler2D d_gloss_dir_map : filter_nearest;
+uniform sampler2D d_gloss_ind_map : filter_nearest;
+
+void fragment() {
+	// SAMPLE G-BUFFERs
+	vec3 i_depth_frag = texture(i_depth_map, SCREEN_UV).rgb;
+	vec3 i_albedo_frag = texture(i_albedo_map, SCREEN_UV).rgb;
+	vec3 i_normal_frag = texture(i_normal_map, SCREEN_UV).rgb;
+	
+	vec3 d_depth_frag = texture(d_depth_map, SCREEN_UV).rgb;
+	vec3 d_diffuse_color_frag = texture(d_diffuse_color_map, SCREEN_UV).rgb;
+	vec3 d_normal_frag = texture(d_normal_map, SCREEN_UV).rgb;
+	vec3 d_diff_dir_frag = texture(d_diff_dir_map, SCREEN_UV).rgb;
+	vec3 d_diff_ind_frag = texture(d_diff_ind_map, SCREEN_UV).rgb;
+	vec3 d_gloss_color_frag = texture(d_gloss_color_map, SCREEN_UV).rgb;
+	vec3 d_gloss_dir_frag = texture(d_gloss_dir_map, SCREEN_UV).rgb;
+	vec3 d_gloss_ind_frag = texture(d_gloss_ind_map, SCREEN_UV).rgb;
+	
+	// DATA HARMONIZATION
+	i_depth_frag = pre_process_i_depth(i_depth_frag);
+	d_depth_frag = pre_process_d_depth(d_depth_frag, cam_near, cam_far);
+	d_normal_frag = pre_process_d_normal(d_normal_frag);
+	i_normal_frag = pre_process_i_normal(i_normal_frag, INV_VIEW_MATRIX);
+	
+	vec3 diffuse_contrib = vec3(0.0);
+	vec3 specular_contrib = vec3(0.0);
+	
+	// DATA SELECTION (according to depth)
+	float depth_frag;
+	vec3 albedo_frag;
+	vec3 normal_frag;
+	bool is_frag_interactive = d_depth_frag.r < i_depth_frag.r;
+	if(is_frag_interactive) {
+		depth_frag = i_depth_frag.r;
+		albedo_frag = i_albedo_frag;
+		normal_frag = i_normal_frag;
+	}
+	else {
+		depth_frag = d_depth_frag.r;
+		albedo_frag = d_diffuse_color_frag;
+		normal_frag = d_normal_frag;
+		
+		vec3 d_diff_light = d_diff_dir_frag + d_diff_ind_frag;
+		vec3 d_gloss_light = d_gloss_dir_frag + d_gloss_ind_frag;
+		diffuse_contrib += d_diffuse_color_frag * d_diff_light;
+		specular_contrib += d_gloss_color_frag * d_gloss_light;
+	}
+	
+	// WORLD POSITION FROM DEPTH
+	vec3 ndc = vec3((SCREEN_UV * 2.0) - 1.0, depth_frag);
+	vec4 clip = vec4(ndc, 1.0);
+	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * clip;
+	world.xyz /= world.w;
+	vec3 frag_position = world.xyz;
+	
+	// ACCUMULATE LIGHT CONTRIBUTIONS
+	for(int i = 0; i < nb_plights; i++) {
+		vec3 light_vec = plight_position[i] - frag_position;
+		float d2 = length(light_vec);
+		d2 = pow(d2, 2.0);
+		float attenuation = 1.0 / d2;
+
+		vec3 C = plight_color[i];
+		float I = plight_intensity[i];
+		float NdotL = max(dot(normal_frag, L), 0.0);
+		diffuse_contrib += NdotL * C * I * albedo_frag * attenuation;
+		//specular_contrib += NOT IMPLEMENTED YET
+	}
+	
+	// FINAL FRAGMENT COLOR
+	ALBEDO = diffuse_contrib + specular_contrib;
+}
+```
+{{< /togglecode >}}
+
 #### 2.1. Introduction des maps déterministe
-On doit binsure passer au shader les textures générées dans Blender via des uniforms.
+On doit biensure passer au shader les textures générées par Blender via des uniforms.
 
-[code]
+{{< togglecode >}}
+```glsl {#code-compact hl_lines=[3,4,5,6,7]}
+// DETERMINIST G-BUFFER
+...
+uniform sampler2D d_diff_dir_map : filter_nearest;
+uniform sampler2D d_diff_ind_map : filter_nearest;
+uniform sampler2D d_gloss_color_map : filter_nearest;
+uniform sampler2D d_gloss_dir_map : filter_nearest;
+uniform sampler2D d_gloss_ind_map : filter_nearest;
 
-On en ajoute que 5 car `d_diff_dir_map` est déjà là (c'est notre albédo)
+...
+```
+
+```glsl {#code-full .hidden hl_lines=[29,30,31,32,33]}
+// USUAL GODOT POST-PROCESS STUFF
+shader_type spatial;
+render_mode unshaded, fog_disabled;
+
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+// HELPER FUNCTIONS FROM THE ORACLE
+#include "pre_process_utils.gdshaderinc"
+
+// SCENE UNIFORMS
+uniform float cam_near;
+uniform float cam_far;
+uniform int nb_plights;
+uniform vec3 plight_position[8];
+uniform vec3 plight_color[8];
+uniform float plight_intensity[8];
+
+// INTERACTIVE G-BUFFER
+uniform sampler2D i_depth_map : filter_nearest;
+uniform sampler2D i_albedo_map : filter_nearest;
+uniform sampler2D i_normal_map : filter_nearest;
+
+// DETERMINIST G-BUFFER
+uniform sampler2D d_depth_map : filter_nearest;
+uniform sampler2D d_diffuse_color_map : filter_nearest;
+uniform sampler2D d_normal_map : filter_nearest;
+uniform sampler2D d_diff_dir_map : filter_nearest;
+uniform sampler2D d_diff_ind_map : filter_nearest;
+uniform sampler2D d_gloss_color_map : filter_nearest;
+uniform sampler2D d_gloss_dir_map : filter_nearest;
+uniform sampler2D d_gloss_ind_map : filter_nearest;
+
+void fragment() {
+	// SAMPLE G-BUFFERs
+	vec3 i_depth_frag = texture(i_depth_map, SCREEN_UV).rgb;
+	vec3 i_albedo_frag = texture(i_albedo_map, SCREEN_UV).rgb;
+	vec3 i_normal_frag = texture(i_normal_map, SCREEN_UV).rgb;
+	
+	vec3 d_depth_frag = texture(d_depth_map, SCREEN_UV).rgb;
+	vec3 d_diffuse_color_frag = texture(d_diffuse_color_map, SCREEN_UV).rgb;
+	vec3 d_normal_frag = texture(d_normal_map, SCREEN_UV).rgb;
+	vec3 d_diff_dir_frag = texture(d_diff_dir_map, SCREEN_UV).rgb;
+	vec3 d_diff_ind_frag = texture(d_diff_ind_map, SCREEN_UV).rgb;
+	vec3 d_gloss_color_frag = texture(d_gloss_color_map, SCREEN_UV).rgb;
+	vec3 d_gloss_dir_frag = texture(d_gloss_dir_map, SCREEN_UV).rgb;
+	vec3 d_gloss_ind_frag = texture(d_gloss_ind_map, SCREEN_UV).rgb;
+	
+	// DATA HARMONIZATION
+	i_depth_frag = pre_process_i_depth(i_depth_frag);
+	d_depth_frag = pre_process_d_depth(d_depth_frag, cam_near, cam_far);
+	d_normal_frag = pre_process_d_normal(d_normal_frag);
+	i_normal_frag = pre_process_i_normal(i_normal_frag, INV_VIEW_MATRIX);
+	
+	vec3 diffuse_contrib = vec3(0.0);
+	vec3 specular_contrib = vec3(0.0);
+	
+	// DATA SELECTION (according to depth)
+	float depth_frag;
+	vec3 albedo_frag;
+	vec3 normal_frag;
+	bool is_frag_interactive = d_depth_frag.r < i_depth_frag.r;
+	if(is_frag_interactive) {
+		depth_frag = i_depth_frag.r;
+		albedo_frag = i_albedo_frag;
+		normal_frag = i_normal_frag;
+	}
+	else {
+		depth_frag = d_depth_frag.r;
+		albedo_frag = d_diffuse_color_frag;
+		normal_frag = d_normal_frag;
+		
+		vec3 d_diff_light = d_diff_dir_frag + d_diff_ind_frag;
+		vec3 d_gloss_light = d_gloss_dir_frag + d_gloss_ind_frag;
+		diffuse_contrib += d_diffuse_color_frag * d_diff_light;
+		specular_contrib += d_gloss_color_frag * d_gloss_light;
+	}
+	
+	// WORLD POSITION FROM DEPTH
+	vec3 ndc = vec3((SCREEN_UV * 2.0) - 1.0, depth_frag);
+	vec4 clip = vec4(ndc, 1.0);
+	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * clip;
+	world.xyz /= world.w;
+	vec3 frag_position = world.xyz;
+	
+	// ACCUMULATE LIGHT CONTRIBUTIONS
+	for(int i = 0; i < nb_plights; i++) {
+		vec3 light_vec = plight_position[i] - frag_position;
+		float d2 = length(light_vec);
+		d2 = pow(d2, 2.0);
+		float attenuation = 1.0 / d2;
+
+		vec3 C = plight_color[i];
+		float I = plight_intensity[i];
+		float NdotL = max(dot(normal_frag, L), 0.0);
+		diffuse_contrib += NdotL * C * I * albedo_frag * attenuation;
+		//specular_contrib += NOT IMPLEMENTED YET
+	}
+	
+	// FINAL FRAGMENT COLOR
+	ALBEDO = diffuse_contrib + specular_contrib;
+}
+```
+{{< /togglecode >}}
+
+On en ajoute que 5 car `d_diffuse_color_frag` est déjà là (c'est notre albédo)
 
 #### 2.2. Echantillonage des maps déterministe
 On échantillonne nos maps de la même manière que les autres. Cette fois il n'y a pas d'harmonisation a effectuer car ces données sont exclusivent au monde déterministe.
 
-[code]
+{{< togglecode >}}
+```glsl {#code-compact hl_lines=[6,7,8,9,10]}
+...
+
+void fragment() {
+	// SAMPLE G-BUFFERs
+	...
+	vec3 d_diff_dir_frag = texture(d_diff_dir_map, SCREEN_UV).rgb;
+	vec3 d_diff_ind_frag = texture(d_diff_ind_map, SCREEN_UV).rgb;
+	vec3 d_gloss_color_frag = texture(d_gloss_color_map, SCREEN_UV).rgb;
+	vec3 d_gloss_dir_frag = texture(d_gloss_dir_map, SCREEN_UV).rgb;
+	vec3 d_gloss_ind_frag = texture(d_gloss_ind_map, SCREEN_UV).rgb;
+	...
+```
+
+```glsl {#code-full .hidden hl_lines=[44,45,46,47,48]}
+// USUAL GODOT POST-PROCESS STUFF
+shader_type spatial;
+render_mode unshaded, fog_disabled;
+
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+// HELPER FUNCTIONS FROM THE ORACLE
+#include "pre_process_utils.gdshaderinc"
+
+// SCENE UNIFORMS
+uniform float cam_near;
+uniform float cam_far;
+uniform int nb_plights;
+uniform vec3 plight_position[8];
+uniform vec3 plight_color[8];
+uniform float plight_intensity[8];
+
+// INTERACTIVE G-BUFFER
+uniform sampler2D i_depth_map : filter_nearest;
+uniform sampler2D i_albedo_map : filter_nearest;
+uniform sampler2D i_normal_map : filter_nearest;
+
+// DETERMINIST G-BUFFER
+uniform sampler2D d_depth_map : filter_nearest;
+uniform sampler2D d_diffuse_color_map : filter_nearest;
+uniform sampler2D d_normal_map : filter_nearest;
+uniform sampler2D d_diff_dir_map : filter_nearest;
+uniform sampler2D d_diff_ind_map : filter_nearest;
+uniform sampler2D d_gloss_color_map : filter_nearest;
+uniform sampler2D d_gloss_dir_map : filter_nearest;
+uniform sampler2D d_gloss_ind_map : filter_nearest;
+
+void fragment() {
+	// SAMPLE G-BUFFERs
+	vec3 i_depth_frag = texture(i_depth_map, SCREEN_UV).rgb;
+	vec3 i_albedo_frag = texture(i_albedo_map, SCREEN_UV).rgb;
+	vec3 i_normal_frag = texture(i_normal_map, SCREEN_UV).rgb;
+	
+	vec3 d_depth_frag = texture(d_depth_map, SCREEN_UV).rgb;
+	vec3 d_diffuse_color_frag = texture(d_diffuse_color_map, SCREEN_UV).rgb;
+	vec3 d_normal_frag = texture(d_normal_map, SCREEN_UV).rgb;
+	vec3 d_diff_dir_frag = texture(d_diff_dir_map, SCREEN_UV).rgb;
+	vec3 d_diff_ind_frag = texture(d_diff_ind_map, SCREEN_UV).rgb;
+	vec3 d_gloss_color_frag = texture(d_gloss_color_map, SCREEN_UV).rgb;
+	vec3 d_gloss_dir_frag = texture(d_gloss_dir_map, SCREEN_UV).rgb;
+	vec3 d_gloss_ind_frag = texture(d_gloss_ind_map, SCREEN_UV).rgb;
+	
+	// DATA HARMONIZATION
+	i_depth_frag = pre_process_i_depth(i_depth_frag);
+	d_depth_frag = pre_process_d_depth(d_depth_frag, cam_near, cam_far);
+	d_normal_frag = pre_process_d_normal(d_normal_frag);
+	i_normal_frag = pre_process_i_normal(i_normal_frag, INV_VIEW_MATRIX);
+	
+	vec3 diffuse_contrib = vec3(0.0);
+	vec3 specular_contrib = vec3(0.0);
+	
+	// DATA SELECTION (according to depth)
+	float depth_frag;
+	vec3 albedo_frag;
+	vec3 normal_frag;
+	bool is_frag_interactive = d_depth_frag.r < i_depth_frag.r;
+	if(is_frag_interactive) {
+		depth_frag = i_depth_frag.r;
+		albedo_frag = i_albedo_frag;
+		normal_frag = i_normal_frag;
+	}
+	else {
+		depth_frag = d_depth_frag.r;
+		albedo_frag = d_diffuse_color_frag;
+		normal_frag = d_normal_frag;
+		
+		vec3 d_diff_light = d_diff_dir_frag + d_diff_ind_frag;
+		vec3 d_gloss_light = d_gloss_dir_frag + d_gloss_ind_frag;
+		diffuse_contrib += d_diffuse_color_frag * d_diff_light;
+		specular_contrib += d_gloss_color_frag * d_gloss_light;
+	}
+	
+	// WORLD POSITION FROM DEPTH
+	vec3 ndc = vec3((SCREEN_UV * 2.0) - 1.0, depth_frag);
+	vec4 clip = vec4(ndc, 1.0);
+	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * clip;
+	world.xyz /= world.w;
+	vec3 frag_position = world.xyz;
+	
+	// ACCUMULATE LIGHT CONTRIBUTIONS
+	for(int i = 0; i < nb_plights; i++) {
+		vec3 light_vec = plight_position[i] - frag_position;
+		float d2 = length(light_vec);
+		d2 = pow(d2, 2.0);
+		float attenuation = 1.0 / d2;
+
+		vec3 C = plight_color[i];
+		float I = plight_intensity[i];
+		float NdotL = max(dot(normal_frag, L), 0.0);
+		diffuse_contrib += NdotL * C * I * albedo_frag * attenuation;
+		//specular_contrib += NOT IMPLEMENTED YET
+	}
+	
+	// FINAL FRAGMENT COLOR
+	ALBEDO = diffuse_contrib + specular_contrib;
+}
+```
+{{< /togglecode >}}
 
 #### 2.3. Reconstitution de la lumière déterministe
 Ici nous allons initialiser les variable `diffuse_contrib` et `specular_contrib` selon la formule indiquée dans la documention de Blender.
@@ -716,7 +1064,134 @@ Ici nous allons initialiser les variable `diffuse_contrib` et `specular_contrib`
 
 Blender utilise le terme "glossy", mais ne vous laissez pas perturber pour si peu. C'est un synonyme de "specular". Par ailleurs, notez que la lumière déterministe ne doit pas s'appliquer aux fragments intéractifs (raison pour laquelle on initialise les variables dans le `else`).
 
-[code]
+{{< togglecode >}}
+```glsl {#code-compact hl_lines=[13,14,15,16]}
+...
+
+void fragment() {
+	...
+	
+	// DATA SELECTION (according to depth)
+	...
+	if(is_frag_interactive) {
+		...
+	}
+	else {
+		...
+		vec3 d_diff_light = d_diff_dir_frag + d_diff_ind_frag;
+		vec3 d_gloss_light = d_gloss_dir_frag + d_gloss_ind_frag;
+		diffuse_contrib += d_diffuse_color_frag * d_diff_light;
+		specular_contrib += d_gloss_color_frag * d_gloss_light;
+	}
+}
+```
+
+```glsl {#code-full .hidden hl_lines=[74,75,76,77]}
+// USUAL GODOT POST-PROCESS STUFF
+shader_type spatial;
+render_mode unshaded, fog_disabled;
+
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+// HELPER FUNCTIONS FROM THE ORACLE
+#include "pre_process_utils.gdshaderinc"
+
+// SCENE UNIFORMS
+uniform float cam_near;
+uniform float cam_far;
+uniform int nb_plights;
+uniform vec3 plight_position[8];
+uniform vec3 plight_color[8];
+uniform float plight_intensity[8];
+
+// INTERACTIVE G-BUFFER
+uniform sampler2D i_depth_map : filter_nearest;
+uniform sampler2D i_albedo_map : filter_nearest;
+uniform sampler2D i_normal_map : filter_nearest;
+
+// DETERMINIST G-BUFFER
+uniform sampler2D d_depth_map : filter_nearest;
+uniform sampler2D d_diffuse_color_map : filter_nearest;
+uniform sampler2D d_normal_map : filter_nearest;
+uniform sampler2D d_diff_dir_map : filter_nearest;
+uniform sampler2D d_diff_ind_map : filter_nearest;
+uniform sampler2D d_gloss_color_map : filter_nearest;
+uniform sampler2D d_gloss_dir_map : filter_nearest;
+uniform sampler2D d_gloss_ind_map : filter_nearest;
+
+void fragment() {
+	// SAMPLE G-BUFFERs
+	vec3 i_depth_frag = texture(i_depth_map, SCREEN_UV).rgb;
+	vec3 i_albedo_frag = texture(i_albedo_map, SCREEN_UV).rgb;
+	vec3 i_normal_frag = texture(i_normal_map, SCREEN_UV).rgb;
+	
+	vec3 d_depth_frag = texture(d_depth_map, SCREEN_UV).rgb;
+	vec3 d_diffuse_color_frag = texture(d_diffuse_color_map, SCREEN_UV).rgb;
+	vec3 d_normal_frag = texture(d_normal_map, SCREEN_UV).rgb;
+	vec3 d_diff_dir_frag = texture(d_diff_dir_map, SCREEN_UV).rgb;
+	vec3 d_diff_ind_frag = texture(d_diff_ind_map, SCREEN_UV).rgb;
+	vec3 d_gloss_color_frag = texture(d_gloss_color_map, SCREEN_UV).rgb;
+	vec3 d_gloss_dir_frag = texture(d_gloss_dir_map, SCREEN_UV).rgb;
+	vec3 d_gloss_ind_frag = texture(d_gloss_ind_map, SCREEN_UV).rgb;
+	
+	// DATA HARMONIZATION
+	i_depth_frag = pre_process_i_depth(i_depth_frag);
+	d_depth_frag = pre_process_d_depth(d_depth_frag, cam_near, cam_far);
+	d_normal_frag = pre_process_d_normal(d_normal_frag);
+	i_normal_frag = pre_process_i_normal(i_normal_frag, INV_VIEW_MATRIX);
+	
+	vec3 diffuse_contrib = vec3(0.0);
+	vec3 specular_contrib = vec3(0.0);
+	
+	// DATA SELECTION (according to depth)
+	float depth_frag;
+	vec3 albedo_frag;
+	vec3 normal_frag;
+	bool is_frag_interactive = d_depth_frag.r < i_depth_frag.r;
+	if(is_frag_interactive) {
+		depth_frag = i_depth_frag.r;
+		albedo_frag = i_albedo_frag;
+		normal_frag = i_normal_frag;
+	}
+	else {
+		depth_frag = d_depth_frag.r;
+		albedo_frag = d_diffuse_color_frag;
+		normal_frag = d_normal_frag;
+		
+		vec3 d_diff_light = d_diff_dir_frag + d_diff_ind_frag;
+		vec3 d_gloss_light = d_gloss_dir_frag + d_gloss_ind_frag;
+		diffuse_contrib += d_diffuse_color_frag * d_diff_light;
+		specular_contrib += d_gloss_color_frag * d_gloss_light;
+	}
+	
+	// WORLD POSITION FROM DEPTH
+	vec3 ndc = vec3((SCREEN_UV * 2.0) - 1.0, depth_frag);
+	vec4 clip = vec4(ndc, 1.0);
+	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * clip;
+	world.xyz /= world.w;
+	vec3 frag_position = world.xyz;
+	
+	// ACCUMULATE LIGHT CONTRIBUTIONS
+	for(int i = 0; i < nb_plights; i++) {
+		vec3 light_vec = plight_position[i] - frag_position;
+		float d2 = length(light_vec);
+		d2 = pow(d2, 2.0);
+		float attenuation = 1.0 / d2;
+
+		vec3 C = plight_color[i];
+		float I = plight_intensity[i];
+		float NdotL = max(dot(normal_frag, L), 0.0);
+		diffuse_contrib += NdotL * C * I * albedo_frag * attenuation;
+		//specular_contrib += NOT IMPLEMENTED YET
+	}
+	
+	// FINAL FRAGMENT COLOR
+	ALBEDO = diffuse_contrib + specular_contrib;
+}
+```
+{{< /togglecode >}}
 
 Ainsi, la suite du shader accumule naturellement la lumière interactive par dessus la lumière déterministe que l'on vient de reconstituer, et on obtien le résultat suivant :
 
@@ -739,7 +1214,7 @@ Et bien c'est parfaitement normal. Toutes les images générées par ray tracing
 
 [blender denoise]
 
-Il suffit d'utiliser le boeud `Denoiser` dans le `Compositeur` et le tour est joué.
+Il suffit d'utiliser le noeud `Denoise` dans le `Compositeur` et le tour est joué.
 
 [blender maps denoisées]
 
@@ -762,7 +1237,8 @@ Comme le calcul est refait sans distinction côté Godot, ces lumières sont pri
 
 Le shader à donc besoin de savoir à quel monde appartiennent les lumières qu'il traite. On lui fait part de cet information à travers le uniform `plight_isInteractive`. Il s'en sert lors de l'accumulation pour filtrer le cas problématique.
 
-```glsl
+{{< togglecode >}}
+```glsl {#code-compact hl_lines=[5,18,19]}
 // USUAL GODOT POST-PROCESS CODE
 // HELPER FUNCTIONS FROM THE ORACLE
 // SCENE UNIFORMS
@@ -789,6 +1265,117 @@ void fragment() {
 	ALBEDO = diffuse_contrib + specular_contrib;
 }
 ```
+
+```glsl {#code-full .hidden hl_lines=[19,90,91]}
+// USUAL GODOT POST-PROCESS STUFF
+shader_type spatial;
+render_mode unshaded, fog_disabled;
+
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+// HELPER FUNCTIONS FROM THE ORACLE
+#include "pre_process_utils.gdshaderinc"
+
+// SCENE UNIFORMS
+uniform float cam_near;
+uniform float cam_far;
+uniform int nb_plights;
+uniform vec3 plight_position[8];
+uniform vec3 plight_color[8];
+uniform float plight_intensity[8];
+uniform bool plight_isInteractive[8];
+
+// INTERACTIVE G-BUFFER
+uniform sampler2D i_depth_map : filter_nearest;
+uniform sampler2D i_albedo_map : filter_nearest;
+uniform sampler2D i_normal_map : filter_nearest;
+
+// DETERMINIST G-BUFFER
+uniform sampler2D d_depth_map : filter_nearest;
+uniform sampler2D d_diffuse_color_map : filter_nearest;
+uniform sampler2D d_normal_map : filter_nearest;
+uniform sampler2D d_diff_dir_map : filter_nearest;
+uniform sampler2D d_diff_ind_map : filter_nearest;
+uniform sampler2D d_gloss_color_map : filter_nearest;
+uniform sampler2D d_gloss_dir_map : filter_nearest;
+uniform sampler2D d_gloss_ind_map : filter_nearest;
+
+void fragment() {
+	// SAMPLE G-BUFFERs
+	vec3 i_depth_frag = texture(i_depth_map, SCREEN_UV).rgb;
+	vec3 i_albedo_frag = texture(i_albedo_map, SCREEN_UV).rgb;
+	vec3 i_normal_frag = texture(i_normal_map, SCREEN_UV).rgb;
+	
+	vec3 d_depth_frag = texture(d_depth_map, SCREEN_UV).rgb;
+	vec3 d_diffuse_color_frag = texture(d_diffuse_color_map, SCREEN_UV).rgb;
+	vec3 d_normal_frag = texture(d_normal_map, SCREEN_UV).rgb;
+	vec3 d_diff_dir_frag = texture(d_diff_dir_map, SCREEN_UV).rgb;
+	vec3 d_diff_ind_frag = texture(d_diff_ind_map, SCREEN_UV).rgb;
+	vec3 d_gloss_color_frag = texture(d_gloss_color_map, SCREEN_UV).rgb;
+	vec3 d_gloss_dir_frag = texture(d_gloss_dir_map, SCREEN_UV).rgb;
+	vec3 d_gloss_ind_frag = texture(d_gloss_ind_map, SCREEN_UV).rgb;
+	
+	// DATA HARMONIZATION
+	i_depth_frag = pre_process_i_depth(i_depth_frag);
+	d_depth_frag = pre_process_d_depth(d_depth_frag, cam_near, cam_far);
+	d_normal_frag = pre_process_d_normal(d_normal_frag);
+	i_normal_frag = pre_process_i_normal(i_normal_frag, INV_VIEW_MATRIX);
+	
+	vec3 diffuse_contrib = vec3(0.0);
+	vec3 specular_contrib = vec3(0.0);
+	
+	// DATA SELECTION (according to depth)
+	float depth_frag;
+	vec3 albedo_frag;
+	vec3 normal_frag;
+	bool is_frag_interactive = d_depth_frag.r < i_depth_frag.r;
+	if(is_frag_interactive) {
+		depth_frag = i_depth_frag.r;
+		albedo_frag = i_albedo_frag;
+		normal_frag = i_normal_frag;
+	}
+	else {
+		depth_frag = d_depth_frag.r;
+		albedo_frag = d_diffuse_color_frag;
+		normal_frag = d_normal_frag;
+		
+		vec3 d_diff_light = d_diff_dir_frag + d_diff_ind_frag;
+		vec3 d_gloss_light = d_gloss_dir_frag + d_gloss_ind_frag;
+		diffuse_contrib += d_diffuse_color_frag * d_diff_light;
+		specular_contrib += d_gloss_color_frag * d_gloss_light;
+	}
+	
+	// WORLD POSITION FROM DEPTH
+	vec3 ndc = vec3((SCREEN_UV * 2.0) - 1.0, depth_frag);
+	vec4 clip = vec4(ndc, 1.0);
+	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * clip;
+	world.xyz /= world.w;
+	vec3 frag_position = world.xyz;
+	
+	// ACCUMULATE LIGHT CONTRIBUTIONS
+	for(int i = 0; i < nb_plights; i++) {
+		if(!is_frag_interactive && !plight_isInteractive[i])
+			continue;
+		
+		vec3 light_vec = plight_position[i] - frag_position;
+		float d2 = length(light_vec);
+		d2 = pow(d2, 2.0);
+		float attenuation = 1.0 / d2;
+
+		vec3 C = plight_color[i];
+		float I = plight_intensity[i];
+		float NdotL = max(dot(normal_frag, L), 0.0);
+		diffuse_contrib += NdotL * C * I * albedo_frag * attenuation;
+		//specular_contrib += NOT IMPLEMENTED YET
+	}
+	
+	// FINAL FRAGMENT COLOR
+	ALBEDO = diffuse_contrib + specular_contrib;
+}
+```
+{{< /togglecode >}}
 
 Ce qui nous laisse avec ce magnifique rendu :
 
