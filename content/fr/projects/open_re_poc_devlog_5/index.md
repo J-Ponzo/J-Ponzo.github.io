@@ -21,11 +21,11 @@ Le modèle de Lambert suppose que les surfaces réfléchissent la lumière de ma
 ### 1. Principe
 Une façon de se représenter le phénomene, c'est d'imaginer un faiseau de lumière parfaitement vertical qui éclaire une surface parfaitement horizontale. Le cercle dans lequel les photons percutent la surface cohincide avec la section du faiseau.
 
-[Schema cercle]
+[![Schéma d'un vaiseau de lumière éclairant un plan orthogonal. Le projeté de sa section au sol est circulaire](images/circle_ray.opti.webp)](images/circle_ray.opti.webp)
 
 Si maitenant le faiseau est incliné, ce cercle devient une elipse. De là on peut tirer une conclusion similaire à ce qu'on avait dit dans la partie I au sujet de l'inverse square law : la surface de l'elipse est superieure à celle du cercle alors que la quantité de photons emis reste la même. La concentration de lumière est donc plus faible. Et au plus l'angle est rasant, au plus l'elipse s'étire et augmente sa surface. L'intensité lumineuse perçue est donc fonction de l'angle d'incidence de la lumière. 
 
-[Schema elipse]
+[![Schéma d'un vaiseau de lumière rasant éclairant le même plan. Le projeté de sa section au sol est une élipse](images/elipse_ray.opti.webp)](images/elipse_ray.opti.webp)
 
 La modalité exacte selon laquelle la surface évolue en fonction de l'ancle n'est pas intuitive. Mais on va fair confiance à Mr Lambert en affirmant que : I = I0 * max(N.L, 0.0) (avec I0 l’intensité de la source, N le vecteur Normal, et L l'inverse de la direction de la lumière)
 
@@ -645,14 +645,14 @@ Les ombre sont un peu sharp pour l'instant. Ca fait pas très naturel. Dans la v
 
 Contrairement à la lumière directe qui voyage en ligne droite, la lumière indirecte peut donc contourner les obstacles par rebonds successifs. Ainsi, elle peut affecter n'importe quelle surface, notament les faces non-exposées. Son intensitée est moins forte car on perd de l'énergie à chaque rebond (tous les photons ne sont pas réfléchis). Mais c'est gràce à elle que dans la réalité, les ombres ne sont jamais completement noir.
 
-[schéma indirect]
+[![Schéma illusterant la différence entre lumière directe et indirecte](images/direct_indirect.opti.webp)](images/direct_indirect.opti.webp)
 
 Notez que nos lumières déterministes ne sont pas sujetes à ce problème car elles prennent en compte l'éclairage indirecte. C'est un des aspects qui les rend si interessante malgré le fait qu'on ne peut pas les déplacer comme on veut. Voyons comment elle fonctionnent.
 
 ## III. Lumière déterministe
 Avant toute chose, pour pourvoir calculer de la lumière déterministe, on va avoir besoin : d'une lumière déterministe... On va donc ajouter une point light à notre scene Blender.
 
-[blender point light]
+[![Capture d'écran de blender montrant la scène avec une light en plus](images/blender_point_light.opti.webp)](images/blender_point_light.opti.webp)
 
 Ensuite, comme à chaque fois qu'on touche à Blender depuis le début de cette serie, on va devoir activer de nouvelles passes et modifier notre compositor pour générer de nouvelles maps pour notre G-Buffer déterministe.
 
@@ -671,7 +671,8 @@ De là vous connaissez la musique, :
 - On ajoute les pins nécessaires au noud File Output
 - On relie les sorties de chaque passes aux pins correspondant et on appuie sur F12 pour lancer le rendu
 
-[blender passes]
+
+[![Capture d'écran montrant comment activer les pass d'illumination de Cycles](images/blender_passes.opti.webp)](images/blender_passes.opti.webp)
 
 Petit point vocabulaire pour bien comprendre à quoi correspondent toutes ses données :
 - **diffuse :** correspond à la composantes diffuse de la lumière
@@ -1089,8 +1090,9 @@ void fragment() {
 #### 2.3. Reconstitution de la lumière déterministe
 Ici nous allons initialiser les variable `diffuse_contrib` et `specular_contrib` selon la formule indiquée dans la documention de Blender.
 
-[blender compo]
+[![Schéma issue de la documentation de godot indiquant comment rzeconstituer les maps des différentes passes](images/blender_compo_formula.opti.webp)](images/blender_compo_formula.opti.webp)
 
+[TODO à revoir]
 Blender utilise le terme "glossy", mais ne vous laissez pas perturber pour si peu. C'est un synonyme de "specular". Par ailleurs, notez que la lumière déterministe ne doit pas s'appliquer aux fragments intéractifs (raison pour laquelle on initialise les variables dans le `else`).
 
 {{< togglecode >}}
@@ -1227,21 +1229,21 @@ Ainsi, la suite du shader accumule naturellement la lumière interactive par des
 [video]
 
 ### 3. Denoising
-Si on regarde de près, on peut voir que les ombres déterministes ne sont pas très précises.
+Si on regarde de près, on peut voir que le rendu n'est pas très propre.
 
-[ombre floue]
+[godot floue]
 
-Quand on regarde les maps générées par blender, on comprend vite pourquoi.
+Quand on regarde les maps d'indirect générées par blender, on comprend vite pourquoi.
 
-[blender maps]
+[blender maps noise]
 
-"Garbage in => garbage out !". Il n'y a pas de miracle, si vos données d'entrées ne sont pas propres, aucune chance d'avoir quelque chose de bien en sortie.
+"Garbage in => garbage out !". Il n'y a pas de miracle, si vos données d'entrées ne sont sales, aucune chance d'avoir quelque chose de bien en sortie.
 
 **Mais pourquoi Blender fait un rendu tout flou d'abord ?**
 
-Et bien c'est parfaitement normal. Toutes les images générées par ray tracing sont bruitées. Si on veut de la netteté, il faut les denoiser. Biensure, Blender est capable de faire ça. Il ne le fait simplement pas par defaut.
+Et bien c'est parfaitement normal. Toutes les images générées par path tracing sont bruitées, et c'est le cas des maps d'indirect. Si on veut de la netteté, il faut les denoiser. Biensure, Blender est capable de faire ça. Il ne le fait simplement pas par defaut.
 
-[blender denoise]
+[![Capture du compositeur de Blender auquel on a ajouté les noeuds dénoise](images/blender_denoise_node.opti.webp)](images/blender_denoise_node.opti.webp)
 
 Il suffit d'utiliser le noeud `Denoise` dans le `Compositeur` et le tour est joué.
 
@@ -1249,20 +1251,16 @@ Il suffit d'utiliser le noeud `Denoise` dans le `Compositeur` et le tour est jou
 
 Evidement le denoising augment le temps de rendu. Mais c'est le prix pour avoir un rendu bien net.
 
-[ombre net]
+[godot net]
 
 ### 4. Double exposition
 Le resultat actuel est plutôt pas mal. Mais si vous avez l'oeil, vous aurez surement remarqué que la lumière déterministe est un peu sur vitaminée.
 
-[godot det light burn]
-
 Là raison est simple. Notre shader ne fait pas de distinction selon type de lumière lors de l'accumulation des contributions. Pour un pixel interactif c'est exactement ce qu'on veut : si un personnage s'approche d'une source déterministe, on a envie que sa lumière l'affecte.
 
-Mais pour un pixel déterministe, c'est un probleme ! En effet, l'accumulation des lumières déterministes sur l'environnement déterministe à déjà été calculés par Blender. Elle est stoqué dans les maps d'illumination que l'on vient d'intégrer. 
+Mais pour un pixel déterministe, c'est un probleme ! En effet, l'accumulation des lumières déterministes sur l'environnement déterministe à déjà été calculés par Blender. Elle est stoqué dans les maps d'illumination que l'on vient d'intégrer. Comme le calcul est refait sans distinction côté Godot, ces lumières sont prises en compte 2 fois. C'est pour ça qu'elles patatent aussi fort. 
 
-Comme le calcul est refait sans distinction côté Godot, ces lumières sont prises en compte 2 fois. C'est pour ça qu'elles patatent aussi fort (d'ailleurs si vous êtes attentif, vous remarquerez qu'elles brûlent le monde déterministe mais pas les élements interactifs).
-
-[godot det light burn zoom]
+[godot det light burn]
 
 Le shader à donc besoin de savoir à quel monde appartiennent les lumières qu'il traite. On lui fait part de cet information à travers le uniform `plight_isInteractive`. Il s'en sert lors de l'accumulation pour filtrer le cas problématique.
 
