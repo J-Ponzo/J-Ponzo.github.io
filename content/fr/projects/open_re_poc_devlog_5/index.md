@@ -9,17 +9,19 @@ description = 'devlog 5 du projet OpenRE'
 [⬅️ Vers Précédent : "OpenRE devlog 5 : Fusion des mondes. Part I"](projects/open_re_poc_devlog_4)
 
 ## I. Introduction
-Bienvenue dans la deuxième partie de "fusion des mondes" ! Le mois dernier nous avions mélangé de la géométrie intéractive à de la déterministe en nous basant sur les textures de profondeur. Nous avions ensuite éclairé tout ça avec une point light interactive qui clignotait en orbitant autour de la scène. L'implémentation de l'éclairage était basé uniquement sur la distance.
+Bienvenue dans la deuxième partie de "fusion des mondes" ! Le mois dernier nous avions mélangé de la géométrie intéractive à de la géométrie déterministe en nous basant sur les textures de profondeur. Nous avions ensuite éclairé tout ça avec une point light interactive qui clignotait en orbitant autour de la scène. L'implémentation de l'éclairage était basé uniquement sur la distance.
 
 Aujourd'hui nous allons :
 - Enrichire le modèle d'illumination en prenant en compte l'orientation des surfaces
-- Calculer de la lumière déterministe dans Blender et l'intégrer a notre scène
+- Calculer la lumière déterministe dans Blender et l'intégrer a notre scène
 
 ## II. Le modèle de Lambert
-Le modèle de Lambert suppose que les surfaces réfléchissent la lumière de manière égale dans toutes les directions. Cela veut dire que la quantité de lumière en un point ne dépend pas du point de vue de l'observateur. En réalité, elle dépend de l'angle selon lequel le rayon frappe la surface.
+Le nouveau modèle que nous allons mettre en place s'appel le "model de Lambert". Il suppose notament que les surfaces réfléchissent la lumière de manière égale dans toutes les directions (pure diffuse). Cela veut dire que la quantité de lumière en un point ne dépend pas du point de vue de l'observateur (ce qui simplifira nos calcules pour l'instant). En réalité, elle dépend de l'angle selon lequel le rayon frappe la surface.
 
 ### 1. Principe
 Une façon de se représenter le phénomene, c'est d'imaginer un faiseau de lumière parfaitement vertical qui éclaire une surface parfaitement horizontale. Le cercle dans lequel les photons percutent la surface cohincide avec la section du faiseau.
+
+[TODO intégrer dL et dG]
 
 <img alt="Schéma d'un vaiseau de lumière éclairant un plan orthogonal. Le projeté de sa section au sol est circulaire" src="./images/circle_ray.opti.webp" style="width:66%; display: block; margin-left: auto; margin-right: auto;" /> 
 
@@ -29,10 +31,12 @@ Si maitenant le faiseau est incliné, ce cercle devient une elipse. De là on pe
 
 La modalité exacte selon laquelle la surface évolue en fonction de l'ancle n'est pas intuitive. Mais on va fair confiance à Mr Lambert en affirmant que : I = I0 * max(N.L, 0.0) (avec I0 l’intensité de la source, N le vecteur Normal, et L l'inverse de la direction de la lumière)
 
-### 2. Implémentation
-En relisant le numéro précédent pour écrire celui çi, je me suis rendu compte que les échantillons de code commencaient à être un peu long. J'avais moi même un peu de mal à les resituer alors que je les ai écrits, alors je n'ose pas imaginer la galère pour vous.
+[TODO revoir pour pas faire confiance et introduire le NdotL]
 
-Dans la partie II on va continuer d'en rajouter. J'avais peur que ça devienne vraiment illisible, alors j'ai passé un peu de temps pour faire un petit bouton qui recontextualise l'échantillon dans le code complet. J'éspère que ça aidera à lecture.
+### 2. Implémentation
+En relisant le numéro précédent, je me suis rendu compte que les échantillons de code commencaient à être un peu long. J'avais déjà du mal à les resituer dans la globalité, alors je n'ose pas imaginer la galère pour vous.
+
+Dans la partie II on va continuer d'en rajouter et j'avais peur que ça devienne vraiment illisible. J'ai donc passé un peu de temps à développer une technologie révolutionnaire qui recontextualise l'échantillon dans le code complet sous simple pression d'un bouton (rigolez pas, je suis pas dev web, j'ai mis ma vie pour faire ça alors il fallait que j'en parle 😅). En tout cas j'éspère que ça aidera à la lecture.
 
 Bref, voici les ajouts nécessaire à l'implémentation du modèle Lambertien. Comme toujours on va décortiquer ça pas à pas.
 
@@ -183,7 +187,7 @@ void fragment() {
 {{< /togglecode >}}
 
 #### 1.1. Introduction des normales
-Pour calculer l'angle d'incidence de la lumière, on va avoir besoin des normales.
+Pour calculer l'angle d'incidence de la lumière, on va avoir besoin des normales (cette fois c'est pas une blague, on va vraiment les utiliser ^^).
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[6,10,15,18,22,23,28,32,36,43,44]}
 // USUAL GODOT POST-PROCESS CODE
@@ -293,7 +297,7 @@ void fragment() {
 On introduit donc les uniforms `i_normal_map` et `d_normal_map` qui proviennent respectivement des G-Buffers interactif et déterministe.
 
 #### 1.2. Echantillonage des normales
-On échantillone/harmonize tout ça comme on l'a fait pour les autres maps
+On échantillone/harmonize ensuite tout ça comme on l'a fait pour les autres maps
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[4,7,11,12]}
@@ -407,7 +411,7 @@ void fragment() {
 {{< /togglecode >}}
 
 #### 1.3. Selection de la normale
-On selectionne en suite la normale du monde visible. Toujours en se basant sur la profondeur.
+Puis on selectionne ensuite la normale du monde visible. Toujours en se basant sur la profondeur.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[5,9,13]}
@@ -523,7 +527,8 @@ void fragment() {
 {{< /togglecode >}}
 
 #### 1.4. Application du cosinus de Lambert
-Enfin, on applique à notre calcule le terme Lambertien `NdotL` qui est le cosinus de l'angle formé par la normale et la direction de la lumière.
+[TODO revoir par rapport à l'explication du calcule au début]
+Et enfin, on applique à notre calcule le terme Lambertien `NdotL` qui est le cosinus de l'angle formé par la normale et la direction de la lumière.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[7,8]}
@@ -634,20 +639,21 @@ void fragment() {
 ```
 {{< /togglecode >}}
 
-Si la valeur du cosinus est négative, cela veut dire que la surface est éclairée "par l'arrière". Dans ce cas, la source ne contribue pas à l'illumination. Mais sommer une valeurs négative aura pour effet "d'absorber" la lumière déjà accumulée. Ce n'est pas ce qu'on peut, c'est pourquoi `NdotL` doit être clampé.
+[TODO revoir en utilisant le terme back face ou non-exposé introduit juste après]
+Si la valeur du cosinus est négative, cela veut dire que la surface est éclairée "par l'arrière". Dans ce cas, la source ne contribue pas à l'illumination. Mais sommer une valeurs négative aura pour effet "d'absorber" la lumière déjà accumulée. Ce n'est pas ce qu'on veut, c'est pourquoi `NdotL` doit être clampé.
 
 #### 1.5. Résultat
 Cette implémentation nous donne un meilleur sens du relief grâce à un éclairage plus nuancé et aux self shadows qui se déssinent sur les faces non-exposées. 
 
 [video]
 
-Les ombre sont un peu sharp pour l'instant. Ca fait pas très naturel. Dans la vrai vie, quand un rayon de lumière percute une surface, certains photons rebondissent et vont s'écraser ailleurs. On parle alors de lumière indirect. 
+Les ombre sont un peu sharp pour l'instant. Ca fait pas très naturel. Dans la vrai vie, quand un rayon de lumière percute une surface, certains photons rebondissent et vont s'écraser ailleurs. On parle alors de lumière indirecte. 
 
 Contrairement à la lumière directe qui voyage en ligne droite, la lumière indirecte peut donc contourner les obstacles par rebonds successifs. Ainsi, elle peut affecter n'importe quelle surface, notament les faces non-exposées. Son intensitée est moins forte car on perd de l'énergie à chaque rebond (tous les photons ne sont pas réfléchis). Mais c'est gràce à elle que dans la réalité, les ombres ne sont jamais completement noir.
 
 <img alt="Schéma illusterant la différence entre lumière directe et indirecte" src="./images/direct_indirect.opti.webp" style="width:66%; display: block; margin-left: auto; margin-right: auto;" /> 
 
-Notez que nos lumières déterministes ne sont pas sujetes à ce problème car elles prennent en compte l'éclairage indirecte. C'est un des aspects qui les rend si interessante malgré le fait qu'on ne peut pas les déplacer comme on veut. Voyons comment elle fonctionnent.
+Notez que nos lumières déterministes ne sont pas sujetes à ce problème car elles prennent en compte l'éclairage indirecte. C'est un des aspects qui les rend si interessante malgré le fait qu'on ne peut pas les déplacer comme on veut. Voyons comment ça fonctionnent.
 
 ## III. Lumière déterministe
 Avant toute chose, pour pourvoir calculer de la lumière déterministe, on va avoir besoin : d'une lumière déterministe... On va donc ajouter une point light à notre scene Blender.
