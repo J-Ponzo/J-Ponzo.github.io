@@ -650,8 +650,37 @@ Contrairement à la lumière directe qui voyage en ligne droite, la lumière ind
 Notez que nos lumières déterministes ne sont pas sujetes à ce problème car elles prennent en compte l'éclairage indirecte. C'est un des aspects qui les rend si interessante malgré le fait qu'on ne peut pas les déplacer comme on veut. Voyons comment elle fonctionnent.
 
 ## III. Lumière déterministe
+Avant toute chose, pour pourvoir calculer de la lumière déterministe, on va avoir besoin : d'une lumière déterministe... On va donc ajouter une point light à notre scene Blender.
+
+[blender point light]
+
+Ensuite, comme à chaque fois qu'on touche à Blender depuis le début de cette serie, on va devoir activer de nouvelles passes et modifier notre compositor pour générer de nouvelles maps pour notre G-Buffer déterministe.
 
 ### 1. Generation des textures d'illumination
+Cettes fois ci, les passes cycle qui nous interessent sont au nombre de 5 :
+- diffuse directe
+- diffuse indirecte
+- glossy directe
+- glossy indirecte
+- glossy color
+
+Techniquement la diffuse color nous interesse aussi mais il se trouve qu'on l'a déjà. C'est notre albédo.
+
+De là vous connaissez la musique, :
+- On active les passes dans le paneau latéral
+- On ajoute les pins nécessaires au noud File Output
+- On relie les sorties de chaque passes aux pins correspondant et on appuie sur F12 pour lancer le rendu
+
+[blender passes]
+
+Petit point vocabulaire pour bien comprendre à quoi correspondent toutes ses données :
+- **diffuse :** correspond à la composantes diffuse de la lumière
+- **glossy :** correspond à la composantes spéculaire de la lumière
+- **direct/indirect :** caractère directe ou indirecte de la lumière au sens décrit précédement
+
+En gros, plutôt que de nous donner directement l'accumulation totale de toutes les contributions lumineuse de la scène, Blender les regroupe par paquet et nous laisse le soin de recombiner comme on veut. Cela confère à l'utilisateur un plus grande liberté artistique. 
+
+Je ne sais pas encore si on aura l'utilisté de ce découpage dans OpenRE. Dans le doute je le garde pour me laisser l'oportunité d'experimenter plus tard. Mais si on ne s'en sert pas, il faudra bien sur recomposer tout ça directement dans Blender avant export pour ne pas se trimbaler 5 textures au lieu d'une seule.
 
 ### 2. Intégration au compositor
 C'est maintenant une habitude, voici d'un bloc la totalité des ajout que l'on s'apprete à détailler.
