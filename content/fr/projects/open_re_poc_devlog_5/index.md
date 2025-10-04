@@ -645,7 +645,7 @@ Les ombre sont un peu sharp pour l'instant. Ca fait pas très naturel. Dans la v
 
 Contrairement à la lumière directe qui voyage en ligne droite, la lumière indirecte peut donc contourner les obstacles par rebonds successifs. Ainsi, elle peut affecter n'importe quelle surface, notament les faces non-exposées. Son intensitée est moins forte car on perd de l'énergie à chaque rebond (tous les photons ne sont pas réfléchis). Mais c'est gràce à elle que dans la réalité, les ombres ne sont jamais completement noir.
 
-[![Schéma illusterant la différence entre lumière directe et indirecte](images/direct_indirect.opti.webp)](images/direct_indirect.opti.webp)
+<img alt="Schéma illusterant la différence entre lumière directe et indirecte" src="./images/direct_indirect.opti.webp" style="width:66%; display: block; margin-left: auto; margin-right: auto;" /> 
 
 Notez que nos lumières déterministes ne sont pas sujetes à ce problème car elles prennent en compte l'éclairage indirecte. C'est un des aspects qui les rend si interessante malgré le fait qu'on ne peut pas les déplacer comme on veut. Voyons comment elle fonctionnent.
 
