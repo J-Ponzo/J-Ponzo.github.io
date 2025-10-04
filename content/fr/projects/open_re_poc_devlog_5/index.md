@@ -1237,7 +1237,7 @@ Ainsi, la suite du shader accumule naturellement la lumière interactive par des
 ### 3. Denoising
 Si on regarde de près, on peut voir que le rendu n'est pas très propre.
 
-[godot floue]
+[![Capture zoomée de la scene, mettant en evidence le bruit de l'image](images/det_noise_zoom.opti.webp)](images/det_noise_zoom.opti.webp)
 
 Quand on regarde les maps d'indirect générées par blender, on comprend vite pourquoi.
 
@@ -1257,7 +1257,7 @@ Il suffit d'utiliser le noeud `Denoise` dans le `Compositeur` et le tour est jou
 
 Evidement le denoising augment le temps de rendu. Mais c'est le prix pour avoir un rendu bien net.
 
-[godot net]
+[![Capture zoomée de la scene, mettant en evidence l'abscence de bruit](images/det_denoise_zoom.opti.webp)](images/det_denoise_zoom.opti.webp)
 
 ### 4. Double exposition
 Le resultat actuel est plutôt pas mal. Mais si vous avez l'oeil, vous aurez surement remarqué que la lumière déterministe est un peu sur vitaminée.
