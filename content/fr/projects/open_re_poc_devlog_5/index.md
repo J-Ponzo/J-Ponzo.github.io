@@ -1241,7 +1241,7 @@ Si on regarde de près, on peut voir que le rendu n'est pas très propre.
 
 Quand on regarde les maps d'indirect générées par blender, on comprend vite pourquoi.
 
-[blender maps noise]
+[![Caplture zoomée mettant en evidence le bruit sur les images d'origine "Diffuse Indirect" et "Glossy Indirect"](images/noise_indirect.webp)](images/noise_indirect.webp)
 
 "Garbage in => garbage out !". Il n'y a pas de miracle, si vos données d'entrées ne sont sales, aucune chance d'avoir quelque chose de bien en sortie.
 
@@ -1253,7 +1253,7 @@ Et bien c'est parfaitement normal. Toutes les images générées par path tracin
 
 Il suffit d'utiliser le noeud `Denoise` dans le `Compositeur` et le tour est joué.
 
-[blender maps denoisées]
+[![Caplture zoomée mettant en evidence l'abscence de bruit après denoising dans blender"](images/denoised_indirect.webp)](images/denoised_indirect.webp)
 
 Evidement le denoising augment le temps de rendu. Mais c'est le prix pour avoir un rendu bien net.
 
