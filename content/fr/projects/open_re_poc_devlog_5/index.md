@@ -645,7 +645,14 @@ Si la valeur du cosinus est négative, cela veut dire que la surface est éclair
 #### 1.5. Résultat
 Cette implémentation nous donne un meilleur sens du relief grâce à un éclairage plus nuancé et aux self shadows qui se déssinent sur les faces non-exposées. 
 
-[video]
+{{< rawhtml >}} 
+
+<video width="100%" controls muted loop playsinline autoplay>
+    <source src="videos/lambert.mp4" type="video/mp4">
+    Your browser does not support the video tag.  
+</video>
+
+{{< /rawhtml >}}
 
 Les ombre sont un peu sharp pour l'instant. Ca fait pas très naturel. Dans la vrai vie, quand un rayon de lumière percute une surface, certains photons rebondissent et vont s'écraser ailleurs. On parle alors de lumière indirecte. 
 
@@ -656,7 +663,7 @@ Contrairement à la lumière directe qui voyage en ligne droite, la lumière ind
 Notez que nos lumières déterministes ne sont pas sujetes à ce problème car elles prennent en compte l'éclairage indirecte. C'est un des aspects qui les rend si interessante malgré le fait qu'on ne peut pas les déplacer comme on veut. Voyons comment ça fonctionnent.
 
 ## III. Lumière déterministe
-Avant toute chose, pour pourvoir calculer de la lumière déterministe, on va avoir besoin : d'une lumière déterministe... On va donc ajouter une point light à notre scene Blender.
+Avant toute chose, pour pouvoir calculer de la lumière déterministe, on va avoir besoin... d'une lumière déterministe ! On va donc ajouter une point light à notre scene Blender.
 
 [![Capture d'écran de blender montrant la scène avec une light en plus](images/blender_point_light.opti.webp)](images/blender_point_light.opti.webp)
 
@@ -1232,7 +1239,15 @@ void fragment() {
 
 Ainsi, la suite du shader accumule naturellement la lumière interactive par dessus la lumière déterministe que l'on vient de reconstituer, et on obtien le résultat suivant :
 
-[video]
+{{< rawhtml >}} 
+
+<video width="100%" controls muted loop playsinline autoplay>
+    <source src="videos/burned_noise.mp4" type="video/mp4">
+    Your browser does not support the video tag.  
+</video>
+
+{{< /rawhtml >}}
+
 
 ### 3. Denoising
 Si on regarde de près, on peut voir que le rendu n'est pas très propre.
@@ -1243,13 +1258,14 @@ Quand on regarde les maps d'indirect générées par blender, on comprend vite p
 
 [![Caplture zoomée mettant en evidence le bruit sur les images d'origine "Diffuse Indirect" et "Glossy Indirect"](images/noise_indirect.webp)](images/noise_indirect.webp)
 
-"Garbage in => garbage out !". Il n'y a pas de miracle, si vos données d'entrées ne sont sales, aucune chance d'avoir quelque chose de bien en sortie.
+*"Garbage in => garbage out !"* Il n'y a pas de miracle, si vos données d'entrées sont sales, aucune chance d'avoir quelque chose de correcte en sortie.
 
 **Mais pourquoi Blender fait un rendu tout flou d'abord ?**
 
-Et bien c'est parfaitement normal. Toutes les images générées par path tracing sont bruitées, et c'est le cas des maps d'indirect. Si on veut de la netteté, il faut les denoiser. Biensure, Blender est capable de faire ça. Il ne le fait simplement pas par defaut.
+Et bien c'est parfaitement normal. Toutes les images générées par *path tracing* sont bruitées, et comme ça que sont produites les maps d'indirect. Si on veut de la netteté, il faut les denoiser. Biensure, Blender est capable de faire ça. Il ne le fait simplement pas par defaut.
 
 [![Capture du compositeur de Blender auquel on a ajouté les noeuds dénoise](images/blender_denoise_node.opti.webp)](images/blender_denoise_node.opti.webp)
+[TODO expliquer qu'il n'y a pas la light interactive ?]
 
 Il suffit d'utiliser le noeud `Denoise` dans le `Compositeur` et le tour est joué.
 
@@ -1412,6 +1428,13 @@ void fragment() {
 
 Ce qui nous laisse avec ce magnifique rendu :
 
-[video]
+{{< rawhtml >}} 
+
+<video width="100%" controls muted loop playsinline autoplay>
+    <source src="videos/final.mp4" type="video/mp4">
+    Your browser does not support the video tag.  
+</video>
+
+{{< /rawhtml >}}
 
 ## IV. Conclusion 
