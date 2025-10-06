@@ -27,13 +27,11 @@ Si maitenant le faiseau est incliné, ce cercle devient une elipse. De là on pe
 
 ![Schéma d'un vaiseau de lumière rasant éclairant le même plan. Le projeté de sa section au sol est une élipse](images/elipse_ray.opti.webp)
 
-Le rapport exacte entre la surface du cercle `SL` (de diametre `dL`) et celle de l'élipse projetée `SG` (de grand axe `dG`) est : `SG = SL / cos(angle)` ou `SG = SL / (N.L)` avec `N` le vecteur normal, et `L` l'inverse de la direction de la lumière.
+Désolé, je n'arrive pas à avoir des notations mathématique correctes pour l'instant (conseils bienvenus). Sachez donc que dans la suite, `N` et `L` sont bien des vecteurs et que `(N.L)` est bien un produit scalaire (même si il n'y a pas de flèches).
 
-Si l'intensité `I` est inversement proportionnel à la surface dans laquelle les photons sont "dilués", on a : `I = I0 * (N.L)`. On notera `NdotL` le
+Le rapport exacte entre la surface du cercle `SL` (de diametre `dL`) et celle de l'élipse projetée `SG` (de grand axe `dG`) est : `SG = SL / cos(angle)` ou `SG = SL / (N.L)` avec `N` le vecteur normal, et `L` l'inverse de la direction de la lumière 
 
-La modalité exacte selon laquelle la surface évolue en fonction de l'ancle n'est pas intuitive. Mais on va fair confiance à Mr Lambert en affirmant que : I = I0 * max(N.L, 0.0) (avec I0 l’intensité de la source, N le vecteur Normal, et L l'inverse de la direction de la lumière)
-
-[TODO revoir pour pas faire confiance et introduire le NdotL]
+Si l'intensité `I` est inversement proportionnel à la surface dans laquelle les photons sont "dilués", on a : `I = I0 * (N.L)`. On notera `NdotL` le facteur de proportianalité `(N.L)` que j'ai pour mauvaise habitude d'appeller "facteur géométrique". Mais apparament c'est faux de dire ça 😅. On utilisera donc plutôt la dénomination "terme Lambertien".
 
 ### 2. Implémentation
 En relisant le numéro précédent, je me suis rendu compte que les échantillons de code commencaient à être un peu long. J'avais déjà du mal à les resituer dans la globalité, alors je n'ose pas imaginer la galère pour vous.
