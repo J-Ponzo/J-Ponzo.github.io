@@ -16,25 +16,53 @@ Aujourd'hui nous allons :
 - Calculer la lumière déterministe dans Blender et l'intégrer a notre scène
 
 ## II. Le modèle de Lambert
-Le nouveau modèle que nous allons mettre en place s'appel le "model de Lambert". Il suppose notament que les surfaces réfléchissent la lumière de manière égale dans toutes les directions (pure diffuse). Cela veut dire que la quantité de lumière en un point ne dépend pas du point de vue de l'observateur (ce qui simplifira nos calcules pour l'instant). En réalité, elle dépend de l'angle selon lequel le rayon frappe la surface.
+Le modèle de Lambert décrit des surfaces purement diffuses, c'est à dire qui renvoient la lumière de manière égale dans toutes les directions. Cela veut dire que la quantité de lumière en un point ne dépend pas du point de vue de l'observateur mais seulement de l'angle selon lequel le rayon frappe la surface.
+
+C'est le modèle que nous nous proposons d'implémenter. D'abord parce qu'il est à peine plus compliqué que le précédent, mais surtout car comme nous l'avons déjà évoqué, le G-Buffer interactif dont nous disposons ne possède pas encore les données nécessaires au calcule de la spéculaire.
+
 
 ### 1. Principe
-Une façon de se représenter le phénomene, c'est d'imaginer un faiseau de lumière parfaitement vertical qui éclaire une surface parfaitement horizontale. Le cercle dans lequel les photons percutent la surface cohincide avec la section du faiseau. Dit autrement : soient `dL` le diamètre du faiseau et `dG` le diamètre du cercle projeté, on à `dL = dG`
+L'intensitée apparente varie donc selon l'angle d'incidence de la lumière. Une façon de se représenter le phénomene, c'est d'imaginer un faiseau lumineux parfaitement vertical éclairant une surface parfaitement horizontale. 
+
+Le cercle dans lequel les photons percutent la surface cohincide avec la section du faiseau. Ou dit autrement :
+
+<div style="text-align:center;">
+
+"soient `dL` le diamètre du faiseau et `dG` le diamètre du cercle projeté, on à : `dL = dG`"
+
+</div> 
+<br/>
 
 <img alt="Schéma d'un vaiseau de lumière éclairant un plan orthogonal. Le projeté de sa section au sol est circulaire" src="./images/circle_ray.opti.webp" style="width:66%; display: block; margin-left: auto; margin-right: auto;" /> 
 
-Si maitenant le faiseau est incliné, ce cercle devient une elipse. De là on peut tirer une conclusion similaire à ce qu'on avait dit dans la partie I au sujet de l'inverse square law : la surface de l'elipse est superieure à celle du cercle alors que la quantité de photons emis reste la même. La concentration de lumière est donc plus faible. Et au plus l'angle est rasant, au plus l'elipse s'étire et augmente sa surface. L'intensité lumineuse perçue est donc fonction de l'angle d'incidence de la lumière. 
+Si maintenant le faiseau est incliné, `dG` s'étire transformant notre cercle projeté en une élipse. L'aire de cette élipse est évidament plus grande que celle du cercle alors que la quantité de photons emis, elle, reste la même. Ce qui se traduit par une baisse de la concentration lumineuse.
 
 ![Schéma d'un vaiseau de lumière rasant éclairant le même plan. Le projeté de sa section au sol est une élipse](images/elipse_ray.opti.webp)
 
-Désolé, je n'arrive pas à avoir des notations mathématique correctes pour l'instant (conseils bienvenus). Sachez donc que dans la suite, `N` et `L` sont bien des vecteurs et que `(N.L)` est bien un produit scalaire (même si il n'y a pas de flèches).
+La décroissance de l'intensité lumineuse est donc proportionnel à la croissance de l'aire de l'élipse, elle même fonction de l'angle d'incidence du faiseau. En posant tout ça, on peut déduire la fameuse "loi du cosinus" de Lambert. Laquelle décrit `I`, l'intensité lumineuse perçue, comme :
 
-Le rapport exacte entre la surface du cercle `SL` (de diametre `dL`) et celle de l'élipse projetée `SG` (de grand axe `dG`) est : `SG = SL / cos(angle)` ou `SG = SL / (N.L)` avec `N` le vecteur normal, et `L` l'inverse de la direction de la lumière 
+<div style="text-align:center;">
 
-Si l'intensité `I` est inversement proportionnel à la surface dans laquelle les photons sont "dilués", on a : `I = I0 * (N.L)`. On notera `NdotL` le facteur de proportianalité `(N.L)` que j'ai pour mauvaise habitude d'appeller "facteur géométrique". Mais apparament c'est faux de dire ça 😅. On utilisera donc plutôt la dénomination "terme Lambertien".
+`I = I0 * cos(angle)`	
+
+(avec `I0` l'intensité de la source)
+
+</div> 
+
+Que l'on peut aussi écrire :
+
+<div style="text-align:center;">
+
+`I = I0 * (N.L)` 
+
+(avec `N` la normale à la surface et `L` l'inverse de la direction de la lumière)
+
+</div> 
+
+En gros, Lambert, c'est basiquement multiplier votre lumière par `(N.L)`
 
 ### 2. Implémentation
-En relisant le numéro précédent, je me suis rendu compte que les échantillons de code commencaient à être un peu long. J'avais déjà du mal à les resituer dans la globalité, alors je n'ose pas imaginer la galère pour vous.
+En relisant le numéro précédent, je me suis rendu compte que les échantillons de code commencaient à être un peu long. J'avais déjà du mal à les resituer dans la globalité, alors je n'ose pas imaginer la galère pour quelqu'un qui ne les a pas écrit.
 
 Dans la partie II on va continuer d'en rajouter et j'avais peur que ça devienne vraiment illisible. J'ai donc passé un peu de temps à développer une technologie révolutionnaire qui recontextualise l'échantillon dans le code complet sous simple pression d'un bouton (rigolez pas, je suis pas dev web, j'ai mis ma vie pour faire ça alors il fallait que j'en parle 😅). En tout cas j'éspère que ça aidera à la lecture.
 
