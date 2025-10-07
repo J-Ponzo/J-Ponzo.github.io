@@ -49,7 +49,7 @@
     
 
     <link rel="canonical" href="http://localhost:1313/projects/open_re_poc_devlog_4/">
-    <link href="/style.min.d051611d972fbc0c488f4469d3dce0f44403a9e65ca176c7632a4432d42f7634.css" rel="stylesheet">
+    <link href="/style.min.108c4c461b7a4c182434be799ba3436432548ccab41bdb394e0779285f20212e.css" rel="stylesheet">
     <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
 
     
@@ -73,6 +73,9 @@
 
     
     
+	
+	
+	<link rel="stylesheet" href="http://localhost:1313/css/togglecode.min.cb9bfee064f33d928a0183a1f9d86330cbadabb70a197c20e7265edad454eb3e.css">
 </head>
 <body data-theme = "dark" class="notransition">
 
@@ -277,17 +280,139 @@ Comme d’habitude, nous adopterons une approche itérative : nous commencerons 
 </span></span></code></pre></div><p>Ne vous inquiétez pas, nous allons le disséquer ensemble dans les sections suivantes.</p>
 <h3 id="1-définition-habituelle-dun-post-process">1. Définition habituelle d’un post-process</h3>
 <p>Nous en avons déjà parlé : ces premières lignes sont identiques pour tous les post-process.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// USUAL GODOT POST-PROCESS STUFF</span>
+
+
+  
+  
+  
+
+
+<div class="togglecode">
+  <div class="highlight" id="code-compact"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// USUAL GODOT POST-PROCESS STUFF</span>
 </span></span><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">vertex</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="n">POSITION</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">VERTEX</span><span class="p">.</span><span class="n">xy</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><h3 id="2-inclusion-des-helpers-de-loracle">2. Inclusion des <em>helpers</em> de l’oracle</h3>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// HELPER FUNCTIONS FROM THE ORACLE</span>
+</span></span></code></pre></div><div class="highlight hidden" id="code-full"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line hl"><span class="cl"><span class="c1">// USUAL GODOT POST-PROCESS STUFF</span>
+</span></span><span class="line hl"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">
+</span></span><span class="line hl"><span class="cl"><span class="k">void</span> <span class="n">vertex</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line hl"><span class="cl">	<span class="n">POSITION</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">VERTEX</span><span class="p">.</span><span class="n">xy</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span><span class="line hl"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// HELPER FUNCTIONS FROM THE ORACLE</span>
 </span></span><span class="line"><span class="cl"><span class="cp">#include &#34;pre_process_utils.gdshaderinc&#34;</span>
-</span></span></code></pre></div><p>Rappelez-vous : pour harmoniser les données, l’Oracle appliquait des prétraitements à certaines maps. J’ai extrait et regroupé ces fonctions dans le fichier <code>pre_process_utils.gdshaderinc</code>, que nous incluons ici. Ainsi, si nous modifions ces prétraitements, ils resteront valides pour les deux post-process. Voici son contenu :</p>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// SCENE UNIFORMS</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_near</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_far</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// INTERACTIVE G-BUFFER</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">i_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">i_albedo_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// DETERMINIST G-BUFFER</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_diffuse_color_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// SAMPLE G-BUFFERs</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_albedo_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_albedo_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">d_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">d_diffuse_color_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_diffuse_color_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// DATA HARMONIZATION</span>
+</span></span><span class="line"><span class="cl">	<span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">pre_process_i_depth</span><span class="p">(</span><span class="n">i_depth_frag</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">d_depth_frag</span> <span class="o">=</span> <span class="n">pre_process_d_depth</span><span class="p">(</span><span class="n">d_depth_frag</span><span class="p">,</span> <span class="n">cam_near</span><span class="p">,</span> <span class="n">cam_far</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// DATA SELECTION (according to depth)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">float</span> <span class="n">depth_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">albedo_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">bool</span> <span class="n">is_frag_interactive</span> <span class="o">=</span> <span class="n">d_depth_frag</span><span class="p">.</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">i_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span><span class="p">(</span><span class="n">is_frag_interactive</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">depth_frag</span> <span class="o">=</span> <span class="n">i_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">albedo_frag</span> <span class="o">=</span> <span class="n">i_albedo_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">depth_frag</span> <span class="o">=</span> <span class="n">d_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">albedo_frag</span> <span class="o">=</span> <span class="n">d_diffuse_color_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// FINAL FRAGMENT COLOR</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">albedo_frag</span><span class="p">.</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
+  <button class="toggle-btn" onclick="toggleCode(this)">Full Code</button>
+</div>
+
+<h3 id="2-inclusion-des-helpers-de-loracle">2. Inclusion des <em>helpers</em> de l’oracle</h3>
+<p>
+
+
+<div class="togglecode">
+  <div class="highlight" id="code-compact"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// HELPER FUNCTIONS FROM THE ORACLE</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include &#34;pre_process_utils.gdshaderinc&#34;</span>
+</span></span></code></pre></div><div class="highlight hidden" id="code-full"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// USUAL GODOT POST-PROCESS STUFF</span>
+</span></span><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">vertex</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">POSITION</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">VERTEX</span><span class="p">.</span><span class="n">xy</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line hl"><span class="cl"><span class="c1">// HELPER FUNCTIONS FROM THE ORACLE</span>
+</span></span><span class="line hl"><span class="cl"><span class="cp">#include &#34;pre_process_utils.gdshaderinc&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// SCENE UNIFORMS</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_near</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_far</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// INTERACTIVE G-BUFFER</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">i_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">i_albedo_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// DETERMINIST G-BUFFER</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_diffuse_color_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// SAMPLE G-BUFFERs</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_albedo_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_albedo_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">d_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">d_diffuse_color_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_diffuse_color_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// DATA HARMONIZATION</span>
+</span></span><span class="line"><span class="cl">	<span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">pre_process_i_depth</span><span class="p">(</span><span class="n">i_depth_frag</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">d_depth_frag</span> <span class="o">=</span> <span class="n">pre_process_d_depth</span><span class="p">(</span><span class="n">d_depth_frag</span><span class="p">,</span> <span class="n">cam_near</span><span class="p">,</span> <span class="n">cam_far</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// DATA SELECTION (according to depth)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">float</span> <span class="n">depth_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">albedo_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">bool</span> <span class="n">is_frag_interactive</span> <span class="o">=</span> <span class="n">d_depth_frag</span><span class="p">.</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">i_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span><span class="p">(</span><span class="n">is_frag_interactive</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">depth_frag</span> <span class="o">=</span> <span class="n">i_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">albedo_frag</span> <span class="o">=</span> <span class="n">i_albedo_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">depth_frag</span> <span class="o">=</span> <span class="n">d_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">albedo_frag</span> <span class="o">=</span> <span class="n">d_diffuse_color_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// FINAL FRAGMENT COLOR</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">albedo_frag</span><span class="p">.</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
+  <button class="toggle-btn" onclick="toggleCode(this)">Full Code</button>
+</div>
+
+Rappelez-vous : pour harmoniser les données, l’Oracle appliquait des prétraitements à certaines maps. J’ai extrait et regroupé ces fonctions dans le fichier <code>pre_process_utils.gdshaderinc</code>, que nous incluons ici. Ainsi, si nous modifions ces prétraitements, ils resteront valides pour les deux post-process. Voici son contenu :</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">vec3</span> <span class="n">pre_process_i_depth</span><span class="p">(</span><span class="k">vec3</span> <span class="n">i_depth</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">i_depth</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
@@ -311,7 +436,11 @@ Comme d’habitude, nous adopterons une approche itérative : nous commencerons 
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h3 id="3-parmètres-dentrée">3. Parmètres d&rsquo;entrée</h3>
 <p>Comme évoqué précédemment, le post-process prend en entrée des uniforms correspondant aux deux G-Buffers, ainsi que quelques paramètres supplémentaires relatifs à la scène.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// SCENE UNIFORMS</span>
+<p>
+
+
+<div class="togglecode">
+  <div class="highlight" id="code-compact"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// SCENE UNIFORMS</span>
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_near</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_far</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
@@ -322,7 +451,62 @@ Comme d’habitude, nous adopterons une approche itérative : nous commencerons 
 </span></span><span class="line"><span class="cl"><span class="c1">// DETERMINIST G-BUFFER</span>
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_diffuse_color_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
-</span></span></code></pre></div><p>Pour l’instant, nous avons besoin :</p>
+</span></span></code></pre></div><div class="highlight hidden" id="code-full"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// USUAL GODOT POST-PROCESS STUFF</span>
+</span></span><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">vertex</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">POSITION</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">VERTEX</span><span class="p">.</span><span class="n">xy</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// HELPER FUNCTIONS FROM THE ORACLE</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include &#34;pre_process_utils.gdshaderinc&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line hl"><span class="cl"><span class="c1">// SCENE UNIFORMS</span>
+</span></span><span class="line hl"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_near</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_far</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">
+</span></span><span class="line hl"><span class="cl"><span class="c1">// INTERACTIVE G-BUFFER</span>
+</span></span><span class="line hl"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">i_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">i_albedo_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">
+</span></span><span class="line hl"><span class="cl"><span class="c1">// DETERMINIST G-BUFFER</span>
+</span></span><span class="line hl"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_diffuse_color_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// SAMPLE G-BUFFERs</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_albedo_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_albedo_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">d_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">d_diffuse_color_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_diffuse_color_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// DATA HARMONIZATION</span>
+</span></span><span class="line"><span class="cl">	<span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">pre_process_i_depth</span><span class="p">(</span><span class="n">i_depth_frag</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">d_depth_frag</span> <span class="o">=</span> <span class="n">pre_process_d_depth</span><span class="p">(</span><span class="n">d_depth_frag</span><span class="p">,</span> <span class="n">cam_near</span><span class="p">,</span> <span class="n">cam_far</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// DATA SELECTION (according to depth)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">float</span> <span class="n">depth_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">albedo_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">bool</span> <span class="n">is_frag_interactive</span> <span class="o">=</span> <span class="n">d_depth_frag</span><span class="p">.</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">i_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span><span class="p">(</span><span class="n">is_frag_interactive</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">depth_frag</span> <span class="o">=</span> <span class="n">i_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">albedo_frag</span> <span class="o">=</span> <span class="n">i_albedo_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">depth_frag</span> <span class="o">=</span> <span class="n">d_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">albedo_frag</span> <span class="o">=</span> <span class="n">d_diffuse_color_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// FINAL FRAGMENT COLOR</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">albedo_frag</span><span class="p">.</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
+  <button class="toggle-btn" onclick="toggleCode(this)">Full Code</button>
+</div>
+
+Pour l’instant, nous avons besoin :</p>
 <ul>
 <li>des paramètres <em>near</em> et <em>far</em> de la caméra active</li>
 <li>des textures de <em>depth</em> et d’<em>albedo</em> issues des G-Buffers interactif et déterministe.</li>
@@ -330,7 +514,11 @@ Comme d’habitude, nous adopterons une approche itérative : nous commencerons 
 <p>L’albedo déterministe est ici nommé <code>d_diffuse_color_map</code>, car c’est son nom dans la terminologie Blender. Mais il s’agit bien de la même chose.</p>
 <h3 id="4-echantillonage-des-g-buffers">4. Echantillonage des G-Buffers</h3>
 <p>Chaque map est échantillonnée pour récupérer le fragment correspondant. Dans la foulée, nous appliquons les prétraitements.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
+
+
+
+<div class="togglecode">
+  <div class="highlight" id="code-compact"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="c1">// SAMPLE G-BUFFERs</span>
 </span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_albedo_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_albedo_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
@@ -344,9 +532,68 @@ Comme d’habitude, nous adopterons une approche itérative : nous commencerons 
 </span></span><span class="line"><span class="cl">	
 </span></span><span class="line"><span class="cl">	<span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><h3 id="5-selection-des-fragment">5. Selection des fragment</h3>
+</span></span></code></pre></div><div class="highlight hidden" id="code-full"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// USUAL GODOT POST-PROCESS STUFF</span>
+</span></span><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">vertex</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">POSITION</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">VERTEX</span><span class="p">.</span><span class="n">xy</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// HELPER FUNCTIONS FROM THE ORACLE</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include &#34;pre_process_utils.gdshaderinc&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// SCENE UNIFORMS</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_near</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_far</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// INTERACTIVE G-BUFFER</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">i_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">i_albedo_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// DETERMINIST G-BUFFER</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_diffuse_color_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line hl"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line hl"><span class="cl">	<span class="c1">// SAMPLE G-BUFFERs</span>
+</span></span><span class="line hl"><span class="cl">	<span class="k">vec3</span> <span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">	<span class="k">vec3</span> <span class="n">i_albedo_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_albedo_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">	
+</span></span><span class="line hl"><span class="cl">	<span class="k">vec3</span> <span class="n">d_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">	<span class="k">vec3</span> <span class="n">d_diffuse_color_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_diffuse_color_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">	
+</span></span><span class="line hl"><span class="cl">	<span class="c1">// DATA HARMONIZATION</span>
+</span></span><span class="line hl"><span class="cl">	<span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">pre_process_i_depth</span><span class="p">(</span><span class="n">i_depth_frag</span><span class="p">);</span>
+</span></span><span class="line hl"><span class="cl">	<span class="n">d_depth_frag</span> <span class="o">=</span> <span class="n">pre_process_d_depth</span><span class="p">(</span><span class="n">d_depth_frag</span><span class="p">,</span> <span class="n">cam_near</span><span class="p">,</span> <span class="n">cam_far</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// DATA SELECTION (according to depth)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">float</span> <span class="n">depth_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">albedo_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">bool</span> <span class="n">is_frag_interactive</span> <span class="o">=</span> <span class="n">d_depth_frag</span><span class="p">.</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">i_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span><span class="p">(</span><span class="n">is_frag_interactive</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">depth_frag</span> <span class="o">=</span> <span class="n">i_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">albedo_frag</span> <span class="o">=</span> <span class="n">i_albedo_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">depth_frag</span> <span class="o">=</span> <span class="n">d_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">albedo_frag</span> <span class="o">=</span> <span class="n">d_diffuse_color_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// FINAL FRAGMENT COLOR</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">albedo_frag</span><span class="p">.</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
+  <button class="toggle-btn" onclick="toggleCode(this)">Full Code</button>
+</div>
+
+<h3 id="5-selection-des-fragment">5. Selection des fragment</h3>
 <p>Ensuite, nous utilisons la profondeur pour déterminer lequel des deux mondes occlude l&rsquo;autre. Nous assignons alors les données correspondant au monde visible aux variables <code>depth_frag</code> et <code>albedo_frag</code>, que nous utiliserons dans la suite du shader.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
+
+
+
+<div class="togglecode">
+  <div class="highlight" id="code-compact"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="p">...</span>
 </span></span><span class="line"><span class="cl">	
 </span></span><span class="line"><span class="cl">	<span class="c1">// DATA SELECTION (according to depth)</span>
@@ -364,14 +611,128 @@ Comme d’habitude, nous adopterons une approche itérative : nous commencerons 
 </span></span><span class="line"><span class="cl">	
 </span></span><span class="line"><span class="cl">	<span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><h3 id="6-affichage-du-fragment-final">6. Affichage du fragment final</h3>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
+</span></span></code></pre></div><div class="highlight hidden" id="code-full"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// USUAL GODOT POST-PROCESS STUFF</span>
+</span></span><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">vertex</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">POSITION</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">VERTEX</span><span class="p">.</span><span class="n">xy</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// HELPER FUNCTIONS FROM THE ORACLE</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include &#34;pre_process_utils.gdshaderinc&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// SCENE UNIFORMS</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_near</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_far</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// INTERACTIVE G-BUFFER</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">i_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">i_albedo_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// DETERMINIST G-BUFFER</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_diffuse_color_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line hl"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// SAMPLE G-BUFFERs</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_albedo_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_albedo_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">d_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">d_diffuse_color_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_diffuse_color_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// DATA HARMONIZATION</span>
+</span></span><span class="line"><span class="cl">	<span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">pre_process_i_depth</span><span class="p">(</span><span class="n">i_depth_frag</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">d_depth_frag</span> <span class="o">=</span> <span class="n">pre_process_d_depth</span><span class="p">(</span><span class="n">d_depth_frag</span><span class="p">,</span> <span class="n">cam_near</span><span class="p">,</span> <span class="n">cam_far</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line hl"><span class="cl">	<span class="c1">// DATA SELECTION (according to depth)</span>
+</span></span><span class="line hl"><span class="cl">	<span class="k">float</span> <span class="n">depth_frag</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">	<span class="k">vec3</span> <span class="n">albedo_frag</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">	<span class="k">bool</span> <span class="n">is_frag_interactive</span> <span class="o">=</span> <span class="n">d_depth_frag</span><span class="p">.</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">i_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">	<span class="k">if</span><span class="p">(</span><span class="n">is_frag_interactive</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line hl"><span class="cl">		<span class="n">depth_frag</span> <span class="o">=</span> <span class="n">i_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">		<span class="n">albedo_frag</span> <span class="o">=</span> <span class="n">i_albedo_frag</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line hl"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line hl"><span class="cl">		<span class="n">depth_frag</span> <span class="o">=</span> <span class="n">d_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">		<span class="n">albedo_frag</span> <span class="o">=</span> <span class="n">d_diffuse_color_frag</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// FINAL FRAGMENT COLOR</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">albedo_frag</span><span class="p">.</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
+  <button class="toggle-btn" onclick="toggleCode(this)">Full Code</button>
+</div>
+
+<h3 id="6-affichage-du-fragment-final">6. Affichage du fragment final</h3>
+<p>
+
+
+<div class="togglecode">
+  <div class="highlight" id="code-compact"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="p">...</span>
 </span></span><span class="line"><span class="cl">	
 </span></span><span class="line"><span class="cl">	<span class="c1">// FINAL FRAGMENT COLOR</span>
 </span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">albedo_frag</span><span class="p">.</span><span class="n">rgb</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>Bon, d’accord, la &ldquo;suite du shader&rdquo; est pour l’instant un peu courte. Nous ne faisons qu’afficher directement l’albedo du monde sélectionné, sans même utiliser <code>depth_frag</code>. Mais ne vous inquiétez pas, ça viendra. Pour l’heure, je vous propose d’admirer ce magnifique chapaï !</p>
+</span></span></code></pre></div><div class="highlight hidden" id="code-full"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// USUAL GODOT POST-PROCESS STUFF</span>
+</span></span><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">vertex</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">POSITION</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">VERTEX</span><span class="p">.</span><span class="n">xy</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// HELPER FUNCTIONS FROM THE ORACLE</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include &#34;pre_process_utils.gdshaderinc&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// SCENE UNIFORMS</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_near</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_far</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// INTERACTIVE G-BUFFER</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">i_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">i_albedo_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// DETERMINIST G-BUFFER</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_diffuse_color_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line hl"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// SAMPLE G-BUFFERs</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_albedo_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_albedo_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">d_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">d_diffuse_color_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_diffuse_color_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// DATA HARMONIZATION</span>
+</span></span><span class="line"><span class="cl">	<span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">pre_process_i_depth</span><span class="p">(</span><span class="n">i_depth_frag</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">d_depth_frag</span> <span class="o">=</span> <span class="n">pre_process_d_depth</span><span class="p">(</span><span class="n">d_depth_frag</span><span class="p">,</span> <span class="n">cam_near</span><span class="p">,</span> <span class="n">cam_far</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// DATA SELECTION (according to depth)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">float</span> <span class="n">depth_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">albedo_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">bool</span> <span class="n">is_frag_interactive</span> <span class="o">=</span> <span class="n">d_depth_frag</span><span class="p">.</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">i_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span><span class="p">(</span><span class="n">is_frag_interactive</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">depth_frag</span> <span class="o">=</span> <span class="n">i_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">albedo_frag</span> <span class="o">=</span> <span class="n">i_albedo_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">depth_frag</span> <span class="o">=</span> <span class="n">d_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">albedo_frag</span> <span class="o">=</span> <span class="n">d_diffuse_color_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line hl"><span class="cl">	<span class="c1">// FINAL FRAGMENT COLOR</span>
+</span></span><span class="line hl"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">albedo_frag</span><span class="p">.</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
+  <button class="toggle-btn" onclick="toggleCode(this)">Full Code</button>
+</div>
+
+Bon, d’accord, la &ldquo;suite du shader&rdquo; est pour l’instant un peu courte. Nous ne faisons qu’afficher directement l’albedo du monde sélectionné, sans même utiliser <code>depth_frag</code>. Mais ne vous inquiétez pas, ça viendra. Pour l’heure, je vous propose d’admirer ce magnifique chapaï !</p>
 
  
 
@@ -400,8 +761,12 @@ Comme d’habitude, nous adopterons une approche itérative : nous commencerons 
 <h3 id="2-implémentation">2. Implémentation</h3>
 <p>Commençons par ajouter une OmniLight à la scène interactive. Un script la fera orbiter autour de notre structure, tout en altérant périodiquement sa couleur et son intensité. Une petite sphère blanche la matérialisera pour faciliter le débogage.</p>
 <p><a href="/projects/open_re_poc_devlog_4/images/rotolight-anim.webp"><img alt="Gif de l&rsquo;editeur de godot montrant une light orbitant autours du chapaï" src="/projects/open_re_poc_devlog_4/images/rotolight-anim.webp"></a></p>
-<p>Nous pouvons maintenant reprendre le shader pour y implémenter le fameux &ldquo;<em>distance-only lighting</em>&rdquo; de « Days of the Porcupine ». Pour un aperçu global, voici les modifications apportées :</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// USUAL GODOT POST-PROCESS CODE</span>
+<p>Nous pouvons maintenant reprendre le shader pour y implémenter le fameux &ldquo;<em>distance-only lighting</em>&rdquo; de « Days of the Porcupine ». Pour un aperçu global, voici les modifications apportées :
+
+
+
+<div class="togglecode">
+  <div class="highlight" id="code-compact"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// USUAL GODOT POST-PROCESS CODE</span>
 </span></span><span class="line"><span class="cl"><span class="c1">// HELPER FUNCTIONS FROM THE ORACLE</span>
 </span></span><span class="line"><span class="cl"><span class="c1">// SCENE UNIFORMS</span>
 </span></span><span class="line"><span class="cl"><span class="p">...</span>
@@ -446,7 +811,89 @@ Comme d’habitude, nous adopterons une approche itérative : nous commencerons 
 </span></span><span class="line"><span class="cl">	<span class="c1">// FINAL FRAGMENT COLOR</span>
 </span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">diffuse_contrib</span> <span class="o">+</span> <span class="n">specular_contrib</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>Comme d’habitude, nous allons expliquer tout cela en douceur.</p>
+</span></span></code></pre></div><div class="highlight hidden" id="code-full"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// USUAL GODOT POST-PROCESS STUFF</span>
+</span></span><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">vertex</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">POSITION</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">VERTEX</span><span class="p">.</span><span class="n">xy</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// HELPER FUNCTIONS FROM THE ORACLE</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include &#34;pre_process_utils.gdshaderinc&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// SCENE UNIFORMS</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_near</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_far</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl"><span class="k">uniform</span> <span class="k">int</span> <span class="n">nb_plights</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl"><span class="k">uniform</span> <span class="k">vec3</span> <span class="n">plight_position</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+</span></span><span class="line hl"><span class="cl"><span class="k">uniform</span> <span class="k">vec3</span> <span class="n">plight_color</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+</span></span><span class="line hl"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">plight_intensity</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// INTERACTIVE G-BUFFER</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">i_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">i_albedo_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// DETERMINIST G-BUFFER</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_diffuse_color_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line hl"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// SAMPLE G-BUFFERs</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_albedo_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_albedo_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">d_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">d_diffuse_color_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_diffuse_color_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// DATA HARMONIZATION</span>
+</span></span><span class="line"><span class="cl">	<span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">pre_process_i_depth</span><span class="p">(</span><span class="n">i_depth_frag</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">d_depth_frag</span> <span class="o">=</span> <span class="n">pre_process_d_depth</span><span class="p">(</span><span class="n">d_depth_frag</span><span class="p">,</span> <span class="n">cam_near</span><span class="p">,</span> <span class="n">cam_far</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line hl"><span class="cl">	<span class="k">vec3</span> <span class="n">diffuse_contrib</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+</span></span><span class="line hl"><span class="cl">	<span class="k">vec3</span> <span class="n">specular_contrib</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// DATA SELECTION (according to depth)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">float</span> <span class="n">depth_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">albedo_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">bool</span> <span class="n">is_frag_interactive</span> <span class="o">=</span> <span class="n">d_depth_frag</span><span class="p">.</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">i_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span><span class="p">(</span><span class="n">is_frag_interactive</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">depth_frag</span> <span class="o">=</span> <span class="n">i_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">albedo_frag</span> <span class="o">=</span> <span class="n">i_albedo_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">depth_frag</span> <span class="o">=</span> <span class="n">d_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">albedo_frag</span> <span class="o">=</span> <span class="n">d_diffuse_color_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line hl"><span class="cl">	<span class="c1">// WORLD POSITION FROM DEPTH</span>
+</span></span><span class="line hl"><span class="cl">	<span class="k">vec3</span> <span class="n">ndc</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">((</span><span class="n">SCREEN_UV</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">depth_frag</span><span class="p">);</span>
+</span></span><span class="line hl"><span class="cl">	<span class="k">vec4</span> <span class="n">clip</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">ndc</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span><span class="line hl"><span class="cl">	<span class="k">vec4</span> <span class="n">world</span> <span class="o">=</span> <span class="n">INV_VIEW_MATRIX</span> <span class="o">*</span> <span class="n">INV_PROJECTION_MATRIX</span> <span class="o">*</span> <span class="n">clip</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">	<span class="n">world</span><span class="p">.</span><span class="n">xyz</span> <span class="o">/=</span> <span class="n">world</span><span class="p">.</span><span class="n">w</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">	<span class="k">vec3</span> <span class="n">frag_position</span> <span class="o">=</span> <span class="n">world</span><span class="p">.</span><span class="n">xyz</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">	
+</span></span><span class="line hl"><span class="cl">	<span class="c1">// ACCUMULATE LIGHT CONTRIBUTIONS</span>
+</span></span><span class="line hl"><span class="cl">	<span class="k">for</span><span class="p">(</span><span class="k">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mo">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nb_plights</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line hl"><span class="cl">		<span class="k">vec3</span> <span class="n">light_vec</span> <span class="o">=</span> <span class="n">plight_position</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">frag_position</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">		<span class="k">float</span> <span class="n">d2</span> <span class="o">=</span> <span class="n">length</span><span class="p">(</span><span class="n">light_vec</span><span class="p">);</span>
+</span></span><span class="line hl"><span class="cl">		<span class="n">d2</span> <span class="o">=</span> <span class="n">pow</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">);</span>
+</span></span><span class="line hl"><span class="cl">		<span class="k">float</span> <span class="n">attenuation</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">d2</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">
+</span></span><span class="line hl"><span class="cl">		<span class="k">vec3</span> <span class="n">C</span> <span class="o">=</span> <span class="n">plight_color</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line hl"><span class="cl">		<span class="k">float</span> <span class="n">I</span> <span class="o">=</span> <span class="n">plight_intensity</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line hl"><span class="cl">		<span class="n">diffuse_contrib</span> <span class="o">+=</span> <span class="n">C</span> <span class="o">*</span> <span class="n">I</span> <span class="o">*</span> <span class="n">albedo_frag</span> <span class="o">*</span> <span class="n">attenuation</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">		<span class="c1">//specular_contrib += NOT IMPLEMENTED YET</span>
+</span></span><span class="line hl"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line hl"><span class="cl">	
+</span></span><span class="line hl"><span class="cl">	<span class="c1">// FINAL FRAGMENT COLOR</span>
+</span></span><span class="line hl"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">diffuse_contrib</span> <span class="o">+</span> <span class="n">specular_contrib</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
+  <button class="toggle-btn" onclick="toggleCode(this)">Full Code</button>
+</div>
+
+Comme d’habitude, nous allons expliquer tout cela en douceur.</p>
 <h4 id="11-paramètres-des-lumières">1.1. Paramètres des lumières</h4>
 <p>D&rsquo;abord on fourni à notre post-process les paramètres de la lumière :</p>
 <ul>
@@ -455,15 +902,100 @@ Comme d’habitude, nous adopterons une approche itérative : nous commencerons 
 <li>intensité</li>
 </ul>
 <p>Bien qu’on en ait qu’une seule pour l’instant, nous anticipons dès maintenant l’ajout de nouvelles lumières en utilisant des tableaux plutôt que des variables simples.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// SCENE UNIFORMS</span>
+
+
+
+<div class="togglecode">
+  <div class="highlight" id="code-compact"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// SCENE UNIFORMS</span>
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_near</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_far</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl"><span class="k">uniform</span> <span class="k">int</span> <span class="n">nb_plights</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl"><span class="k">uniform</span> <span class="k">vec3</span> <span class="n">plight_position</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+</span></span><span class="line hl"><span class="cl"><span class="k">uniform</span> <span class="k">vec3</span> <span class="n">plight_color</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+</span></span><span class="line hl"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">plight_intensity</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+</span></span></code></pre></div><div class="highlight hidden" id="code-full"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// USUAL GODOT POST-PROCESS STUFF</span>
+</span></span><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">int</span> <span class="n">nb_plights</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">vec3</span> <span class="n">plight_position</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
-</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">vec3</span> <span class="n">plight_color</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
-</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">plight_intensity</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
-</span></span></code></pre></div><p><strong>Trois tableaux et un entier ? Pourquoi tant de haine ?!!</strong></p>
+</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">vertex</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">POSITION</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">VERTEX</span><span class="p">.</span><span class="n">xy</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// HELPER FUNCTIONS FROM THE ORACLE</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include &#34;pre_process_utils.gdshaderinc&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// SCENE UNIFORMS</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_near</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_far</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl"><span class="k">uniform</span> <span class="k">int</span> <span class="n">nb_plights</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl"><span class="k">uniform</span> <span class="k">vec3</span> <span class="n">plight_position</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+</span></span><span class="line hl"><span class="cl"><span class="k">uniform</span> <span class="k">vec3</span> <span class="n">plight_color</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+</span></span><span class="line hl"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">plight_intensity</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// INTERACTIVE G-BUFFER</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">i_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">i_albedo_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// DETERMINIST G-BUFFER</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_diffuse_color_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// SAMPLE G-BUFFERs</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_albedo_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_albedo_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">d_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">d_diffuse_color_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_diffuse_color_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// DATA HARMONIZATION</span>
+</span></span><span class="line"><span class="cl">	<span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">pre_process_i_depth</span><span class="p">(</span><span class="n">i_depth_frag</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">d_depth_frag</span> <span class="o">=</span> <span class="n">pre_process_d_depth</span><span class="p">(</span><span class="n">d_depth_frag</span><span class="p">,</span> <span class="n">cam_near</span><span class="p">,</span> <span class="n">cam_far</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">diffuse_contrib</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">specular_contrib</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// DATA SELECTION (according to depth)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">float</span> <span class="n">depth_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">albedo_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">bool</span> <span class="n">is_frag_interactive</span> <span class="o">=</span> <span class="n">d_depth_frag</span><span class="p">.</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">i_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span><span class="p">(</span><span class="n">is_frag_interactive</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">depth_frag</span> <span class="o">=</span> <span class="n">i_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">albedo_frag</span> <span class="o">=</span> <span class="n">i_albedo_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">depth_frag</span> <span class="o">=</span> <span class="n">d_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">albedo_frag</span> <span class="o">=</span> <span class="n">d_diffuse_color_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// WORLD POSITION FROM DEPTH</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">ndc</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">((</span><span class="n">SCREEN_UV</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">depth_frag</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec4</span> <span class="n">clip</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">ndc</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec4</span> <span class="n">world</span> <span class="o">=</span> <span class="n">INV_VIEW_MATRIX</span> <span class="o">*</span> <span class="n">INV_PROJECTION_MATRIX</span> <span class="o">*</span> <span class="n">clip</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">world</span><span class="p">.</span><span class="n">xyz</span> <span class="o">/=</span> <span class="n">world</span><span class="p">.</span><span class="n">w</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">frag_position</span> <span class="o">=</span> <span class="n">world</span><span class="p">.</span><span class="n">xyz</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// ACCUMULATE LIGHT CONTRIBUTIONS</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span><span class="p">(</span><span class="k">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mo">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nb_plights</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">light_vec</span> <span class="o">=</span> <span class="n">plight_position</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">frag_position</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">float</span> <span class="n">d2</span> <span class="o">=</span> <span class="n">length</span><span class="p">(</span><span class="n">light_vec</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">d2</span> <span class="o">=</span> <span class="n">pow</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">float</span> <span class="n">attenuation</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">d2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">C</span> <span class="o">=</span> <span class="n">plight_color</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">		<span class="k">float</span> <span class="n">I</span> <span class="o">=</span> <span class="n">plight_intensity</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">		<span class="n">diffuse_contrib</span> <span class="o">+=</span> <span class="n">C</span> <span class="o">*</span> <span class="n">I</span> <span class="o">*</span> <span class="n">albedo_frag</span> <span class="o">*</span> <span class="n">attenuation</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">//specular_contrib += NOT IMPLEMENTED YET</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// FINAL FRAGMENT COLOR</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">diffuse_contrib</span> <span class="o">+</span> <span class="n">specular_contrib</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
+  <button class="toggle-btn" onclick="toggleCode(this)">Full Code</button>
+</div>
+
+<p><strong>Trois tableaux et un entier ? Pourquoi tant de haine ?!!</strong></p>
 <p>&ldquo;Pourquoi ne pas utiliser un tableau de structures, comme dans n&rsquo;importe quel langage <a href="/pages/glossary/#cpu">CPU</a> ?&rdquo; Bonne question ! En GLSL, les tableaux sont très limités : leur taille doit être connue à la compilation, et en réalité, derière le rideau, ils sont souvent gérés comme une suite de variables simples. C’est plus une commodité d’écriture qu’une vrai structure de donnée.</p>
 <p>La seule solution pour avoir des tableaux dynamiques, ce serait d’utiliser des SSBO (Shader Storage Buffer Objects). Sauf que… GDShader (le langage de shader de Godot) ne supporte ni les SSBO ni les structures. On est donc coincés avec trois tableaux de taille fixe et un entier pour savoir combien de lumières on a au total.</p>
 <h4 id="12-calcul-de-la-position-du-fragment">1.2. Calcul de la position du fragment</h4>
@@ -471,13 +1003,105 @@ Comme d’habitude, nous adopterons une approche itérative : nous commencerons 
 <p><a href="/projects/open_re_poc_devlog_4/images/transform_chain.opti.webp"><img alt="Schéma décrivant la coordinate transformation chain changeant successivement d&rsquo;espace dans cet ordre : object space, world_space, view space, clip space, NDC space, screen space" src="/projects/open_re_poc_devlog_4/images/transform_chain.opti.webp"></a></p>
 <p>Nous disposons déjà de la profondeur du fragment (<code>depth_frag</code>), et Godot nous fournit sa position à l’écran via la variable <code>SCREEN_UV</code>. Nous pouvons en déduire la coordonée en espace NDC (<em>Native Device Coordinate</em>).</p>
 <p>À partir de là, il suffit d’inverser le tronçon de la &ldquo;<em>coordinate transformation chain</em>&rdquo; qui nous intéresse, et de l&rsquo;appliquer à notre <em>Native Device Coordinate</em> pour avoir la position du fragment en <em>world space</em> :</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl">	<span class="c1">// WORLD POSITION FROM DEPTH</span>
+<p>
+
+
+<div class="togglecode">
+  <div class="highlight" id="code-compact"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="p">...</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// WORLD POSITION FROM DEPTH</span>
 </span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">ndc</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">((</span><span class="n">SCREEN_UV</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">depth_frag</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">	<span class="k">vec4</span> <span class="n">clip</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">ndc</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">	<span class="k">vec4</span> <span class="n">world</span> <span class="o">=</span> <span class="n">INV_VIEW_MATRIX</span> <span class="o">*</span> <span class="n">INV_PROJECTION_MATRIX</span> <span class="o">*</span> <span class="n">clip</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">	<span class="n">world</span><span class="p">.</span><span class="n">xyz</span> <span class="o">/=</span> <span class="n">world</span><span class="p">.</span><span class="n">w</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">frag_position</span> <span class="o">=</span> <span class="n">world</span><span class="p">.</span><span class="n">xyz</span><span class="p">;</span>
-</span></span></code></pre></div><p><strong>Mais à quoi sert la ligne :</strong> <code>world.xyz /= world.w</code> <strong>?</strong></p>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">	<span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><div class="highlight hidden" id="code-full"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// USUAL GODOT POST-PROCESS STUFF</span>
+</span></span><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">vertex</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">POSITION</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">VERTEX</span><span class="p">.</span><span class="n">xy</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// HELPER FUNCTIONS FROM THE ORACLE</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include &#34;pre_process_utils.gdshaderinc&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// SCENE UNIFORMS</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_near</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_far</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">int</span> <span class="n">nb_plights</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">vec3</span> <span class="n">plight_position</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">vec3</span> <span class="n">plight_color</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">plight_intensity</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// INTERACTIVE G-BUFFER</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">i_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">i_albedo_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// DETERMINIST G-BUFFER</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_diffuse_color_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line hl"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// SAMPLE G-BUFFERs</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_albedo_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_albedo_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">d_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">d_diffuse_color_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_diffuse_color_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// DATA HARMONIZATION</span>
+</span></span><span class="line"><span class="cl">	<span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">pre_process_i_depth</span><span class="p">(</span><span class="n">i_depth_frag</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">d_depth_frag</span> <span class="o">=</span> <span class="n">pre_process_d_depth</span><span class="p">(</span><span class="n">d_depth_frag</span><span class="p">,</span> <span class="n">cam_near</span><span class="p">,</span> <span class="n">cam_far</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">diffuse_contrib</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">specular_contrib</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// DATA SELECTION (according to depth)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">float</span> <span class="n">depth_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">albedo_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">bool</span> <span class="n">is_frag_interactive</span> <span class="o">=</span> <span class="n">d_depth_frag</span><span class="p">.</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">i_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span><span class="p">(</span><span class="n">is_frag_interactive</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">depth_frag</span> <span class="o">=</span> <span class="n">i_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">albedo_frag</span> <span class="o">=</span> <span class="n">i_albedo_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">depth_frag</span> <span class="o">=</span> <span class="n">d_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">albedo_frag</span> <span class="o">=</span> <span class="n">d_diffuse_color_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line hl"><span class="cl">	<span class="c1">// WORLD POSITION FROM DEPTH</span>
+</span></span><span class="line hl"><span class="cl">	<span class="k">vec3</span> <span class="n">ndc</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">((</span><span class="n">SCREEN_UV</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">depth_frag</span><span class="p">);</span>
+</span></span><span class="line hl"><span class="cl">	<span class="k">vec4</span> <span class="n">clip</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">ndc</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span><span class="line hl"><span class="cl">	<span class="k">vec4</span> <span class="n">world</span> <span class="o">=</span> <span class="n">INV_VIEW_MATRIX</span> <span class="o">*</span> <span class="n">INV_PROJECTION_MATRIX</span> <span class="o">*</span> <span class="n">clip</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">	<span class="n">world</span><span class="p">.</span><span class="n">xyz</span> <span class="o">/=</span> <span class="n">world</span><span class="p">.</span><span class="n">w</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">	<span class="k">vec3</span> <span class="n">frag_position</span> <span class="o">=</span> <span class="n">world</span><span class="p">.</span><span class="n">xyz</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// ACCUMULATE LIGHT CONTRIBUTIONS</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span><span class="p">(</span><span class="k">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mo">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nb_plights</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">light_vec</span> <span class="o">=</span> <span class="n">plight_position</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">frag_position</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">float</span> <span class="n">d2</span> <span class="o">=</span> <span class="n">length</span><span class="p">(</span><span class="n">light_vec</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">d2</span> <span class="o">=</span> <span class="n">pow</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">float</span> <span class="n">attenuation</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">d2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">C</span> <span class="o">=</span> <span class="n">plight_color</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">		<span class="k">float</span> <span class="n">I</span> <span class="o">=</span> <span class="n">plight_intensity</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">		<span class="n">diffuse_contrib</span> <span class="o">+=</span> <span class="n">C</span> <span class="o">*</span> <span class="n">I</span> <span class="o">*</span> <span class="n">albedo_frag</span> <span class="o">*</span> <span class="n">attenuation</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">//specular_contrib += NOT IMPLEMENTED YET</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// FINAL FRAGMENT COLOR</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">diffuse_contrib</span> <span class="o">+</span> <span class="n">specular_contrib</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
+  <button class="toggle-btn" onclick="toggleCode(this)">Full Code</button>
+</div>
+
+<strong>Mais à quoi sert la ligne :</strong> <code>world.xyz /= world.w</code> <strong>?</strong></p>
 <p>Vous n&rsquo;avez surement pas envie que je vous assome avec un cours sur les coordonnées homogènes. J&rsquo;avoue que ça tombe très bien car c&rsquo;est un sujet complexe que je ne maitrise pas totalement 😅 (ressources bienvenues dans les commentaires au passage !).</p>
 <p>Pour faire simple, voici ce que je pense en avoir compris : l&rsquo;idée est de passer dans un espace de dimention supérieure qui offre des avantages mathématiques pratiques. En programmation graphique, cela permet notamment de :</p>
 <ul>
@@ -498,7 +1122,11 @@ Comme d’habitude, nous adopterons une approche itérative : nous commencerons 
 <li>La diffuse : partie de la lumière dispersée dans toutes les directions, qui nous permet de percevoir la couleur de l’objet (comme une balle en caoutchouc).</li>
 <li>La spéculaire : partie de la lumière réfléchie principalement dans une direction privilégiée produisant les reflets (par exemple, un mirroir est un objet completement spéculaire)</li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
+<p>
+
+
+<div class="togglecode">
+  <div class="highlight" id="code-compact"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="p">...</span>
 </span></span><span class="line"><span class="cl">	
 </span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">diffuse_contrib</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
@@ -522,17 +1150,163 @@ Comme d’habitude, nous adopterons une approche itérative : nous commencerons 
 </span></span><span class="line"><span class="cl">	<span class="c1">// FINAL FRAGMENT COLOR</span>
 </span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">diffuse_contrib</span> <span class="o">+</span> <span class="n">specular_contrib</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>Comme vous pouvez le constater, notre modèle du pauvre fait l&rsquo;impasse sur la spéculaire. La raison à cela, c&rsquo;est que nos G-Buffers actuels ne contiennent pas encore les données nécessaires pour calculer cette composante. Mais comme pour les tableaux de lumière, nous déclarons déjà <code>specular_contrib</code> en prévision des futures améliorations.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">C</span> <span class="o">=</span> <span class="n">plight_color</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span></code></pre></div><div class="highlight hidden" id="code-full"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// USUAL GODOT POST-PROCESS STUFF</span>
+</span></span><span class="line"><span class="cl"><span class="n">shader_type</span> <span class="n">spatial</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">render_mode</span> <span class="n">unshaded</span><span class="p">,</span> <span class="n">fog_disabled</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">vertex</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">POSITION</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">VERTEX</span><span class="p">.</span><span class="n">xy</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// HELPER FUNCTIONS FROM THE ORACLE</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include &#34;pre_process_utils.gdshaderinc&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// SCENE UNIFORMS</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_near</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">cam_far</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">int</span> <span class="n">nb_plights</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">vec3</span> <span class="n">plight_position</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">vec3</span> <span class="n">plight_color</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">plight_intensity</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// INTERACTIVE G-BUFFER</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">i_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">i_albedo_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// DETERMINIST G-BUFFER</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_depth_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">d_diffuse_color_map</span> <span class="o">:</span> <span class="n">filter_nearest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line hl"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// SAMPLE G-BUFFERs</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">i_albedo_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">i_albedo_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">d_depth_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_depth_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">d_diffuse_color_frag</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">d_diffuse_color_map</span><span class="p">,</span> <span class="n">SCREEN_UV</span><span class="p">).</span><span class="n">rgb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// DATA HARMONIZATION</span>
+</span></span><span class="line"><span class="cl">	<span class="n">i_depth_frag</span> <span class="o">=</span> <span class="n">pre_process_i_depth</span><span class="p">(</span><span class="n">i_depth_frag</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">d_depth_frag</span> <span class="o">=</span> <span class="n">pre_process_d_depth</span><span class="p">(</span><span class="n">d_depth_frag</span><span class="p">,</span> <span class="n">cam_near</span><span class="p">,</span> <span class="n">cam_far</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line hl"><span class="cl">	<span class="k">vec3</span> <span class="n">diffuse_contrib</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+</span></span><span class="line hl"><span class="cl">	<span class="k">vec3</span> <span class="n">specular_contrib</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// DATA SELECTION (according to depth)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">float</span> <span class="n">depth_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">albedo_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">bool</span> <span class="n">is_frag_interactive</span> <span class="o">=</span> <span class="n">d_depth_frag</span><span class="p">.</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">i_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span><span class="p">(</span><span class="n">is_frag_interactive</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">depth_frag</span> <span class="o">=</span> <span class="n">i_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">albedo_frag</span> <span class="o">=</span> <span class="n">i_albedo_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">depth_frag</span> <span class="o">=</span> <span class="n">d_depth_frag</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">albedo_frag</span> <span class="o">=</span> <span class="n">d_diffuse_color_frag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// WORLD POSITION FROM DEPTH</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">ndc</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">((</span><span class="n">SCREEN_UV</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">depth_frag</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec4</span> <span class="n">clip</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">ndc</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec4</span> <span class="n">world</span> <span class="o">=</span> <span class="n">INV_VIEW_MATRIX</span> <span class="o">*</span> <span class="n">INV_PROJECTION_MATRIX</span> <span class="o">*</span> <span class="n">clip</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">world</span><span class="p">.</span><span class="n">xyz</span> <span class="o">/=</span> <span class="n">world</span><span class="p">.</span><span class="n">w</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">frag_position</span> <span class="o">=</span> <span class="n">world</span><span class="p">.</span><span class="n">xyz</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line hl"><span class="cl">	<span class="c1">// ACCUMULATE LIGHT CONTRIBUTIONS</span>
+</span></span><span class="line hl"><span class="cl">	<span class="k">for</span><span class="p">(</span><span class="k">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mo">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nb_plights</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line hl"><span class="cl">		<span class="k">vec3</span> <span class="n">light_vec</span> <span class="o">=</span> <span class="n">plight_position</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">frag_position</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">		<span class="k">float</span> <span class="n">d2</span> <span class="o">=</span> <span class="n">length</span><span class="p">(</span><span class="n">light_vec</span><span class="p">);</span>
+</span></span><span class="line hl"><span class="cl">		<span class="n">d2</span> <span class="o">=</span> <span class="n">pow</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">);</span>
+</span></span><span class="line hl"><span class="cl">		<span class="k">float</span> <span class="n">attenuation</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">d2</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">
+</span></span><span class="line hl"><span class="cl">		<span class="k">vec3</span> <span class="n">C</span> <span class="o">=</span> <span class="n">plight_color</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line hl"><span class="cl">		<span class="k">float</span> <span class="n">I</span> <span class="o">=</span> <span class="n">plight_intensity</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line hl"><span class="cl">		<span class="n">diffuse_contrib</span> <span class="o">+=</span> <span class="n">C</span> <span class="o">*</span> <span class="n">I</span> <span class="o">*</span> <span class="n">albedo_frag</span> <span class="o">*</span> <span class="n">attenuation</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">		<span class="c1">//specular_contrib += NOT IMPLEMENTED YET</span>
+</span></span><span class="line hl"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line hl"><span class="cl">	
+</span></span><span class="line hl"><span class="cl">	<span class="c1">// FINAL FRAGMENT COLOR</span>
+</span></span><span class="line hl"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">diffuse_contrib</span> <span class="o">+</span> <span class="n">specular_contrib</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
+  <button class="toggle-btn" onclick="toggleCode(this)">Full Code</button>
+</div>
+
+Comme vous pouvez le constater, notre modèle du pauvre fait l&rsquo;impasse sur la spéculaire. La raison à cela, c&rsquo;est que nos G-Buffers actuels ne contiennent pas encore les données nécessaires pour calculer cette composante. Mais comme pour les tableaux de lumière, nous déclarons déjà <code>specular_contrib</code> en prévision des futures améliorations.</p>
+<p>
+
+
+<div class="togglecode">
+  <div class="highlight" id="code-compact"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">C</span> <span class="o">=</span> <span class="n">plight_color</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
 </span></span><span class="line"><span class="cl">		<span class="k">float</span> <span class="n">I</span> <span class="o">=</span> <span class="n">plight_intensity</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
 </span></span><span class="line"><span class="cl">		<span class="n">diffuse_contrib</span> <span class="o">+=</span> <span class="n">C</span> <span class="o">*</span> <span class="n">I</span> <span class="o">*</span> <span class="n">albedo_frag</span> <span class="o">*</span> <span class="n">attenuation</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">		<span class="c1">//specular_contrib += NOT IMPLEMENTED YET</span>
-</span></span></code></pre></div><p>Par ailleurs, vous pouvez remarquer que le facteur d’atténuation est bien calculé en appliquant l&rsquo;<em>inverse square law</em> :</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">light_vec</span> <span class="o">=</span> <span class="n">plight_position</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">frag_position</span><span class="p">;</span>
+</span></span></code></pre></div><div class="highlight hidden" id="code-full"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="p">...</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">diffuse_contrib</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">specular_contrib</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="p">...</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// ACCUMULATE LIGHT CONTRIBUTIONS</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span><span class="p">(</span><span class="k">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mo">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nb_plights</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">light_vec</span> <span class="o">=</span> <span class="n">plight_position</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">frag_position</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">		<span class="k">float</span> <span class="n">d2</span> <span class="o">=</span> <span class="n">length</span><span class="p">(</span><span class="n">light_vec</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">		<span class="n">d2</span> <span class="o">=</span> <span class="n">pow</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">		<span class="k">float</span> <span class="n">attenuation</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">d2</span><span class="p">;</span>
-</span></span></code></pre></div><p>Ce qui nous donne le résultat suivant :</p>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line hl"><span class="cl">		<span class="k">vec3</span> <span class="n">C</span> <span class="o">=</span> <span class="n">plight_color</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line hl"><span class="cl">		<span class="k">float</span> <span class="n">I</span> <span class="o">=</span> <span class="n">plight_intensity</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line hl"><span class="cl">		<span class="n">diffuse_contrib</span> <span class="o">+=</span> <span class="n">C</span> <span class="o">*</span> <span class="n">I</span> <span class="o">*</span> <span class="n">albedo_frag</span> <span class="o">*</span> <span class="n">attenuation</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">		<span class="c1">//specular_contrib += NOT IMPLEMENTED YET</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// FINAL FRAGMENT COLOR</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">diffuse_contrib</span> <span class="o">+</span> <span class="n">specular_contrib</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
+  <button class="toggle-btn" onclick="toggleCode(this)">Full Code</button>
+</div>
+
+Par ailleurs, vous pouvez remarquer que le facteur d’atténuation est bien calculé en appliquant l&rsquo;<em>inverse square law</em> :</p>
+<p>
+
+
+<div class="togglecode">
+  <div class="highlight" id="code-compact"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">light_vec</span> <span class="o">=</span> <span class="n">plight_position</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">frag_position</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">float</span> <span class="n">d2</span> <span class="o">=</span> <span class="n">length</span><span class="p">(</span><span class="n">light_vec</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">d2</span> <span class="o">=</span> <span class="n">pow</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">float</span> <span class="n">attenuation</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">d2</span><span class="p">;</span>
+</span></span></code></pre></div><div class="highlight hidden" id="code-full"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">void</span> <span class="n">fragment</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="p">...</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">diffuse_contrib</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">specular_contrib</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="p">...</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// ACCUMULATE LIGHT CONTRIBUTIONS</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span><span class="p">(</span><span class="k">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mo">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nb_plights</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line hl"><span class="cl">		<span class="k">vec3</span> <span class="n">light_vec</span> <span class="o">=</span> <span class="n">plight_position</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">frag_position</span><span class="p">;</span>
+</span></span><span class="line hl"><span class="cl">		<span class="k">float</span> <span class="n">d2</span> <span class="o">=</span> <span class="n">length</span><span class="p">(</span><span class="n">light_vec</span><span class="p">);</span>
+</span></span><span class="line hl"><span class="cl">		<span class="n">d2</span> <span class="o">=</span> <span class="n">pow</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">);</span>
+</span></span><span class="line hl"><span class="cl">		<span class="k">float</span> <span class="n">attenuation</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">d2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">C</span> <span class="o">=</span> <span class="n">plight_color</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">		<span class="k">float</span> <span class="n">I</span> <span class="o">=</span> <span class="n">plight_intensity</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">		<span class="n">diffuse_contrib</span> <span class="o">+=</span> <span class="n">C</span> <span class="o">*</span> <span class="n">I</span> <span class="o">*</span> <span class="n">albedo_frag</span> <span class="o">*</span> <span class="n">attenuation</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">//specular_contrib += NOT IMPLEMENTED YET</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// FINAL FRAGMENT COLOR</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">diffuse_contrib</span> <span class="o">+</span> <span class="n">specular_contrib</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
+  <button class="toggle-btn" onclick="toggleCode(this)">Full Code</button>
+</div>
+
+Ce qui nous donne le résultat suivant :</p>
 
  
 
@@ -658,5 +1432,7 @@ Comme d’habitude, nous adopterons une approche itérative : nous commencerons 
 
     
 
-</body>
+
+		<script src="http://localhost:1313/js/togglecode.min.20d8a7e249c5cfc719fa54b9545592036db0fee4e0ea851f283f820460c5b07b.js" defer></script>
+    </body>
 </html>
