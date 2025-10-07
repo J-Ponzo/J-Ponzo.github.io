@@ -16,7 +16,7 @@ Aujourd'hui nous allons :
 - Calculer la lumière déterministe dans Blender et l'intégrer a notre scène
 
 ## II. Le modèle de Lambert
-Le modèle de Lambert décrit des surfaces purement diffuses, c'est à dire qui renvoient la lumière de manière égale dans toutes les directions. Cela veut dire que la quantité de lumière en un point ne dépend pas du point de vue de l'observateur mais seulement de l'angle selon lequel le rayon frappe la surface.
+Le modèle de Lambert décrit des surfaces purement diffuses, c'est à dire qui renvoient la lumière de manière égale dans toutes les directions. Cela veut dire que la quantité de lumière en un point ne dépend pas de l'observateur mais seulement de l'angle selon lequel le rayon frappe la surface.
 
 C'est le modèle que nous nous proposons d'implémenter. D'abord parce qu'il est à peine plus compliqué que le précédent, mais surtout car comme nous l'avons déjà évoqué, le G-Buffer interactif dont nous disposons ne possède pas encore les données nécessaires au calcule de la spéculaire.
 
@@ -693,9 +693,30 @@ Avant toute chose, pour pouvoir calculer de la lumière déterministe, on va avo
 
 [![Capture d'écran de blender montrant la scène avec une light en plus](images/blender_point_light.opti.webp)](images/blender_point_light.opti.webp)
 
-Ensuite, comme à chaque fois qu'on touche à Blender depuis le début de cette serie, on va activer de nouvelles passes et modifier notre compositor pour générer de nouvelles maps à destination de notre G-Buffer déterministe.
+Cette point light sera automatiquement réimportée dans la scène godot par la magie de l'interopérabilité. Mais il faudra tout de même l'assigner aux uniforms correspondant de notre shader pour qu'il puisse la prendre en compte (vous vous souvenez ? les 3 tableaux de taille fix un peu overkill de la partie I ?). Sans cela elle ne pourra pas éclairer les pixels interactifs.
+
+D'ailleurs c'est le moment de déterrer le tableau récapitulatif de l'article principal pour nous remettre au point sur les différents cas :
+<style>
+table th:first-of-type {
+    width: 10%;
+}
+table th:nth-of-type(2) {
+    width: 50%;
+}
+table th:nth-of-type(3) {
+    width: 30%;
+}
+</style>
+|                         | Pixel Déterministe                                                                                     | Pixel Interactif                                  |
+|-------------------------|:------------------------------------------------------------------------------------------------------:|:-------------------------------------------------:|
+| **Lumière Déterministe** | Précalculé					|	Temps Réèl	|
+| **Lumière Interactive**  | Précalculé + Temps Réèl	|	Temps Réèl	|
+
+Le shader actuel n'accumule pour l'instant que la partie temps réèl de chaque lumière. Pour compléter le tableau, il va donc falloir précalculer la partie déterministe dans Blender, et l'appliquer aux pixels déterministes. 
 
 ### 1. Generation des textures d'illumination
+Comme à chaque fois qu'on touche à Blender depuis le début de cette serie, on va activer de nouvelles passes et modifier notre compositor pour générer de nouvelles maps à destination de notre G-Buffer déterministe.
+
 Cettes fois ci, les passes cycle qui nous interessent sont au nombre de 5 :
 - diffuse directe
 - diffuse indirecte
@@ -719,7 +740,7 @@ Petit point vocabulaire pour bien comprendre à quoi correspondent toutes ses do
 - **direct :** contribution des rayons de première visibilité (lumière directe)
 - **indirect :** contribution des rebonds successifs (lumière indirecte)
 
-En gros, plutôt que de nous donner directement l'accumulation totale de toutes les contributions lumineuse de la scène, Blender les regroupe par paquet et nous laisse le soin de les recombiner comme on veut. Cela confère à l'utilisateur un plus grande liberté artistique. 
+En gros, plutôt que de nous donner directement l'accumulation totale de toutes les contributions lumineuse de la scène, Blender les regroupe par paquet et nous laisse le soin de les recombiner comme on veut. Ce qui donne à l'utilisateur une plus grande liberté artistique. 
 
 Je ne sais pas encore si on aura l'utilisté de ce découpage dans OpenRE. Dans le doute on le garde pour se laisser l'oportunité d'experimenter plus tard. Mais si on ne s'en sert pas, il faudra biensure recomposer tout ça directement dans Blender avant export. On va pas se trimbaler 5 textures quand on peut n'en manipuler qu'une seule.
 
@@ -1130,8 +1151,7 @@ Ici nous allons initialiser les variable `diffuse_contrib` et `specular_contrib`
 
 [![Schéma issue de la documentation de godot indiquant comment rzeconstituer les maps des différentes passes](images/blender_compo_formula.opti.webp)](images/blender_compo_formula.opti.webp)
 
-[TODO parler clairement de tous les cas possibles]
-Comme on l'a vu, Blender utilise le terme "glossy", mais il s'agit d'un synonyme de "specular". Par ailleurs, notez que la lumière déterministe générée dans Blender ne doit pas s'appliquer aux fragments intéractifs. Ce cas sera géré autrement. C'est la raison pour laquelle on initialise les variables dans le `else`.
+Comme indiqué dans le tableau, la lumière déterministe générée dans Blender ne s'applique pas aux fragments intéractifs. C'est la raison pour laquelle on initialise les variables dans le `else`.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[13,14,15,16]}
@@ -1262,7 +1282,7 @@ void fragment() {
 ```
 {{< /togglecode >}}
 
-Ainsi, la suite du shader accumule naturellement la lumière interactive par dessus la lumière déterministe que l'on vient de reconstituer, et on obtien le résultat suivant :
+Ainsi, la suite du shader accumule naturellement la lumière temps réèl par dessus la lumière précalculée que l'on vient de reconstituer, et on obtien le résultat suivant :
 
 {{< rawhtml >}} 
 
@@ -1304,11 +1324,11 @@ Le resultat actuel est plutôt pas mal. Mais si vous avez l'oeil, vous aurez sur
 
 Là raison est simple. Notre shader ne fait pas de distinction selon type de lumière lors de l'accumulation des contributions. Pour un pixel interactif c'est exactement ce qu'on veut : si un personnage s'approche d'une source déterministe, on a envie que sa lumière l'affecte.
 
-Mais pour un pixel déterministe, c'est un probleme ! En effet, l'accumulation des lumières déterministes sur l'environnement déterministe à déjà été calculés par Blender. Elle est stoqué dans les maps d'illumination que l'on vient d'intégrer. Comme le calcul est refait sans distinction côté Godot, ces lumières sont prises en compte 2 fois. C'est pour ça que ça patate aussi fort. 
+Mais pour un pixel déterministe, c'est un probleme ! En effet, l'accumulation des lumières déterministes sur l'environnement déterministe à déjà été calculés par Blender. Elle est stoqué dans les maps d'illumination que l'on vient d'intégrer. Comme le calcul est refait sans distinction côté Godot, ces lumières sont prises en compte 2 fois. C'est pour ça que ça patate aussi fort. (d'ailleurs si j'avais lu correctement mon tableau récapitulatif, j'aurait pu l'anticiper ^^)
 
 [![Capture zoomée de la scene, mettant en evidence l'intensité trop forte de la lumière qui brûle l'image](images/det_burned_zoom.opti.webp)](images/det_burned_zoom.opti.webp)
 
-Le shader à donc besoin de savoir à quel monde appartiennent les lumières qu'il traite. On lui fait part de cet information à travers le uniform `plight_isInteractive`. Il s'en sert lors de l'accumulation pour filtrer le cas "lumiere déterministe sur pixel déterministe".
+Le shader à donc besoin de savoir à quel monde appartiennent les lumières qu'il traite. On lui fait part de cet information à travers un nouveau uniform `plight_isInteractive`. Il s'en sert lors de l'accumulation pour filtrer le cas "lumiere déterministe sur pixel déterministe" (qui n'a pas de composante temps réèl).
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[5,18,19]}
