@@ -1,7 +1,7 @@
 +++
 author = 'Turbo Tartine'
 date = '2025-08-31T12:54:28+02:00'
-draft = true
+hidden = true
 title = "OpenRE devlog 5 : Fusion des mondes. Part II"
 description = 'devlog 5 du projet OpenRE'
 +++
