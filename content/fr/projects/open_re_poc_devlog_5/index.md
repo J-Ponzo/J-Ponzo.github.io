@@ -666,7 +666,7 @@ void fragment() {
 ```
 {{< /togglecode >}}
 
-Si `NdotL` est négatif, cela indique que la face n'est pas exposée à la lumière (c'est à dire que les rayon la frappe "par l'arrière"). Mais sommer une valeurs négative produirait un effet "d'absorbtion" la lumière déjà accumulée. Ce n'est pas ce qu'on veut, c'est pourquoi on clamp `NdotL`.
+Si `NdotL` est négatif, cela indique que la face n'est pas exposée à la lumière (c'est à dire que les rayon la frappe "par l'arrière"). Mais sommer une valeurs négative produirait un effet "d'absorbtion" de la lumière déjà accumulée. Ce n'est pas ce qu'on veut, c'est pourquoi on clamp `NdotL`.
 
 #### 1.5. Résultat
 Cette implémentation nous donne un meilleur sens du relief grâce à un éclairage plus nuancé et aux self shadows qui se déssinent sur les faces non-exposées. 
@@ -686,14 +686,14 @@ Contrairement à la lumière directe qui voyage en ligne droite, la lumière ind
 
 <img alt="Schéma illusterant la différence entre lumière directe et indirecte" src="./images/direct_indirect.opti.webp" style="width:66%; display: block; margin-left: auto; margin-right: auto;" /> 
 
-Notez que nos lumières déterministes ne sont pas sujetes à ce problème d'ombre trop noire car elles prennent justement en compte l'éclairage indirecte. C'est un des aspects qui les rend si interessante malgré le fait qu'on ne peut pas les déplacer comme on veut. Voyons comment ça fonctionne.
+Notez que nos lumières déterministes ne sont pas sujetes à ce problème de noiceur des ombres car elles prennent justement en compte l'éclairage indirecte. C'est un des aspects qui les rend si interessante malgré le fait qu'on ne peut pas les déplacer comme on veut. Voyons comment ça fonctionne.
 
 ## III. Lumière déterministe
 Avant toute chose, pour pouvoir calculer de la lumière déterministe, on va avoir besoin... d'une lumière déterministe ! Il faut donc ajouter une point light à notre scene Blender.
 
 [![Capture d'écran de blender montrant la scène avec une light en plus](images/blender_point_light.opti.webp)](images/blender_point_light.opti.webp)
 
-Cette point light sera automatiquement réimportée dans la scène godot par la magie de l'interopérabilité. Mais il faudra tout de même l'assigner aux uniforms correspondant de notre shader pour qu'il puisse la prendre en compte (vous vous souvenez ? les 3 tableaux de taille fix un peu overkill de la partie I ?). Sans cela elle ne pourra pas éclairer les pixels interactifs.
+Cette point light sera automatiquement réimportée dans la scène godot par la magie de l'interopérabilité des 2 logiciels. Mais il faudra tout de même l'assigner aux uniforms correspondant de notre shader pour qu'il puisse la prendre en compte (vous vous souvenez ? les 3 tableaux de taille fix un peu overkill de la partie I ?). Sans cela elle ne pourra pas éclairer les pixels interactifs.
 
 D'ailleurs c'est le moment de déterrer le tableau récapitulatif de l'article principal pour nous remettre au point sur les différents cas :
 <style>
@@ -715,9 +715,7 @@ table th:nth-of-type(3) {
 Le shader actuel n'accumule pour l'instant que la partie temps réèl de chaque lumière. Pour compléter le tableau, il va donc falloir précalculer la partie déterministe dans Blender, et l'appliquer aux pixels déterministes. 
 
 ### 1. Generation des textures d'illumination
-Comme à chaque fois qu'on touche à Blender depuis le début de cette serie, on va activer de nouvelles passes et modifier notre compositor pour générer de nouvelles maps à destination de notre G-Buffer déterministe.
-
-Cettes fois ci, les passes cycle qui nous interessent sont au nombre de 5 :
+Comme à chaque fois qu'on touche à Blender, on va activer de nouvelles passes et modifier le compositor pour générer de nouvelles maps afin d'enrichir notre G-Buffer déterministe. Cette fois ci, les passes cycle qui nous interessent sont au nombre de 5 :
 - diffuse directe
 - diffuse indirecte
 - glossy directe
@@ -734,7 +732,7 @@ De là vous connaissez la musique, :
 
 [![Capture d'écran montrant comment activer les pass d'illumination de Cycles](images/blender_passes.opti.webp)](images/blender_passes.opti.webp)
 
-Petit point vocabulaire pour bien comprendre à quoi correspondent toutes ses données :
+Petit point vocabulaire pour bien comprendre à quoi correspondent toutes ces données :
 - **diffuse :** correspond à la composantes diffuse de la lumière
 - **glossy :** correspond à la composantes spéculaire de la lumière
 - **direct :** contribution des rayons de première visibilité (lumière directe)
@@ -745,7 +743,7 @@ En gros, plutôt que de nous donner directement l'accumulation totale de toutes 
 Je ne sais pas encore si on aura l'utilisté de ce découpage dans OpenRE. Dans le doute on le garde pour se laisser l'oportunité d'experimenter plus tard. Mais si on ne s'en sert pas, il faudra biensure recomposer tout ça directement dans Blender avant export. On va pas se trimbaler 5 textures quand on peut n'en manipuler qu'une seule.
 
 ### 2. Intégration au compositor
-C'est maintenant une habitude, voici d'un bloc la totalité des ajout que l'on s'apprete à détailler. L'objectif ici étant de mettre notre shader en capacité de gérer la lumière déterministe que l'on vient de générer.
+C'est maintenant une habitude, voici d'un bloc la totalité des ajout que l'on s'apprete à détailler. L'objectif ici est que notre shader soit en capacité de gérer la lumière déterministe que l'on vient de générer.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[7,8,9,10,11 , 16,17,18,19,20 , 30,31,32,33]}
@@ -1022,7 +1020,7 @@ void fragment() {
 {{< /togglecode >}}
 
 #### 2.2. Echantillonage des maps déterministe
-Ensuite, on échantillonne ces textures de la même manière que les autres. Mais cette fois ci, il n'y a pas d'harmonisation a effectuer car les données sont exclusivent au monde déterministe.
+Ensuite, on échantillonne ces textures de la même manière que les autres. Mais cette fois ci, il n'y a pas d'harmonisation a effectuer car ces données sont exclusivent au monde déterministe.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[6,7,8,9,10]}
@@ -1151,7 +1149,7 @@ Ici nous allons initialiser les variable `diffuse_contrib` et `specular_contrib`
 
 [![Schéma issue de la documentation de godot indiquant comment rzeconstituer les maps des différentes passes](images/blender_compo_formula.opti.webp)](images/blender_compo_formula.opti.webp)
 
-Comme indiqué dans le tableau, la lumière déterministe générée dans Blender ne s'applique pas aux fragments intéractifs. C'est la raison pour laquelle on initialise les variables dans le `else`.
+Comme le disait le tableau récapitulatif, la lumière déterministe générée dans Blender ne s'applique pas aux fragments intéractifs. C'est la raison pour laquelle on initialise les variables dans le `else` du bloc de sélection des données.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[13,14,15,16]}
@@ -1315,7 +1313,7 @@ Il suffit d'utiliser le noeud `Denoise` dans le `Compositeur` et le tour est jou
 
 [![Caplture zoomée mettant en evidence l'abscence de bruit après denoising dans blender"](images/denoised_indirect.webp)](images/denoised_indirect.webp)
 
-Evidement le denoising augment le temps de rendu. Mais c'est le prix pour avoir un rendu bien propre.
+Evidement le denoising augment le temps de rendu. Mais c'est le prix pour avoir un rendu de qualité.
 
 [![Capture zoomée de la scene, mettant en evidence l'abscence de bruit](images/det_denoise_zoom.opti.webp)](images/det_denoise_zoom.opti.webp)
 
