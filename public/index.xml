@@ -6,20 +6,7 @@
     <description>Recent content in Home on Turbo Tartine Games</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-fr</language>
-    <lastBuildDate>Sun, 31 Aug 2025 12:54:28 +0200</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>OpenRE devlog 5 : Fusion des mondes. Part II</title>
-      <link>http://localhost:1313/projects/open_re_poc_devlog_5/</link>
-      <pubDate>Sun, 31 Aug 2025 12:54:28 +0200</pubDate>
-      
-      <guid>http://localhost:1313/projects/open_re_poc_devlog_5/</guid>
-      
-      <description>&lt;p&gt;&lt;a href=&#34;http://localhost:1313/projects/open_re_poc_devlog_4/&#34;&gt;⬅️ Vers Précédent : &amp;ldquo;OpenRE devlog 5 : Fusion des mondes. Part I&amp;rdquo;&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id=&#34;i-introduction&#34;&gt;I. Introduction&lt;/h2&gt;
-&lt;p&gt;Bienvenue dans cette deuxième partie de &amp;ldquo;fusion des mondes&amp;rdquo; ! Le mois dernier nous avions mélangé de la géométrie intéractive à de la géométrie déterministe en nous basant sur les textures de profondeur. Nous avions ensuite éclairé tout ça avec une point light interactive qui clignotait en orbitant autour de la scène. L&amp;rsquo;implémentation de l&amp;rsquo;éclairage était basé uniquement sur la distance.&lt;/p&gt;</description>
-      
-    </item>
-    
+    <lastBuildDate>Thu, 28 Aug 2025 08:43:37 +0200</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>OpenRE devlog 4 : Fusion des mondes. Part I</title>
       <link>http://localhost:1313/projects/open_re_poc_devlog_4/</link>
