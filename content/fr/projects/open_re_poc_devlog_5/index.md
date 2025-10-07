@@ -1285,7 +1285,7 @@ Si on s'interesse aux maps d'indirect générées par Blender, on comprend vite 
 
 *"Garbage in => garbage out !"* Il n'y a pas de miracle, si vos données d'entrées sont sales, aucune chance d'avoir quelque chose de propre en sortie.
 
-**Mais pourquoi Blender fait tout rendu tout dégeux d'abord ?**
+**Mais pourquoi Blender fait des rendu tout dégeux d'abord ?**
 
 Et bien en fait c'est normal. Toutes les images générées par *path tracing* sont bruitées, et c'est comme ça que sont produites les maps d'indirect. Si on veut de la netteté, il faut les denoiser. Blender en est biensure capable. Il ne le fait simplement pas par defaut.
 
