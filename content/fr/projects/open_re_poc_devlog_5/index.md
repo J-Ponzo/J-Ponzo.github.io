@@ -1486,6 +1486,6 @@ On commence à arriver sur quelque chose de convainquant. Sur la partie temps r�
 
 Ceci étant dit, je trouve que même en l'état, Lambert ne s'en sort pas trop mal dès lors qu'on y ajoute la lumière déterministe précalculée. On a déjà de la spéculaire, de la lumière indirect et on se paie même le luxe d'une superbe ombre portée (qui ignore la géométrie interactive oui ça va je sais...).
 
-La deux mondes ne sont pas encore totalement indicernables, mais il faut quand même regargarder la scène de près pour voire la supercherie. Il faudra biensure confirmer cela sur un scène un peu plus réaliste mais c'est assez prometteur. 
+Les deux mondes ne sont pas totalement indicernables, mais il faut quand même regargarder la scène de près pour voire la supercherie. Il faudra biensure confirmer cela sur un scène un peu plus réaliste mais c'est assez prometteur. 
 
 Ainsi s'achève cette première mise en application des principe d'OpenRE. Je suis contant de pouvoir enfin vous montrer quelque résultats (après 6 numéros répartis sur 6 mois, il était temps héhé). Mais on as encore pas mal de sujets à couvrir dans ce POC avant de passer au SDK. J'espère que ça vous plais toujours. En tout cas ça me fait très plaisir de voire que plusieurs personnes suivent l'aventure. Salut à vous ! Merci d'être là ! Et à bientôt 👋
