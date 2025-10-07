@@ -325,7 +325,7 @@ void fragment() {
 On introduit donc les uniforms `i_normal_map` et `d_normal_map` qui proviennent respectivement des G-Buffers interactif et déterministe.
 
 #### 1.2. Echantillonage des normales
-On échantillone/harmonize ensuite tout ça comme on l'a fait pour les autres maps
+Ensuite, on échantillone et on harmonise tout ça comme on l'a fait pour les autres maps
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[4,7,11,12]}
@@ -439,7 +439,7 @@ void fragment() {
 {{< /togglecode >}}
 
 #### 1.3. Selection de la normale
-Puis on selectionne ensuite la normale du monde visible. Toujours en se basant sur la profondeur.
+Puis on selectionne la normale du monde visible. Toujours en nous basant sur la profondeur.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[5,9,13]}
@@ -555,8 +555,7 @@ void fragment() {
 {{< /togglecode >}}
 
 #### 1.4. Application du cosinus de Lambert
-[TODO revoir par rapport à l'explication du calcule au début]
-Et enfin, on applique à notre calcule le terme Lambertien `NdotL` qui est le cosinus de l'angle formé par la normale et la direction de la lumière.
+Et enfin, on applique le terme Lambertien `NdotL` à notre calcule de l'illumination.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[7,8]}
@@ -667,8 +666,7 @@ void fragment() {
 ```
 {{< /togglecode >}}
 
-[TODO revoir en utilisant le terme back face ou non-exposé introduit juste après]
-Si la valeur du cosinus est négative, cela veut dire que la surface est éclairée "par l'arrière". Dans ce cas, la source ne contribue pas à l'illumination. Mais sommer une valeurs négative aura pour effet "d'absorber" la lumière déjà accumulée. Ce n'est pas ce qu'on veut, c'est pourquoi `NdotL` doit être clampé.
+Si `NdotL` est négatif, cela indique que la face n'est pas exposée à la lumière (c'est à dire que les rayon la frappe "par l'arrière"). Mais sommer une valeurs négative produirait un effet "d'absorbtion" la lumière déjà accumulée. Ce n'est pas ce qu'on veut, c'est pourquoi on clamp `NdotL`.
 
 #### 1.5. Résultat
 Cette implémentation nous donne un meilleur sens du relief grâce à un éclairage plus nuancé et aux self shadows qui se déssinent sur les faces non-exposées. 
@@ -682,20 +680,20 @@ Cette implémentation nous donne un meilleur sens du relief grâce à un éclair
 
 {{< /rawhtml >}}
 
-Les ombre sont un peu sharp pour l'instant. Ca fait pas très naturel. Dans la vrai vie, quand un rayon de lumière percute une surface, certains photons rebondissent et vont s'écraser ailleurs. On parle alors de lumière indirecte. 
+Les ombre sont un peu sharp pour l'instant, ce qui ne rend pas très naturel. Dans la vrai vie, quand un rayon de lumière percute une surface, certains photons rebondissent et vont s'écraser ailleurs. On parle alors de lumière indirecte. 
 
 Contrairement à la lumière directe qui voyage en ligne droite, la lumière indirecte peut donc contourner les obstacles par rebonds successifs. Ainsi, elle peut affecter n'importe quelle surface, notament les faces non-exposées. Son intensitée est moins forte car on perd de l'énergie à chaque rebond (tous les photons ne sont pas réfléchis). Mais c'est gràce à elle que dans la réalité, les ombres ne sont jamais completement noir.
 
 <img alt="Schéma illusterant la différence entre lumière directe et indirecte" src="./images/direct_indirect.opti.webp" style="width:66%; display: block; margin-left: auto; margin-right: auto;" /> 
 
-Notez que nos lumières déterministes ne sont pas sujetes à ce problème car elles prennent en compte l'éclairage indirecte. C'est un des aspects qui les rend si interessante malgré le fait qu'on ne peut pas les déplacer comme on veut. Voyons comment ça fonctionnent.
+Notez que nos lumières déterministes ne sont pas sujetes à ce problème d'ombre trop noire car elles prennent justement en compte l'éclairage indirecte. C'est un des aspects qui les rend si interessante malgré le fait qu'on ne peut pas les déplacer comme on veut. Voyons comment ça fonctionne.
 
 ## III. Lumière déterministe
-Avant toute chose, pour pouvoir calculer de la lumière déterministe, on va avoir besoin... d'une lumière déterministe ! On va donc ajouter une point light à notre scene Blender.
+Avant toute chose, pour pouvoir calculer de la lumière déterministe, on va avoir besoin... d'une lumière déterministe ! Il faut donc ajouter une point light à notre scene Blender.
 
 [![Capture d'écran de blender montrant la scène avec une light en plus](images/blender_point_light.opti.webp)](images/blender_point_light.opti.webp)
 
-Ensuite, comme à chaque fois qu'on touche à Blender depuis le début de cette serie, on va devoir activer de nouvelles passes et modifier notre compositor pour générer de nouvelles maps pour notre G-Buffer déterministe.
+Ensuite, comme à chaque fois qu'on touche à Blender depuis le début de cette serie, on va activer de nouvelles passes et modifier notre compositor pour générer de nouvelles maps à destination de notre G-Buffer déterministe.
 
 ### 1. Generation des textures d'illumination
 Cettes fois ci, les passes cycle qui nous interessent sont au nombre de 5 :
@@ -705,11 +703,11 @@ Cettes fois ci, les passes cycle qui nous interessent sont au nombre de 5 :
 - glossy indirecte
 - glossy color
 
-Techniquement la diffuse color nous interesse aussi mais il se trouve qu'on l'a déjà. C'est notre albédo.
+Techniquement la diffuse color nous interesse aussi mais il se trouve qu'on l'a déjà (souvenez vous, c'est notre albédo).
 
 De là vous connaissez la musique, :
 - On active les passes dans le paneau latéral
-- On ajoute les pins nécessaires au noud File Output
+- On ajoute les pins nécessaires au noeud File Output
 - On relie les sorties de chaque passes aux pins correspondant et on appuie sur F12 pour lancer le rendu
 
 
@@ -718,14 +716,15 @@ De là vous connaissez la musique, :
 Petit point vocabulaire pour bien comprendre à quoi correspondent toutes ses données :
 - **diffuse :** correspond à la composantes diffuse de la lumière
 - **glossy :** correspond à la composantes spéculaire de la lumière
-- **direct/indirect :** caractère directe ou indirecte de la lumière au sens décrit précédement
+- **direct :** contribution des rayons de première visibilité (lumière directe)
+- **indirect :** contribution des rebonds successifs (lumière indirecte)
 
-En gros, plutôt que de nous donner directement l'accumulation totale de toutes les contributions lumineuse de la scène, Blender les regroupe par paquet et nous laisse le soin de recombiner comme on veut. Cela confère à l'utilisateur un plus grande liberté artistique. 
+En gros, plutôt que de nous donner directement l'accumulation totale de toutes les contributions lumineuse de la scène, Blender les regroupe par paquet et nous laisse le soin de les recombiner comme on veut. Cela confère à l'utilisateur un plus grande liberté artistique. 
 
-Je ne sais pas encore si on aura l'utilisté de ce découpage dans OpenRE. Dans le doute je le garde pour me laisser l'oportunité d'experimenter plus tard. Mais si on ne s'en sert pas, il faudra bien sur recomposer tout ça directement dans Blender avant export pour ne pas se trimbaler 5 textures au lieu d'une seule.
+Je ne sais pas encore si on aura l'utilisté de ce découpage dans OpenRE. Dans le doute on le garde pour se laisser l'oportunité d'experimenter plus tard. Mais si on ne s'en sert pas, il faudra biensure recomposer tout ça directement dans Blender avant export. On va pas se trimbaler 5 textures quand on peut n'en manipuler qu'une seule.
 
 ### 2. Intégration au compositor
-C'est maintenant une habitude, voici d'un bloc la totalité des ajout que l'on s'apprete à détailler.
+C'est maintenant une habitude, voici d'un bloc la totalité des ajout que l'on s'apprete à détailler. L'objectif ici étant de mettre notre shader en capacité de gérer la lumière déterministe que l'on vient de générer.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[7,8,9,10,11 , 16,17,18,19,20 , 30,31,32,33]}
@@ -879,7 +878,7 @@ void fragment() {
 {{< /togglecode >}}
 
 #### 2.1. Introduction des maps déterministe
-On doit biensure passer au shader les textures générées par Blender via des uniforms.
+On doit biensure lui donner les textures via des uniforms.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[3,4,5,6,7]}
@@ -1001,10 +1000,8 @@ void fragment() {
 ```
 {{< /togglecode >}}
 
-On en ajoute que 5 car `d_diffuse_color_frag` est déjà là (c'est notre albédo)
-
 #### 2.2. Echantillonage des maps déterministe
-On échantillonne nos maps de la même manière que les autres. Cette fois il n'y a pas d'harmonisation a effectuer car ces données sont exclusivent au monde déterministe.
+Ensuite, on échantillonne ces textures de la même manière que les autres. Mais cette fois ci, il n'y a pas d'harmonisation a effectuer car les données sont exclusivent au monde déterministe.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[6,7,8,9,10]}
@@ -1133,8 +1130,8 @@ Ici nous allons initialiser les variable `diffuse_contrib` et `specular_contrib`
 
 [![Schéma issue de la documentation de godot indiquant comment rzeconstituer les maps des différentes passes](images/blender_compo_formula.opti.webp)](images/blender_compo_formula.opti.webp)
 
-[TODO à revoir]
-Blender utilise le terme "glossy", mais ne vous laissez pas perturber pour si peu. C'est un synonyme de "specular". Par ailleurs, notez que la lumière déterministe ne doit pas s'appliquer aux fragments intéractifs (raison pour laquelle on initialise les variables dans le `else`).
+[TODO parler clairement de tous les cas possibles]
+Comme on l'a vu, Blender utilise le terme "glossy", mais il s'agit d'un synonyme de "specular". Par ailleurs, notez que la lumière déterministe générée dans Blender ne doit pas s'appliquer aux fragments intéractifs. Ce cas sera géré autrement. C'est la raison pour laquelle on initialise les variables dans le `else`.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[13,14,15,16]}
@@ -1278,41 +1275,40 @@ Ainsi, la suite du shader accumule naturellement la lumière interactive par des
 
 
 ### 3. Denoising
-Si on regarde de près, on peut voir que le rendu n'est pas très propre.
+Quand on regarde tout ça de près, on peut voir que le rendu n'est pas très propre.
 
 [![Capture zoomée de la scene, mettant en evidence le bruit de l'image](images/det_noise_zoom.opti.webp)](images/det_noise_zoom.opti.webp)
 
-Quand on regarde les maps d'indirect générées par blender, on comprend vite pourquoi.
+Si on s'interesse aux maps d'indirect générées par Blender, on comprend vite pourquoi.
 
 [![Caplture zoomée mettant en evidence le bruit sur les images d'origine "Diffuse Indirect" et "Glossy Indirect"](images/noise_indirect.webp)](images/noise_indirect.webp)
 
-*"Garbage in => garbage out !"* Il n'y a pas de miracle, si vos données d'entrées sont sales, aucune chance d'avoir quelque chose de correcte en sortie.
+*"Garbage in => garbage out !"* Il n'y a pas de miracle, si vos données d'entrées sont sales, aucune chance d'avoir quelque chose de propre en sortie.
 
-**Mais pourquoi Blender fait un rendu tout flou d'abord ?**
+**Mais pourquoi Blender fait tout rendu tout dégeux d'abord ?**
 
-Et bien c'est parfaitement normal. Toutes les images générées par *path tracing* sont bruitées, et comme ça que sont produites les maps d'indirect. Si on veut de la netteté, il faut les denoiser. Biensure, Blender est capable de faire ça. Il ne le fait simplement pas par defaut.
+Et bien en fait c'est normal. Toutes les images générées par *path tracing* sont bruitées, et c'est comme ça que sont produites les maps d'indirect. Si on veut de la netteté, il faut les denoiser. Blender en est biensure capable. Il ne le fait simplement pas par defaut.
 
 [![Capture du compositeur de Blender auquel on a ajouté les noeuds dénoise](images/blender_denoise_node.opti.webp)](images/blender_denoise_node.opti.webp)
-[TODO expliquer qu'il n'y a pas la light interactive ?]
 
 Il suffit d'utiliser le noeud `Denoise` dans le `Compositeur` et le tour est joué.
 
 [![Caplture zoomée mettant en evidence l'abscence de bruit après denoising dans blender"](images/denoised_indirect.webp)](images/denoised_indirect.webp)
 
-Evidement le denoising augment le temps de rendu. Mais c'est le prix pour avoir un rendu bien net.
+Evidement le denoising augment le temps de rendu. Mais c'est le prix pour avoir un rendu bien propre.
 
 [![Capture zoomée de la scene, mettant en evidence l'abscence de bruit](images/det_denoise_zoom.opti.webp)](images/det_denoise_zoom.opti.webp)
 
 ### 4. Double exposition
-Le resultat actuel est plutôt pas mal. Mais si vous avez l'oeil, vous aurez surement remarqué que la lumière déterministe est un peu sur vitaminée.
+Le resultat actuel est plutôt pas mal. Mais si vous avez l'oeil, vous aurez surement remarqué que la lumière déterministe est quelques peu sur-vitaminée.
 
 Là raison est simple. Notre shader ne fait pas de distinction selon type de lumière lors de l'accumulation des contributions. Pour un pixel interactif c'est exactement ce qu'on veut : si un personnage s'approche d'une source déterministe, on a envie que sa lumière l'affecte.
 
-Mais pour un pixel déterministe, c'est un probleme ! En effet, l'accumulation des lumières déterministes sur l'environnement déterministe à déjà été calculés par Blender. Elle est stoqué dans les maps d'illumination que l'on vient d'intégrer. Comme le calcul est refait sans distinction côté Godot, ces lumières sont prises en compte 2 fois. C'est pour ça qu'elles patatent aussi fort. 
+Mais pour un pixel déterministe, c'est un probleme ! En effet, l'accumulation des lumières déterministes sur l'environnement déterministe à déjà été calculés par Blender. Elle est stoqué dans les maps d'illumination que l'on vient d'intégrer. Comme le calcul est refait sans distinction côté Godot, ces lumières sont prises en compte 2 fois. C'est pour ça que ça patate aussi fort. 
 
 [![Capture zoomée de la scene, mettant en evidence l'intensité trop forte de la lumière qui brûle l'image](images/det_burned_zoom.opti.webp)](images/det_burned_zoom.opti.webp)
 
-Le shader à donc besoin de savoir à quel monde appartiennent les lumières qu'il traite. On lui fait part de cet information à travers le uniform `plight_isInteractive`. Il s'en sert lors de l'accumulation pour filtrer le cas problématique.
+Le shader à donc besoin de savoir à quel monde appartiennent les lumières qu'il traite. On lui fait part de cet information à travers le uniform `plight_isInteractive`. Il s'en sert lors de l'accumulation pour filtrer le cas "lumiere déterministe sur pixel déterministe".
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[5,18,19]}
