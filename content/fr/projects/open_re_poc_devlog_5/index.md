@@ -1336,7 +1336,7 @@ C'est logique dans la mesure où la partie précalculée, c'est justement la lum
 
 [![Capture zoomée de la scene, mettant en evidence l'intensité trop forte de la lumière qui brûle l'image](images/det_burned_zoom.opti.webp)](images/det_burned_zoom.opti.webp)
 
-Le shader à donc besoin de savoir à quel monde appartiennent les lumières qu'il traite. On lui fait part de cet information à travers un nouveau uniform `plight_isInteractive` dont il se sert pour filtrer le cas.
+Le shader à donc besoin de savoir à quel monde appartiennent les lumières qu'il traite. On lui fait part de cet information à travers un nouveau uniform `plight_isInteractive` dont il se sert pour filtrer le cas problématique.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[5,18,19]}
