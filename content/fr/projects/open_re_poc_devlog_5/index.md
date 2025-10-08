@@ -6,67 +6,71 @@ title = "OpenRE devlog 5 : Fusion des mondes. Part II"
 description = 'devlog 5 du projet OpenRE'
 +++
 
-[⬅️ Vers Précédent : "OpenRE devlog 5 : Fusion des mondes. Part I"](projects/open_re_poc_devlog_4)
+[⬅️ Vers Précédent : "OpenRE devlog 4 : Fusion des mondes. Part I"](projects/open_re_poc_devlog_4)
 
 ## I. Introduction
-Bienvenue dans cette deuxième partie de "fusion des mondes" ! Le mois dernier nous avions mélangé de la géométrie intéractive à de la géométrie déterministe en nous basant sur les textures de profondeur. Nous avions ensuite éclairé tout ça avec une point light interactive qui clignotait en orbitant autour de la scène. L'implémentation de l'éclairage était basé uniquement sur la distance.
 
-Aujourd'hui nous allons :
-- Enrichire le modèle d'illumination en prenant en compte l'orientation des surfaces
-- Calculer la lumière déterministe dans Blender et l'intégrer a notre scène
+Bienvenue dans cette deuxième partie de "Fusion des mondes" ! Le mois dernier, nous avions mélangé de la géométrie interactive à de la géométrie déterministe en nous basant sur les textures de profondeur. Nous avions ensuite éclairé tout ça avec une point light interactive qui clignotait en orbitant autour de la scène. L'implémentation de l'éclairage était basée uniquement sur la distance.
+
+Aujourd’hui, nous allons :
+
+* Enrichir le modèle d’illumination en prenant en compte l’orientation des surfaces
+* Calculer la lumière déterministe dans Blender et l’intégrer à notre scène
 
 ## II. Le modèle de Lambert
-Le modèle de Lambert décrit des surfaces purement diffuses, c'est à dire qui renvoient la lumière de manière égale dans toutes les directions. Cela veut dire que la quantité de lumière en un point ne dépend pas de l'observateur mais seulement de l'angle selon lequel le rayon frappe la surface.
 
-C'est le modèle que nous nous proposons d'implémenter. D'abord parce qu'il est à peine plus compliqué que le précédent, mais surtout car comme nous l'avons déjà évoqué, le G-Buffer interactif dont nous disposons ne possède pas encore les données nécessaires au calcule de la spéculaire.
+Le modèle de Lambert décrit des surfaces purement diffuses, c’est-à-dire qui renvoient la lumière de manière égale dans toutes les directions. Cela signifie que la quantité de lumière en un point ne dépend pas de l’observateur, mais seulement de l’angle selon lequel le rayon frappe la surface.
 
+C’est le modèle que nous nous proposons d’implémenter. D’abord parce qu’il est à peine plus compliqué que le précédent, mais surtout parce que, comme nous l’avons déjà évoqué, le G-Buffer interactif dont nous disposons ne possède pas encore les données nécessaires au calcul de la composante spéculaire.
 
 ### 1. Principe
-L'intensitée apparente varie donc selon l'angle d'incidence de la lumière. Une façon de se représenter le phénomene, c'est d'imaginer un faiseau lumineux parfaitement vertical éclairant une surface parfaitement horizontale. 
 
-Le cercle dans lequel les photons percutent la surface cohincide avec la section du faiseau. Ou dit autrement :
+L’intensité apparente varie donc selon l’angle d’incidence de la lumière. Une façon de se représenter le phénomène est d’imaginer un faisceau lumineux parfaitement vertical éclairant une surface parfaitement horizontale.
+
+Le cercle dans lequel les photons percutent la surface coïncide alors avec la section du faisceau. Autrement dit :
 
 <div style="text-align:center;">
 
-"soient `dL` le diamètre du faiseau et `dG` le diamètre du cercle projeté, on à : `dL = dG`"
+« Soient `dL` le diamètre du faisceau et `dG` le diamètre du cercle projeté, on a : `dL = dG` »
 
-</div> 
+</div>  
 <br/>
 
-<img alt="Schéma d'un vaiseau de lumière éclairant un plan orthogonal. Le projeté de sa section au sol est circulaire" src="./images/circle_ray.opti.webp" style="width:66%; display: block; margin-left: auto; margin-right: auto;" /> 
+<img alt="Schéma d'un faisceau de lumière éclairant un plan orthogonal. Le projeté de sa section au sol est circulaire" src="./images/circle_ray.opti.webp" style="width:66%; display: block; margin-left: auto; margin-right: auto;" />
 
-Si maintenant le faiseau est incliné, `dG` s'étire transformant notre cercle projeté en une élipse. L'aire de cette élipse est évidament plus grande que celle du cercle alors que la quantité de photons emis, elle, reste la même. Ce qui se traduit par une baisse de la concentration lumineuse.
+Si maintenant le faisceau est incliné, `dG` s’étire, transformant notre cercle projeté en une ellipse. L’aire de cette ellipse est évidemment plus grande que celle du cercle, alors que la quantité de photons émis, elle, reste la même. Ce qui se traduit par une baisse de la concentration lumineuse.
 
-![Schéma d'un vaiseau de lumière rasant éclairant le même plan. Le projeté de sa section au sol est une élipse](images/elipse_ray.opti.webp)
+![Schéma d'un faisceau de lumière rasant éclairant le même plan. Le projeté de sa section au sol est une ellipse](images/elipse_ray.opti.webp)
 
-La décroissance de l'intensité lumineuse est donc proportionnel à la croissance de l'aire de l'élipse, elle même fonction de l'angle d'incidence du faiseau. En posant tout ça, on peut déduire la fameuse "loi du cosinus" de Lambert. Laquelle décrit `I`, l'intensité lumineuse perçue, comme :
+La décroissance de l’intensité lumineuse est donc proportionnelle à la croissance de l’aire de l’ellipse, elle-même fonction de l’angle d’incidence du faisceau. En posant tout cela, on peut déduire la fameuse loi du cosinus de Lambert, laquelle décrit `I`, l’intensité lumineuse perçue, comme :
 
 <div style="text-align:center;">
 
-`I = I0 * cos(angle)`	
+`I = I0 * cos(angle)`
 
-(avec `I0` l'intensité de la source)
+(avec `I0` l’intensité de la source)
 
 </div> 
 
-Que l'on peut aussi écrire :
+Que l’on peut aussi écrire :
 
 <div style="text-align:center;">
 
-`I = I0 * (N.L)` 
+`I = I0 * (N.L)`
 
 (avec `N` la normale à la surface et `L` l'inverse de la direction de la lumière)
 
 </div> 
 
-En gros, Lambert, c'est basiquement multiplier votre lumière par `(N.L)`
+En gros, Lambert, c’est basiquement multiplier votre lumière par `(N.L)`.
 
 ### 2. Implémentation
-En relisant le numéro précédent, je me suis rendu compte que les échantillons de code commencaient à être un peu long. J'avais déjà du mal à les resituer dans la globalité, alors je n'ose pas imaginer la galère pour quelqu'un qui ne les a pas écrit.
 
-Dans la partie II on va continuer d'en rajouter et j'avais peur que ça devienne vraiment illisible. J'ai donc passé un peu de temps à développer une technologie révolutionnaire qui recontextualise l'échantillon dans le code complet sous simple pression d'un bouton (rigolez pas, je suis pas dev web, j'ai mis ma vie pour faire ça alors il fallait que j'en parle 😅). En tout cas j'éspère que ça aidera à la lecture.
+En relisant le numéro précédent, je me suis rendu compte que les échantillons de code commençaient à être un peu longs. J’avais déjà du mal à les resituer dans la globalité, alors je n’ose pas imaginer la galère pour quelqu’un qui ne les a pas écrits.
 
-Bref, voici les ajouts nécessaire à l'implémentation du modèle Lambertien. Comme toujours on va décortiquer ça pas à pas.
+Dans cette partie II, on va continuer d’en rajouter, et j’avais peur que ça devienne vraiment illisible. J’ai donc passé un peu de temps à développer une technologie révolutionnaire qui recontextualise l’échantillon dans le code complet sous simple pression d’un bouton (rigolez pas, je suis pas dev web, j’ai mis ma vie pour faire ça, alors il fallait que j’en parle 😅). En tout cas, j’espère que ça aidera à la lecture.
+
+Bref, voici les ajouts nécessaires à l’implémentation du modèle lambertien. Comme toujours, on va décortiquer ça pas à pas.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[6,10,15,18,22,23,28,32,36,43,44]}
@@ -215,7 +219,8 @@ void fragment() {
 {{< /togglecode >}}
 
 #### 1.1. Introduction des normales
-Pour calculer l'angle d'incidence de la lumière, on va avoir besoin des normales (cette fois c'est pas une blague, on va vraiment les utiliser ^^).
+
+Pour calculer l’angle d’incidence de la lumière, on va avoir besoin des normales (cette fois, c’est pas une blague, on va vraiment les utiliser ^^).
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[6,10,15,18,22,23,28,32,36,43,44]}
 // USUAL GODOT POST-PROCESS CODE
@@ -322,10 +327,11 @@ void fragment() {
 ```
 {{< /togglecode >}}
 
-On introduit donc les uniforms `i_normal_map` et `d_normal_map` qui proviennent respectivement des G-Buffers interactif et déterministe.
+On introduit donc les *uniforms* `i_normal_map` et `d_normal_map`, qui proviennent respectivement des G-Buffers interactif et déterministe.
 
-#### 1.2. Echantillonage des normales
-Ensuite, on échantillone et on harmonise tout ça comme on l'a fait pour les autres maps
+#### 1.2. Échantillonnage des normales
+
+Ensuite, on échantillonne et on harmonise tout ça comme on l’a fait pour les autres *maps*.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[4,7,11,12]}
@@ -438,8 +444,9 @@ void fragment() {
 ```
 {{< /togglecode >}}
 
-#### 1.3. Selection de la normale
-Puis on selectionne la normale du monde visible. Toujours en nous basant sur la profondeur.
+#### 1.3. Sélection de la normale
+
+Puis on sélectionne la normale du monde visible, toujours en nous basant sur la profondeur.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[5,9,13]}
@@ -555,7 +562,8 @@ void fragment() {
 {{< /togglecode >}}
 
 #### 1.4. Application du cosinus de Lambert
-Et enfin, on applique le terme Lambertien `NdotL` à notre calcule de l'illumination.
+
+Et enfin, on applique le terme lambertien `NdotL` à notre calcul de l’illumination.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[7,8]}
@@ -666,12 +674,13 @@ void fragment() {
 ```
 {{< /togglecode >}}
 
-Si `NdotL` est négatif, cela indique que la face n'est pas exposée à la lumière (c'est à dire que les rayon la frappe "par l'arrière"). Mais sommer une valeurs négative produirait un effet "d'absorbtion" de la lumière déjà accumulée. Ce n'est pas ce qu'on veut, c'est pourquoi on clamp `NdotL`.
+Si `NdotL` est négatif, cela indique que la face n’est pas exposée à la lumière (c’est-à-dire que les rayons la frappent “par l’arrière”). Mais sommer une valeur négative produirait un effet “d’absorption” de la lumière déjà accumulée. Ce n’est pas ce qu’on veut, c’est pourquoi on *clamp* `NdotL`.
 
 #### 1.5. Résultat
-Cette implémentation nous donne un meilleur sens du relief grâce à un éclairage plus nuancé et aux self shadows qui se déssinent sur les faces non-exposées. 
 
-{{< rawhtml >}} 
+Cette implémentation nous donne un meilleur sens du relief grâce à un éclairage plus nuancé et aux *self shadows* qui se dessinent sur les faces non exposées.
+
+{{< rawhtml >}}
 
 <video width="100%" controls muted loop playsinline autoplay>
     <source src="videos/lambert.mp4" type="video/mp4">
@@ -680,13 +689,13 @@ Cette implémentation nous donne un meilleur sens du relief grâce à un éclair
 
 {{< /rawhtml >}}
 
-Les ombre sont un peu sharp pour l'instant, ce qui ne rend pas très naturel. Dans la vrai vie, quand un rayon de lumière percute une surface, certains photons rebondissent et vont s'écraser ailleurs. On parle alors de lumière indirecte. 
+Les ombres sont un peu *sharp* pour l’instant, ce qui ne rend pas très naturel. Dans la vraie vie, quand un rayon de lumière percute une surface, certains photons rebondissent et vont s’écraser ailleurs. On parle alors de lumière indirecte.
 
-Contrairement à la lumière directe qui voyage en ligne droite, la lumière indirecte peut donc contourner les obstacles par rebonds successifs. Ainsi, elle peut affecter n'importe quelle surface, notament les faces non-exposées. Son intensitée est moins forte car on perd de l'énergie à chaque rebond (tous les photons ne sont pas réfléchis). Mais c'est gràce à elle que dans la réalité, les ombres ne sont jamais completement noir.
+Contrairement à la lumière directe, qui voyage en ligne droite, la lumière indirecte peut contourner les obstacles par rebonds successifs. Ainsi, elle peut affecter n’importe quelle surface, notamment les faces non exposées. Son intensité est plus faible, car on perd de l’énergie à chaque rebond (tous les photons ne sont pas réfléchis). Mais c’est grâce à elle que, dans la réalité, les ombres ne sont jamais complètement noires.
 
-<img alt="Schéma illusterant la différence entre lumière directe et indirecte" src="./images/direct_indirect.opti.webp" style="width:66%; display: block; margin-left: auto; margin-right: auto;" /> 
+<img alt="Schéma illustrant la différence entre lumière directe et indirecte" src="./images/direct_indirect.opti.webp" style="width:66%; display: block; margin-left: auto; margin-right: auto;" /> 
 
-Notez que nos lumières déterministes ne sont pas sujetes à ce problème de noiceur des ombres car elles prennent justement en compte l'éclairage indirecte. C'est un des aspects qui les rend si interessante malgré le fait qu'on ne peut pas les déplacer comme on veut. Voyons comment ça fonctionne.
+Notez que nos lumières déterministes ne sont pas sujettes à ce problème de noirceur des ombres, car elles prennent justement en compte l’éclairage indirect. C’est un des aspects qui les rend si intéressantes, malgré le fait qu’on ne puisse pas les déplacer comme on veut. Voyons comment ça fonctionne.
 
 ## III. Lumière déterministe
 Avant toute chose, pour pouvoir calculer de la lumière déterministe, on va avoir besoin... d'une lumière déterministe ! Il faut donc ajouter une point light à notre scene Blender.
