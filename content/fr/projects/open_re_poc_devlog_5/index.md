@@ -674,7 +674,7 @@ void fragment() {
 ```
 {{< /togglecode >}}
 
-Si `NdotL` est négatif, cela indique que la face n’est pas exposée à la lumière (c’est-à-dire que les rayons la frappent “par l’arrière”). Mais sommer une valeur négative produirait un effet “d’absorption” de la lumière déjà accumulée. Ce n’est pas ce qu’on veut, c’est pourquoi on *clamp* `NdotL`.
+Si `NdotL` est négatif, cela indique que la [face](/pages/glossary/#face) n’est pas exposée à la lumière (c’est-à-dire que les rayons la frappent “par l’arrière”). Mais sommer une valeur négative produirait un effet “d’absorption” de la lumière déjà accumulée. Ce n’est pas ce qu’on veut, c’est pourquoi on *clamp* `NdotL`.
 
 #### 1.5. Résultat
 
@@ -727,7 +727,7 @@ th, td {
 | **Lumière Déterministe** |        Précalculé       |    Temps réel    |
 | **Lumière Interactive**  | Précalculé + Temps réel |    Temps réel    |
 
-Le *shader* actuel n’accumule pour l’instant que la partie temps réel de chaque lumière. Pour compléter le tableau, il va donc falloir précalculer la partie déterministe dans Blender, et l’appliquer aux pixels déterministes.
+Le [*shader*](/pages/glossary/#shader) actuel n’accumule pour l’instant que la partie temps réel de chaque lumière. Pour compléter le tableau, il va donc falloir précalculer la partie déterministe dans Blender, et l’appliquer aux pixels déterministes.
 
 ### 1. Génération des textures d’illumination
 
