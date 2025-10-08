@@ -1167,3 +1167,5 @@ Bien entendu, nous améliorerons cela dans la Partie II en implémentant un nouv
 Une petite réflexion en passant ! Dans le précédent devlog, j’avais mentionné que nous aurions besoin des normales pour implémenter la lumière. Finalement, comme nous avons ignoré l’orientation des surfaces, elles ne se sont pas révélées nécessaires dans cette permière partie. Dommage, cela signifie que nous aurions pu aborder ce sujet un peu plus tôt dans la série.
 
 À ma décharge, je n’avais pas prévu de couper ce numéro ici. La preuve que même en écrivant depuis le futur, on peut quand même arriver à se planter 😅.
+
+<div style="text-align: right"><a href="../open_re_poc_devlog_5">Vers Suivant : "OpenRE devlog 5 : Fusion des mondes. Part II" ➡️</a></div>
