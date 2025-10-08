@@ -706,6 +706,9 @@ table th:nth-of-type(2) {
 table th:nth-of-type(3) {
     width: 30%;
 }
+th, td {
+  border: 3px solid grey !important;
+}
 </style>
 |                         | Pixel Déterministe                                                                                     | Pixel Interactif                                  |
 |-------------------------|:------------------------------------------------------------------------------------------------------:|:-------------------------------------------------:|
@@ -1313,20 +1316,27 @@ Il suffit d'utiliser le noeud `Denoise` dans le `Compositeur` et le tour est jou
 
 [![Caplture zoomée mettant en evidence l'abscence de bruit après denoising dans blender"](images/denoised_indirect.webp)](images/denoised_indirect.webp)
 
-Evidement le denoising augment le temps de rendu. Mais c'est le prix pour avoir un rendu de qualité.
+Evidement le denoising augment le temps de rendu. Mais c'est le prix pour avoir une image de qualité.
 
 [![Capture zoomée de la scene, mettant en evidence l'abscence de bruit](images/det_denoise_zoom.opti.webp)](images/det_denoise_zoom.opti.webp)
 
 ### 4. Double exposition
 Le resultat actuel est plutôt pas mal. Mais si vous avez l'oeil, vous aurez surement remarqué que la lumière déterministe est quelques peu sur-vitaminée.
 
-Là raison est simple. Notre shader ne fait pas de distinction selon type de lumière lors de l'accumulation des contributions. Pour un pixel interactif c'est exactement ce qu'on veut : si un personnage s'approche d'une source déterministe, on a envie que sa lumière l'affecte.
+Là raison est simple. Notre shader ne fait pas de distinction selon type de lumière/pixel lors de l'accumulation des contributions. Il applique la lumière temps réèl de partout. Si j'avais regardé mon tableau récapitulatif lors de l'implémentation, j'aurais pu anticiper que dans le cas "lumière déterministe sur pixel déterministe", seule la lumière précalculée doit être considérée.
 
-Mais pour un pixel déterministe, c'est un probleme ! En effet, l'accumulation des lumières déterministes sur l'environnement déterministe à déjà été calculés par Blender. Elle est stoqué dans les maps d'illumination que l'on vient d'intégrer. Comme le calcul est refait sans distinction côté Godot, ces lumières sont prises en compte 2 fois. C'est pour ça que ça patate aussi fort. (d'ailleurs si j'avais lu correctement mon tableau récapitulatif, j'aurait pu l'anticiper ^^)
+|                         | Pixel Déterministe                                                                                     | Pixel Interactif                                  |
+|-------------------------|:------------------------------------------------------------------------------------------------------:|:-------------------------------------------------:|
+| **Lumière Déterministe** | **===>** Précalculé **<===**					|	Temps Réèl	|
+| **Lumière Interactive**  | Précalculé + Temps Réèl	|	Temps Réèl	|
+
+*Récapitulation du tableau récapitulatif*
+
+C'est logique dans la mesure où la partie précalculée, c'est justement la lumière déterministe accumulée par Blender dans maps d'illumination. Si on l'accumule une deuxième fois gratuitement en temps réèl, forcement ça patate un peu fort.
 
 [![Capture zoomée de la scene, mettant en evidence l'intensité trop forte de la lumière qui brûle l'image](images/det_burned_zoom.opti.webp)](images/det_burned_zoom.opti.webp)
 
-Le shader à donc besoin de savoir à quel monde appartiennent les lumières qu'il traite. On lui fait part de cet information à travers un nouveau uniform `plight_isInteractive`. Il s'en sert lors de l'accumulation pour filtrer le cas "lumiere déterministe sur pixel déterministe" (qui n'a pas de composante temps réèl).
+Le shader à donc besoin de savoir à quel monde appartiennent les lumières qu'il traite. On lui fait part de cet information à travers un nouveau uniform `plight_isInteractive` dont il se sert pour filtrer le cas.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[5,18,19]}
