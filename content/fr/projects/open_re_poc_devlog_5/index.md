@@ -698,13 +698,15 @@ Contrairement à la lumière directe, qui voyage en ligne droite, la lumière in
 Notez que nos lumières déterministes ne sont pas sujettes à ce problème de noirceur des ombres, car elles prennent justement en compte l’éclairage indirect. C’est un des aspects qui les rend si intéressantes, malgré le fait qu’on ne puisse pas les déplacer comme on veut. Voyons comment ça fonctionne.
 
 ## III. Lumière déterministe
-Avant toute chose, pour pouvoir calculer de la lumière déterministe, on va avoir besoin... d'une lumière déterministe ! Il faut donc ajouter une point light à notre scene Blender.
 
-[![Capture d'écran de blender montrant la scène avec une light en plus](images/blender_point_light.opti.webp)](images/blender_point_light.opti.webp)
+Avant toute chose, pour pouvoir calculer de la lumière déterministe, on va avoir besoin… d’une lumière déterministe ! Il faut donc ajouter une *point light* à notre scène Blender.
 
-Cette point light sera automatiquement réimportée dans la scène godot par la magie de l'interopérabilité des 2 logiciels. Mais il faudra tout de même l'assigner aux uniforms correspondant de notre shader pour qu'il puisse la prendre en compte (vous vous souvenez ? les 3 tableaux de taille fix un peu overkill de la partie I ?). Sans cela elle ne pourra pas éclairer les pixels interactifs.
+[![Capture d’écran de Blender montrant la scène avec une light en plus](images/blender_point_light.opti.webp)](images/blender_point_light.opti.webp)
 
-D'ailleurs c'est le moment de déterrer le tableau récapitulatif de l'article principal pour nous remettre au point sur les différents cas :
+Cette *point light* sera automatiquement réimportée dans la scène Godot par la magie de l’interopérabilité entre les deux logiciels. Mais il faudra tout de même l’assigner aux *uniforms* correspondants de notre *shader* pour qu’il puisse la prendre en compte (vous vous souvenez ? les trois tableaux de taille fixe un peu *overkill* de la partie I ?). Sans cela, elle ne pourra pas éclairer les pixels interactifs.
+
+D’ailleurs, c’est le moment de déterrer le tableau récapitulatif de l’article principal pour nous remettre au point sur les différents cas :
+
 <style>
 table th:first-of-type {
     width: 10%;
@@ -719,43 +721,48 @@ th, td {
   border: 3px solid grey !important;
 }
 </style>
-|                         | Pixel Déterministe                                                                                     | Pixel Interactif                                  |
-|-------------------------|:------------------------------------------------------------------------------------------------------:|:-------------------------------------------------:|
-| **Lumière Déterministe** | Précalculé					|	Temps Réèl	|
-| **Lumière Interactive**  | Précalculé + Temps Réèl	|	Temps Réèl	|
 
-Le shader actuel n'accumule pour l'instant que la partie temps réèl de chaque lumière. Pour compléter le tableau, il va donc falloir précalculer la partie déterministe dans Blender, et l'appliquer aux pixels déterministes. 
+|                          |    Pixel Déterministe   | Pixel Interactif |
+| ------------------------ | :---------------------: | :--------------: |
+| **Lumière Déterministe** |        Précalculé       |    Temps réel    |
+| **Lumière Interactive**  | Précalculé + Temps réel |    Temps réel    |
 
-### 1. Generation des textures d'illumination
-Comme à chaque fois qu'on touche à Blender, on va activer de nouvelles passes et modifier le compositor pour générer de nouvelles maps afin d'enrichir notre G-Buffer déterministe. Cette fois ci, les passes cycle qui nous interessent sont au nombre de 5 :
-- diffuse directe
-- diffuse indirecte
-- glossy directe
-- glossy indirecte
-- glossy color
+Le *shader* actuel n’accumule pour l’instant que la partie temps réel de chaque lumière. Pour compléter le tableau, il va donc falloir précalculer la partie déterministe dans Blender, et l’appliquer aux pixels déterministes.
 
-Techniquement la diffuse color nous interesse aussi mais il se trouve qu'on l'a déjà (souvenez vous, c'est notre albédo).
+### 1. Génération des textures d’illumination
 
-De là vous connaissez la musique, :
-- On active les passes dans le paneau latéral
-- On ajoute les pins nécessaires au noeud File Output
-- On relie les sorties de chaque passes aux pins correspondant et on appuie sur F12 pour lancer le rendu
+Comme à chaque fois qu’on touche à Blender, on va activer de nouvelles passes et modifier le *compositor* pour générer de nouvelles *maps* afin d’enrichir notre G-Buffer déterministe. Cette fois-ci, les passes Cycles qui nous intéressent sont au nombre de cinq :
 
+* *diffuse direct*
+* *diffuse indirect*
+* *glossy direct*
+* *glossy indirect*
+* *glossy color*
 
-[![Capture d'écran montrant comment activer les pass d'illumination de Cycles](images/blender_passes.opti.webp)](images/blender_passes.opti.webp)
+Techniquement, la *diffuse color* nous intéresse aussi, mais il se trouve qu’on l’a déjà (souvenez-vous, c’est notre albédo).
+
+De là, vous connaissez la musique :
+
+* On active les passes dans le panneau latéral
+* On ajoute les *pins* nécessaires au nœud `File Output`
+* On relie les sorties de chaque passe aux *pins* correspondants, et on appuie sur `F12` pour lancer le rendu
+
+[![Capture d’écran montrant comment activer les passes d’illumination de Cycles](images/blender_passes.opti.webp)](images/blender_passes.opti.webp)
 
 Petit point vocabulaire pour bien comprendre à quoi correspondent toutes ces données :
-- **diffuse :** correspond à la composantes diffuse de la lumière
-- **glossy :** correspond à la composantes spéculaire de la lumière
-- **direct :** contribution des rayons de première visibilité (lumière directe)
-- **indirect :** contribution des rebonds successifs (lumière indirecte)
 
-En gros, plutôt que de nous donner directement l'accumulation totale de toutes les contributions lumineuse de la scène, Blender les regroupe par paquet et nous laisse le soin de les recombiner comme on veut. Ce qui donne à l'utilisateur une plus grande liberté artistique. 
+* **diffuse :** correspond à la composante diffuse de la lumière
+* **glossy :** correspond à la composante spéculaire de la lumière
+* **direct :** contribution des rayons de première visibilité (lumière directe)
+* **indirect :** contribution des rebonds successifs (lumière indirecte)
 
-Je ne sais pas encore si on aura l'utilisté de ce découpage dans OpenRE. Dans le doute on le garde pour se laisser l'oportunité d'experimenter plus tard. Mais si on ne s'en sert pas, il faudra biensure recomposer tout ça directement dans Blender avant export. On va pas se trimbaler 5 textures quand on peut n'en manipuler qu'une seule.
+En gros, plutôt que de nous donner directement l’accumulation totale de toutes les contributions lumineuses de la scène, Blender les regroupe par paquet et nous laisse le soin de les recombiner comme on veut. Ce qui donne à l’utilisateur une plus grande liberté artistique.
 
-### 2. Intégration au compositor
-C'est maintenant une habitude, voici d'un bloc la totalité des ajout que l'on s'apprete à détailler. L'objectif ici est que notre shader soit en capacité de gérer la lumière déterministe que l'on vient de générer.
+Je ne sais pas encore si on aura l’utilité de ce découpage dans OpenRE. Dans le doute, on le garde pour se laisser l’opportunité d’expérimenter plus tard. Mais si on ne s’en sert pas, il faudra bien sûr recomposer tout ça directement dans Blender avant export. On ne va pas se trimballer cinq textures quand on peut n’en manipuler qu’une seule.
+
+### 2. Intégration au shader
+
+C’est maintenant une habitude : voici, d’un bloc, la totalité des ajouts que l’on s’apprête à détailler. L’objectif ici est que notre *shader* soit en capacité de gérer la lumière déterministe que l’on vient de générer.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[7,8,9,10,11 , 16,17,18,19,20 , 30,31,32,33]}
@@ -908,8 +915,9 @@ void fragment() {
 ```
 {{< /togglecode >}}
 
-#### 2.1. Introduction des maps déterministe
-On doit biensure lui donner les textures via des uniforms.
+#### 2.1. Introduction des *maps* déterministes
+
+On doit bien sûr lui donner les textures via des *uniforms*.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[3,4,5,6,7]}
@@ -1031,8 +1039,9 @@ void fragment() {
 ```
 {{< /togglecode >}}
 
-#### 2.2. Echantillonage des maps déterministe
-Ensuite, on échantillonne ces textures de la même manière que les autres. Mais cette fois ci, il n'y a pas d'harmonisation a effectuer car ces données sont exclusivent au monde déterministe.
+#### 2.2. Échantillonnage des *maps* déterministes
+
+Ensuite, on échantillonne ces textures de la même manière que les autres. Mais cette fois-ci, il n’y a pas d’harmonisation à effectuer, car ces données sont exclusives au monde déterministe.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[6,7,8,9,10]}
@@ -1157,11 +1166,12 @@ void fragment() {
 {{< /togglecode >}}
 
 #### 2.3. Reconstitution de la lumière déterministe
-Ici nous allons initialiser les variable `diffuse_contrib` et `specular_contrib` selon la formule indiquée dans la documention de Blender.
 
-[![Schéma issue de la documentation de godot indiquant comment rzeconstituer les maps des différentes passes](images/blender_compo_formula.opti.webp)](images/blender_compo_formula.opti.webp)
+Ici, nous allons initialiser les variables `diffuse_contrib` et `specular_contrib` selon la formule indiquée dans la documentation de Blender.
 
-Comme le disait le tableau récapitulatif, la lumière déterministe générée dans Blender ne s'applique pas aux fragments intéractifs. C'est la raison pour laquelle on initialise les variables dans le `else` du bloc de sélection des données.
+[![Schéma issu de la documentation de Blender indiquant comment reconstituer les maps des différentes passes](images/blender_compo_formula.opti.webp)](images/blender_compo_formula.opti.webp)
+
+Comme le disait le tableau récapitulatif, la lumière déterministe générée dans Blender ne s’applique pas aux fragments interactifs. C’est la raison pour laquelle on initialise les variables dans le `else` du bloc de sélection des données.
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[13,14,15,16]}
@@ -1292,9 +1302,9 @@ void fragment() {
 ```
 {{< /togglecode >}}
 
-Ainsi, la suite du shader accumule naturellement la lumière temps réèl par dessus la lumière précalculée que l'on vient de reconstituer, et on obtien le résultat suivant :
+Ainsi, la suite du *shader* accumule naturellement la lumière temps réel par-dessus la lumière précalculée que l’on vient de reconstituer, et on obtient le résultat suivant :
 
-{{< rawhtml >}} 
+{{< rawhtml >}}
 
 <video width="100%" controls muted loop playsinline autoplay>
     <source src="videos/burned_noise.mp4" type="video/mp4">
@@ -1303,49 +1313,54 @@ Ainsi, la suite du shader accumule naturellement la lumière temps réèl par de
 
 {{< /rawhtml >}}
 
-
 ### 3. Denoising
-Quand on regarde tout ça de près, on peut voir que le rendu n'est pas très propre.
 
-[![Capture zoomée de la scene, mettant en evidence le bruit de l'image](images/det_noise_zoom.opti.webp)](images/det_noise_zoom.opti.webp)
+Quand on regarde tout ça de près, on peut voir que le rendu n’est pas très propre.
 
-Si on s'interesse aux maps d'indirect générées par Blender, on comprend vite pourquoi.
+[![Capture zoomée de la scène, mettant en évidence le bruit de l’image](images/det_noise_zoom.opti.webp)](images/det_noise_zoom.opti.webp)
 
-[![Caplture zoomée mettant en evidence le bruit sur les images d'origine "Diffuse Indirect" et "Glossy Indirect"](images/noise_indirect.webp)](images/noise_indirect.webp)
+Si on s’intéresse aux *maps* d’indirect générées par Blender, on comprend vite pourquoi.
 
-*"Garbage in => garbage out !"* Il n'y a pas de miracle, si vos données d'entrées sont sales, aucune chance d'avoir quelque chose de propre en sortie.
+[![Capture zoomée mettant en évidence le bruit sur les images d’origine “Diffuse Indirect” et “Glossy Indirect”](images/noise_indirect.webp)](images/noise_indirect.webp)
 
-**Mais pourquoi Blender fait des rendu tout dégeux d'abord ?**
+*"Garbage in ⇒ garbage out !"*
+Il n’y a pas de miracle : si vos données d’entrée sont sales, aucune chance d’obtenir quelque chose de propre en sortie.
 
-Et bien en fait c'est normal. Toutes les images générées par *path tracing* sont bruitées, et c'est comme ça que sont produites les maps d'indirect. Si on veut de la netteté, il faut les denoiser. Blender en est biensure capable. Il ne le fait simplement pas par defaut.
+**Mais pourquoi Blender fait des rendus tout dégueux, d’abord ?**
 
-[![Capture du compositeur de Blender auquel on a ajouté les noeuds dénoise](images/blender_denoise_node.opti.webp)](images/blender_denoise_node.opti.webp)
+Eh bien, en fait, c’est normal. Toutes les images générées par *path tracing* sont bruitées, et c’est ainsi que sont produites les *maps* d’indirect. Si on veut de la netteté, il faut les *denoiser*. Blender en est bien sûr capable, il ne le fait simplement pas par défaut.
 
-Il suffit d'utiliser le noeud `Denoise` dans le `Compositeur` et le tour est joué.
+[![Capture du compositeur de Blender auquel on a ajouté les nœuds Denoise](images/blender_denoise_node.opti.webp)](images/blender_denoise_node.opti.webp)
 
-[![Caplture zoomée mettant en evidence l'abscence de bruit après denoising dans blender"](images/denoised_indirect.webp)](images/denoised_indirect.webp)
+Il suffit d’utiliser le nœud `Denoise` dans le `Compositor` et le tour est joué.
 
-Evidement le denoising augment le temps de rendu. Mais c'est le prix pour avoir une image de qualité.
+[![Capture zoomée mettant en évidence l’absence de bruit après denoising dans Blender](images/denoised_indirect.webp)](images/denoised_indirect.webp)
 
-[![Capture zoomée de la scene, mettant en evidence l'abscence de bruit](images/det_denoise_zoom.opti.webp)](images/det_denoise_zoom.opti.webp)
+Évidemment, le *denoising* augmente le temps de rendu. Mais c’est le prix à payer pour obtenir une image de qualité.
+
+[![Capture zoomée de la scène, mettant en évidence l’absence de bruit](images/det_denoise_zoom.opti.webp)](images/det_denoise_zoom.opti.webp)
 
 ### 4. Double exposition
-Le resultat actuel est plutôt pas mal. Mais si vous avez l'oeil, vous aurez surement remarqué que la lumière déterministe est quelques peu sur-vitaminée.
 
-Là raison est simple. Notre shader ne fait pas de distinction selon type de lumière/pixel lors de l'accumulation des contributions. Il applique la lumière temps réèl de partout. Si j'avais regardé mon tableau récapitulatif lors de l'implémentation, j'aurais pu anticiper que dans le cas "lumière déterministe sur pixel déterministe", seule la lumière précalculée doit être considérée.
+Le résultat actuel est plutôt pas mal.
+Mais si vous avez l’œil, vous aurez sûrement remarqué que la lumière déterministe est quelque peu survitaminée.
 
-|                         | Pixel Déterministe                                                                                     | Pixel Interactif                                  |
-|-------------------------|:------------------------------------------------------------------------------------------------------:|:-------------------------------------------------:|
-| **Lumière Déterministe** | **===>** Précalculé **<===**					|	Temps Réèl	|
-| **Lumière Interactive**  | Précalculé + Temps Réèl	|	Temps Réèl	|
+La raison est simple : notre *shader* ne fait pas de distinction selon les types de lumière ou de pixel lors de l’accumulation des contributions. Il applique la lumière temps réel partout. Si j’avais relu mon tableau récapitulatif lors de l’implémentation, j’aurais pu anticiper que dans le cas *“lumière déterministe sur pixel déterministe”*, seule la lumière précalculée doit être considérée.
 
-*Récapitulation du tableau récapitulatif*
+|                          |      Pixel Déterministe      | Pixel Interactif |
+| ------------------------ | :--------------------------: | :--------------: |
+| **Lumière Déterministe** | **===>** Précalculé **<===** |    Temps Réel    |
+| **Lumière Interactive**  |    Précalculé + Temps Réel   |    Temps Réel    |
 
-C'est logique dans la mesure où la partie précalculée, c'est justement la lumière déterministe accumulée par Blender dans maps d'illumination. Si on l'accumule une deuxième fois gratuitement en temps réèl, forcement ça patate un peu fort.
+*Récapitulation du tableau récapitulatif.*
 
-[![Capture zoomée de la scene, mettant en evidence l'intensité trop forte de la lumière qui brûle l'image](images/det_burned_zoom.opti.webp)](images/det_burned_zoom.opti.webp)
+C’est logique, dans la mesure où la partie précalculée, c’est justement la lumière déterministe accumulée par Blender dans les *maps* d’illumination. Si on l’accumule une deuxième fois gratuitement en temps réel, forcément, ça patate un peu fort.
 
-Le shader à donc besoin de savoir à quel monde appartiennent les lumières qu'il traite. On lui fait part de cet information à travers un nouveau uniform `plight_isInteractive` dont il se sert pour filtrer le cas problématique.
+[![Capture zoomée de la scène, mettant en évidence l’intensité trop forte de la lumière qui brûle l’image](images/det_burned_zoom.opti.webp)](images/det_burned_zoom.opti.webp)
+
+Le *shader* a donc besoin de savoir à quel monde appartiennent les lumières qu’il traite.
+On lui transmet cette information à travers un nouvel *uniform* `plight_isInteractive`, dont il se sert pour filtrer le cas problématique.
+
 
 {{< togglecode >}}
 ```glsl {#code-compact hl_lines=[5,18,19]}
@@ -1489,7 +1504,7 @@ void fragment() {
 
 Ce qui nous laisse avec ce magnifique rendu :
 
-{{< rawhtml >}} 
+{{< rawhtml >}}
 
 <video width="100%" controls muted loop playsinline autoplay>
     <source src="videos/final.mp4" type="video/mp4">
@@ -1498,11 +1513,16 @@ Ce qui nous laisse avec ce magnifique rendu :
 
 {{< /rawhtml >}}
 
-## IV. Conclusion 
-On commence à arriver sur quelque chose de convainquant. Sur la partie temps réèl, le modèle de Lambert est certes un peu léger en comparaison de ce qui se fait aujourd'hui. Mais sans spéculaire on peut malheureusement pas faire beaucup mieux. C'est pourquoi dans le prochain épisode, on s'attaquera à l'harmonisation de l'ORM en vu de l'implémentation d'un modèle PBR.
+## IV. Conclusion
 
-Ceci étant dit, je trouve que même en l'état, Lambert ne s'en sort pas trop mal dès lors qu'on y ajoute la lumière déterministe précalculée. On a déjà de la spéculaire, de la lumière indirect et on se paie même le luxe d'une superbe ombre portée (qui ignore la géométrie interactive oui ça va je sais...).
+On commence à arriver sur quelque chose de convaincant.
+Sur la partie temps réel, le modèle de Lambert est certes un peu léger en comparaison de ce qui se fait aujourd’hui. Mais sans spéculaire, on ne peut malheureusement pas faire beaucoup mieux. C’est pourquoi, dans le prochain épisode, on s’attaquera à l’harmonisation de l’ORM en vue de l’implémentation d’un modèle PBR.
 
-Les deux mondes ne sont pas totalement indicernables, mais il faut quand même regargarder la scène de près pour voire la supercherie. Il faudra biensure confirmer cela sur un scène un peu plus réaliste mais c'est assez prometteur. 
+Ceci étant dit, je trouve que même en l’état, Lambert ne s’en sort pas trop mal dès lors qu’on y ajoute la lumière déterministe précalculée. On a déjà de la spéculaire, de la lumière indirecte, et on se paie même le luxe d’une superbe ombre portée (qui ignore la géométrie interactive, oui, ça va, je sais...).
 
-Ainsi s'achève cette première mise en application des principe d'OpenRE. Je suis contant de pouvoir enfin vous montrer quelque résultats (après 6 numéros répartis sur 6 mois, il était temps héhé). Mais on as encore pas mal de sujets à couvrir dans ce POC avant de passer au SDK. J'espère que ça vous plais toujours. En tout cas ça me fait très plaisir de voire que plusieurs personnes suivent l'aventure. Salut à vous ! Merci d'être là ! Et à bientôt 👋
+Les deux mondes ne sont pas totalement indiscernables, mais il faut quand même regarder la scène de près pour voir la supercherie. Il faudra bien sûr confirmer cela sur une scène un peu plus réaliste, mais c’est assez prometteur.
+
+Ainsi s’achève cette première mise en application des principes d’OpenRE. Je suis content de pouvoir enfin vous montrer quelques résultats (après six numéros répartis sur six mois, il était temps héhé).
+Mais on a encore pas mal de sujets à couvrir dans ce POC avant de passer au SDK. J’espère que ça vous plaît toujours. En tout cas, ça me fait très plaisir de voir que plusieurs personnes suivent l’aventure.
+
+Salut à vous, merci d’être là, et à bientôt 👋
