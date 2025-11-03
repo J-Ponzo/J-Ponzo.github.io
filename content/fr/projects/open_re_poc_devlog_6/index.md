@@ -17,3 +17,33 @@ draft = true
 - Create custom nodal shader that draw ORM on specific cam layer
 - implement pbr from learn open GL
 - boost roto-light intensity
+
+[⬅️ Vers Précédent : "OpenRE devlog 5 : Fusion des mondes. Part II"](projects/open_re_poc_devlog_5)
+
+## I. Introduction
+
+## II. Quésaco PBR ?
+
+## III. Génération des textures
+
+### 1. ORM interactive
+
+simple_ORM avec metalic/roughness/AO plugged
+
+### 2. ORM déterministe
+
+## IV. Réglages
+
+### 1. Albedo interactif annulé par la Metalic 
+
+=> simple_ORM avec metalic/roughness/AO unplugged
+
+### 2. Le cas de Ambient Occlusion
+
+Pas vraiment PBR blabla. Cut au preprocess de l'oracle
+
+### 2. Diffuse Color VS Albedo
+
+Metalic Workflow VS Specular Workflow
+
+## V. Conclusion 
