@@ -22,7 +22,19 @@ draft = true
 
 ## I. Introduction
 
+Salut à tous ! Après les derniers épisodes consacrés à l'implémentation de l'éclairage, on va déterer l'Oracle et refaire un peu d'harmonisation. Cette fois ci, on s'interessera à l'ORM qui est un standard d'organisation de données au sein des cannaux d'une texture :
+- Red : (Ambient) **O**clusion
+- Green : **R**oughness
+- Blue : **M**etalic
+
+On va avoir besoin de ces informations pour mettre en oeuvre un modèle d'illumination PBR. Vous avez certainement déjà rencontré ce terme, mais prenons un instant pour nous mettre au claire sur ce que c'est vraiment.
+
 ## II. Quésaco PBR ?
+PBR est l'accronyme de *Physically Based Rendering*. Il s'agit d'une cathégorie de modèles d'illumination qui s'appuie sur des loies physiques pour garantire un certain niveau de cohérence visuelle et d'ineropérabilité des materiaux. 
+
+Dans l'imaginaire collectif, il est souvent synonyme de qualité de rendu et de réalisme : "Regardez ! c'est "Physically Based" ça veut dire c'est comme la vrai vie !". En réalité, on peut tout à fait faire du stylisé avec des modèles PBR, d'ailleurs un des pioniers de la démocratisation de ces techniques est Disney et son article "Physically-Based Shading at Disney" dont toute l'industrie s'est inspirée.
+
+En fait, il faut plus voir le PBR comme un contract permettant d'articuler et d'homogénéiser le travail de artistes et des programeurs graphiques. Avant lui l'humanité était tout a fait capable de faire de super materiaux. Cependant, ces materiaux n'était correct que dans le moteur pour lequel ils étaient concus, voir même parfois dans une seule scène aux conditions d'éclairages particulières.
 
 ## III. Génération des textures
 
