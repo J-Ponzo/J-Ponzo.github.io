@@ -58,7 +58,7 @@ Côté Blender, on a la possiblité de créer des passes custom qu'ils appel des
 
 A partir de là peut traiter ce pin de sortie comme une passe classique et dérouler notre *process* habituel.
 - on créé un pin `orm` dans le noeud `File Output`
-- on relie le pin 'aov_orm' de `Render Layers` au pin `orm` fraichement créé
+- on relie le pin `aov_orm` de `Render Layers` au pin `orm` fraichement créé
 
 [aov_orm_compositor_annot]
 
@@ -97,7 +97,7 @@ th, td {
 | BaseTorus (Purpule part of podium)	| 0.00 | 0.80 |
 | BaseCylinder (Blue part of podium)	| 1.00 | 0.50 |
 
-On a donc un fait le nécessaire pour remplir les cannaux `Green` et `Blue` de notre ORM. Mais il nous reste le `Red` déstiné à acceuillir l'*Ambient Occlusion*. Cette donnée ne vient pas du materiau mais d'une passe Cycle officielle qu'il nous faut activer et combiner à notre AOV comme ceci :
+On a donc fait le nécessaire pour remplir les cannaux `Green` et `Blue` de notre ORM. Mais il nous reste le `Red` déstiné à acceuillir l'*Ambient Occlusion*. Cette donnée ne vient pas du materiau mais d'une passe Cycle officielle qu'il nous faut activer et combiner à notre AOV comme ceci :
 
 [combine_ao_aov]
 
@@ -106,6 +106,14 @@ Et voila ! On a plus qu'à appuyer sur F12 pour lancer le rendu et on obtien une
 [orm]
 
 ### 2. ORM interactive
+
+Pour l'ORM intéractive, la technique va être de se servir des `camera layers` active pour selectionner ce qu'on veut envoyer dans l'albedo. Ainsi nous auront un materiaux normal sur la plupart de layers, mais si une certaine layer est active (disons la 5), l'ORM se substitura à l'Albedo. 
+
+De cette manière nous pourront créer un `Sub_Viewport` sur le même modèle que ce qu'on avait fait pour l'Albedo :
+- `hint_screen_texture` affichée sur le quad
+- `Debug Draw = Unshaded`
+
+Sauf que cette fois on mettra le caméra et le quad sur la layer 5
 
 simple_ORM avec metalic/roughness/AO plugged
 
