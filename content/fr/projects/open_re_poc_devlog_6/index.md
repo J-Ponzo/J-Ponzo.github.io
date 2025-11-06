@@ -107,15 +107,30 @@ Et voila ! On a plus qu'à appuyer sur F12 pour lancer le rendu et on obtien une
 
 ### 2. ORM interactive
 
-Pour l'ORM intéractive, la technique va être de se servir des `camera layers` active pour selectionner ce qu'on veut envoyer dans l'albedo. Ainsi nous auront un materiaux normal sur la plupart de layers, mais si une certaine layer est active (disons la 5), l'ORM se substitura à l'Albedo. 
+Pour l'ORM intéractive, la technique va être de se servir des `camera layers` pour selectionner ce qu'on veut envoyer dans l'albedo. Ainsi nous auront un materiaux normal sur la plupart de layers, mais si une certaine layer est active (disons la 5), l'ORM se substitura à l'Albedo. 
 
 De cette manière nous pourront créer un `Sub_Viewport` sur le même modèle que ce qu'on avait fait pour l'Albedo :
 - `hint_screen_texture` affichée sur le quad
-- `Debug Draw = Unshaded`
+- `Debug Draw = Unshaded` sur le `Sub_Viewport`
 
-Sauf que cette fois on mettra le caméra et le quad sur la layer 5
+Sauf que sous ce `Sub_Viewport`, le caméra et le quad seront sur la layer 5.
 
-simple_ORM avec metalic/roughness/AO plugged
+[gif setup SubViewport ORM]
+
+On va donc créer un material custom. J'ai choisi d'utiliser un `Visual Shader` plutôt qu'un shader classique au cas où je n'arrive pas à une solution completement automatique pour la migration. Autant rester accessible à un maximum de profils et je sais que le glsl peut rebuter pas mal de monde.
+
+Pour l'instant on se limitera à des `Vec3 Parameters` pour  definir :
+- Albedo
+- ORM
+- Normales 
+
+Pour la scène actuelle ça suffira car nous n'avons que des materiaux uniformement répartis sur toute la surface du mesh. Mais on va rapidement devoir supporter des textures pour pouvoir composer des scenes un peu plus convainquantes. On enchichira le shader en temps voulu mais en attendant il ressemble à ça :
+
+[visual shader with metalic]
+
+Toute la science est dans la partie encadrée en rouge : on verifie si la layer 5 de la caméra courante est activée, et on se sert de cette information pour switcher entre l'albedo et l'ORM. 
+
+Maitenant que le materiau est prêt, on est bons pour le remplacer dans tous nos meshes en reglant chaque fois l'albedo et l'ORM à l'identique de ce qui est setup dans Blender. Une fois que c'est fait, on va pouvoir adapter l'Oracle pour qu'il prenne en compte nos maps d'ORM et commencer les réglages.
 
 ## IV. Réglages
 
