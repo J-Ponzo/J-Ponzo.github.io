@@ -26,7 +26,7 @@ Salut à tous !
 Après les derniers épisodes consacrés à l’implémentation de l’éclairage, on va ressortir l’Oracle du placard pour faire un peu d’harmonisation.
 Cette fois-ci, on va s’intéresser à l’ORM.
 
-Il s’agit d’une convention qui définit dans quels canaux RGB sont rangées les informations suivantes :
+ORM est une convention qui définit dans quels canaux RGB sont rangées les informations suivantes :
 - Red : (Ambient) **O**cclusion
 - Green : **R**oughness
 - Blue : **M**etallic
@@ -133,13 +133,165 @@ Toute la science est dans la partie encadrée en rouge : on verifie si la layer 
 Maitenant que le materiau est prêt, on est bons pour le remplacer dans tous nos meshes en reglant chaque fois l'albedo et l'ORM à l'identique de ce qui est setup dans Blender. Une fois que c'est fait, on va pouvoir adapter l'Oracle pour qu'il prenne en compte nos maps d'ORM et commencer les réglages.
 
 ## IV. Réglages
+Grâce au turbo widget d'affichage/masquage de code, je peux maintenant cesser d'eluder les modifications de l'orcle. Alors les voici !
+
+{{< togglecode >}}
+```glsl {#code-compact hl_lines=[5,8,11,12,13,14,18,19]}
+...
+
+// Data to check
+...
+#define ORM_TYPE 3
+
+// Determinist & Interactive G-Buffer
+const int NB_GMAPS = 4;
+...
+
+vec3 compute_orm_difference(vec3 d_frag, vec3 i_frag) {
+	float dist = distance(d_frag, i_frag);
+	return vec3(dist, dist, dist);
+}
+
+vec3 compute_difference(vec3 d_frag, vec3 i_frag) {
+	...
+	else if (data_type == ORM_TYPE)
+		return compute_orm_difference(d_frag, i_frag);
+	...
+}
+
+...
+```
+
+```glsl {#code-full .hidden hl_lines=[14,18,52,53,54,55,64,65]}
+shader_type spatial;
+render_mode unshaded, fog_disabled;
+
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+const vec3 ERROR_COLOR = vec3(1.0, 0.0, 1.0);
+
+// Data to check
+#define ALBEDO_TYPE 0
+#define DEPTH_TYPE 1
+#define NORMAL_TYPE 2
+#define ORM_TYPE 3
+uniform int data_type = -1;
+
+// Determinist & Interactive G-Buffer
+const int NB_GMAPS = 4;
+uniform sampler2D[NB_GMAPS] d_gbuffer : filter_nearest;
+uniform sampler2D[NB_GMAPS] i_gbuffer : filter_nearest;
+
+// Choix du mode d'affichage
+#define I_D_DIFFERENCE 0
+#define D_TEXTURE_ONLY 1
+#define I_TEXTURE_ONLY 2
+uniform int visualisation_mode = 0;
+
+// Permutation des normales
+#include "debug.gdshaderinc"
+#include "pre_process_utils.gdshaderinc"
+uniform int permut_idx = 0;
+
+vec3 compute_albedo_difference(vec3 d_frag, vec3 i_frag) {
+	float dist = distance(d_frag, i_frag);
+	return vec3(dist, dist, dist);
+}
+
+vec3 compute_depth_difference(vec3 d_frag, vec3 i_frag) {
+	float dist = distance(d_frag.r, i_frag.r);
+	return vec3(dist, dist, dist);
+}
+
+vec3 compute_normal_difference(vec3 d_frag, vec3 i_frag) {
+	d_frag = d_frag * 2.0 - 1.0;	// Unpack
+	i_frag = i_frag * 2.0 - 1.0;	// Unpack
+	d_frag = normalize(d_frag);
+	i_frag = normalize(i_frag);
+	float angle = acos(dot(d_frag, i_frag)) / PI;
+	return vec3(angle, angle, angle);
+}
+
+vec3 compute_orm_difference(vec3 d_frag, vec3 i_frag) {
+	float dist = distance(d_frag, i_frag);
+	return vec3(dist, dist, dist);
+}
+
+vec3 compute_difference(vec3 d_frag, vec3 i_frag) {
+	if (data_type == ALBEDO_TYPE)
+		return compute_albedo_difference(d_frag, i_frag);
+	else if (data_type == DEPTH_TYPE)
+		return compute_depth_difference(d_frag, i_frag);
+	else if (data_type == NORMAL_TYPE)
+		return compute_normal_difference(d_frag, i_frag);
+	else if (data_type == ORM_TYPE)
+		return compute_orm_difference(d_frag, i_frag);
+	return ERROR_COLOR;
+}
+
+const float n = 0.1;
+const float f = 5.0;
+
+void fragment() {
+	vec3 out_color = ERROR_COLOR;
+
+	if (data_type >= 0 && data_type < NB_GMAPS
+		&& visualisation_mode >= 0 && visualisation_mode < 3) {
+		// Récupération des pixels déterministe et interactif
+		vec3 d_frag = texture(d_gbuffer[data_type], SCREEN_UV).rgb;
+		vec3 i_frag = texture(i_gbuffer[data_type], SCREEN_UV).rgb;
+
+		// Preprocess data
+		switch (data_type) {
+			case DEPTH_TYPE:
+				d_frag = pre_process_d_depth(d_frag, n, f);
+				i_frag = pre_process_i_depth(i_frag);
+				break;
+			case NORMAL_TYPE:
+				d_frag = pre_process_d_normal(d_frag);
+				d_frag = (d_frag + 1.0) / 2.0;	// Pack for visualization
+				i_frag = pre_process_i_normal(i_frag, INV_VIEW_MATRIX);
+				i_frag = (i_frag + 1.0) / 2.0; // Pack for visualization
+				break;
+			case ORM_TYPE:
+				d_frag = vec3(1.0, d_frag.yz);
+				i_frag = vec3(1.0, i_frag.yz);
+				break;
+		}
+
+		// Selection de l'affichage
+		switch (visualisation_mode) {
+			case D_TEXTURE_ONLY:
+				out_color = d_frag;
+				break;
+			case I_TEXTURE_ONLY:
+				out_color = i_frag;
+				break;
+			case I_D_DIFFERENCE:
+				out_color = compute_difference(d_frag, i_frag);
+				break;
+		}
+	}
+
+	ALBEDO = out_color;
+}
+```
+{{< /togglecode >}}
+
+En somme, on agrandit les tableau de samplers pour aceuillir le nouveau `ORM_TYPE`, puis on ajout une fonction plutôt triviale de calcule de différence que l'on invoque dans `compute_difference`. De là, on oublie pas d'assigner notre texture deterministe et notre SubViewport interactif aux parametres de l'Oracle et on appuie sur `Play` pour obtenir notre première prophecie (ca faisait longtemps tiens...)
+
+[Prophecy]
+
+A première vu y a du boulot, mais en faite pas tant que ça.
 
 ### 1. Albedo interactif annulé par la Metalic 
-On voit du noir sur metalic=1
+Quand on regarde l'orm intéractive, on voit instantanement que le plafond et le cylindre qui fait office de podium sont complètement noirs. Ca n'a pas l'aire normal et si on se réfère au tableau de valeurs de la partie III.1 on reconnais vite un patern. Les mesh avec une `metallic` à 1.00 sont tous noirs comme de par hasard.
 
-plugger metalic=1 detruit l'albedo. C'est un rendu unshaded ?
+[ORM interactive]
 
-=> simple_ORM avec metalic unplugged
+J'ai d'abord été un peu surpris, et puis je me suis rappelé de notre bricolage à base de `hint_screen_texture` et de `Debug Draw = Unshaded`. Ce n'est pas vraiment l'albedo qu'on affiche, mais le rendu final privé de lumière. Et sans lumière à réfléchir, les metaux apparaissent noir.
 
 ### 2. Le cas de Ambient Occlusion
 Couleurs différentes et dégradées .
