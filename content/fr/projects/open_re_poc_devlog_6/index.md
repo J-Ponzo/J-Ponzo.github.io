@@ -293,12 +293,32 @@ Quand on regarde l'orm intéractive, on voit instantanement que le plafond et le
 
 J'ai d'abord été un peu surpris, et puis je me suis rappelé de notre bricolage à base de `hint_screen_texture` et de `Debug Draw = Unshaded`. Ce n'est pas vraiment l'albedo qu'on affiche, mais le rendu final privé de lumière. Et sans lumière à réfléchir, les metaux apparaissent noir.
 
+Le workaround est simple. On va juste débrancher la `metallic` de notre materiau custom. On en a pas besoin pour le rendu étant donné qu'on a rusé pour que l'info passe par l'albedo.
+
+[visual shader no metallic]
+
+Evidament ça va dégrader le rendu en éditeur ce qui n'est pas optimal. Mais là on est sur du confort d'utilisation. C'est donc un autre combat pour plustard.
+
+Après ce changement, si on re jete un oeil à l'ORM interactive, les materiaux metaliques ne sont plus noir.
+
 ### 2. Le cas de Ambient Occlusion
-Couleurs différentes et dégradées .
+Un petit presage plus tard, on constate bien une légère amélioration sur les zones concernées. Mais c'est quand même plutôt mauvais. 
 
-C'est a cause de l'AO.
+[presage 2]
 
-Pas vraiment PBR blabla. Cut au preprocess de l'oracle
+Les différences ont l'aire de se concentrer dans les angles et les zones confinées. Et quand on y réfléchi c'est tout à fait normal étant donné qu'on a pas du ton géré l'ambient occlusion côté godot ^^.
+
+En fait, l'ambient occlusion ne fait pas vraiment partie du PBR. Ce n'est pas un attribut qui défini la matière elle même. C'est un phenomène lié à la géométrie des objets que l'on simule en bakant le "degré d'ouveture" en chaque points de la surface du mesh.
+
+[exemple de map d'AO]
+
+Notre materiau custom dans sa version actuelle ne supporte que des valeurs uniformements réparties sur la totalité de l'objet. Ce qui n'a aucun sens pour l'ambient occlusion. On ne peut donc pas encore l'utiliser coté interactif.
+
+Ceci étant dit, même si on supportait déjà les textures, il n'y aurai vraiment lieu d'harmoniser cette donnée avec l'AO déterministe. La raison à cela est que les modalités de calcule de par et d'autre sont très différentes :
+- Blender : calcule l'AO de manière globale au niveau de la scène
+- Godot : l'AO est baké directement par le logiciel de modélisation. Ce qui fait qu'il est local à l'objet.
+
+Par consequent on aura quoi qu'on face des différences entre les AO déterminste et interactif. On donc simplement utiliser la préprocess de l'Orcale pour ignorer cette donnée.
 
 ## V. Rendu final
 Ce qui nous laisse avec le magnifique rendu :
