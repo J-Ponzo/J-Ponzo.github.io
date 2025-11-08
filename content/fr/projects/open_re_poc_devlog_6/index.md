@@ -255,10 +255,6 @@ void fragment() {
 				i_frag = pre_process_i_normal(i_frag, INV_VIEW_MATRIX);
 				i_frag = (i_frag + 1.0) / 2.0; // Pack for visualization
 				break;
-			case ORM_TYPE:
-				d_frag = vec3(1.0, d_frag.yz);
-				i_frag = vec3(1.0, i_frag.yz);
-				break;
 		}
 
 		// Selection de l'affichage
@@ -314,28 +310,204 @@ En fait, l'ambient occlusion ne fait pas vraiment partie du PBR. Ce n'est pas un
 
 Notre materiau custom dans sa version actuelle ne supporte que des valeurs uniformements réparties sur la totalité de l'objet. Ce qui n'a aucun sens pour l'ambient occlusion. On ne peut donc pas encore l'utiliser coté interactif.
 
-Ceci étant dit, même si on supportait déjà les textures, il n'y aurai vraiment lieu d'harmoniser cette donnée avec l'AO déterministe. La raison à cela est que les modalités de calcule de par et d'autre sont très différentes :
+Ceci étant dit, même si on supportait déjà les textures, il n'y aurait pas vraiment lieu d'harmoniser cette donnée avec l'AO déterministe. La raison à cela est que les modalités de calcule de par et d'autre sont très différentes :
 - Blender : calcule l'AO de manière globale au niveau de la scène
 - Godot : l'AO est baké directement par le logiciel de modélisation. Ce qui fait qu'il est local à l'objet.
 
-Par consequent on aura quoi qu'on face des différences entre les AO déterminste et interactif. On donc simplement utiliser la préprocess de l'Orcale pour ignorer cette donnée.
+Par consequent, quoi qu'on face les différences entre les AO déterminste et interactif ne disparaitront jamais totalement. On va donc prendre le parti de les accepter et utiliser le préprocess de l'Orcale pour ignorer la donnée.
+
+{{< togglecode >}}
+```glsl {#code-compact hl_lines=[11,12]}
+...
+void fragment() {
+	...
+	if (data_type >= 0 && data_type < NB_GMAPS
+		&& visualisation_mode >= 0 && visualisation_mode < 3) {
+		...
+		// Preprocess data
+		switch (data_type) {
+			...
+			case ORM_TYPE:
+				d_frag = vec3(1.0, d_frag.yz);
+				i_frag = vec3(1.0, i_frag.yz);
+				break;
+		}
+		...
+	}
+	...
+}
+...
+```
+
+```glsl {#code-full .hidden hl_lines=[94,95]}
+shader_type spatial;
+render_mode unshaded, fog_disabled;
+
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+const vec3 ERROR_COLOR = vec3(1.0, 0.0, 1.0);
+
+// Data to check
+#define ALBEDO_TYPE 0
+#define DEPTH_TYPE 1
+#define NORMAL_TYPE 2
+#define ORM_TYPE 3
+uniform int data_type = -1;
+
+// Determinist & Interactive G-Buffer
+const int NB_GMAPS = 4;
+uniform sampler2D[NB_GMAPS] d_gbuffer : filter_nearest;
+uniform sampler2D[NB_GMAPS] i_gbuffer : filter_nearest;
+
+// Choix du mode d'affichage
+#define I_D_DIFFERENCE 0
+#define D_TEXTURE_ONLY 1
+#define I_TEXTURE_ONLY 2
+uniform int visualisation_mode = 0;
+
+// Permutation des normales
+#include "debug.gdshaderinc"
+#include "pre_process_utils.gdshaderinc"
+uniform int permut_idx = 0;
+
+vec3 compute_albedo_difference(vec3 d_frag, vec3 i_frag) {
+	float dist = distance(d_frag, i_frag);
+	return vec3(dist, dist, dist);
+}
+
+vec3 compute_depth_difference(vec3 d_frag, vec3 i_frag) {
+	float dist = distance(d_frag.r, i_frag.r);
+	return vec3(dist, dist, dist);
+}
+
+vec3 compute_normal_difference(vec3 d_frag, vec3 i_frag) {
+	d_frag = d_frag * 2.0 - 1.0;	// Unpack
+	i_frag = i_frag * 2.0 - 1.0;	// Unpack
+	d_frag = normalize(d_frag);
+	i_frag = normalize(i_frag);
+	float angle = acos(dot(d_frag, i_frag)) / PI;
+	return vec3(angle, angle, angle);
+}
+
+vec3 compute_orm_difference(vec3 d_frag, vec3 i_frag) {
+	float dist = distance(d_frag, i_frag);
+	return vec3(dist, dist, dist);
+}
+
+vec3 compute_difference(vec3 d_frag, vec3 i_frag) {
+	if (data_type == ALBEDO_TYPE)
+		return compute_albedo_difference(d_frag, i_frag);
+	else if (data_type == DEPTH_TYPE)
+		return compute_depth_difference(d_frag, i_frag);
+	else if (data_type == NORMAL_TYPE)
+		return compute_normal_difference(d_frag, i_frag);
+	else if (data_type == ORM_TYPE)
+		return compute_orm_difference(d_frag, i_frag);
+	return ERROR_COLOR;
+}
+
+const float n = 0.1;
+const float f = 5.0;
+
+void fragment() {
+	vec3 out_color = ERROR_COLOR;
+
+	if (data_type >= 0 && data_type < NB_GMAPS
+		&& visualisation_mode >= 0 && visualisation_mode < 3) {
+		// Récupération des pixels déterministe et interactif
+		vec3 d_frag = texture(d_gbuffer[data_type], SCREEN_UV).rgb;
+		vec3 i_frag = texture(i_gbuffer[data_type], SCREEN_UV).rgb;
+
+		// Preprocess data
+		switch (data_type) {
+			case DEPTH_TYPE:
+				d_frag = pre_process_d_depth(d_frag, n, f);
+				i_frag = pre_process_i_depth(i_frag);
+				break;
+			case NORMAL_TYPE:
+				d_frag = pre_process_d_normal(d_frag);
+				d_frag = (d_frag + 1.0) / 2.0;	// Pack for visualization
+				i_frag = pre_process_i_normal(i_frag, INV_VIEW_MATRIX);
+				i_frag = (i_frag + 1.0) / 2.0; // Pack for visualization
+				break;
+			case ORM_TYPE:
+				d_frag = vec3(1.0, d_frag.yz);
+				i_frag = vec3(1.0, i_frag.yz);
+				break;
+		}
+
+		// Selection de l'affichage
+		switch (visualisation_mode) {
+			case D_TEXTURE_ONLY:
+				out_color = d_frag;
+				break;
+			case I_TEXTURE_ONLY:
+				out_color = i_frag;
+				break;
+			case I_D_DIFFERENCE:
+				out_color = compute_difference(d_frag, i_frag);
+				break;
+		}
+	}
+
+	ALBEDO = out_color;
+}
+```
+{{< /togglecode >}}
+
+
 
 ## V. Rendu final
-Ce qui nous laisse avec le magnifique rendu :
+Ce qui nous laisse avec ce magnifique rendu :
 
-<light-broken>
+[light-broken]
 
-On peut voire des reflets dans les surface lisses et ... une petit minute, mais c'est cassé chef !
+On peut voire de superbes reflets dans les surface lisses et ... une petit minute, mais c'est cassé chef !
+
+En effet, le plafond et le podium semblent ne semblent pas recevoir la lumière (toujours les mêmes...).
 
 ## VI. La vengeance de l'Albedo
-Le plafond et le podium semblent ne pas recevoir la lumière... toujours les mêmes...
+Si on demande à l'oracle de comparer les maps d'albedo, on constate bien qu'il y'a un problème au niveau des zones non éclairables.
 
-Use oracle pour trouver coupable. Et le coupables est : Albédo ?
+[Albedo diff]
 
-Normal cette fois car Metalic Workflow VS Specular Workflow => albedo/diff_col=noir si metalic=1
+Pour comprendre ce qu'il se passe, il n'y a qu'a regarder les textures pour s'appercevoir que l'albedo déterministe est lui aussi devenu noir sur les surfaces metaliques. Pourtant côté Blender on a pas fait de bricolage bizare, on récupère bien la passe officielle `Diffuse Color`. Alors que se passe-t-il ?
 
-=> 2eme aov_albedo + adaptation de Oracle et compositor
+Il se passe que jusqu'ici, j'ai un peu menti en disant que l'albedo et la diffuse color c'était la même chose. Pour m'expliquer sur ce mensonge je dois faire une petite digression. 
 
-<light-fixed>
+Les modèles PBR se déclinent en deux grandes familles :
+- le specular/glossiness workflow (branche historique décrite dans le papier de Disney)
+- le metallic/rougness workflow
+
+Sans entrer dans les détails, le workflow metallic/roughness est une simplification du workflow specular/glossiness. Il est un peu "plus éloigné" de la réalité physique, mais bien plus efficace à utiliser et à stocker en mémoire. C’est pour cette raison qu’il s’est rapidement imposé comme le standard dans le rendu temps réel.
+
+[comparaison]
+
+Evidement, Cycles qui n'est pas conçu pour le temps réèl utilise la version la plus lourde et la plus fidèle. Et dans le workflow specular/glossiness, la diffuse color d'un metal, qui ne reflechi que la lumière spéculaire, est naturellement noire.
+
+Tant qu'à faire on aimerai bien garder la présision de Blender lorsque c'est possible et un albédo unique seulement quand on doit recalculer la lumière en temps réèl. On va donc garder les passe Cycle telle quel, et on va ajouter une passe custom `aov_albedo` qui nous renvera la couleur de l'objets.
+
+Evidament cela va nécessiter quelques ajustements :
+- se rebraquer les Shader de chaque mesh pour ajouter le `AOV output`
+- remplacer `diff_col` par `albedo` dans les shaders de l'orcale et du compositor
+- adapter le code du compositor pour prendre en compte cette differentiation entre `diff_col` et `albedo`
+
+Les 2 premiers sont simple, mais voici les modifications à apporter au compositor :
+
+[code]
+
+
+Maintenant que les données sont correctement séparée, le surfaces métaliques reçoivent bien la lumière.
+
+[light-fixed]
 
 ## VII. Conclusion 
+
+
+
+
+
+
+En effet, il existe dans la nature certains matériaux qui réfléchissent la lumière diffuse dans une couleur différente de la lumière spéculaire : les matériaux iridescents. Mais dans la pratique, l’immense majorité du monde qui nous entoure ne l’est pas. En partant de ce constat, le workflow metallic/roughness n’a besoin que d’une seule map d’albedo, là où le modèle specular/glossiness en nécessite deux.
