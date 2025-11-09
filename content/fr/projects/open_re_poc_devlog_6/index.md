@@ -5,19 +5,6 @@ title = "OpenRE devlog 6 : Harmonisation de l'ORM"
 description = 'devlog 6 du projet OpenRE'
 draft = true
 +++
-
-- Setup det ORM
-- Generate det ORM :
-	- add aov_orm in passes
-	- activate AO passe
-	- add aov outpout for all material
-	- combine aov & AO in compositor then throw it in orm output pin
-	- denoise AO
-- Setup int ORM
-- Create custom nodal shader that draw ORM on specific cam layer
-- implement pbr from learn open GL
-- boost roto-light intensity
-
 [⬅️ Vers Précédent : "OpenRE devlog 5 : Fusion des mondes. Part II"](projects/open_re_poc_devlog_5)
 
 ## I. Introduction
@@ -487,19 +474,17 @@ Sans entrer dans les détails, le workflow metallic/roughness est une simplifica
 
 Evidement, Cycles qui n'est pas conçu pour le temps réèl utilise la version la plus lourde et la plus fidèle. Et dans le workflow specular/glossiness, la diffuse color d'un metal, qui ne reflechi que la lumière spéculaire, est naturellement noire.
 
-Tant qu'à faire on aimerai bien garder la présision de Blender lorsque c'est possible et un albédo unique seulement quand on doit recalculer la lumière en temps réèl. On va donc garder les passe Cycle telle quel, et on va ajouter une passe custom `aov_albedo` qui nous renvera la couleur de l'objets.
+Tant qu'à faire on aimerai bien garder la présision de Blender lorsque c'est possible et un albédo unique seulement quand on doit recalculer la lumière en temps réèl. On va donc garder les passe Cycle officielle telle quel, et on va ajouter une passe custom `aov_albedo` qui nous renvera la couleur de l'objets.
 
 Evidament cela va nécessiter quelques ajustements :
-- se rebraquer les Shader de chaque mesh pour ajouter le `AOV output`
+- se rebraquer les Shader de chaque mesh pour ajouter le `AOV output`de l'albedo
 - remplacer `diff_col` par `albedo` dans les shaders de l'orcale et du compositor
 - adapter le code du compositor pour prendre en compte cette differentiation entre `diff_col` et `albedo`
-
-Les 2 premiers sont simple, mais voici les modifications à apporter au compositor :
 
 [code]
 
 
-Maintenant que les données sont correctement séparée, le surfaces métaliques reçoivent bien la lumière.
+Maintenant que les données sont correctement séparée, les surfaces métaliques reçoivent bien la lumière.
 
 [light-fixed]
 
