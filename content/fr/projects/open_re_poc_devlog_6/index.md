@@ -3,7 +3,7 @@ author = 'Turbo Tartine'
 date = '2025-11-02T09:37:24+01:00'
 title = "OpenRE devlog 6 : Harmonisation de l'ORM"
 description = 'devlog 6 du projet OpenRE'
-hidden = true
+hidden = false
 +++
 [⬅️ Vers Précédent : "OpenRE devlog 5 : Fusion des mondes. Part II"](projects/open_re_poc_devlog_5)
 
@@ -64,7 +64,7 @@ On nomme ensuite l’entrée `aov_orm` et un pin du même nom apparaît alors da
 
 [![Screen du workspace Shading de Blender montrant comment remplir l'AOV d'ORM depuis le materiau du plafond](images/aov_orm_compositor_annot.opti.webp)](images/aov_orm_compositor_annot.opti.webp)
 
-Ensuite, il faut définir la sortie de cette nouvelle passe. Pour cela, on édite un à un les matériaux des différents *meshes* de la scène dans le `Workspace Shading`.
+Ensuite, il faut définir la sortie de cette nouvelle passe. Pour cela, on édite un à un les matériaux des différents [*meshes*](/pages/glossary/#mesh) de la scène dans le `Workspace Shading`.
 Pour chacuns d'eux :
 
 * On renseigne les valeurs des champs `Metallic` et `Roughness` du `Principled BRDF` (différentes histoire d’avoir un peu de variété pour les tests).
@@ -122,7 +122,7 @@ Ainsi, la plupart des `layers` afficheront le matériau normal, mais si une *lay
 
 De cette manière, on peut resortir le bricollage qu'on avait utilisé pour le `Sub_Viewport` de l’albedo :
 
-* `hint_screen_texture` affichée sur le quad
+* `hint_screen_texture` affichée sur le [quad](/pages/glossary/#quad)
 * `Debug Draw = Unshaded` sur le `ORM_SubViewport`
 
 Sous ce `ORM_SubViewport`, la caméra et le quad seront donc sur la *layer* 5.
@@ -130,7 +130,7 @@ Sous ce `ORM_SubViewport`, la caméra et le quad seront donc sur la *layer* 5.
 <img alt="Capture de Godot montrant le reglage du subviewport ORM" src="./images/orm_int_setup_gif.webp" style="width:66%; display: block; margin-left: auto; margin-right: auto;" />
 
 Il faut ensuite créer un matériau personnalisé que l'on va devoir assigner à tous les meshes de la scène.
-J’ai choisi d’utiliser un `Visual Shader` plutôt qu’un shader classique, au cas où je n’arriverais pas à une solution de migration totalement automatique. Autant rester accessible à un maximum de profils — et je sais que le GLSL peut rebuter pas mal de monde.
+J’ai choisi d’utiliser un `Visual Shader` plutôt qu’un [*shader*](/pages/glossary/#shader) classique, au cas où je n’arriverais pas à une solution de migration totalement automatique. Autant rester accessible à un maximum de profils — et je sais que le GLSL peut rebuter pas mal de monde.
 
 Pour l’instant, on se limitera à des `Vector3Parameter` pour définir :
 
