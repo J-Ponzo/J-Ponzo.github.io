@@ -226,6 +226,7 @@ Le dépôt de ce POC n'est malheureusement pas public. De toute façon, la codeb
 - [devlog 3 : Harmonisation des normales](projects/open_re_poc_devlog_3)
 - [devlog 4 : Fusion des mondes. Part I](projects/open_re_poc_devlog_4)
 - [devlog 5 : Fusion des mondes. Part II](projects/open_re_poc_devlog_5)
+- [devlog 6 : Harmonisation de l'ORM](projects/open_re_poc_devlog_6)
 
 *Cette phase est en cours. Les devlogs suivant seront publiés dès qu’ils seront disponibles.*
 

@@ -702,7 +702,7 @@ Avant toute chose, pour pouvoir calculer de la lumière déterministe, on va avo
 
 [![Capture d’écran de Blender montrant la scène avec une light en plus](images/blender_point_light.opti.webp)](images/blender_point_light.opti.webp)
 
-Cette *point light* sera automatiquement réimportée dans la scène Godot par la magie de l’interopérabilité entre les deux logiciels. Mais il faudra tout de même l’assigner aux *uniforms* correspondants de notre *shader* pour qu’il puisse la prendre en compte (vous vous souvenez ? les trois tableaux de taille fixe un peu *overkill* de la partie I ?). Sans cela, elle ne pourra pas éclairer les pixels interactifs.
+Cette *point light* sera automatiquement réimportée dans la scène Godot par la magie de l’interopérabilité entre les deux logiciels. Mais il faudra tout de même l’assigner aux *uniforms* correspondants de notre [*shader*](/pages/glossary/#shader) pour qu’il puisse la prendre en compte (vous vous souvenez ? les trois tableaux de taille fixe un peu *overkill* de la partie I ?). Sans cela, elle ne pourra pas éclairer les pixels interactifs.
 
 D’ailleurs, c’est le moment de déterrer le tableau récapitulatif de l’article principal pour nous remettre au point sur les différents cas :
 
@@ -726,7 +726,7 @@ th, td {
 | **Lumière Déterministe** |        Précalculé       |    Temps réel    |
 | **Lumière Interactive**  | Précalculé + Temps réel |    Temps réel    |
 
-Le [*shader*](/pages/glossary/#shader) actuel n’accumule pour l’instant que la partie temps réel de chaque lumière. Pour compléter le tableau, il va donc falloir précalculer la partie déterministe dans Blender, et l’appliquer aux pixels déterministes.
+Le *shader* actuel n’accumule pour l’instant que la partie temps réel de chaque lumière. Pour compléter le tableau, il va donc falloir précalculer la partie déterministe dans Blender, et l’appliquer aux pixels déterministes.
 
 ### 1. Génération des textures d’illumination
 
@@ -1525,3 +1525,5 @@ Ainsi s’achève cette première mise en application des principes d’OpenRE. 
 Mais on a encore pas mal de sujets à couvrir dans ce POC avant de passer au SDK. J’espère que ça vous plaît toujours. En tout cas, ça me fait très plaisir de voir que plusieurs personnes suivent l’aventure.
 
 Salut à vous, merci d’être là, et à bientôt 👋
+
+<div style="text-align: right"><a href="../open_re_poc_devlog_6">Vers Suivant : "OpenRE devlog 6 : Harmonisation de l'ORM" ➡️</a></div>
