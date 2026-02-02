@@ -13,7 +13,42 @@ Dans la serie de devlog du projet OpenRE, je me suis retrouvé à devoir expliqu
 
 Pour remédier au premier point : voici un article dédié dans lequel on va pouvoir prendre toute la place qu'on veut pour détailler tout ce qu'il y a à détailler ! Pour le second, j’ai essayé de comprendre comment fonctionne la lumière dans la vraie vie. Je me suis donc naturellement intéressé à la branche de la physique qui étudie la lumière : l’optique.
 
+Le terrier de lapin s'est avéré beaucoup plus profond et labyrinthique que prévue. Ce que j'en retiens, au-dela du fait que c'est beaucoup trop dur pour moi, c'est qu'on a heureusement pas besoin de tout pour faire du rendu. 
+
+On se contantera donc, dans cet article, de situer grossièrement "à quel étage(s)" de la physique on trouve le PBR avant de construire notre propre modèle de diffusion de la lumière. Ce modèle un peu "avec les mains" et purement pedagogique nous aidera à visualiser les différents phénomènes interessant du point de vue du rendu. On s'en servira ensuite comme base de laquelle on pointera les approximations usuellement à l'oeuvre dans un modèle PBR temps réèl.
+
 ## II. La vrai physique : celle que je ne comprends pas
+Quand on dit que le PBR n'est pas physiquement exacte mais seulement inspiré par la physique, une idée un peu naive à tendance à s'imposer à nous. Celle qu'il y aurait une verité scientifique absolue, trop complexe pour être représentée dans un ordinateur et qu'on aurrait du simplifié par nécessité technique.
+
+Evidament il y a de ça. Mais en chechant cette verité fondamental pour pouvoir expliquer en quoi le PBR en diverge, j'ai réalisé que c'était un peu plus compliqué. En effet, au gré des divers article, vidéos de vulgarisation et autres pages wikipédia, j'ai cru voire hémerger un pattern. 
+
+Attention si vous être physicien, la suite va peut être vous faire tiquer. Je vais le dire avec mes mots parce que c'est les seuls que j'ai alors soyez gentil (mais hesitez pas à me corriger en commentaires). En gros ce que je comprends de comment c'est fichu, c'est que pour chaque grande branche de la physique on a :
+- Des théories fondamentales : décrivent le fonctionnement globale des choses. Je les vois comme des généralisations les unes des autres, valables ou simplement pratiques sous différentes hypothèse (les trucs petits, les bidules grands, les machins quantiques...)
+- Des études d'une chose précise : divers sujets spécifiques que l'on peut apréhender selon la grille de lecture de l'une ou l'autre de ces théories fondamentales.
+
+Par exemple, la cinématique c'est l'étude du mouvement. Suivant le cadre dans lequel s'inscrit le système qu'on observe, on va l'étudier avec :
+- la mécanique classique : si le systeme est à une échelle macroscopique
+- la mécanique relativiste : si l'objet se déplace à des vitesses proches de celle de la lumière
+- la mecanique quantique : si le système est à l'échelle microscopique
+
+Pour l'optique, les grande théories sont :
+- l'optique géometrique : La lumière est un rayon qui se propage en ligne droite et de manière instantanée. N'explique pas vraiment la couleur mais s'en sert par emprunt. Valable à l'échelle macroscopique (très superieur à la longeure d'onde étudiée). Permet de modéliser la plupart des phénomènes observable à l'oeuil nu (mais pas tous).
+- l'optique ondulatoire : La lumière est une onde électromagnetique. Permet d'expliquer les phenomènes visibles tels que la difraction, la polarisation et les interferences (en plus de ceux déjà décrits par l'optique géometrique). Les couleurs sont déterminées par la longueur d'onde.
+- l'optique quantique : La lumière est définie en terme de photons et d'états quantiques. Les couleurs sont déterminées par la frequence du photon. C'est le modèle le plus fondamental qu'on ai à l'heure actuelle. (mais aussi le plus incomprehensible)
+
+Et les champs d'étude suceptibles de nous interesser pour le rendu sont :
+- La radiométrie : Etude des mesures physiques de la lumière (Energie, Flux, Intensité, Radiance, Irradiance...)
+- Le transfert radiatif : Etude de la propagation de la lumière
+- La photometrie : Etude de la perception de la lumière par l'oeuil humain
+
+
+
+
+
+
+
+## OLD
+
 Le terrier de lapin s'est avéré beaucoup plus profond et labyrinthique que prévue. L'optique est organisée en plusieurs sous branche qui ont chacunes leurs modèle.
 
 
@@ -38,27 +73,4 @@ Tout ça pour dire que dans cet article, je vais utiliser un modèle pédagogiqu
 ## V. Conclusion
 Les angles motrs tenaient comment je situe mon modèle 
 
-## Autres axes :
-Quand on dit que le PBR n'est pas physiquement exacte mais seulement inspiré par la physique, une idée un peu naive à tendance à s'imposer à nous. Celle qu'il y aurait une verité scientifique absolue, trop complexe pour être représentée dans un ordinateur et qu'on aurrait du simplifié par nécessité technique.
-
-Evidament il y a de ça. Mais en chechant cette verité fondamental pour pouvoir expliquer en quoi le PBR en diverge, j'ai réalisé que c'était un peu plus compliqué. En effet, au gré des divers article, vidéos de vulgarisation et autres pages wikipédia, j'ai cru voire hémerger un pattern. 
-
-Attention si vous être physicien, la suite va peut être vous faire tiquer. Je vais le dire avec mes mots parce que c'est les seuls que j'ai alors soyez gentil (mais hesitez pas à me corriger en commentaires). En gros ce que je comprends de comment c'est foutu, c'est que pour chaque branche on a :
-- Des théories fondamentales : décrivent le fonctionnement globale des choses. Je les vois comme des généralisations les unes des autres, valables ou pas sous différentes hypothèse (les trucs petits, les bidules grands, les machins quantiques...)
-- Des études d'une chose précise : divers sujets spécifiques que l'on peut apréhender selon la grille de lecture de l'une ou l'autre de ces théories fondamentales.
-
-Par exemple, la cinématique c'est l'étude du mouvement. Suivant le cadre dans lequel s'inscrit le système qu'on observe, on va l'étudier avec :
-- la mécanique classique : si le systeme est à une échelle macroscopique
-- la mécanique relativiste : si l'objet se déplace à des vitesses proches de celle de la lumière
-- la mecanique quantique : si le système est à l'échelle microscopique
-
-Pour l'optique, les grande théories sont :
-- l'optique géometrique : La lumière est un rayon qui se propage en ligne droite et de manière instantanée. Valable à l'échelle macroscopique (très superieur à la longeure d'onde étudiée). Permet de modéliser la plupart des phénomènes observable à l'oeuil nu (mais pas tous).
-- l'optique ondulatoire : La lumière est une onde électromagnetique. Permet d'expliquer les phenomènes visibles tels que la difraction, la polarisation et les interferences (en plus de ceux déjà décrits par l'optique géometrique). Les couleurs sont déterminées par la longueur d'onde.
-- l'optique quantique : La lumière est définie en terme de photons et d'états quantiques. Les couleurs sont déterminées par la frequence du photon. C'est le modèle le plus fondamental qu'on ai à l'heure actuelle. (mais aussi le plus incomprehensible)
-
-Et les champs d'étude suceptibles de nous interesser pour le rendu sont :
-- La radiométrie : Etude des mesures physiques de la lumière (Energie, Flux, Intensité, Radiance, Irradiance...)
-- Le transfert radiatif : Etude de la propagation de la lumière
-- La photometrie : Etude de la perception de la lumière par l'oeuil humain
 
