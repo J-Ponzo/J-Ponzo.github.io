@@ -15,7 +15,7 @@ Pour remédier au premier point : voici un article dédié dans lequel on va pou
 
 Le terrier de lapin s'est avéré beaucoup plus profond et labyrinthique que prévue. Ce que j'en retiens, au-dela du fait que c'est beaucoup trop dur pour moi, c'est qu'on a heureusement pas besoin de tout pour faire du rendu. 
 
-On se contantera donc, dans cet article, de situer grossièrement "à quel étage(s)" de la physique on trouve le PBR avant de construire notre propre modèle de diffusion de la lumière. Ce modèle un peu "avec les mains" et purement pedagogique nous aidera à visualiser les différents phénomènes interessant du point de vue du rendu. On s'en servira ensuite comme base de laquelle on pointera les approximations usuellement à l'oeuvre dans un modèle PBR temps réèl.
+On se contantera donc, dans cet article, de situer grossièrement "à quel étage(s)" de la physique le PBR prend sa source avant de construire notre propre modèle de diffusion de la lumière. Ce modèle un peu "avec les mains" et purement pedagogique nous aidera à visualiser les différents phénomènes interessant du point de vue du rendu. On s'en servira ensuite comme base depuis laquelle on pointera les approximations usuellement à l'oeuvre dans un modèle PBR temps réèl.
 
 ## II. La vrai physique : celle que je ne comprends pas
 Quand on dit que le PBR n'est pas physiquement exacte mais seulement inspiré par la physique, une idée un peu naive à tendance à s'imposer à nous. Celle qu'il y aurait une verité scientifique absolue, trop complexe pour être représentée dans un ordinateur et qu'on aurrait du simplifié par nécessité technique.
@@ -38,14 +38,10 @@ Pour l'optique, les grande théories sont :
 
 Et les champs d'étude suceptibles de nous interesser pour le rendu sont :
 - La radiométrie : Etude des mesures physiques de la lumière (Energie, Flux, Intensité, Radiance, Irradiance...)
-- Le transfert radiatif : Etude de la propagation de la lumière
+- Le transfert radiatif : Etude de la propagation de la lumière et de son intéraction avec la matière
 - La photometrie : Etude de la perception de la lumière par l'oeuil humain
 
-
-
-
-
-
+En une phrase interminable, les modeles PBR sont un ensemble de techniques numiériques et statistiques apportant des solutions aproximatives à l'equation du transfert radiatif formulée dans les termes des grandeurs radiométriques et selon les hypothèses de l'optique géométrique.
 
 ## OLD
 
