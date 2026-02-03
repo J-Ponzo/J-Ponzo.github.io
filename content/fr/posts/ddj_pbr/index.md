@@ -24,7 +24,7 @@ Evidament il y a de ça. Mais en chechant cette verité fondamental pour pouvoir
 
 Attention si vous être physicien, la suite va peut être vous faire tiquer. Je vais le dire avec mes mots parce que c'est les seuls que j'ai alors soyez gentil (mais hesitez pas à me corriger en commentaires). En gros ce que je comprends de comment c'est fichu, c'est que pour chaque grande branche de la physique on a :
 - Des théories fondamentales : décrivent le fonctionnement globale des choses. Je les vois comme des généralisations les unes des autres, valables ou simplement pratiques sous différentes hypothèse (les trucs petits, les bidules grands, les machins quantiques...)
-- Des études d'une chose ou d'un phénomène précis : divers sujets spécifiques que l'on va étudier à travers l'une ou l'autre de ces théories fondamentales.
+- Des études d'une chose ou d'un phénomène précis : divers sujets spécifiques que l'on va étudier à travers l'une ou l'autre (parfois plusieurs) de ces théories fondamentales.
 
 Par exemple, la cinématique c'est l'étude du mouvement. Suivant le cadre dans lequel s'inscrit le système qu'on observe, on va l'étudier avec :
 - la mécanique classique : si le systeme est à une échelle macroscopique
@@ -38,10 +38,10 @@ Pour l'optique, les grande théories sont :
 
 Et les champs d'étude suceptibles de nous interesser pour le rendu sont :
 - La radiométrie : Définie les grandeurs physiques qui caracterisent la lumière (Energie, Flux, Intensité, Radiance, Irradiance...)
-- Le transfert radiatif : Etudie de la propagation de la lumière et de son intéraction avec la matière
-- La photometrie : Etude de la perception de la lumière par l'oeuil humain. Introduit le concepte de couleur (car oui, "couleur = longueur d'onde" est un gros abus de langage).
+- Le transfert radiatif : Etudie de la propagation de la lumière et son intéraction avec la matière
+- La photometrie : Etude de la perception de la lumière par l'oeuil humain. Introduit notament le concepte de couleur (car oui, "couleur = longueur d'onde" est un gros raccourcis).
 
-Par chance, ils fonctionnent tous les trois sous le regime de l'optique géométrique. On pourra trouvé ici et là des notions empruntées à d'autres cadres théoriques comme le photon ou le spectre de longueure d'ondes. Mais ces termes designeront des versions idéalisées de ces entités. Par exemple, le photon est compris comme une particule. Ce qui est assez eloigné de la réalité.
+Par chance, ils fonctionnent tous les trois sous le regime de l'optique géométrique. On y touve parfois des notions empruntées à d'autres cadres théoriques comme le photon ou le spectre de longueure d'ondes. Mais ces termes font ici référence à des versions idéalisées de ces objets physiques. Par exemple, le photon est compris comme une particule simple. Ce qui est assez éloigné de la définition reconnue dans le cadre quantique.
 
 
 
