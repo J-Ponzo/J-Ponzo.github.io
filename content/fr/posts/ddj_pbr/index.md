@@ -24,7 +24,7 @@ Evidament il y a de ça. Mais en chechant cette verité fondamental pour pouvoir
 
 Attention si vous être physicien, la suite va peut être vous faire tiquer. Je vais le dire avec mes mots parce que c'est les seuls que j'ai alors soyez gentil (mais hesitez pas à me corriger en commentaires). En gros ce que je comprends de comment c'est fichu, c'est que pour chaque grande branche de la physique on a :
 - Des théories fondamentales : décrivent le fonctionnement globale des choses. Je les vois comme des généralisations les unes des autres, valables ou simplement pratiques sous différentes hypothèse (les trucs petits, les bidules grands, les machins quantiques...)
-- Des études d'une chose précise : divers sujets spécifiques que l'on peut apréhender selon la grille de lecture de l'une ou l'autre de ces théories fondamentales.
+- Des études d'une chose ou d'un phénomène précis : divers sujets spécifiques que l'on va étudier à travers l'une ou l'autre de ces théories fondamentales.
 
 Par exemple, la cinématique c'est l'étude du mouvement. Suivant le cadre dans lequel s'inscrit le système qu'on observe, on va l'étudier avec :
 - la mécanique classique : si le systeme est à une échelle macroscopique
@@ -32,18 +32,22 @@ Par exemple, la cinématique c'est l'étude du mouvement. Suivant le cadre dans 
 - la mecanique quantique : si le système est à l'échelle microscopique
 
 Pour l'optique, les grande théories sont :
-- l'optique géometrique : La lumière est un rayon qui se propage en ligne droite et de manière instantanée. N'explique pas vraiment la couleur mais s'en sert par emprunt. Valable à l'échelle macroscopique (très superieur à la longeure d'onde étudiée). Permet de modéliser la plupart des phénomènes observable à l'oeuil nu (mais pas tous).
-- l'optique ondulatoire : La lumière est une onde électromagnetique. Permet d'expliquer les phenomènes visibles tels que la difraction, la polarisation et les interferences (en plus de ceux déjà décrits par l'optique géometrique). Les couleurs sont déterminées par la longueur d'onde.
-- l'optique quantique : La lumière est définie en terme de photons et d'états quantiques. Les couleurs sont déterminées par la frequence du photon. C'est le modèle le plus fondamental qu'on ai à l'heure actuelle. (mais aussi le plus incomprehensible)
+- l'optique géometrique : La lumière est un rayon qui se propage en ligne droite et de manière instantanée. Valable à l'échelle macroscopique (très superieur à la longeure d'onde étudiée). Permet de modéliser la plupart des phénomènes visibles (mais pas tous).
+- l'optique ondulatoire : La lumière est une onde électromagnetique. Permet d'expliquer les phenomènes visibles tels que la difraction, la polarisation et les interferences (en plus de ceux déjà décrits par l'optique géometrique).
+- l'optique quantique : La lumière est définie en terme de photons et d'états quantiques. C'est le modèle le plus fondamental qu'on ai à l'heure actuelle. (mais aussi le plus incomprehensible)
 
 Et les champs d'étude suceptibles de nous interesser pour le rendu sont :
-- La radiométrie : Etude des mesures physiques de la lumière (Energie, Flux, Intensité, Radiance, Irradiance...)
-- Le transfert radiatif : Etude de la propagation de la lumière et de son intéraction avec la matière
-- La photometrie : Etude de la perception de la lumière par l'oeuil humain
+- La radiométrie : Définie les grandeurs physiques qui caracterisent la lumière (Energie, Flux, Intensité, Radiance, Irradiance...)
+- Le transfert radiatif : Etudie de la propagation de la lumière et de son intéraction avec la matière
+- La photometrie : Etude de la perception de la lumière par l'oeuil humain. Introduit le concepte de couleur (car oui, "couleur = longueur d'onde" est un gros abus de langage).
 
-En une phrase interminable, les modeles PBR sont un ensemble de techniques numiériques et statistiques apportant des solutions aproximatives à l'equation du transfert radiatif formulée dans les termes des grandeurs radiométriques et selon les hypothèses de l'optique géométrique.
+Par chance, ils fonctionnent tous les trois sous le regime de l'optique géométrique. On pourra trouvé ici et là des notions empruntées à d'autres cadres théoriques comme le photon ou le spectre de longueure d'ondes. Mais ces termes designeront des versions idéalisées de ces entités. Par exemple, le photon est compris comme une particule. Ce qui est assez eloigné de la réalité.
+
+
 
 ## OLD
+
+En une phrase interminable, les modeles PBR sont un ensemble de techniques numiériques et statistiques apportant des solutions aproximatives à l'equation du transfert radiatif formulée dans les termes des grandeurs radiométriques et selon les hypothèses de l'optique géométrique.
 
 Le terrier de lapin s'est avéré beaucoup plus profond et labyrinthique que prévue. L'optique est organisée en plusieurs sous branche qui ont chacunes leurs modèle.
 
