@@ -20,9 +20,9 @@ On se contantera donc, dans cet article, de situer grossièrement "à quel étag
 ## II. La vrai physique : celle que je ne comprends pas
 Quand on dit que le PBR n'est pas physiquement exacte mais seulement inspiré par la physique, une idée un peu naive à tendance à s'imposer à nous. Celle qu'il y aurait une verité scientifique absolue, trop complexe pour être représentée dans un ordinateur et qu'on aurrait du simplifié par nécessité technique.
 
-Evidament il y a de ça. Mais en chechant cette verité fondamental pour pouvoir expliquer en quoi le PBR en diverge, j'ai réalisé que c'était un peu plus compliqué. En effet, au gré des divers article, vidéos de vulgarisation et autres pages wikipédia, j'ai cru voire hémerger un pattern. 
+Evidament il y a de ça. Mais en chechant cette verité fondamental pour pouvoir expliquer en quoi le PBR en diverge, j'ai progressivement réalisé que c'était en fait plus compliqué  et que ma vision de la science était peut être un peu idéalisée.
 
-Attention si vous être physicien, la suite va peut être vous faire tiquer. Je vais le dire avec mes mots parce que c'est les seuls que j'ai alors soyez gentil (mais hesitez pas à me corriger en commentaires). En gros ce que je comprends de comment c'est fichu, c'est que pour chaque grande branche de la physique on a :
+Attention si vous être physicien, la suite va peut être vous faire tiquer. Je vais le dire avec mes mots car ce sont les seuls que j'ai alors soyez gentil (mais hesitez pas à me corriger en commentaires). En gros ce que je comprends de comment c'est fichu, c'est que pour chaque grande branche de la physique on a :
 - Des théories fondamentales qui décrivent le fonctionnement globale des choses. Je les vois comme des généralisations les unes des autres, valables ou simplement pratiques sous différentes hypothèse (les trucs petits, les bidules grands, les machins quantiques...)
 - Des études d'une chose ou d'un phénomène précis que l'on va regarder à travers l'une ou l'autre (parfois plusieurs) de ces théories fondamentales.
 
@@ -39,16 +39,44 @@ Pour l'optique, les grande théories sont :
 Et les champs d'étude suceptibles de nous interesser pour le rendu sont :
 - La radiométrie : Définie les grandeurs physiques qui caracterisent la lumière (Energie, Flux, Intensité, Radiance, Irradiance...)
 - Le transfert radiatif : Etudie la propagation de la lumière et son intéraction avec la matière
-- La photometrie : Etudie la perception de la lumière par l'oeuil humain. Introduit notament le concepte de couleur (car oui, "couleur = longueur d'onde" est un gros raccourcis).
+- La photometrie : Etudie la perception de la lumière par l'oeuil humain. Introduit notament le concepte de couleur (car oui, "couleur = longueur d'onde" c'est un gros raccourcis).
 
-Par chance, ils fonctionnent tous les trois sous le regime de l'optique géométrique. On y touve parfois des notions empruntées à d'autres théories comme le photon ou le spectre de longueure d'ondes. Mais ces termes font dans ce cas référence à des versions idéalisées de ces objets physiques. Par exemple, le photon est compris comme une simple particule. Ce qui est assez éloigné de la définition reconnue par la physique quantique.
+Par chance, ils fonctionnent tous les trois sous le regime de l'optique géométrique. On y touve parfois des notions empruntées à d'autres théories comme le photon ou la longueure d'onde. Mais ces termes font dans ce cas référence à des versions idéalisées de ces objets physiques. Par exemple, le photon est compris comme une simple particule. Ce qui est assez éloigné de la définition reconnue par la physique quantique.
 
-En une phrase interminable : "les modeles PBR sont un ensemble de techniques numiériques et statistiques apportant des solutions aproximatives à des équations formulées par des cadres théoriques rigoureux mais déjà imparfait dans le but de produir un résultat aussi qualitatif que subjectif". Ce que je veux dire par là, c'est que la divergence entre physique et PBR ne me semble pas être une question de vérite, mais de rapport à cette verité :
+En une phrase interminable : "les modeles PBR sont un ensemble de techniques numiériques et statistiques apportant des solutions aproximatives à des équations formulées dans des cadres théoriques rigoureux mais imparfait dans le but de produir un résultat de qualité subjective". Ce que je veux dire par là, c'est que la divergence entre physique et PBR ne me semble pas être une question de vérite, mais de rapport à cette verité :
 - La physique est fausse, elle le sait, mais elle s'applique à définir précisément en quoi et sous quelles hyphothèses on peut lui faire confience (parce que sinon y a des morts).
 - Le PBR est faux, il le sait, et il s'en fou parce que l'objectif, c'est "juste" de faire l'image la plus réaliste possible pour le moins cher possible.
 
 ## III. Le Turbo Photon Tartining : qui n'existe que dans ma tête
+Dans cette section nous allons donc essayer d'expliquer comment fonctionne cette fameuse "vrai" lumière physique qui n'existe pas. On va rester à un niveau conceptuel, loin de l'austérité de la rigueure scientifique et de ses formules compliquées qui fillent mal au crâne. Regardez moi cette horreur ! Qui à envie de fourrer son nez là dedans ?
 
+[Equation du transfert radiatif]
+
+Ce cauchemard sur pattes, c'est la sainte "équation du transfert radiatif" que des gens avec un très gros cerveau nous ont leguée. Il faudra bien s'y attaquer un jour si on veut vraiment comprendre ce qu'on fait. Mais j'ai deux exellentes nouvelle :
+- 1. Ce jour n'est pas arrivé. Dans cette article on va rester sur de "l'optique de comptoir"
+- 2. Ce jour n'est pas obligé d'arriver. Comprendre vraiement ce qu'on fait c'est un plus, mais c'est pas obligatoire pour faire de très belles images. 
+
+Si vous avez déjà un peu trainé sur ce blog, vous avez peut être noté que j'aime bien donner de nom débiles aux trucs. Je vous présente donc le "Turbo Photon Tartining" : le modèle qui dit comment les turbo-photons rebondissent sur la turbo-matière pour tartiner la turbo-rétine.
+
+### 1. Definitions
+
+#### 1.1 Le Trubo Photon
+
+#### 1.2 La Trubo Matière
+
+#### 1.3 Distribution Spectrale du flux radiant
+
+### 2. Phénomenes 
+
+#### 2.1 Emission
+
+#### 2.2 Absorbtion
+
+#### 2.3 Diffusion
+
+#### 2.4 Reflection
+
+#### 2.5 Transmission
 
 ## IV. Le PBR : good enough for les films et le gaming
 
