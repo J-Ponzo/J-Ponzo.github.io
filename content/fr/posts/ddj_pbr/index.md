@@ -7,7 +7,7 @@ description = "Article de vulgarisation expliquant ce qu'est le Physically Based
 hidden = false
 +++
 ## I. Introduction
-Dans la serie de devlog du projet OpenRE, je me suis retrouvé à devoir expliquer ce qu'est le PBR. Ce faisant, je me suis rendu compte que :
+Dans la serie de devlog du projet OpenRE, je me suis retrouvé à devoir expliquer ce qu'est le Physicaly Based Rendering (PBR). Ce faisant, je me suis rendu compte que :
 - le sujet est trop vaste pour tenir dans une simple section d’article
 - il y avait quelques angles morts dans ma compréhension des choses
 
@@ -15,7 +15,7 @@ Pour remédier au premier point : voici un article dédié dans lequel on va pou
 
 Le terrier de lapin s'est avéré beaucoup plus profond et labyrinthique que prévue. Ce que j'en retiens, au-dela du fait que c'est beaucoup trop dur pour moi, c'est qu'on a heureusement pas besoin de tout pour faire du rendu. 
 
-On se contantera donc, dans cet article, de situer grossièrement "à quel étage(s)" de la physique le PBR prend sa source avant de construire notre propre modèle de diffusion de la lumière. Ce modèle un peu "avec les mains" et purement pedagogique nous aidera à visualiser les différents phénomènes interessant du point de vue du rendu. On s'en servira ensuite comme base depuis laquelle on pointera les approximations usuellement à l'oeuvre dans un modèle PBR temps réèl.
+On se contantera donc, dans cet article, de situer grossièrement "à quel étage(s)" de la physique le PBR prend sa source avant de construire notre propre modèle de diffusion de la lumière. Ce modèle un peu "avec les mains" et purement pedagogique nous aidera à aquerir un image mentale des différents phénomènes interessant du point de vue du rendu. On s'en servira ensuite comme base depuis laquelle on definira par soustraction ce qu'est un modèle PBR temps réèl.
 
 ## II. La vrai physique : celle que je ne comprends pas
 Quand on dit que le PBR n'est pas physiquement exacte mais seulement inspiré par la physique, une idée un peu naive à tendance à s'imposer à nous. Celle qu'il y aurait une verité scientifique absolue, trop complexe pour être représentée dans un ordinateur et qu'on aurrait du simplifié par nécessité technique.
@@ -23,29 +23,42 @@ Quand on dit que le PBR n'est pas physiquement exacte mais seulement inspiré pa
 Evidament il y a de ça. Mais en chechant cette verité fondamental pour pouvoir expliquer en quoi le PBR en diverge, j'ai réalisé que c'était un peu plus compliqué. En effet, au gré des divers article, vidéos de vulgarisation et autres pages wikipédia, j'ai cru voire hémerger un pattern. 
 
 Attention si vous être physicien, la suite va peut être vous faire tiquer. Je vais le dire avec mes mots parce que c'est les seuls que j'ai alors soyez gentil (mais hesitez pas à me corriger en commentaires). En gros ce que je comprends de comment c'est fichu, c'est que pour chaque grande branche de la physique on a :
-- Des théories fondamentales : décrivent le fonctionnement globale des choses. Je les vois comme des généralisations les unes des autres, valables ou simplement pratiques sous différentes hypothèse (les trucs petits, les bidules grands, les machins quantiques...)
-- Des études d'une chose ou d'un phénomène précis : divers sujets spécifiques que l'on va étudier à travers l'une ou l'autre (parfois plusieurs) de ces théories fondamentales.
+- Des théories fondamentales qui décrivent le fonctionnement globale des choses. Je les vois comme des généralisations les unes des autres, valables ou simplement pratiques sous différentes hypothèse (les trucs petits, les bidules grands, les machins quantiques...)
+- Des études d'une chose ou d'un phénomène précis que l'on va regarder à travers l'une ou l'autre (parfois plusieurs) de ces théories fondamentales.
 
 Par exemple, la cinématique c'est l'étude du mouvement. Suivant le cadre dans lequel s'inscrit le système qu'on observe, on va l'étudier avec :
 - la mécanique classique : si le systeme est à une échelle macroscopique
 - la mécanique relativiste : si l'objet se déplace à des vitesses proches de celle de la lumière
-- la mecanique quantique : si le système est à l'échelle microscopique
+- la mecanique quantique : si le système est à l'échelle microscopique (pas sûr qu'on parle encore de cinématique à ce niveau mais vous voyez l'idée ^^)
 
 Pour l'optique, les grande théories sont :
 - l'optique géometrique : La lumière est un rayon qui se propage en ligne droite et de manière instantanée. Valable à l'échelle macroscopique (très superieur à la longeure d'onde étudiée). Permet de modéliser la plupart des phénomènes visibles (mais pas tous).
-- l'optique ondulatoire : La lumière est une onde électromagnetique. Permet d'expliquer les phenomènes visibles tels que la difraction, la polarisation et les interferences (en plus de ceux déjà décrits par l'optique géometrique).
+- l'optique ondulatoire : La lumière est une onde électromagnetique. Permet d'expliquer des phenomènes visibles tels que la difraction, la polarisation et les interferences (en plus de ceux déjà décrits par l'optique géometrique).
 - l'optique quantique : La lumière est définie en terme de photons et d'états quantiques. C'est le modèle le plus fondamental qu'on ai à l'heure actuelle. (mais aussi le plus incomprehensible)
 
 Et les champs d'étude suceptibles de nous interesser pour le rendu sont :
 - La radiométrie : Définie les grandeurs physiques qui caracterisent la lumière (Energie, Flux, Intensité, Radiance, Irradiance...)
-- Le transfert radiatif : Etudie de la propagation de la lumière et son intéraction avec la matière
-- La photometrie : Etude de la perception de la lumière par l'oeuil humain. Introduit notament le concepte de couleur (car oui, "couleur = longueur d'onde" est un gros raccourcis).
+- Le transfert radiatif : Etudie la propagation de la lumière et son intéraction avec la matière
+- La photometrie : Etudie la perception de la lumière par l'oeuil humain. Introduit notament le concepte de couleur (car oui, "couleur = longueur d'onde" est un gros raccourcis).
 
-Par chance, ils fonctionnent tous les trois sous le regime de l'optique géométrique. On y touve parfois des notions empruntées à d'autres cadres théoriques comme le photon ou le spectre de longueure d'ondes. Mais ces termes font ici référence à des versions idéalisées de ces objets physiques. Par exemple, le photon est compris comme une particule simple. Ce qui est assez éloigné de la définition reconnue dans le cadre quantique.
+Par chance, ils fonctionnent tous les trois sous le regime de l'optique géométrique. On y touve parfois des notions empruntées à d'autres théories comme le photon ou le spectre de longueure d'ondes. Mais ces termes font dans ce cas référence à des versions idéalisées de ces objets physiques. Par exemple, le photon est compris comme une simple particule. Ce qui est assez éloigné de la définition reconnue par la physique quantique.
+
+En une phrase interminable : "les modeles PBR sont un ensemble de techniques numiériques et statistiques apportant des solutions aproximatives à des équations formulées par des cadres théoriques rigoureux mais déjà imparfait dans le but de produir un résultat aussi qualitatif que subjectif". Ce que je veux dire par là, c'est que la divergence entre physique et PBR ne me semble pas être une question de vérite, mais de rapport à cette verité :
+- La physique est fausse, elle le sait, mais elle s'applique à définir précisément en quoi et sous quelles hyphothèses on peut lui faire confience (parce que sinon y a des morts).
+- Le PBR est faux, il le sait, et il s'en fou parce que l'objectif, c'est "juste" de faire l'image la plus réaliste possible pour le moins cher possible.
+
+## III. Le Turbo Photon Tartining : qui n'existe que dans ma tête
 
 
+## IV. Le PBR : good enough for les films et le gaming
 
-## OLD
+## V. Conclusion
+Les angles motrs tenaient comment je situe mon modèle 
+
+
+## OLD ACCUMULATION
+
+Il n'y a donc pas de verité absolue unique qui dis ce que les choses sont ou ne sont pas. Mais un enchevetrement complexe de cadres théoriques qui se savent imparfait mais qui definissent rigoureusement leur domaines de validité.
 
 En une phrase interminable, les modeles PBR sont un ensemble de techniques numiériques et statistiques apportant des solutions aproximatives à l'equation du transfert radiatif formulée dans les termes des grandeurs radiométriques et selon les hypothèses de l'optique géométrique.
 
@@ -65,12 +78,5 @@ Pour ne rien vous cacher, j'ai vraiment pas compris grand chose. Mais j'ai rapid
 Ca m'a un peu décomplexé. J'ai réalisé que ce n'était pas un problème de construire un modèle "un peu farfelu" tant qu’il est cohérent avec ce qu’on cherche à expliquer. L’important n’est pas qu’il soit physiquement exact, mais qu'on soit cappable d'en comprendre les limites et de le situer par rapport à d'autre modèles plus rigoureux.
 
 Tout ça pour dire que dans cet article, je vais utiliser un modèle pédagogique imparfait, plutôt faux d'un point de vue scientifique... mais qui je l'espère, vous permettra de mieux comprendre le PBR : ce qu'il est, dans quel cadre il s'inscrit  et comment il marche.
-
-## III. Le Turbo Photon Tartining : qui n'existe que dans ma tête
-
-## IV. Le PBR : good enough for les films et le gaming
-
-## V. Conclusion
-Les angles motrs tenaient comment je situe mon modèle 
 
 
