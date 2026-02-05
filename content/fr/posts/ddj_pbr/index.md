@@ -60,13 +60,24 @@ Si vous avez déjà un peu trainé sur ce blog, vous avez peut être noté que j
 
 ### 1. Definitions
 
-#### 1.1 Le Trubo Photon
+#### 1.1 Le Turbo Photon
+Le turbo-photon est une particule qui a :
+- une position dans l'espace
+- une vélocité (une vitesse mais dans une certaine direction)
+- une énergie
+- une frequence (liée à la longueure d'onde, mais on verra ça pus tard)
 
-#### 1.2 La Trubo Matière
+Dans la suite j'appelerai ça un photon sinon ça va vite devenir lourd (ça l'est surement déjà hehe...). Mais gardez en tête que le vrai photon c'est pas ça.
 
-#### 1.3 Distribution Spectrale du flux radiant
+#### 1.2 La Turbo Matière
+La turbo-matière, c'est un ensemble de propriétés que l'on va pouvoir assigner à des zone délimitées de l'espace : des volume donc. Ces volumes adjacents qui forment la scène vont conditionner l'intégralité du cycle de vie des photons : naissance, trajectoire, mort, resurection...
 
-### 2. Phénomenes 
+Là encore je vais appeler ça de la matière pour faire simple, mais on va prendre quelques libertés. Par exemple, le vide sera considéré comme de la matière (c'est mon modèle je fais qu'est ce que je veux <metal smiley>).
+
+#### 1.3 Flux Radiant Spectral
+
+### 2. Les propriés de la matière
+La matière est définie par les probabilités qu'un certain evenement se produise en son sein.
 
 #### 2.1 Emission
 
