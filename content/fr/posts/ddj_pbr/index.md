@@ -56,9 +56,42 @@ Ce cauchemard sur pattes, c'est la sainte "équation du transfert radiatif" que 
 - 1. Ce jour n'est pas arrivé. Dans cette article on va rester sur de "l'optique de comptoir"
 - 2. Ce jour n'est pas obligé d'arriver. Comprendre vraiement ce qu'on fait c'est un plus, mais c'est pas obligatoire pour faire de très belles images. 
 
-Si vous avez déjà un peu trainé sur ce blog, vous avez peut être noté que j'aime bien donner de nom débiles aux trucs. Je vous présente donc le "Turbo Photon Tartining" : le modèle qui dit comment les turbo-photons rebondissent sur la turbo-matière pour tartiner la turbo-rétine.
+Si vous avez déjà un peu trainé sur ce blog, vous avez peut être noté que j'aime bien donner de nom débiles aux trucs. Je vous présente donc le "Turbo Photon Tartining" : le modèle qui dit comment les turbo-photons rebondissent sur la turbo-matière pour tartiner vos turbo-rétines.
 
 ### 1. Definitions
+
+#### 1.1 Longueure d'onde et Spectre :
+Selon l'optique ondulatoire, la lumière est une onde elecromagnétique. Cette onde peut être décomposée en ce qu'on appel un spectre de fréquences. C'est à dire une superposition d'ondes simples et régulière : des sinusoïdes. Chacune de ces "sous-ondes" unitaires est caracterisées par une certaine frequence et une certaine amplitude. 
+
+[Schema de décomposition : Onde complexe => somme de sin => equivalent sous forme de spectre]
+
+La longueur d'onde, est éroitement liée à la fréquence. Si on connait la vitesse de propagation de l'onde electromanietique, on peut aisaiment passer de l'une à l'autre. Je ne sais pas exactement pourquoi, mais l'optique préfère parler en longeur d'onde qu'en fréquence. La "couleur" de la lumière se defini donc comme un spectre de longueures d'ondes et non de fréquence. Et si vous avez fait de la physique au Lycée, vous vous rappelez vaguement que :
+- les longueures d'onde < 380nm sont invisible et sont appelées les ultra violets
+- les longueures d'onde > 780nm sont aussi invisible, mais appellées infra rouges
+- les longueures d'onde entre les 2 forment le spectre des "couleurs" visibles qui s'étant de la "couleur" bleu à la "couleur" rouge.
+
+[Shema spectre visible avec blague sur le fait que ultra et infra sont inversés]
+
+Et c'est la qu'est le twist ! Vous les avez bien vu les guillement autour du mot "couleur" ? C'est bon ? Alors on se prend tous par la main, et on va le dire à haute voix tous ensemble : "Non ! Les longueur d'onde ne sont pas des couleurs !". Ce que l'être humain appel une couleur, c'est l'interpretation que son cerveau fait d'un spectre de longueurs d'onde (tout entier).
+
+Ca c'est du bleu :
+[Spectre pic bleu]
+
+Ca c'est du rouge :
+[Spectre pic rouge]
+
+Ca c'est du jaune :
+[Spectre pic jaune]
+
+Mais ça c'est aussi du jaune :
+[Spectre 2 pics jaune]
+
+Et ça c'est quoi ?
+[Spectre 2 pics rose]
+
+(petit indice : vous pouvez me montre le rose dans le spectre de "couleurs" visibles ?)
+
+Garder vos questions dans un coin. On y répondra avant la fin de l'article. D'ici là retenez qu'on utilise des couleurs pour représenter les longueurs d'onde qui compose un spectre parce que c'est plus facile de s'y retrouver. Mais la couleur à proprement parler, c'est l'interprétaion que votre cerveau fait du signal que votre oeuil lui envoi lorsqu'il est stimulé par un spectre de longueurs d'onde donné.
 
 #### 1.1 Le Turbo Photon
 Le turbo-photon est une particule qui a :
@@ -67,15 +100,15 @@ Le turbo-photon est une particule qui a :
 - une énergie
 - une longueur d'onde
 
-Dans la suite j'appelerai ça un photon sinon ça va vite devenir lourd (ça l'est surement déjà hehe...). Mais gardez en tête que le vrai photon c'est pas ça.
+Dans la suite j'appelerai ça un photon sinon ça va vite devenir lourd (ça l'est surement déjà hehe...). Mais gardez en tête que le vrai photon c'est autre chose.
 
 #### 1.2 La Turbo Matière
-La turbo-matière, c'est un ensemble de propriétés que l'on va pouvoir assigner à des zone délimitées de l'espace : des volume donc. Ces volumes adjacents qui forment la scène vont conditionner l'intégralité du cycle de vie des photons : naissance, trajectoire, mort, resurection...
+La turbo-matière, c'est un ensemble de propriétés que l'on va pouvoir assigner à des zone délimitées de l'espace : des volume donc. Ces volumes adjacents qui forment la scène vont conditionner l'intégralité du cycle de vie des photons : naissance, vie, mort, resurection...
 
-Là encore je vais appeler ça de la matière malgré le décalage avec les définitions traditionnelles. Par exemple le vide sera pour nous une matière comme les autres, ce qui n'est pas très académique . (c'est mon modèle je fais qu'est ce que je veux ! Qu'est ce que tu vas faire ? <metal smiley>).
+Là encore je vais appeler ça de la matière malgré le décalage avec les définitions conventionnelles. Par exemple le vide sera pour nous une matière comme les autres, ce qui n'est pas très académique . (c'est mon modèle je fais qu'est ce que je veux ! <metal smiley>).
 
 #### 1.3 Flux Radiant et Flux Radiant Spectral
-En radiometrie, le flux radiant c'est la puissance totale du flux de lumière. Imaginez un portique placé sur un feseau lumineux. Ce portique peut être ouvert ou fermé et dispose d'un compteur d'energie. Lorsqu'on l'ouvre, le compteur est remise à zéro. Chaque photon qui le traverse est scanné et son énerige est ajoutée au compteur. Le flux radiant du féseau, c'est la valeur affichée par le compteur si on ouvre le portique pendant exactement 1 seconde.
+En radiometrie, le flux radiant c'est la puissance totale du flux de lumière. Imaginez un portique placé sur un feseau lumineux. Ce portique peut être ouvert ou fermé et dispose d'un compteur d'energie. Lorsqu'on l'ouvre, le compteur est remise à zéro. Chaque photon qui le traverse est alors scanné et son énerige est ajoutée au compteur. Le flux radiant du féseau, c'est la valeur affichée par le compteur si on ouvre le portique pendant exactement 1 seconde.
 
 Malheureusement cette quantité ne dit rien de la répartition spectrale de la lumière : c'est à dire des longueurs d'ondes qui la compose. Pour cela on a besion d'une V2 du portique. Ce nouveau dispositif possède plusieurs compteurs et peut scanner la longueur d'onde du photon en plus de son energie.
 
