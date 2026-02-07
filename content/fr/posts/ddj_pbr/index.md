@@ -63,7 +63,8 @@ Si vous avez déjà un peu trainé sur ce blog, vous avez peut être noté que j
 #### 1.1 Le Turbo Photon
 Le turbo-photon est une particule qui a :
 - une position dans l'espace
-- une vélocité (aka une vitesse, mais dans une certaine direction)
+- une direction
+- une vitesse
 - une énergie
 - une longueur d'onde
 
@@ -72,7 +73,7 @@ Dans la suite j'appelerai ça un photon sinon ça va vite devenir lourd (ça l'e
 #### 1.2 La Turbo Matière
 La turbo-matière, c'est un ensemble de propriétés que l'on va pouvoir assigner à des zone délimitées de l'espace : des volume donc. Ces volumes adjacents qui forment la scène vont conditionner l'intégralité du cycle de vie des photons : naissance, vie, mort, resurection...
 
-Là encore je vais appeler ça de la matière malgré le décalage avec les définitions conventionnelles. Par exemple le vide sera pour nous une matière comme les autres, ce qui n'est pas très académique . (c'est mon modèle je fais qu'est ce que je veux ! <metal smiley>).
+Là encore je vais appeler ça de la matière malgré le décalage avec les définitions conventionnelles. Par exemple le vide sera pour nous une matière comme les autres, ce qui n'est pas très académique . (C'est mon modèle. Je fais qu'est ce que je veux ! <metal smiley>).
 
 #### 1.3 Flux Radiant et Flux Radiant Spectral
 En radiometrie, le flux radiant c'est la puissance totale du flux de lumière. Imaginez un portique placé sur un feseau lumineux. Ce portique peut être ouvert ou fermé et dispose d'un compteur d'energie. Lorsqu'on l'ouvre, le compteur est remise à zéro. Chaque photon qui le traverse est alors scanné et son énerige est ajoutée au compteur. Le flux radiant du féseau, c'est la valeur affichée par le compteur si on ouvre le portique pendant exactement 1 seconde.
@@ -89,11 +90,11 @@ Si vous avez quelques souvenirs du Lycée, vous vous rappelez vaguement que :
 
 [Shema spectre visible avec blague sur le fait que ultra et infra sont inversés]
 
-Vous les avez bien vu les guillement autour de **"**couleur**"** ? C'est bon ? Alors on se prend tous par la main, et on va le dire à haute voix tous ensemble une bonne fois pour toutes : 
+Vous les avez bien vu les guillemets de **"**couleur**"** ? C'est bon ? Alors on se prend tous par la main, et on va le dire à haute voix tous ensemble une bonne fois pour toutes : 
 
 **"Non ! Les longueur d'onde ne sont pas des couleurs !"**
 
-Ce que l'être humain appel une couleur, c'est l'interpretation qu'il fait, non pas d'une longueur d'onde isolée, mais de la totalité du flux radiant spectral qu'il se prend dans l'oeuil son oeil dèe qu'il l'ouvre.
+Ce que l'être humain appel une couleur, c'est l'interpretation qu'il fait, non pas d'une longueur d'onde isolée, mais de la totalité du flux radiant spectral qu'il se prend dans l'oeuil quand il l'ouvre.
 
 Ca c'est du bleu :
 [Spectre pic bleu]
@@ -114,18 +115,61 @@ Et ça c'est quoi ?
 
 Garder vos questions dans un coin. On y répondra avant la fin de l'article. D'ici là retenez qu'on utilise des couleurs pour représenter les longueurs d'onde qui compose un spectre parce que c'est plus facile de s'y retrouver. Mais la couleur à proprement parler, c'est l'interprétaion que votre cerveau fait des signaux que les cônes de votre oeil lui envoi lorsqu'ils sont stimulés par le flux radian spectral.
 
-### 2. Les propriés de la matière
-La matière est définie par les probabilités qu'un certain evenement se produise en son sein.
+### 2. Interactions Photon / Matière
+Dans notre modèle, le comportement des photons est probabiliste. C'est à dire que les différents phénomenes qui lui sont relatifs vont avoir une chance de se produire, ou pas. Cet ensemble de probabilités, c'est ce qui carracterise la matière.
+
+Modéliser tout ça mathématiquement serait infiniment complexe et fort peu lisible (et surtout je sais pas faire). On se contantera donc des descriptions prosaïques suivantes.
 
 #### 2.1 Emission
+Toutes les matières ont une certaine probabilité d'émetre des photon. Tous les objets qui nous entoure produisent donc de la lumière. Pas seulement l'écran et la souris RGB de gamer. La chaise, le bureau, les murs... tout ça emet bien des photons. Mais la plupart du temps, leur longueur d'onde est en dehors du spectre visible (sauf si vous avez une chaise RGB mais là on peut plus rien pour vous).
+
+Les valeurs des différentes caracteristique du photon émis ne sont pas forcement equiprobables. On aura notament de la variance pour :
+- la longueur d'onde : on vient d'en parler
+- la position : les photons peuve apparaitre plutôt au centre ou plutôt en peripherie
+- la direction : certains rayonnements sont plus directionnels que d'autres
+
+Notez que des conditions exterieur peuvent également influer sur les propriétés d'émissivité de la matière. Par exemple plus la température est haute, plus les photons émis sont nombreux, energetiques et situés dans un spectre large et décalé vers des longueure d'ondes courtes. Autrement dit, même si votre chaise n'est malheureusement pas RGB, il suffit théoriquement de la chauffer suffisament pour qu'elle brille quand même dans le noire (mais si vous faites ça ne vous assayez pas dessus).
+
+[Schema fer chaufé à blanc]
 
 #### 2.2 Absorbtion
+"La matière donne, mais la matière reprends !" A chaque instant, un photon à une chance (ou plutôt malchance) d'être absorbé par la matière qu'il traverse. Lorsque cela se produit, son energie est recyclée dans autre chose :
+- Dissipation thermiques : La température augmente, ce qui donne une intuition de pourquoi la matières chaude émet plus (elles a enmagasiné plus d'énergie à dépenser)
+- Courant électrique : C’est le principe des panneaux solaires (processus photo-électrique)
+- Ré-émitions : L'énergie est transférée à un éléctron, qui se décharge de ce surplus en créant un nouveau photon. Imédiatement (fluorécense) ou de manière différée (phosphorécense) 
+- Réaction chimique : L’énergie peut être utilisée pour modifier la structure électronique ou moléculaire de la matière, en cassant ou en créant des liaisons. C’est le principe de la photosynthèse.
+
+Toutes les longueurs d'ondes ne sont pas égales vis à a vis des probabilités d'absorbtion. Pour les materiaux, le flux radiant spectral, c'est un packet de dragibus. Certains son voraces, d'autre plus raisonnables. Certains sont particulièrement friant des rouges et des bleus, mais pas trop des jaunes, d'autres s'en fichent et font pas la différence (miam miam miam du sucre).
+
+En consequence, la répartion spectrale du flux radiant est altérée par l'absorbtion, ce qui in-fine donne aux objets leur couleur :
+- Noir : le materiau est turbo-vorace, tends lui le paquet et tu est sûr de jamais le revoir. C'est pour ça qu'on dit que le noir tiens plus chaud que le blanc.
+- Blanc : Là on est en face d'un materiaux qui fait attention à sa ligne. En apparence au moins (rien ne dit qu'il ne se jette pas sur les infra-rouges des qu'on tourne le dos)
+- Bleu : On dit souvent que la nature n'aime pas le bleu. Au contraire, si on en vois jamais c'est parce qu'elle à tout mangé (et elle a raison, team bleu ! c'est les meilleurs !).
 
 #### 2.3 Diffusion
+Quand un photon rate son jet de destin, il est donc absorbé. Mais si il le réussi, il doit encore faire un jet de diffusion. Le resultat de ce nouveau lancé va déterminer sa nouvelle direction. La encore, ce sont les caracteristiques de la matière qui déterminent les probabilités associées à chacunes des directions possibles. 
 
-#### 2.4 Reflection
+Ainsi on distinguera des materiaux :
+- isotropes : qui diffusent de manière equiprobable dans toutes les directions
+- anisotropes à diffusion avant : diffuse majoritairement dans la direction du photon
+- anisotropes à diffusion arrière : diffuse majoritairement dans le sens inverse du photon
+- Des choses plus exotiques qui diffusent dans une direction indépendante de celle du photon (comme les yeux de votre chat qui renvoit toute la lumière vers vous quand ils vous fixent dans l'obscurité) <à vérifier>
 
-#### 2.5 Transmission
+Ici aussi, le comportement peut varier selon la longueur d'onde. C'est notament pour ça que le ciel est bleu. <à vérifier>
+
+#### 2.4 Transmission
+Jusqu'ici on a décrit comment ça marche à l'interieurs des materiaux. Mais quand on arrive à la frontière entre 2 volumes aux propriétés différentes : nouvelles regle ! Le photon fait cette fois-ci un jet de transmission. Si il le réussi, c'est bon : les videurs le laisse entrer. On dit que le photon est transmis.
+
+De là il pourra continuer sa route dans la nouvelle matière mais il va d'abord être réfracté : c'est à dire dévié de sa direction initiale en fonction :
+- de l'ange d'incidence avec la frontière
+- des indices de refraction des 2 materiaux
+
+[Schéma refraction]
+
+#### 2.5 Reflection
+En cas d'échec du test de transmission, il rebondit sur la frontière.
+
+#### 2.6 Fresnel
 
 ## IV. Le PBR : good enough for les films et le gaming
 
