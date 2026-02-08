@@ -157,19 +157,33 @@ Ainsi on distinguera des materiaux :
 
 Ici aussi, le comportement peut varier selon la longueur d'onde. C'est notament pour ça que le ciel est bleu. <à vérifier>
 
-#### 2.4 Transmission
+#### 2.4 Reflection, Transmission et Fresnel
 Jusqu'ici on a décrit comment ça marche à l'interieurs des materiaux. Mais quand on arrive à la frontière entre 2 volumes aux propriétés différentes : nouvelles regle ! Le photon fait cette fois-ci un jet de transmission. Si il le réussi, c'est bon : les videurs le laisse entrer. On dit que le photon est transmis.
 
 De là il pourra continuer sa route dans la nouvelle matière mais il va d'abord être réfracté : c'est à dire dévié de sa direction initiale en fonction :
 - de l'ange d'incidence avec la frontière
-- des indices de refraction des 2 materiaux
+- des indices de refraction (IOR) des 2 materiaux
+
+En cas d'échec du test de transmission, il rebondit sur la frontière. On dit qu'il est reflechi.
 
 [Schéma refraction]
 
-#### 2.5 Reflection
-En cas d'échec du test de transmission, il rebondit sur la frontière.
+La probabilté d'être reflechi est donc liée à celle d'être transmis. Le photon ne lance les dés qu'une seule fois et selon le resulta, on aura soit l'un soit l'autre. Ce qui détermine le seuil de réussite c'est le Fresnel (pro tips : le 's' ne se prononce pas). Et comme la refraction, il dépend lui aussi de l'angle d'incidence et des IORs des materiaux.
 
-#### 2.6 Fresnel
+[Schéma refraction avec fresnel]
+
+Le jet de transmission est ainsi plus difficile pour un photons rasant que pour un photon qui arriverait perpendiculaire à la surface. C'est la raison pour laquel quand on regarde une vitre de face, elle est bien transparante, mais au plus on la regarde de biais, au plus elle se comporte comme un miroir.
+
+[Gif fenetre]
+
+#### 2.5 Dispertion et Reflectance Spectrales :
+On ne l'a pas évoqué dans la partie précédente, mais l'IOR est fonction de la longueur d'onde. Prenons par exemple 2 photons qui arrivent à la frontière selon le même angle d'incidence mais qui ont des longueurs d'onde différentes. Et bien il n'auront pas la même chance d'être transmis, et si ils le sont, leur angle de réfraction sera différent (puisque les 2 phenomenes dépendent de l'IOR).
+
+Dans le cas de la refraction, cela va donner ce qu'on appel la dispertion spectrale. C'est ce qui donne naissance aux arcs en ciel et aux aberrations chromatiques.
+
+[Effet arc en ciel]
+
+Pour la transmision ça va se traduire plutôt par la dissociation de la répartition spectral entre le flux radiant reflechi et le flux radiant transmis. Dit autrement, les reflets auront une couleur différente de celle de l'objet. On parle de relfectance spectrale.
 
 ## IV. Le PBR : good enough for les films et le gaming
 
