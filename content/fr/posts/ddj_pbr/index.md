@@ -185,6 +185,46 @@ Dans le cas de la refraction, cela va donner ce qu'on appel la dispertion spectr
 
 Pour la transmision ça va se traduire plutôt par la dissociation de la répartition spectral entre le flux radiant reflechi et le flux radiant transmis. Dit autrement, les reflets auront une couleur différente de celle de l'objet. On parle de relfectance spectrale.
 
+[Relfectance spectrale]
+
+### 3 Les materiaux usuels
+Maintenant qu'on a les notions principales, on va les utiliser pour décrire différents types de materiau qu'on rencontre assez souvent.
+
+#### 3.1 Le vide
+Le vide, c'est un peut le matriau nul. Pas d'emission, pas d'absorbtion, pas de diffusion et IOR neutre (égal à 1). En gros les photons déjà existant le traversent en ligne droite. Et c'est à peut près tout.
+
+[Illustration vide]
+
+#### 3.2 L'aire
+Définir ce qu'on appel l'aire
+
+Emission : faible / infrarouge
+Invisible à température ambiante mais creuser les histoires air ionisé (plasma), décharges électriques, aurores, flames
+
+Absorbtion :
+O₂, O₃, CO₂, H₂O absorbent certaines longueurs d’onde
+Visible : absorption faible mais non nulle
+UV : absorption forte (ozone)
+IR : absorption très importante (gaz à effet de serre)
+
+Diffusion :
+diffusion Rayleigh (molécules ≪ λ) = ciel bleu
+diffusion Mie (aérosols, poussières, gouttelettes) = brouillard, nuiages, brume
+
+IOR : dépend de pression, température, humidité, longueur d’onde (= 1.000293 air sec, 20°C, 1 atm)
+- légèrement les rayons
+- mirage
+- réfraction atmosphérique (astronomie)
+
+#### 3.3 Dielectriques transparents
+L'aire en fait partie, mais aussi verre, eau, plasique transparent, diamant
+
+#### 3.4 Dielectriques opaques
+La plupart des trucs <verifier>
+
+#### 3.5 Metaux
+Pas de diffusion car absobtion directe. Reflection uniquement. Couleur venant de radiance spectrale
+
 ## IV. Le PBR : good enough for les films et le gaming
 
 ## V. Conclusion
