@@ -115,10 +115,12 @@ Et ça c'est quoi ?
 
 Garder vos questions dans un coin. On y répondra avant la fin de l'article. D'ici là retenez qu'on utilise des couleurs pour représenter les longueurs d'onde qui compose un spectre parce que c'est plus facile de s'y retrouver. Mais la couleur à proprement parler, c'est l'interprétaion que votre cerveau fait des signaux que les cônes de votre oeil lui envoi lorsqu'ils sont stimulés par le flux radian spectral.
 
-### 2. Interactions Photon / Matière
-Dans notre modèle, le comportement des photons est probabiliste. C'est à dire que les différents phénomenes qui lui sont relatifs vont avoir une chance de se produire, ou pas. Cet ensemble de probabilités, c'est ce qui carracterise la matière.
+### 2. Phénomènes de bas-niveau :
+Ce que j'appèle phénomènes de bas-niveau, ce sont les comportement élémentatires des photons pris individuellements lors de leur voyage à travers la matière. (Ce n'est pas un terme officiel. Ne le sortez dans une conversation).
 
-Modéliser tout ça mathématiquement serait infiniment complexe et fort peu lisible (et surtout je sais pas faire). On se contantera donc des descriptions prosaïques suivantes.
+Dans notre modèle, ces phénomènes sont probabilistes. C'est à dire qu'ils vont avoir une chance de se produire, ou pas. Et pour nous, cet ensemble de probabilités, c'est ce qui va carracteriser la matière.
+
+Modéliser tout ça mathématiquement serait infiniment complexe et fort peu didactique (et surtout je sais pas faire). On se contantera donc des descriptions prosaïques suivantes.
 
 #### 2.1 Emission
 Toutes les matières ont une certaine probabilité d'émetre des photon. Tous les objets qui nous entoure produisent donc de la lumière. Pas seulement l'écran et la souris RGB de gamer. La chaise, le bureau, les murs... tout ça emet bien des photons. Mais la plupart du temps, leur longueur d'onde est en dehors du spectre visible (sauf si vous avez une chaise RGB mais là on peut plus rien pour vous).
@@ -187,13 +189,34 @@ Pour la transmision ça va se traduire plutôt par la dissociation de la répart
 
 [Relfectance spectrale]
 
-### 3 Les materiaux usuels
-Maintenant qu'on a les notions principales, on va les utiliser pour décrire différents types de materiau qu'on rencontre assez souvent.
+### 3 Phénomenes de haut-niveau :
+Quand un photon unique traverse la matière, il est donc soumis aux phénomènes de bas-niveau. On a vu que ces derniers sont probabilistes. Mais si on considère une très (très, très) grande population de photons, la magie des grands nombres va en quelques sortes "stabiliser" la nature cahotique de la lumière. Et de cette stabilisation vont émerger de nouveaux phénomènes, plus globaux, que j'appelle : phénomènes de haut-niveau.
+
+#### 3.1 Transparence
+
+#### 3.2 Opacité Diélectrique
+
+#### 3.3 Opacité Conductrice (le métal <diable>)
+
+#### 3.4 Translucence
+
+## IV. Le PBR : good enough for les films et le gaming
+
+## V. Conclusion
+Les angles motrs tenaient comment je situe mon modèle 
+
+
+## OLD ACCUMULATION
+
+### 3 Taxonomie des materiaux
+Maintenant qu'on a les notions principales, on va les utiliser pour décrire différentes catégories de materiaux afin de mettre en relation la manière dont ils nous apparaissent et la façon dont les photons transitent à l'interieur.
 
 #### 3.1 Le vide
 Le vide, c'est un peut le matriau nul. Pas d'emission, pas d'absorbtion, pas de diffusion et IOR neutre (égal à 1). En gros les photons déjà existant le traversent en ligne droite. Et c'est à peut près tout.
 
 [Illustration vide]
+
+En gros il n'influe pas sur le système, et c'est pour ça que notre oeuil ne peut pas le voir.
 
 #### 3.2 L'aire
 Définir ce qu'on appel l'aire
@@ -224,14 +247,6 @@ La plupart des trucs <verifier>
 
 #### 3.5 Metaux
 Pas de diffusion car absobtion directe. Reflection uniquement. Couleur venant de radiance spectrale
-
-## IV. Le PBR : good enough for les films et le gaming
-
-## V. Conclusion
-Les angles motrs tenaient comment je situe mon modèle 
-
-
-## OLD ACCUMULATION
 
 Il n'y a donc pas de verité absolue unique qui dis ce que les choses sont ou ne sont pas. Mais un enchevetrement complexe de cadres théoriques qui se savent imparfait mais qui definissent rigoureusement leur domaines de validité.
 
