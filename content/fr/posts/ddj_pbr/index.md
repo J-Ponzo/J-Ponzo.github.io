@@ -192,42 +192,27 @@ Pour la transmision ça va se traduire plutôt par la dissociation de la répart
 ### 3 Phénomenes de haut-niveau :
 Quand un photon unique traverse la matière, il est donc soumis aux phénomènes de bas-niveau. On a vu que ces derniers sont probabilistes. Mais si on considère une très (très, très) grande population de photons, la magie des grands nombres va en quelques sortes "stabiliser" la nature aléatoire de la lumière. Et de cette stabilisation vont émerger de nouveaux phénomènes, plus globaux, que j'appelle : phénomènes de haut-niveau.
 
-Le modèle est peut etre pas bon : https://www.lightzoomlumiere.fr/article/reflexion-de-la-lumiere-sur-la-matiere-de-mille-et-une-facons/
-
 #### 3.1 Transparence
-La transparence, c'est quand un materiau transmet beaucoup, mais diffuse peu. Les photons le traversent de part en part tout en conservant une certaine cohérence directionnelle. Cela regroupe des matières comme :
-- le verre
-- le diamant
-- l'eau
-- la glace
+La transparence, c'est quand un materiau transmet beaucoup, mais diffuse et absorbe peu. Les photons le traversent de part en part tout en conservant une certaine cohérence directionnelle. Ce qui fait que l'on distingue assez netement l'image qui se trouve derrière.
 
 [schema]
 
-Il peut eventuellement subire de l'absorbtion. Mais celle-ci reste faible et ne concerne qu'une petit partie du spectre visible, expliquant la couleur de certains materiaux transparents. Ce qui permet à notre oeuil de deceler sa présence (au dela de cette eventuelle couleur), c'est principalement la réfraction et la reflection de fresnel.
+Ce qui permet à notre oeuil de deceler sa présence, c'est principalement la réfraction et le fresnel.
 
-#### 3.2 Opacité Diélectrique
-L'opacité dielectrique se caracterise par une absorbtion et une diffusion consequentes. La lumière rentre mais est rapidement absorbée et ne parvient pas à pénetrer en profondeur (encore moins traverser). 
+#### 3.2 Transulucidité
+Un materiau translutcie possède lui aussi une transmission consequente et une faible absorbtion permetant aux photons de le traverser. Mais contrairement à un materiau transparent, la diffusion y est très forte, induisant un très grand cahos directionnel.
 
-Toutefois, le chaos de la diffusion multiple laisse une chance à certains photons, après plusieurs rebonds proches de la surface, de ressortir du matériau. C'est ce qui donne la lumière diffuse.
+En somme la lumière passe, mais elle est completement homogéneisée par la diffusion, ce qui ne permet pas distinguer les formes qui se trouvent derrière l'object.
 
-Comme on l'a vu, certaines longueurs d’onde sont moins rapidement absorbées que d’autres. Elles ont donc une probabilité plus élevée de ressortir par diffusion, ce qui détermine la couleur diffuse du matériau.
+#### 3.3 Opacité Diélectrique
+L'opacité dielectrique se caracterise par une absorbtion et une diffusion fortes. La lumière rentre mais est rapidement absorbée et ne parvient pas à pénetrer en profondeur (encore moins traverser). 
 
-Ces materiaux sont très répendus :
-- bois
-- pierre
-- plastic mat
-- papier
-- peau
-- marbre
-- jade
+Toutefois, avant d'être absorbées, certains photons parvienent à ressortir du côté où ils sont entrés par diffusions successives. C'est ce qu'on appelle la lumière diffuse. 
 
-#### 3.3 Opacité Conductrice (le métal <diable>)
-Pour les conducteur, aka les métaux, l'opacité vient aussi un peu de l'absorbtion, mais surtout de la reflection. Non seulement la lumière qui y penetre est très rapidement absorbée, mais en plus, leur très forte reflectivité l'empeche d'entrer en quantité.
+C'est materiaux peuvent être plus ou moins reflectifs/transmissifs. Un materiau qui transmet 100% de la lumière n'existe pas mais il a quand même un nom : c'est un lambertien pur. Il ne se distingue que par sa diffuse tandis qu'un materiau qui reflechi plus ou moins la lumière, aura en bonus plus ou moins de reflets.
 
-En conséquence, les métaux ne présentent pas de lumière diffuse : ils sont de ce point de vue essentiellement noirs. Ce qui permet de les distinguer, ce sont les reflets et la couleur dont ils se teintent, propre à chaque metal.
-
-#### 3.4 Translucence
-L'opacité c'est quand les photons ne traverent pas à cause de l'absorbtion. La transparence c'est quand ils traversent en conservant une certaine cohérence directionnelle. Et la translucence, c'est quand ils traversent, mais que le caho de la diffusion détruit completement la cohérence directionnelle.
+#### 3.4 Opacité Conductrice (le métal <diable>)
+Pour les conducteur, aka les métaux, la lumière est presque totalement reflechie. Et le peu qui y penetre est instantanément absorbée. En conséquence, les métaux ne présentent pas de lumière diffuse : ils sont de ce point de vue essentiellement noirs. Ce qui permet de les distinguer, ce sont les reflets et la couleur dont ils se teintent, propre à chaque metal.
 
 ## IV. Le PBR : good enough for les films et le gaming
 
