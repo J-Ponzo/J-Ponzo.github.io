@@ -211,6 +211,16 @@ Toutefois, avant d'être absorbées, certains photons parvienent à ressortir du
 
 C'est materiaux peuvent être plus ou moins reflectifs/transmissifs. Un materiau qui transmet 100% de la lumière n'existe pas mais il a quand même un nom : c'est un lambertien pur. Il ne se distingue que par sa diffuse tandis qu'un materiau qui reflechi plus ou moins la lumière, aura en bonus plus ou moins de reflets.
 
+#### 3.4 Le Continum Diélectrique
+Ces 3 phénomenes ne sont pas des classes hermetiques. En réalité, on peut ranger les materiaux diélectriques sur un graphe qui aurait pour abssyce la diffusion et pour ordonnée l'absorbtion.
+
+[graph]
+
+Transparence, opacité et translucidité ne sont alors que des zones remarquables du graphe dont les délimitations sont floues. Les materiaux diélectriques n'appartiennent donc pas strictement à l'une ou à l'autre de ces cathégories. Il est plus juste de dire qu'ils en sont proches à différents degrés.
+
+#### 3.5 Selectivité spectrale
+Non seulement les materiaux diélectriques sont défini par une position dans un graph plutôt que par l'appartenance à une cathégorié. Mais en plus cette position dans le graph varie selon la longueur d'onde.
+
 #### 3.4 Opacité Conductrice (le métal <diable>)
 Pour les conducteur, aka les métaux, la lumière est presque totalement reflechie. Et le peu qui y penetre est instantanément absorbée. En conséquence, les métaux ne présentent pas de lumière diffuse : ils sont de ce point de vue essentiellement noirs. Ce qui permet de les distinguer, ce sont les reflets et la couleur dont ils se teintent, propre à chaque metal.
 
