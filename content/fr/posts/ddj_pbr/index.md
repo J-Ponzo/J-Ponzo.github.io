@@ -202,6 +202,8 @@ Ce qui permet à notre oeuil de deceler sa présence, c'est principalement la r�
 #### 3.2 Transulucidité
 Un materiau translutcie possède lui aussi une transmission consequente et une faible absorbtion permetant aux photons de le traverser. Mais contrairement à un materiau transparent, la diffusion y est très forte, induisant un très grand cahos directionnel.
 
+[schema]
+
 En somme la lumière passe, mais elle est completement homogéneisée par la diffusion, ce qui ne permet pas distinguer les formes qui se trouvent derrière l'object.
 
 #### 3.3 Opacité Diélectrique
@@ -211,18 +213,51 @@ Toutefois, avant d'être absorbées, certains photons parvienent à ressortir du
 
 C'est materiaux peuvent être plus ou moins reflectifs/transmissifs. Un materiau qui transmet 100% de la lumière n'existe pas mais il a quand même un nom : c'est un lambertien pur. Il ne se distingue que par sa diffuse tandis qu'un materiau qui reflechi plus ou moins la lumière, aura en bonus plus ou moins de reflets.
 
+[schema]
+
 #### 3.4 Le Continum Diélectrique
-Ces 3 phénomenes ne sont pas des classes hermetiques. En réalité, on peut ranger les materiaux diélectriques sur un graphe qui aurait pour abssyce la diffusion et pour ordonnée l'absorbtion.
+Ces 3 phénomenes décrivent les materiaux dielectriques. C'est à dire, tout ce qui n'est pas un metal. Il ne faut pas les voire comme des classes hermetiques entre elles. En réalité, on peut ranger les materiaux diélectriques sur un graphe qui aurait pour abssyce la diffusion et pour ordonnée l'absorbtion.
 
 [graph]
 
-Transparence, opacité et translucidité ne sont alors que des zones remarquables du graphe dont les délimitations sont floues. Les materiaux diélectriques n'appartiennent donc pas strictement à l'une ou à l'autre de ces cathégories. Il est plus juste de dire qu'ils en sont proches à différents degrés.
+Transparence, opacité et translucidité sont alors des zones de ce graphe, remarquable mais aux contours flous. Les materiaux diélectriques ne sont pas rangés dans l'une ou à l'autre de ces cathégories. Ils s'en rapprochent à différents degrés.
 
 #### 3.5 Selectivité spectrale
-Non seulement les materiaux diélectriques sont défini par une position dans un graph plutôt que par l'appartenance à une cathégorié. Mais en plus cette position dans le graph varie selon la longueur d'onde.
+On à vu que les phénomènes de bas-niveau pouvaient varier selon la longueur d'onde. Les phénomènes de haut-niveau qui n'en sont qu'une stabilisation statistique à grande echelle heritent naturellement de ce comportement.
 
-#### 3.4 Opacité Conductrice (le métal <diable>)
-Pour les conducteur, aka les métaux, la lumière est presque totalement reflechie. Et le peu qui y penetre est instantanément absorbée. En conséquence, les métaux ne présentent pas de lumière diffuse : ils sont de ce point de vue essentiellement noirs. Ce qui permet de les distinguer, ce sont les reflets et la couleur dont ils se teintent, propre à chaque metal.
+Ainsi, les materiaux diélectriques sont non seulement définis par une position dans un graph. Mais en plus cette position peut varier selon la longueur d'onde considérée. Voyons ensemble quelques cas concrets.
+
+##### 3.5.1 La menthe à l'eau
+Si vous prenez par exemple de la menthe à l'eau, on peut dire que c'est un materiau qui est peu diffusant sur la totalité du spectre visible. En revanche, il est peu absorbant pour les longueurs d'onde autour du vert, mais très absorbant pour les autres. 
+
+[Image]
+
+D'une certaine manière, on peut dire que la menthe à l'eau est tranparente pour le vert mais opaque pour le reste.
+
+##### 3.5.2 Le pastis
+Pour le pastis on observe le même phénomène d'absorbtion selective mais pour un matriau qui cette fois diffuse beaucoup sur tout le spectre. Les photons qui ne contribuent pas au jaune sont très vite absorbées tantis que les autres survivent mais voient leur cohérence directionnelle est détruite par la diffusion.
+
+[Image]
+
+On peut dire que le pastice est tranlucide pour le jaune, et opaque pour le reste.
+
+##### 3.5.3 Le ciel
+Pour l'atmosphère cette fois on est dans un cas différent. Ce n'est plus l'absorbtion qui est selective, mais la diffusion. Les longueur d'onde bleu de la lumière du soleil sont détournées dans toutes les directions tandis que le reste continue sa route en ligne droite. 
+
+Une partie de la composante bleu qui devrait nous passer au dessus de la tête nous parvient donc par diffusion. C'est pour ça que ciel est de cette couleur.
+
+[Image]
+
+L'atmosphère est donc translucide pour le bleu et transparente pour le reste.
+
+#### 3.6 Opacité Conductrice (le métal <diable>)
+Les conducteurs, c’est-à-dire les métaux, sont une espèce à part. Contrairement aux diélectriques, ils reflechissent la quasi totalité de la lumière qui se présentent à leur interface, et la faible part qui pénètre est absorbée quasi instantanement. 
+
+Il n'y donc pas de vie photonique à l'interieur de la matière. En conséquence, les métaux ne présentent pas de lumière diffuse. Ce qui permet de les distinguer visuellement, ce sont les reflets.
+
+[schema]
+
+Ces reflets sont eux aussi soumis à une sélectivité spectrale, ce qui confère à chaque métal une teinte caractéristique.
 
 ## IV. Le PBR : good enough for les films et le gaming
 
