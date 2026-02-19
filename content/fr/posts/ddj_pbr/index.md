@@ -155,7 +155,7 @@ Ainsi on distinguera des materiaux :
 - isotropes : qui diffusent de manière equiprobable dans toutes les directions
 - anisotropes à diffusion avant : diffuse majoritairement dans la direction du photon
 - anisotropes à diffusion arrière : diffuse majoritairement dans le sens inverse du photon
-- Des choses plus exotiques qui diffusent dans une direction indépendante de celle du photon (comme les yeux de votre chat qui renvoit toute la lumière vers vous quand ils vous fixent dans l'obscurité) <à vérifier>
+- Des choses plus exotiques qui diffusent dans une direction indépendante de celle du photon (comme les yeux de votre chat qui renvoit toute la lumière vers vous quand ils vous fixent dans l'obscurité) <à vérifier https://fr.wikipedia.org/wiki/Tapetum_lucidum>
 
 Ici aussi, le comportement peut varier selon la longueur d'onde. C'est notament pour ça que le ciel est bleu. <à vérifier>
 
