@@ -259,6 +259,24 @@ Il n'y donc pas de vie photonique à l'interieur de la matière. En conséquence
 
 Ces reflets sont eux aussi soumis à une sélectivité spectrale, ce qui confère à chaque métal une teinte caractéristique.
 
+## 4 Perception Humaine
+L'oeil humain est constitué de 2 types de cellules qui réagissent à la lumière : les batonnets et les cônes. Leurs specificités nous permettent de percevoir le monde dans plusieurs modes (vision nocturne, vision diurne, vision central, vision peripherique ...). Ces modes sont appelés des domaines de vision.
+
+#### 4.1 Domaine de vision nocturne
+Les batonnets sont les cellules qui nous permettent de "voire" dans le noir (même si l'humain est plutôt mauvais à ce jeu là). Ils sont en effet beaucoup plus noubreux et beaucoup plus sensibles que les cône. Ce qui leur permet de s'activer à des seuils beaucoup plus faibles. 
+
+Contrairement aux cônes ils ne sont pas différentiés et s'activent tous de la même façon. En consequence il permettent de détecter des sources lumineuse plus faibles, mais ils ne permettent pas de distinguer les couleurs. Dans l'obscurité, la vision est achromatique. Ce n'est pas vraiment du noir et blanc, mais c'est l'idée.
+
+Notez également qu'une trop forte intensité lumineuse dégrade la prothéine qui permet l'activation des batonnets. Ce qui veut dire qu'ils s'activent beaucoup moins bien de jour. La proteine se régénèrent naturellement lorsqu'on eteind la lumière mais le processus prend un certain temps. C'est pour ça qu'au plus on reste longtemps dans l'obscurité, au mieux on voit.
+
+Inversement quand on rallume la lumière, on est ébloui car les batonnets sont sur-stimulés. Heureusement la proteine, est rapidement dégradée et en quelques secondes on y voit normalement.x
+
+#### 4.2 Domaine de vision diurne
+
+#### 4.3 Domaines de vision central et peripherique
+
+Autre caracteristique interessante, ils sont beaucoup plus présent sur le bord de la rétine qu'au centre. C'est la raison pour laquelle les étoiles vous paraissent moins brillantes quand vous vous concentrez dessus que quand vous regarder légerement à côté.
+
 ## IV. Le PBR : good enough for les films et le gaming
 
 ## V. Conclusion
