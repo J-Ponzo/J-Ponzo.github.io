@@ -269,13 +269,30 @@ Contrairement aux cônes ils ne sont pas différentiés et s'activent tous de la
 
 Notez également qu'une trop forte intensité lumineuse dégrade la prothéine qui permet l'activation des batonnets. Ce qui veut dire qu'ils s'activent beaucoup moins bien de jour. La proteine se régénèrent naturellement lorsqu'on eteind la lumière mais le processus prend un certain temps. C'est pour ça qu'au plus on reste longtemps dans l'obscurité, au mieux on voit.
 
-Inversement quand on rallume la lumière, on est ébloui car les batonnets sont sur-stimulés. Heureusement la proteine, est rapidement dégradée et en quelques secondes on y voit normalement.x
+Inversement quand on rallume la lumière d'un coup, on est ébloui car les batonnets sont sur-stimulés. Heureusement la proteine, est rapidement dégradée et en quelques secondes on y voit normalement.
 
 #### 4.2 Domaine de vision diurne
+Le cônes ont un seuil d'activation plus élevé et n'ont pas besoin d'un mecanise d'inibition comme on vient de le voir avec les batonnets. Ils prennent simplement le relais en conditions diurne (le jour).
+
+Ce qui fait toute la différence, c'est que ces cellules sont présentes en 3 saveurs :
+- Les cônes S : Short wave length.
+- Les cônes M : Mid wave length.
+- Les cônes L : Long wave length.
+
+La sensibilité des photorectepteurs à telle ou telle longueure d'onde c'est ce qu'on appel la réponse spectrale. C'est une courbe progressive, qui s'étale sur une plage entière du spectre.
+
+[Schéma]
+
+On parle souvent de cônes rouge (L), vert (M) et bleu (S) même si les pics ne correspondent pas tout à fait à ces appellations. Dans le shéma ci-dessus, vous pouvez constater par exemple que le pic de la réponse spectrale des cones rouges se trouve plutôt dans les longueures d'onde jaunes (et la bleu est vraiment limite). 
+
+En fait ce qui compte ce n'est pas vraiment le pic, mais plutôt "quelle courbe domine sur le tronçon". Si vous regardez à nouveau les courbes avec cette information, ça vous parrait peut être un peu plus cohérent.
+
+Ainsi les seules informations dont le cerveau dispose pour déclencher la senstion de couleur, c'est un triptet de valeurs. Chacune correspondant à l'intensité mesurées par un types de cônes.
 
 #### 4.3 Domaines de vision central et peripherique
+La répartition des cônes et des batonnets sur notre rétine n'est pas homogène. En effet les batonnets sont beaucoup plus présent sur le bord de la rétine qu'au centre. C'est la raison pour laquelle les étoiles vous paraissent moins brillantes quand vous vous concentrez dessus que quand vous regarder légerement à côté.
 
-Autre caracteristique interessante, ils sont beaucoup plus présent sur le bord de la rétine qu'au centre. C'est la raison pour laquelle les étoiles vous paraissent moins brillantes quand vous vous concentrez dessus que quand vous regarder légerement à côté.
+Au contraire, les cônes sont présent presque exclusivement au centre. En consequence, notre vision peripherique distingue très mal les couleurs.
 
 ## IV. Le PBR : good enough for les films et le gaming
 
