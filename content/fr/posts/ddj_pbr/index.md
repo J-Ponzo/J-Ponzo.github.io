@@ -259,27 +259,27 @@ Il n'y donc pas de vie photonique à l'interieur de la matière. En conséquence
 
 Ces reflets sont eux aussi soumis à une sélectivité spectrale, ce qui confère à chaque métal une teinte caractéristique.
 
-## 4 Perception Humaine
-L'oeil humain est constitué de 2 types de cellules qui réagissent à la lumière : les batonnets et les cônes. Leurs specificités nous permettent de percevoir le monde dans plusieurs modes (vision nocturne, vision diurne, vision central, vision peripherique ...). Ces modes sont appelés des domaines de vision.
+## IV Perception Humaine
+L'oeil humain est constitué de 2 types de cellules qui réagissent à la lumière : les batonnets et les cônes. La spécialisation de ces photorecepteurs nous permettent de percevoir le monde selon plusieurs modes (vision nocturne, vision diurne, vision central, vision peripherique ...). Ces modes sont appelés des domaines de vision.
 
-#### 4.1 Domaine de vision nocturne
+### 1 Domaine de vision nocturne
 Les batonnets sont les cellules qui nous permettent de "voire" dans le noir (même si l'humain est plutôt mauvais à ce jeu là). Ils sont en effet beaucoup plus noubreux et beaucoup plus sensibles que les cône. Ce qui leur permet de s'activer à des seuils beaucoup plus faibles. 
 
-Contrairement aux cônes ils ne sont pas différentiés et s'activent tous de la même façon. En consequence il permettent de détecter des sources lumineuse plus faibles, mais ils ne permettent pas de distinguer les couleurs. Dans l'obscurité, la vision est achromatique. Ce n'est pas vraiment du noir et blanc, mais c'est l'idée.
+Contrairement aux cônes ils ne sont pas différentiés et s'activent tous de la même façon. En consequence ils ne permettent pas de distinguer les couleurs. Dans l'obscurité, la vision humaine est achromatique. Ce n'est pas vraiment du noir et blanc, mais c'est l'idée.
 
-Notez également qu'une trop forte intensité lumineuse dégrade la prothéine qui permet l'activation des batonnets. Ce qui veut dire qu'ils s'activent beaucoup moins bien de jour. La proteine se régénèrent naturellement lorsqu'on eteind la lumière mais le processus prend un certain temps. C'est pour ça qu'au plus on reste longtemps dans l'obscurité, au mieux on voit.
+Notez également qu'une trop forte intensité lumineuse dégrade la prothéine qui permet l'activation des batonnets. Ce qui veut dire qu'ils s'activent beaucoup moins bien de jour. La proteine se régénèrent naturellement lorsqu'on eteind la lumière mais le processus prend un certain temps. C'est pour ça qu'au plus on reste dans l'obscurité, au mieux on voit.
 
 Inversement quand on rallume la lumière d'un coup, on est ébloui car les batonnets sont sur-stimulés. Heureusement la proteine, est rapidement dégradée et en quelques secondes on y voit normalement.
 
-#### 4.2 Domaine de vision diurne
-Le cônes ont un seuil d'activation plus élevé et n'ont pas besoin d'un mecanise d'inibition comme on vient de le voir avec les batonnets. Ils prennent simplement le relais en conditions diurne (le jour).
+### 2 Domaine de vision diurne
+Les cônes, qui ont un seuil d'activation plus élevé, n'ont pas besoin d'un mecanisme d'inibition aussi sophistiqué que les batonnets. Ils prennent simplement le relais en conditions diurne (le jour).
 
-Ce qui fait toute la différence, c'est que ces cellules sont présentes en 3 saveurs :
+Ce qui fait toute la différence avec leur cousin achromatique, c'est que ces cellules sont présentes en 3 saveurs :
 - Les cônes S : Short wave length.
 - Les cônes M : Mid wave length.
 - Les cônes L : Long wave length.
 
-La sensibilité des photorectepteurs à telle ou telle longueure d'onde c'est ce qu'on appel la réponse spectrale. C'est une courbe progressive, qui s'étale sur une plage entière du spectre.
+La sensibilité d'un cônes à telle ou telle longueure d'onde c'est ce qu'on appel la réponse spectrale. C'est une courbe progressive, qui s'étale sur une plage entière du spectre.
 
 [Schéma]
 
@@ -287,12 +287,27 @@ On parle souvent de cônes rouge (L), vert (M) et bleu (S) même si les pics ne 
 
 En fait ce qui compte ce n'est pas vraiment le pic, mais plutôt "quelle courbe domine sur le tronçon". Si vous regardez à nouveau les courbes avec cette information, ça vous parrait peut être un peu plus cohérent.
 
-Ainsi les seules informations dont le cerveau dispose pour déclencher la senstion de couleur, c'est un triptet de valeurs. Chacune correspondant à l'intensité mesurées par un types de cônes.
+Ainsi la seule information qui arrive jusqu'au cerveau, c'est un triptet de valeurs. Chacune correspondant à l'intensité mesurées par un types de cônes. Ce qui correspond à la sensation produite par le cerveau, qu'on appel "couleur", c'est ce fameux triplet de valeurs.
 
-#### 4.3 Domaines de vision central et peripherique
+### 3 Domaines de vision central et peripherique
 La répartition des cônes et des batonnets sur notre rétine n'est pas homogène. En effet les batonnets sont beaucoup plus présent sur le bord de la rétine qu'au centre. C'est la raison pour laquelle les étoiles vous paraissent moins brillantes quand vous vous concentrez dessus que quand vous regarder légerement à côté.
 
-Au contraire, les cônes sont présent presque exclusivement au centre. En consequence, notre vision peripherique distingue très mal les couleurs.
+Au contraire, les cônes sont présent presque exclusivement au centre. En consequence, notre vision peripherique distingue très mal les couleurs. Mais ce n'est pas sa fonction principale. Sa mission c'est de détecter le mouvement (les batonnets ont une réponse plus rapide aux variations de lumière).
+
+### 4 Pourquoi c'est important ?
+On pourrait considérer que ce qu'il se passe dans l'oeuil, c'est hors sujet vis à vis du rendu. Après tout, un moteur grahique, ça calcule le flux radiant spectral pour chaque pixels de votre écran. Tant qu'il a juste et que l'écran est bien calibré on est bon, non ?! Si l'oeuil fait la différence avec la vrai vie, c'est que c'est mal fait !
+
+En bien non ! Regarder une surface 2D, fixe, qui n'occupe qu'une partie du champs de vision, c'est très différend du monde réèl. La VR permet de repousser cette limitation, mais même comme ça vous ne pourrez pas arnaquer completement votre oeuil.
+
+Pour mitiger cela, les jeux vidéos mettent en place des techniques plus ou moins efficaces (et plus ou moins impopulaires pour certains joueurs). La plupart du temps ce sont des post process : 
+- vinietage
+- auto-exposure
+- depth of field
+- color grading 
+
+Mais ce qui est vraiment important, c'est qu'on sais maintenant ce qu'est une couleur. On va donc pouvoir revenir sur les exemples qu'on à mis de côté dans la partie précédente.
+
+### 5 Retour sur la couleurs
 
 ## IV. Le PBR : good enough for les films et le gaming
 
