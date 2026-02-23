@@ -253,14 +253,14 @@ L'atmosphère est donc translucide pour le bleu et transparente pour le reste.
 #### 3.6 Opacité Conductrice (le métal <diable>)
 Les conducteurs, c’est-à-dire les métaux, sont une espèce à part. Contrairement aux diélectriques, ils reflechissent la quasi totalité de la lumière qui se présentent à leur interface, et la faible part qui pénètre est absorbée quasi instantanement. 
 
-Il n'y donc pas de vie photonique à l'interieur de la matière. En conséquence, les métaux ne présentent pas de lumière diffuse. Ce qui permet de les distinguer visuellement, ce sont les reflets.
+Il n'y a donc pas de vie photonique à l'interieur de la matière. En conséquence, les métaux ne présentent pas de lumière diffuse. Ce qui permet de les distinguer visuellement, ce sont les reflets.
 
 [schema]
 
 Ces reflets sont eux aussi soumis à une sélectivité spectrale, ce qui confère à chaque métal une teinte caractéristique.
 
 ## IV Perception Humaine
-L'oeil humain est constitué de 2 types de cellules qui réagissent à la lumière : les batonnets et les cônes. La spécialisation de ces photorecepteurs nous permettent de percevoir le monde selon plusieurs modes (vision nocturne, vision diurne, vision central, vision peripherique ...). Ces modes sont appelés des domaines de vision.
+L'oeil humain est constitué de 2 types de cellules qui réagissent à la lumière : les batonnets et les cônes. La spécialisation de ces photorecepteurs nous permettent de percevoir le monde selon plusieurs modes (vision nocturne, vision diurne, vision central, vision peripherique ...). Ces modes sont appelés des domaines de vision. Ces domaines ne sont pas exclusifs et se chevauchent en permanance. Mais va les étudier séparément pour plus de clarté.
 
 ### 1 Domaine de vision nocturne
 Les batonnets sont les cellules qui nous permettent de "voire" dans le noir (même si l'humain est plutôt mauvais à ce jeu là). Ils sont en effet beaucoup plus noubreux et beaucoup plus sensibles que les cône. Ce qui leur permet de s'activer à des seuils beaucoup plus faibles. 
@@ -269,7 +269,7 @@ Contrairement aux cônes ils ne sont pas différentiés et s'activent tous de la
 
 Notez également qu'une trop forte intensité lumineuse dégrade la prothéine qui permet l'activation des batonnets. Ce qui veut dire qu'ils s'activent beaucoup moins bien de jour. La proteine se régénèrent naturellement lorsqu'on eteind la lumière mais le processus prend un certain temps. C'est pour ça qu'au plus on reste dans l'obscurité, au mieux on voit.
 
-Inversement quand on rallume la lumière d'un coup, on est ébloui car les batonnets sont sur-stimulés. Heureusement la proteine, est rapidement dégradée et en quelques secondes on y voit normalement.
+Inversement quand on rallume la lumière d'un coup, on est ébloui car les batonnets saturent. Heureusement la proteine, est rapidement dégradée et en quelques secondes on y voit normalement.
 
 ### 2 Domaine de vision diurne
 Les cônes, qui ont un seuil d'activation plus élevé, n'ont pas besoin d'un mecanisme d'inibition aussi sophistiqué que les batonnets. Ils prennent simplement le relais en conditions diurne (le jour).
@@ -290,7 +290,7 @@ En fait ce qui compte ce n'est pas vraiment le pic, mais plutôt "quelle courbe 
 Ainsi la seule information qui arrive jusqu'au cerveau, c'est un triptet de valeurs. Chacune correspondant à l'intensité mesurées par un types de cônes. Ce qui correspond à la sensation produite par le cerveau, qu'on appel "couleur", c'est ce fameux triplet de valeurs.
 
 ### 3 Domaines de vision central et peripherique
-La répartition des cônes et des batonnets sur notre rétine n'est pas homogène. En effet les batonnets sont beaucoup plus présent sur le bord de la rétine qu'au centre. C'est la raison pour laquelle les étoiles vous paraissent moins brillantes quand vous vous concentrez dessus que quand vous regarder légerement à côté.
+La répartition des cônes et des batonnets sur notre rétine n'est pas homogène. En effet les batonnets sont beaucoup plus présent sur le bord de la rétine qu'au centre. C'est la raison pour laquelle les étoiles vous paraissent moins brillantes quand vous les fixez que quand vous regardez légerement à côté.
 
 Au contraire, les cônes sont présent presque exclusivement au centre. En consequence, notre vision peripherique distingue très mal les couleurs. Mais ce n'est pas sa fonction principale. Sa mission c'est de détecter le mouvement (les batonnets ont une réponse plus rapide aux variations de lumière).
 
@@ -308,6 +308,19 @@ Pour mitiger cela, les jeux vidéos mettent en place des techniques plus ou moin
 Mais ce qui est vraiment important, c'est qu'on sais maintenant ce qu'est une couleur. On va donc pouvoir revenir sur les exemples qu'on à mis de côté dans la partie précédente.
 
 ### 5 Retour sur la couleurs
+Nous disions donc que ces deux répartitions spectrales du flux radiant correspondaient a la couleur jaune. Et c'est vrai ! Pour notre cerveau c'est exactement la même choses.
+
+[Jaune VS Jaune]
+
+La raison est simple, la réponse spectrale des cônes est rigoureusement identique. Mais ça ne veut pas dire pour autant que les 2 lumières réagissent de la même façons lors de leur interaction avec la matière. 
+
+En effet leur composition n'étant pas identiques, les diverse modalités de selection spectral vont donner des répartition résiduelles différentes. Et ces répartition résiduelles peuvent tout à fait présenter des réponses spectrales différentes (et donc dicernable pour l'oueil).
+
+[Gif selection spectrale appliquée]
+
+Notre perception des couleurs est donc imparfaite et comporte en quelques sortes des collisions (au sens fonction de hachage). En plus d'être imparfaite, elle varie d'un individu à l'autre. Et oui, votre perception des couleurs est sensiblement différente de la miene.
+
+La plupart du temps ce sont des micro décalages que l'on peut négliger. Mais certaines spécificités génétiques peuvent donner lieu à des différences plus significatives. Les différents daltonismes augmentent par exemple le nombre de collisions, tandis que les tetrachromacies le dimiue.
 
 ## IV. Le PBR : good enough for les films et le gaming
 
