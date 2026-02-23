@@ -323,6 +323,17 @@ Notre perception des couleurs est donc imparfaite et comporte en quelques sortes
 La plupart du temps ce sont des micro décalages que l'on peut négliger. Mais certaines spécificités génétiques peuvent donner lieu à des différences plus significatives. Les différents daltonismes augmentent par exemple le nombre de collisions, tandis que les tetrachromacies le dimiue.
 
 ## IV. Le PBR : good enough for les films et le gaming
+Maintenant qu'on sait un peu mieux comment fonctionne la lumière, on va pouvoir s'interesser aux simplifications opérées par le PBR ainsi qu'aux raisons de leur mise en oeuvre. Evidament, les modèles offline peuvent se permettre un peu plus de chose que les modèles temps réèl. Dans cette partie, on parlera principalement des seconds, mais on relevera les différences au fur et a mesure quand elles sont pertinantes.
+
+### 1 BRDF / modèle surfacique
+La première grande simplification oppérée par le PBR, c'est de passer d'un modèle volumique, à un modèle surfacique. On ne s'interesse plus à ce qu'ils se passe à l'interieur de la matière. A la place on considère que tous les phénomènes ont lieu à l'interface.
+
+### Negation du continum diélectrique
+
+### 2 Flux radiant spéctral VS RGB
+
+
+### 2 
 
 ## V. Conclusion
 Les angles motrs tenaient comment je situe mon modèle 
