@@ -329,14 +329,13 @@ Le cas d'utilisation qu'on aura en tête sera le rendu temps réèl dans un jeu 
 
 ### 1 Limitations
 Evacuons rapidement les premières simplifications et leurs consequences :
-- **1. Le trajet de la lumière est instantané** => pas de phosporécence
-- **2. La longueur d'onde d'un photon est immutable** => pas de fluorécense, pas de décalage de bande liée à la température ou autre phénomène
-- **3. On passe d'un modèle volumétrique à un modèle surfacique** => On considère que tous les phénomènes se passent au niveau de l'interface et on néglige la vie photoniques à l'interieur du materiau
-- **4. A cause du point précédent, le continum diélectrique n'existe pas** => Les materiaux sont soit transparent, soit opaque. Et les comportements de diffusion/absorbtion sont amalgamées dans une notion unique qu'on appèle : l'albédo
-- **5. La lumière diffuse ressort toujours exactement d'où elle est entrée** => Ce qui exclue le rendu réaliste de materiaux comme : le jade, la peau, la cire etc... (Des techniques modèrnes comme le SSS permetent de contourner cette limitation)
-- **6. Seuls les materiaux solides/déformables sont pris en charge** => Les liquides et les gaz/fumées sont assimilés au vide ou reprensentés autrement (particules, volumetrique lights, fog, skylight...)
-- **7. On considère la vision comme exclusivement chromatique et équivalante dans tout le champs de vision** => Tous les effets liés aux différents domaines de vision sont soit ignorés, soit simulés autrement
-- **8. On ignore le caractère spectral de la lumière** => Fournir une description spectrale complète pour chaque lumière/texel ne serait vraiment pas pratique. Et impossible de calculer ça en temps réèl aujourd'hui. On utilise donc le RGB pour décrire les couleurs. Ce choix implique de faire abstraction du metamerisme.
+- **1. Les transferts d'énerie liée à l'absorbtion ne pas pris en compte** => pas de fluorécense / phosporécence, pas de décalage de bande liée à la température ou autre phénomène
+- **2. On passe d'un modèle volumétrique à un modèle surfacique** => On considère que tous les phénomènes se passent au niveau de l'interface et on néglige la vie photoniques à l'interieur du materiau
+- **3. A cause du point précédent, le continum diélectrique n'existe pas** => Les materiaux sont soit transparent, soit opaque. Et les comportements de diffusion/absorbtion sont amalgamées dans une notion unique qu'on appèle : l'albédo
+- **4. La lumière diffuse ressort toujours exactement d'où elle est entrée** => Ce qui exclue le rendu réaliste de materiaux comme : le jade, la peau, la cire etc... (Des techniques modèrnes comme le SSS permetent de contourner cette limitation)
+- **5. Seuls les materiaux solides/déformables sont pris en charge** => Les liquides et les gaz/fumées sont assimilés au vide ou reprensentés autrement (particules, volumetrique lights, fog, skylight...)
+- **6. On considère la vision comme exclusivement chromatique et uniforme sur tout le champs de vision** => Tous les effets liés aux différents domaines de vision sont soit ignorés, soit simulés autrement
+- **7. On ignore le caractère spectral de la lumière** => Fournir une description spectrale complète pour chaque lumière/texel ne serait vraiment pas pratique. Et impossible de calculer ça en temps réèl aujourd'hui. On utilise donc le RGB pour décrire les couleurs. Ce choix implique de faire abstraction du metamerisme.
 
 
 ### 2 Framework
