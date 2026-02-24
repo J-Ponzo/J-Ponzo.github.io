@@ -323,7 +323,23 @@ Notre perception des couleurs est donc imparfaite et comporte en quelques sortes
 La plupart du temps ce sont des micro décalages que l'on peut négliger. Mais certaines spécificités génétiques peuvent donner lieu à des différences plus significatives. Les différents daltonismes augmentent par exemple le nombre de collisions, tandis que les tetrachromacies le dimiue.
 
 ## IV. Le PBR : good enough for les films et le gaming
-Maintenant qu'on sait un peu mieux comment fonctionne la lumière, on va pouvoir s'interesser aux simplifications opérées par le PBR ainsi qu'aux raisons de leur mise en oeuvre. Evidament, les modèles offline peuvent se permettre un peu plus de chose que les modèles temps réèl. Dans cette partie, on parlera principalement des seconds, mais on relevera les différences au fur et a mesure quand elles sont pertinantes.
+Maintenant qu'on s'est mis d'accord sur le fonctionnement de la lumière, on va pouvoir s'interesser au PBR. On présentera d'abord les simplifications opérées par rapport à notre concensus de ce qu'est "la réalité" Dans un second temps, on décrira le framework général selon lequel il est traditionnelement implémenté.
+
+Le cas d'utilisation qu'on aura en tête sera le rendu temps réèl dans un jeu vidéo. Evidement, les modèles offline peuvent se permettre plus de choses. On essaira donc de pointer les différence lorsque c'est pertinant.
+
+### 1 Limitations
+Evacuons rapidement les premières simplifications et leurs consequences :
+- **1. Le trajet de la lumière est instantané** => pas de phosporécence
+- **2. La longueur d'onde d'un photon est immutable** => pas de fluorécense, pas de décalage de bande liée à la température ou autre phénomène
+- **3. On passe d'un modèle volumétrique à un modèle surfacique** => On considère que tous les phénomènes se passent au niveau de l'interface et on néglige la vie photoniques à l'interieur du materiau
+- **4. A cause du point précédent, le continum diélectrique n'existe pas** => Les materiaux sont soit transparent, soit opaque. Et les comportements de diffusion/absorbtion sont amalgamées dans une notion unique qu'on appèle : l'albédo
+- **5. La lumière diffuse ressort toujours exactement d'où elle est entrée** => Ce qui exclue le rendu réaliste de materiaux comme : le jade, la peau, la cire etc... (Des techniques modèrnes comme le SSS permetent de contourner cette limitation)
+- **6. Seuls les materiaux solides/déformables sont pris en charge** => Les liquides et les gaz/fumées sont assimilés au vide ou reprensentés autrement (particules, volumetrique lights, fog, skylight...)
+- **7. On considère la vision comme exclusivement chromatique et équivalante dans tout le champs de vision** => Tous les effets liés aux différents domaines de vision sont soit ignorés, soit simulés autrement
+- **8. On ignore le caractère spectral de la lumière** => Fournir une description spectrale complète pour chaque lumière/texel ne serait vraiment pas pratique. Et impossible de calculer ça en temps réèl aujourd'hui. On utilise donc le RGB pour décrire les couleurs. Ce choix implique de faire abstraction du metamerisme.
+
+
+### 2 Framework
 
 ### 1 BRDF / modèle surfacique
 La première grande simplification oppérée par le PBR, c'est de passer d'un modèle volumique, à un modèle surfacique. On ne s'interesse plus à ce qu'ils se passe à l'interieur de la matière. A la place on considère que tous les phénomènes ont lieu à l'interface.
