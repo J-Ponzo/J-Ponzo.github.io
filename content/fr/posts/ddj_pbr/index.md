@@ -325,10 +325,12 @@ La plupart du temps ce sont des micro décalages que l'on peut négliger. Mais c
 ## IV. Le PBR : good enough for les films et le gaming
 Maintenant qu'on s'est mis d'accord sur le fonctionnement de la lumière, on va pouvoir s'interesser au PBR. On présentera d'abord les simplifications opérées par rapport à notre concensus de ce qu'est "la réalité" Dans un second temps, on décrira le framework général selon lequel il est traditionnelement implémenté.
 
-Le cas d'utilisation qu'on aura en tête sera le rendu temps réèl dans un jeu vidéo. Evidement, les modèles offline peuvent se permettre plus de choses. On essaira donc de pointer les différence lorsque c'est pertinant.
+Le cas d'utilisation qu'on aura en tête sera le rendu temps réèl dans un jeu vidéo. Evidement, les modèles offline peuvent se permettre plus de choses. On essaira donc de pointer les différence lorsque c'est pertinant, mais on ne s'y attardera pas.
+
+A noter également que les moteurs modèrnes utilisent de plus en plus de techniques plus ou moins liées au PBR pour en repousser les limitations historiques. Nous ne traiterons pas ces techniques car je ne sais pas comment elles marchent (pour le moment !). Mais je les évoquerai aussi. 
 
 ### 1 Limitations
-Evacuons rapidement les premières simplifications et leurs consequences :
+Evacuons rapidement les premières simplifications evidentes et leurs consequences :
 - **1. Les transferts d'énerie liée à l'absorbtion ne pas pris en compte** => pas de fluorécense / phosporécence, pas de décalage de bande liée à la température ou autre phénomène
 - **2. On passe d'un modèle volumétrique à un modèle surfacique** => On considère que tous les phénomènes se passent au niveau de l'interface et on néglige la vie photoniques à l'interieur du materiau
 - **3. A cause du point précédent, le continum diélectrique n'existe pas** => Les materiaux sont soit transparent, soit opaque. Et les comportements de diffusion/absorbtion sont amalgamées dans une notion unique qu'on appèle : l'albédo
@@ -337,11 +339,31 @@ Evacuons rapidement les premières simplifications et leurs consequences :
 - **6. On considère la vision comme exclusivement chromatique et uniforme sur tout le champs de vision** => Tous les effets liés aux différents domaines de vision sont soit ignorés, soit simulés autrement
 - **7. On ignore le caractère spectral de la lumière** => Fournir une description spectrale complète pour chaque lumière/texel ne serait vraiment pas pratique. Et impossible de calculer ça en temps réèl aujourd'hui. On utilise donc le RGB pour décrire les couleurs. Ce choix implique de faire abstraction du metamerisme.
 
+#### 1.1 modèle surfacique
+La première grande simplification oppérée par le PBR, c'est de passer d'un modèle volumetrique, à un modèle surfacique. On ne s'interesse plus à ce qu'il se passe à l'interieur de la matière et on considère que tous les phénomènes ont lieu à l'interface.
+
+Ce changement de paradigme va avoir plusieurs consequences.
+
+#### 1.1.1 Albédo
+Le paradigme surfacique ne permets plus vraiment de décrire les comportements internes de diffusion et d'absorbtion. Les deux sont alors encapsulées dans une notion unique : l'albédo.
+
+L’albédo est donc une façon de modéliser, de manière localisée à la surface d’un objet, la sélection spectrale combinée de la diffusion et de l’absorption. 
+
+[schema]
+
+Techniquement cela prend la forme d'une texture appliquée sur un mesh. Idéalement, chaque texel devrait représenter le caractère spéctral de l'albédo (une courbe en fonction de la longueur d'onde). Mais en plus des considération techniques, ce serait un travail titanesque pour les artistes de modéliser dans ce niveau la de détail. On utilise donc le bon vieux RGB à la place.
+
+#### 1.1.2 Rupture du continum dielectrique
+Maintenant qu'on à plus que l'albédo pour décrire la vie photonique interne d'un materiau, il devient compliqué de le placer correctement dans le continium dielectrique. Le PBR considère donc la transparence et l'opacité comme deux choses bien distinctes et ignore la translucidité.
+
+
+
+En effet, les 
 
 ### 2 Framework
 
-### 1 BRDF / modèle surfacique
-La première grande simplification oppérée par le PBR, c'est de passer d'un modèle volumique, à un modèle surfacique. On ne s'interesse plus à ce qu'ils se passe à l'interieur de la matière. A la place on considère que tous les phénomènes ont lieu à l'interface.
+
+
 
 ### Negation du continum diélectrique
 
