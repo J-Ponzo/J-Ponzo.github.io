@@ -332,12 +332,26 @@ A noter également que les moteurs modèrnes utilisent de plus en plus de techni
 ### 1 Limitations
 Evacuons rapidement les premières simplifications evidentes et leurs consequences :
 - **1. Les transferts d'énerie liée à l'absorbtion ne pas pris en compte** => pas de fluorécense / phosporécence, pas de décalage de bande liée à la température ou autre phénomène
-- **2. On passe d'un modèle volumétrique à un modèle surfacique** => On considère que tous les phénomènes se passent au niveau de l'interface et on néglige la vie photoniques à l'interieur du materiau
-- **3. A cause du point précédent, le continum diélectrique n'existe pas** => Les materiaux sont soit transparent, soit opaque. Et les comportements de diffusion/absorbtion sont amalgamées dans une notion unique qu'on appèle : l'albédo
-- **4. La lumière diffuse ressort toujours exactement d'où elle est entrée** => Ce qui exclue le rendu réaliste de materiaux comme : le jade, la peau, la cire etc... (Des techniques modèrnes comme le SSS permetent de contourner cette limitation)
-- **5. Seuls les materiaux solides/déformables sont pris en charge** => Les liquides et les gaz/fumées sont assimilés au vide ou reprensentés autrement (particules, volumetrique lights, fog, skylight...)
-- **6. On considère la vision comme exclusivement chromatique et uniforme sur tout le champs de vision** => Tous les effets liés aux différents domaines de vision sont soit ignorés, soit simulés autrement
-- **7. On ignore le caractère spectral de la lumière** => Fournir une description spectrale complète pour chaque lumière/texel ne serait vraiment pas pratique. Et impossible de calculer ça en temps réèl aujourd'hui. On utilise donc le RGB pour décrire les couleurs. Ce choix implique de faire abstraction du metamerisme.
+- **2. Seuls les materiaux solides/déformables sont pris en charge** => Les liquides et les gaz/fumées sont assimilés au vide ou reprensentés autrement (particules, volumetrique lights, fog, skylight...)
+- **3. On considère la vision comme exclusivement chromatique et uniforme sur tout le champs de vision** => Tous les effets liés aux différents domaines de vision sont soit ignorés, soit simulés autrement
+- **4. Le phénomène d'emission est ignoré** => Si la matière n'introduit pas la lumière dans le système, on a besoin d'entité artificielles pour le faire : point light, spot light, directionnal lights etc...
+
+#### 1.1 Le mensonge de l'emissive
+Le PBR ne tiendrait pas compte de l'emission de la matière... dans ce cas pourquoi mon mesh a une texture d'emissive ? Et pourquoi il brille dans le noir ? C'est pas de la lumière ça ?
+
+[Image emissive]
+
+Quand je dis que l'emission est ignorée, je veux dire que ce n'est pas ça qui injecte la lumière dans le système. L'emissive mapping c'est une stratégie de contournement permettant de rendre des objects comme un écran, de la lave, les runes magiques de l'armure d'un nain... mais le phénomène est purement local, il ne se transmet pas aux reste de l'environnement.
+
+Par exemple quand on allume une empoule, l'emissive c'est ce qui fait briller le mesh et lui donne son aspect allumé. Mais ce qui éclaire vraiment la pièce, c'est la point light qu'on a mis dessus.
+
+[Illustration empoule]
+
+Petite précision, les modèles offline considèrent vraiment l'emissive comme une source de lumière qui se transmet à l'environement. C'est le cas de Cycles (le ray tracer de Blender), mais on peut aussi retrouver ça dans un moteur de jeu. Par exemple quand on bake les lights dans Unreal, l'emissive affecte l'environnement.
+
+[Images light bake]
+
+Mais j'ai pas menti, les lightmaps ça reste du offline. (Et lumen ?... Oh ça suffit laissez moi tranquille un peu ^^ Demandez aux actionnaires d'Epic. Ils doivent bien savoir puisqu'ils investissent dedans.)
 
 #### 1.1 modèle surfacique
 La première grande simplification oppérée par le PBR, c'est de passer d'un modèle volumetrique, à un modèle surfacique. On ne s'interesse plus à ce qu'il se passe à l'interieur de la matière et on considère que tous les phénomènes ont lieu à l'interface.
