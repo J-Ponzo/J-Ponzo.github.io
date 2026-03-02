@@ -323,15 +323,15 @@ Notre perception des couleurs est donc imparfaite et comporte en quelques sortes
 La plupart du temps ce sont des micro décalages que l'on peut négliger. Mais certaines spécificités génétiques peuvent donner lieu à des différences plus significatives. Les différents daltonismes augmentent par exemple le nombre de collisions, tandis que les tetrachromacies le dimiue.
 
 ## IV. Le PBR : good enough for les films et le gaming
-Maintenant qu'on s'est mis d'accord sur le fonctionnement de la lumière, on va pouvoir s'interesser au PBR. On présentera d'abord les simplifications opérées par rapport à notre concensus de ce qu'est "la réalité" Dans un second temps, on décrira le framework général selon lequel il est traditionnelement implémenté.
+Maintenant qu'on à posé le cadre de ce qu'on considère comme "la réalité", on va pouvoir s'interesser aux simplifications que le PBR lui applique. Dans un second temps, on décrira le framework général selon lequel il est traditionnelement implémenté.
 
 Le cas d'utilisation qu'on aura en tête sera le rendu temps réèl dans un jeu vidéo. Evidement, les modèles offline peuvent se permettre plus de choses. On essaira donc de pointer les différence lorsque c'est pertinant, mais on ne s'y attardera pas.
 
-A noter également que les moteurs modèrnes utilisent de plus en plus de techniques plus ou moins liées au PBR pour en repousser les limitations historiques. Nous ne traiterons pas ces techniques car je ne sais pas comment elles marchent (pour le moment !). Mais je les évoquerai aussi. 
+A noter également que les moteurs modèrnes utilisent de plus en plus de techniques plus ou moins liées au PBR pour en repousser les limitations historiques. Nous ne traiterons pas ces techniques car je ne sais pas comment elles marchent (pour le moment !). On se contantera de les évoquerer et qui sait, ce sera peut être l'objet d'articles annexes un jour. 
 
 ### 1 Limitations
 Evacuons rapidement les premières simplifications evidentes et leurs consequences :
-- **1. Les transferts d'énerie liée à l'absorbtion ne pas pris en compte** => pas de fluorécense / phosporécence, pas de décalage de bande liée à la température ou autre phénomène
+- **1. Les transferts d'énerie liés à l'absorbtion ne sont pas pris en compte** => pas de fluorécense / phosporécence, pas de décalage de bande liée à la température ou autre phénomène complexes
 - **2. Seuls les materiaux solides/déformables sont pris en charge** => Les liquides et les gaz/fumées sont assimilés au vide ou reprensentés autrement (particules, volumetrique lights, fog, skylight...)
 - **3. On considère la vision comme exclusivement chromatique et uniforme sur tout le champs de vision** => Tous les effets liés aux différents domaines de vision sont soit ignorés, soit simulés autrement
 - **4. Le phénomène d'emission est ignoré** => Si la matière n'introduit pas la lumière dans le système, on a besoin d'entité artificielles pour le faire : point light, spot light, directionnal lights etc...
@@ -351,7 +351,7 @@ Petite précision, les modèles offline considèrent vraiment l'emissive comme u
 
 [Images light bake]
 
-Mais j'ai pas menti, les lightmaps ça reste du offline. (Et lumen ?... Oh ça suffit laissez moi tranquille un peu ^^ Demandez aux actionnaires d'Epic. Ils doivent bien savoir puisqu'ils investissent dedans.)
+Mais je n'ai pas menti pour autant, les lightmaps ça reste du offline. (Et lumen ?... Oh ça suffit laissez moi tranquille un peu ^^ Demandez aux actionnaires d'Epic. Ils doivent bien savoir puisqu'ils investissent dedans.)
 
 #### 1.1 modèle surfacique
 La première grande simplification oppérée par le PBR, c'est de passer d'un modèle volumetrique, à un modèle surfacique. On ne s'interesse plus à ce qu'il se passe à l'interieur de la matière et on considère que tous les phénomènes ont lieu à l'interface.
@@ -359,20 +359,21 @@ La première grande simplification oppérée par le PBR, c'est de passer d'un mo
 Ce changement de paradigme va avoir plusieurs consequences.
 
 #### 1.1.1 Albédo
-Le paradigme surfacique ne permets plus vraiment de décrire les comportements internes de diffusion et d'absorbtion. Les deux sont alors encapsulées dans une notion unique : l'albédo.
+Le paradigme surfacique ne permets plus vraiment de décrire les comportements internes de diffusion et d'absorbtion. Les deux sont alors amalgamés dans une notion unique : l'albédo.
 
 L’albédo est donc une façon de modéliser, de manière localisée à la surface d’un objet, la sélection spectrale combinée de la diffusion et de l’absorption. 
 
 [schema]
 
-Techniquement cela prend la forme d'une texture appliquée sur un mesh. Idéalement, chaque texel devrait représenter le caractère spéctral de l'albédo (une courbe en fonction de la longueur d'onde). Mais en plus des considération techniques, ce serait un travail titanesque pour les artistes de modéliser dans ce niveau la de détail. On utilise donc le bon vieux RGB à la place.
+### 1.1.2 Perte du caractère spectral
+Techniquement, l'albedo prend la forme d'une texture appliquée sur un mesh. Idéalement, chaque texel devrait représenter le caractère spéctral de l'albédo (une courbe en fonction de la longueur d'onde). Mais en plus des considération techniques, ce serait un travail titanesque et pas très intuitif de modéliser dans ce niveau la de détail. On utilise donc le bon vieux RGB à la place.
 
-#### 1.1.2 Rupture du continum dielectrique
+Ce faisant, on perd forcement un peu de réalisme. Mais on gagne beaucoup en productivité. Certains renderer offline utilisent vraiment des spectres mais ça reste rare (Cycles ne le supporte pas). Pour modéliser les scènes dans ce cas, on peut avoir recours à des bases de données de materiaux réèls mesurés avec un spectrophotomètre pour avoir directement les courbes.
+
+#### 1.1.3 Rupture du continum dielectrique
 Maintenant qu'on à plus que l'albédo pour décrire la vie photonique interne d'un materiau, il devient compliqué de le placer correctement dans le continium dielectrique. Le PBR considère donc la transparence et l'opacité comme deux choses bien distinctes et ignore la translucidité.
 
-
-
-En effet, les 
+En réalité c'est même pire que ça, car dans un moteur de jeu, la transparence n'est pas considérée suivant un angle phisique. On a différents modes de transparences qu'on peut appliquer à un materiau PBR, mais cette transparence, n'est pas PBR. Dans le meilleur des cas, on à un paramètre qui pilote à quel point le pixel aura la couleur du materiau ou du reste de la scène déjà rendue derière.
 
 ### 2 Framework
 
