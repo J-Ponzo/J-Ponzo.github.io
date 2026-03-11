@@ -353,27 +353,53 @@ Petite précision, les modèles offline considèrent vraiment l'emissive comme u
 
 Mais je n'ai pas menti pour autant, les lightmaps ça reste du offline. (Et lumen ?... Oh ça suffit laissez moi tranquille un peu ^^ Demandez aux actionnaires d'Epic. Ils doivent bien savoir puisqu'ils investissent dedans.)
 
-#### 1.1 modèle surfacique
+#### 1.2 modèle surfacique
 La première grande simplification oppérée par le PBR, c'est de passer d'un modèle volumetrique, à un modèle surfacique. On ne s'interesse plus à ce qu'il se passe à l'interieur de la matière et on considère que tous les phénomènes ont lieu à l'interface.
 
 Ce changement de paradigme va avoir plusieurs consequences.
 
-#### 1.1.1 Albédo
+##### 1.2.1 Albédo
 Le paradigme surfacique ne permets plus vraiment de décrire les comportements internes de diffusion et d'absorbtion. Les deux sont alors amalgamés dans une notion unique : l'albédo.
 
 L’albédo est donc une façon de modéliser, de manière localisée à la surface d’un objet, la sélection spectrale combinée de la diffusion et de l’absorption. 
 
 [schema]
 
-### 1.1.2 Perte du caractère spectral
+##### 1.2.2 Perte du caractère spectral
 Techniquement, l'albedo prend la forme d'une texture appliquée sur un mesh. Idéalement, chaque texel devrait représenter le caractère spéctral de l'albédo (une courbe en fonction de la longueur d'onde). Mais en plus des considération techniques, ce serait un travail titanesque et pas très intuitif de modéliser dans ce niveau la de détail. On utilise donc le bon vieux RGB à la place.
 
 Ce faisant, on perd forcement un peu de réalisme. Mais on gagne beaucoup en productivité. Certains renderer offline utilisent vraiment des spectres mais ça reste rare (Cycles ne le supporte pas). Pour modéliser les scènes dans ce cas, on peut avoir recours à des bases de données de materiaux réèls mesurés avec un spectrophotomètre pour avoir directement les courbes.
 
-#### 1.1.3 Rupture du continum dielectrique
+##### 1.2.3 Rupture du continum dielectrique
 Maintenant qu'on à plus que l'albédo pour décrire la vie photonique interne d'un materiau, il devient compliqué de le placer correctement dans le continium dielectrique. Le PBR considère donc la transparence et l'opacité comme deux choses bien distinctes et ignore la translucidité.
 
 En réalité c'est même pire que ça, car dans un moteur de jeu, la transparence n'est pas considérée suivant un angle phisique. On a différents modes de transparences qu'on peut appliquer à un materiau PBR, mais cette transparence, n'est pas PBR. Dans le meilleur des cas, on à un paramètre qui pilote à quel point le pixel aura la couleur du materiau ou du reste de la scène déjà rendue derière.
+
+#### 1.3 Modèle Microfacettes
+Vous pouvez polire une surface aussi longtemps que vous voulez, à l'echelle microscopique, elle ne sera jamais vraiment plate. Les micros aspérités sont indicernable pour nous mais elles sont bien là : ce sont les microfacettes.
+
+[Schema microfacettes]
+
+Selon le materiau considéré, les microfacettes vont être plus ou moins cahotiques. Et puisque l'angle d'incidence influe sur le destin d'un photon, cette caracteristique va biensure jouer un rôle dans le rendu. En effet les surface rugeuses dégradent la cohérence directionnelle des photons reflechis ce qui a pour effet de troubler les reflets (un peu comme la diffusion trouble l'image dans le cas de la translucidité).
+
+Sur le papier c'est assez logique mais ça pose évidament des problèmes techniques. On imagine mal un artiste modéliser les millions de milliards de faces composant chaque cm² de son mesh. Et un ordinateur actuel serait incapable de rendre un mesh aussi lourd (voir même de le stoquer). Mais il y a plus grave encore.
+
+En réalité même avec des artiste surhumains et des supercalculaters, on aurait toujours un problème d'ordre conceptuel : j'ai nommé, le "mur du changement échelle". En effet, une chose peut être ponctuelle et unitaire au niveau macroscopique, mais devenir un véritable océan lorsqu'on la considère à une échelle micoscopique. Je m'explique. 
+
+Le fragment shader à entre autres besoin d'une normal pour calculer l'éclairage en un pixel donné. A l'échelle macroscopique cette normale est unique et bien définie : on projete le pixel en un point de la scène et on prend la normale du triangle qui contient ce point. Le problème c'est qu'à l'échelle microscopique, les faces sont beaucoup plus petites que notre pixel projeté. On a donc non pas une face unique, mais des milliers de microfacettes ayant chacune leur propre normale.
+
+On ne peut donc pas prendre en compte les microfacettes telle quel. On a besoin d'un astuce.
+
+#### 1.4 Roughness
+Si l'albedo est une abstrction surfacique de la complexité interne de l'interaction photons / matière, la rougness est l'abstraction macroscopique de la complexité microscopique des microfacettes.
+
+Plus concretement, c'est un paramètre qui permet de quantifier la variance des normales des micro facettes :
+- roughness = 0 : la surface est completement lisse. Les normales des microfacettes sont paralelles
+- roughness = 1 : Le chao est maximal et les normales des microfacettes n'ont aucune cohérence directionnelle
+
+A cause des problème décrits dans la partie précédente, le PBR n'utilise pas directement le modèle des microfacettes. A la place il est basé sur des fonctions permetant d'approximer ses effets à l'échelle macroscopique. Et ces fonctions utilisent la roughness comme abstraction du chaos directionnel des microfacettes.
+
+On détaillera ces fonctions plustard quand on décrira plus précisement le framework PBR.
 
 ### 2 Framework
 
