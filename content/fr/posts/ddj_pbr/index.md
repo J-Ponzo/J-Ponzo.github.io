@@ -397,14 +397,15 @@ Plus concretement, c'est un paramètre qui permet de quantifier la variance des 
 - roughness = 0 : la surface est completement lisse. Les normales des microfacettes sont paralelles
 - roughness = 1 : Le chao est maximal et les normales des microfacettes n'ont aucune cohérence directionnelle
 
-A cause des problème décrits dans la partie précédente, le PBR n'utilise pas directement le modèle des microfacettes. A la place il est basé sur des fonctions permetant d'approximer ses effets à l'échelle macroscopique. Et ces fonctions utilisent la roughness comme abstraction du chaos directionnel des microfacettes.
-
-On détaillera ces fonctions plustard quand on décrira plus précisement le framework PBR.
+A cause des problème décrits dans la partie précédente, le PBR n'utilise pas directement le modèle des microfacettes. A la place il est basé sur des fonctions permetant d'approximer ses effets à l'échelle macroscopique. Et ces fonctions utilisent la roughness comme abstraction du chaos directionnel des microfacettes. On détaillera tout ça dans la partie suivante.
 
 ### 2 Framework
+Si vous avez survecu jusqu'ici bravo ! On va enfin pouvoir rentrer dans le vif du sujet. J'ai conscience que ça fait beaucoup de lecture prélimitaire. Mais sans introduire ces notions, je ne pourrait pas faire mieux que de balancer des formules hors contexte en disant : "c'est une implémentation parmis d'autre, maintenant débrouillez vous".
 
+## V. Conclusion
+Initialement, je prévoyais que cette partie soit l'article entier. Mais en l'écrivant j'ai vite compris que je n'allais pas m'en sortir. 
 
-
+En effet, la difficulté du PBR, ne réside pas dans sa définition. Ce qui pose réèlement problème, c'est la profondeur de l'empilement de conceptes sur lequel il est perché. On peut se contanter de balancer des formules et de dire que c'est qu'une implémentation parmis d'autres. Mais ce n'est pas vraiment utile.
 
 ### Negation du continum diélectrique
 
