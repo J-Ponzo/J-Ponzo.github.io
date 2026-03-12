@@ -400,7 +400,24 @@ Plus concretement, c'est un paramètre qui permet de quantifier la variance des 
 A cause des problème décrits dans la partie précédente, le PBR n'utilise pas directement le modèle des microfacettes. A la place il est basé sur des fonctions permetant d'approximer ses effets à l'échelle macroscopique. Et ces fonctions utilisent la roughness comme abstraction du chaos directionnel des microfacettes. On détaillera tout ça dans la partie suivante.
 
 ### 2 Framework
-Si vous avez survecu jusqu'ici bravo ! On va enfin pouvoir rentrer dans le vif du sujet. J'ai conscience que ça fait beaucoup de lecture prélimitaire. Mais sans introduire ces notions, je ne pourrait pas faire mieux que de balancer des formules hors contexte en disant : "c'est une implémentation parmis d'autre, maintenant débrouillez vous".
+Si vous avez survecu jusqu'ici bravo ! On va enfin pouvoir rentrer dans le vif du sujet. Ca fait beaucoup de lecture prélimitaire, je sais. J'aurais pu faire quelque chose de plus synthetique. Mais je ne voyais pas l'interait de présenter une nième implémentation de référence. C'est ce que fond déjà la plupart des article sur le sujet (et il sont mieux écrit que les miens ^^) 
+
+Je trouvais donc plus interessant d'aborder le PBR en tant que framework. Et pour faire ça, il fallait bien déboussailler un peu l'empilement de notions qui se cache dessous. Maintenant que c'est chose faite, on va pouvoir se lancer.
+
+
+
+
+
+
+
+
+
+
+## OLD
+
+sans introduire ces notions, je ne pouvais pas faire mieux que de balancer des formules hors contexte en disant : "c'est une version parmis d'autre, maintenant débrouillez vous !".
+
+Les articles synthétiques c'est très utile. Mais il y en a déjà des tas (et mieux écrit que les miens). Une fois n'est pas coutume, je vous conseil ceux de LearnOpenGL. Je cherche donc à apporter des clé de compréhention permetant d'apréhender le PBR en tant framework plutôt que de présenter une implémentation de référence.
 
 ## V. Conclusion
 Initialement, je prévoyais que cette partie soit l'article entier. Mais en l'écrivant j'ai vite compris que je n'allais pas m'en sortir. 
