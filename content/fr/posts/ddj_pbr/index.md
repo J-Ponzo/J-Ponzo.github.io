@@ -375,6 +375,8 @@ Maintenant qu'on à plus que l'albédo pour décrire la vie photonique interne d
 
 En réalité c'est même pire que ça, car dans un moteur de jeu, la transparence n'est pas considérée suivant un angle phisique. On a différents modes de transparences qu'on peut appliquer à un materiau PBR, mais cette transparence, n'est pas PBR. Dans le meilleur des cas, on à un paramètre qui pilote à quel point le pixel aura la couleur du materiau ou du reste de la scène déjà rendue derière.
 
+##### 1.2.4 Hypothèse d'intéraction locale
+
 #### 1.3 Modèle Microfacettes
 Vous pouvez polire une surface aussi longtemps que vous voulez, à l'echelle microscopique, elle ne sera jamais vraiment plate. Les micros aspérités sont indicernable pour nous mais elles sont bien là : ce sont les microfacettes.
 
