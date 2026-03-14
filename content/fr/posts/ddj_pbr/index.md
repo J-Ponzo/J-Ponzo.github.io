@@ -365,7 +365,7 @@ L’albédo est donc une façon de modéliser, de manière localisée à la surf
 
 [schema]
 
-#### 1.2.2 Hypothèse d'intéraction locale
+##### 1.2.2 Hypothèse d'intéraction locale
 En plus de se limiter à un modèle surfacique, le PBR suppose une intéraction locale. Ca à l'aire compliqué mais en fait pas du tout ! 
 
 En gros jusqu'ici on a établi que :
@@ -383,9 +383,11 @@ Pour la plupart des materiaux opaques ça ne change pas grand chose car le voyag
 Les moteurs de rendus modèrnes utilisent des techniques comme le Sub-Surface Scattering (SSS) pour se libérer de cette limitation. Mais pour moi on est plus sur une extention du PBR que sur un fonctionnement natif.
 
 ##### 1.2.3 Rupture du continum dielectrique
-Maintenant qu'on à plus que l'albédo pour décrire la vie photonique interne d'un materiau, il devient compliqué de le placer correctement dans le continium dielectrique. Le PBR considère donc la transparence et l'opacité comme deux choses bien distinctes et ignore la translucidité.
+On est donc sur un modèle surfacique qui remplace l'intéraction interne par l'albédo et dans lequel la lumière sort toujours par où elle entre. Ca fonctionne pour les materiaux opaque, mais les notions de transparence et de translucidité n'ont plus vraiment de sens dans ce context. Le continum dielectrique en est réduit à la seule opacité.
 
-En réalité c'est même pire que ça, car dans un moteur de jeu, la transparence n'est pas considérée suivant un angle phisique. On a différents modes de transparences qu'on peut appliquer à un materiau PBR, mais cette transparence, n'est pas PBR. Dans le meilleur des cas, on à un paramètre qui pilote à quel point le pixel aura la couleur du materiau ou du reste de la scène déjà rendue derière.
+La transparence est bien présente dans un jeu vidéo, mais elle n'est pas du tout "physicaly based". Le principe est de rendre les surfaces transparente par dessus les surface opaques. La couleur du nouveau pixel est alors "mélangée" avec celle de l'ancien selon diverse modalités. C'est de la pure composition comme vous pourriez le faire à la main dans GIMP (on son concurent que je ne vais pas nommer).
+
+<vrai pour le PBR offline ?>
 
 ##### 1.2.2 Perte du caractère spectral
 Techniquement, l'albedo prend la forme d'une texture appliquée sur un mesh. Idéalement, chaque texel devrait représenter le caractère spéctral de l'albédo (une courbe en fonction de la longueur d'onde). Mais en plus des considération techniques, ce serait un travail titanesque et pas très intuitif de modéliser dans ce niveau la de détail. On utilise donc le bon vieux RGB à la place.
