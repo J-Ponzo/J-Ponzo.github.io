@@ -365,30 +365,6 @@ L’albédo est donc une façon de modéliser, de manière localisée à la surf
 
 [schema]
 
-##### 1.2.2 Hypothèse d'intéraction locale
-En plus de se limiter à un modèle surfacique, le PBR suppose une intéraction locale. Ca à l'aire compliqué mais en fait pas du tout ! 
-
-En gros jusqu'ici on a établi que :
-- La lumière entre dans la matière en un point P1 de la surface. Elle fait sa vie (ou meurt) à l'interieur. Et eventuellement, elle resort de la matière en un point P2 de la surface
-- Le PBR ne traite pas la partie interne du transport de la lumière et résume ça par l'albédo
-
-[Illustration P1, P2, Intern VS albedo]
-
-Et bien l'hypothèse d'intéraction locale, ça veut juste dire qu'en plus de ça, le PBR force : P1 == P2
-
-[Illustration P1 == P2]
-
-Pour la plupart des materiaux opaques ça ne change pas grand chose car le voyage de la lumière y est très court. En consequence, P2 ne tombe jamais très loin de P1 et à l'échelle marcroscopique, on peut les assimiler au même point. Mais ça devient problématique pour des materiaux comme la cire, le jade, la peau etc...
-
-Les moteurs de rendus modèrnes utilisent des techniques comme le Sub-Surface Scattering (SSS) pour se libérer de cette limitation. Mais pour moi on est plus sur une extention du PBR que sur un fonctionnement natif.
-
-##### 1.2.3 Rupture du continum dielectrique
-On est donc sur un modèle surfacique qui remplace l'intéraction interne par l'albédo et dans lequel la lumière sort toujours par où elle entre. Ca fonctionne pour les materiaux opaque, mais les notions de transparence et de translucidité n'ont plus vraiment de sens dans ce context. Le continum dielectrique en est réduit à la seule opacité.
-
-La transparence est bien présente dans un jeu vidéo, mais elle n'est pas du tout "physicaly based". Le principe est de rendre les surfaces transparente par dessus les surface opaques. La couleur du nouveau pixel est alors "mélangée" avec celle de l'ancien selon diverse modalités. C'est de la pure composition comme vous pourriez le faire à la main dans GIMP (on son concurent que je ne vais pas nommer).
-
-<vrai pour le PBR offline ?>
-
 ##### 1.2.2 Perte du caractère spectral
 Techniquement, l'albedo prend la forme d'une texture appliquée sur un mesh. Idéalement, chaque texel devrait représenter le caractère spéctral de l'albédo (une courbe en fonction de la longueur d'onde). Mais en plus des considération techniques, ce serait un travail titanesque et pas très intuitif de modéliser dans ce niveau la de détail. On utilise donc le bon vieux RGB à la place.
 
@@ -423,10 +399,40 @@ Si vous avez survecu jusqu'ici bravo ! On va enfin pouvoir rentrer dans le vif d
 
 Je trouvais donc plus interessant d'aborder le PBR en tant que framework. Et pour faire ça, il fallait déboussailler un peu l'empilement de notions qui se cache dessous. Maintenant que c'est chose faite, on va pouvoir se lancer.
 
+#### 2.1 Fonctions de distribution bidirectionnelles
+En rendu PBR, on modélise l'intéraction lumière-matière à l'aide d'une famille de fonctions qu'on appelle des fonctions de distribution didirectionnelles ou "bidirectionnal distribution function" dans la langue de Motörhead.
 
+On les notes BxDF avec 'x' décrivant le phénomène qu'elles modélise :
+- BRDF : Bidirectional Reflectance Distribution Function
+- BRTF : Bidirectional Transmitance Distribution Function
+- BSTF : Bidirectional Scattering Distribution Function
+- BSSRDF : Bidirectional Surface Scattering Reflectance Distribution Function
 
+https://en.wikipedia.org/wiki/Bidirectional_scattering_distribution_function
 
+##### 1.2.2 Hypothèse d'intéraction locale
+En plus de se limiter à un modèle surfacique, le PBR suppose une intéraction locale. Ca à l'aire compliqué mais en fait pas du tout ! 
 
+En gros jusqu'ici on a établi que :
+- La lumière entre dans la matière en un point P1 de la surface. Elle fait sa vie (ou meurt) à l'interieur. Et eventuellement, elle resort de la matière en un point P2 de la surface
+- Le PBR ne traite pas la partie interne du transport de la lumière et résume ça par l'albédo
+
+[Illustration P1, P2, Intern VS albedo]
+
+Et bien l'hypothèse d'intéraction locale, ça veut juste dire qu'en plus de ça, le PBR force : P1 == P2
+
+[Illustration P1 == P2]
+
+Pour la plupart des materiaux opaques ça ne change pas grand chose car le voyage de la lumière y est très court. En consequence, P2 ne tombe jamais très loin de P1 et à l'échelle marcroscopique, on peut les assimiler au même point. Mais ça devient problématique pour des materiaux comme la cire, le jade, la peau etc...
+
+Les moteurs de rendus modèrnes utilisent des techniques comme le Sub-Surface Scattering (SSS) pour se libérer de cette limitation. Mais pour moi on est plus sur une extention du PBR que sur un fonctionnement natif.
+
+##### 1.2.3 Rupture du continum dielectrique
+On est donc sur un modèle surfacique qui remplace l'intéraction interne par l'albédo et dans lequel la lumière sort toujours par où elle entre. Ca fonctionne pour les materiaux opaque, mais les notions de transparence et de translucidité n'ont plus vraiment de sens dans ce context. Le continum dielectrique en est réduit à la seule opacité.
+
+La transparence est bien présente dans un jeu vidéo, mais elle n'est pas du tout "physicaly based". Le principe est de rendre les surfaces transparente par dessus les surface opaques. La couleur du nouveau pixel est alors "mélangée" avec celle de l'ancien selon diverse modalités. C'est de la pure composition comme vous pourriez le faire à la main dans GIMP (on son concurent que je ne vais pas nommer).
+
+<vrai pour le PBR offline ?>
 
 
 
