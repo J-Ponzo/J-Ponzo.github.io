@@ -399,14 +399,24 @@ Si vous avez survecu jusqu'ici bravo ! On va enfin pouvoir rentrer dans le vif d
 
 Je trouvais donc plus interessant d'aborder le PBR en tant que framework. Et pour faire ça, il fallait déboussailler un peu l'empilement de notions qui se cache dessous. Maintenant que c'est chose faite, on va pouvoir se lancer.
 
-#### 2.1 Fonctions de distribution bidirectionnelles
-En rendu PBR, on modélise l'intéraction lumière-matière à l'aide d'une famille de fonctions qu'on appelle des fonctions de distribution didirectionnelles ou "bidirectionnal distribution function" dans la langue de Motörhead.
+#### 2.1 BSDF
+
+En rendu PBR, l'intéraction lumière-matière est modélisées par ce qu'on appel une BSDF. C'est l'abreviation de Bidirectional Scattering Distribution Function et c'est de là que vient le nom noeud "Principled BSDF" que vous avez surement déjà croisé dans Blender.
+
+Il s'agit d'une fonction mathématique qui prend en parametre une direction d'entrée dE et une direction de sortie dS. Sa mission est de calculer le flux radiant spectral resultant le long de dS en fonction du flux radiant spectral entrant le long de dE.
+
+[Schéma]
+
+Il en existe plusieurs variantes que nous allons discuter dans les sections suivantes.
+
 
 On les notes BxDF avec 'x' décrivant le phénomène qu'elles modélise :
 - BRDF : Bidirectional Reflectance Distribution Function
-- BRTF : Bidirectional Transmitance Distribution Function
-- BSTF : Bidirectional Scattering Distribution Function
-- BSSRDF : Bidirectional Surface Scattering Reflectance Distribution Function
+- BTDF : Bidirectional Transmitance Distribution Function
+- BSSRDF : Bidirectional Scattering-Surface Reflectance Distribution Function
+- BSSTDF : Bidirectional Scattering-Surface Transmitance Distribution Function
+
+
 
 https://en.wikipedia.org/wiki/Bidirectional_scattering_distribution_function
 
