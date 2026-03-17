@@ -400,21 +400,45 @@ Si vous avez survecu jusqu'ici bravo ! On va enfin pouvoir rentrer dans le vif d
 Je trouvais donc plus interessant d'aborder le PBR en tant que framework. Et pour faire ça, il fallait déboussailler un peu l'empilement de notions qui se cache dessous. Maintenant que c'est chose faite, on va pouvoir se lancer.
 
 #### 2.1 BSDF
-
 En rendu PBR, l'intéraction lumière-matière est modélisées par ce qu'on appel une BSDF. C'est l'abreviation de Bidirectional Scattering Distribution Function et c'est de là que vient le nom noeud "Principled BSDF" que vous avez surement déjà croisé dans Blender.
 
-Il s'agit d'une fonction mathématique qui prend en parametre une direction d'entrée dE et une direction de sortie dS. Sa mission est de calculer le flux radiant spectral resultant le long de dS en fonction du flux radiant spectral entrant le long de dE.
+Il s'agit d'une fonction mathématique qui prend en parametre une direction d'entrée dE et une direction de sortie dS. Sa mission est de calculer le flux radiant spectral resultant le long de dS à partir du flux radiant spectral entrant le long de dE.
 
 [Schéma]
 
-Il en existe plusieurs variantes que nous allons discuter dans les sections suivantes.
+Il en existe plusieurs variantes : 
+- BRDF : Bidirectional **Reflectance** Distribution Function
+- BTDF : Bidirectional **Transmitance** Distribution Function
+- BSSRDF : Bidirectional **Subsurface Scattering Reflectance** Distribution Function
+- BSSTDF : Bidirectional **Subsurface Scattering Transmitance** Distribution Function
+
+Voyons à quoi elles correspondent.
+
+##### 2.1.1 BSSRDF
+On va commencer par la fin parce que je trouve que c'est plus claire comme ça. La BSSRDF s'interesse au flux radiant spectral qui entre et sort du même côté de la surface.
+
+[Schema]
+
+Cela correspond à la partie réflechie, mais également tout ce qui resort par diffusions successives.
+
+##### 2.1.2 BSSTDF
+La BSSTDF traite au contraire le flux radiant spectral qui entre d'un côté de la surface mais ressort de l'autre (c'est à dire la partie qui pénetre dans l'objet).
+
+##### 2.1.1 BRDF / BTDF
+
+Le 'R' de BRDF veut dire "Reflectance". Cette fonction décrit la partie de la lumière qui resort du même côté qu'elle est entrée. Ca regroupe la partie réfléchie et la partie diffuse qui resort par rebons successifs.
+
+[Schema]
+
+Le 'T' de BTDF signifie "Transmitance". Ici on s'interesse à ce qui passe de l'autre côté de la surface. C'est à dire ce qui rentre dans l'objet.
+
+[Schema]
+
 
 
 On les notes BxDF avec 'x' décrivant le phénomène qu'elles modélise :
-- BRDF : Bidirectional Reflectance Distribution Function
-- BTDF : Bidirectional Transmitance Distribution Function
-- BSSRDF : Bidirectional Scattering-Surface Reflectance Distribution Function
-- BSSTDF : Bidirectional Scattering-Surface Transmitance Distribution Function
+
+
 
 
 
