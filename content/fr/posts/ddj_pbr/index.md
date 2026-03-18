@@ -6,6 +6,58 @@ title = "Dis donc Jamy : C'est quoi le PBR ?"
 description = "Article de vulgarisation expliquant ce qu'est le Physically Based Rendering"
 hidden = false
 +++
+
+## I. Introduction
+Contrairement à ce qu’on pourrait croire, la lumière ne se laisse pas facilement décrire comme un modèle simple et unique. Pendant longtemps, les physicien eux même ont débattu de sa nature. Pour Newton c'était un flux de particules tandis qu'Huygens défandait un modèle ondulatoire. En 1801, Young donne raison à Huygens en mettant en évidence les interférences lumineuses. Un siècle plus tard, Einstein relance le débat avec l’effet photoélectrique, qui redonne du crédit à la vision corpusculaire.
+
+Aujourd’hui, la physique moderne propose un cadre unifié qui réconcilie ces deux visions : l'optique quantique. Mais en pratique c'est un peu marteau mouche suivant le phénomène considéré. Les anciens modèles sont donc toujours d'actualité.
+
+A cela s'ajoutent les hypothèse spécifiques de tel ou tel domaine d'étude (système volumique, surfacique etc...) et se retrouve avec une multitude de modèles adaptés à différents contextes qui coexistent. C’est précisément là que les choses se compliquent…
+
+[Frise du temps]
+
+J'imagine que pour un vrai physicien, naviguer entre les différents cadre théoriques engeandré par cette Histoire rocambolesque, c'est relativement naturel. Mais pour un moldu comme moi qui cherche juste à se cultiver, c'est un sacré foutoire. 
+
+Biensure, le niveau technique est une première barrière. Quand on lis du contenu scientifiques on comprends rarement tout et c'est parfaitement normal. J'ai donc fait avec les 60% à la portée de mon petit cerveau, comme d'habitude. Mais ce qui m'a vraiment mis en difficulté cette fois çi, c'est l'instabilité du jargon. Suivant le contexte, les mots ne veulent pas dire la même chose (allant parfois jusqu'au contre sens).
+
+Dans cet article, on va partir d'un modèle pédagogique simplifié qu'on admétra comme la réalité physique. A partir de ce modèle, on va chercher à définir par soustraction ce qu'est le PBR. D'abord dans sa version offline, puis dans sa version temps réèl. L'objectif est de comprendre comment les modèles PBR se positionnent par rapport à cette réalité physique.
+
+Mais pour cela, on va devoir traverser plusieurs cadres théoriques. Ce qui va nous confronté au problème de vocabulaire évoqué plus haut. Je vais essayer de lever la confusion en priorisant la non-ambiguité par rapport à l'usage dans le choix de mes mots. Ca veut dire que vous ne trouverez pas forcement les même termes ici que dans le litérature. J'espère qu'on y gagnera en clarté.
+
+## II. Real Life Engine
+Dans la vrai vie, l'existance des photons est totalement déterminée par la matière. C'est elle qui les crée, c'est elle qui les détruit et c'est encore elle qui les fait changer de direction. Elle controle même leur vitesse de propagation et leur longueur d'onde.
+
+Ce que je veux dire par là, c'est qu'il n'y a pas d'un côté la matière et de l'autre la lumière qu'on injecte, qui intéragi, puis qui se volatilise. Il s'agit d'un système fermé dans lequel l’énergie se conserve, mais change continuellement de forme. 
+
+Ainsi ce qu'on appel la lumière, c'est de l'énergie en transit sous la forme d'un photon. Mais cette energie n'est ni crée ni détruite. Avant de se materialiser en photon elle faisait déjà partie du système sous une autre modalité : courant electrique, disipation thermique, mouvement etc...
+
+Dans cette partie on va évidament s'intéresser principalement aux photons. Mais retenez que ce n'est qu'une partie du grand cycle de l'énergie dans lequel tout est lié. Aussi, les phénomènes liés au photons sont très différents selon que l'on s'interesse à l'interieur du milieu ou à son interface avec un autre milieu. On va donc traiter ces aspects séparément.
+
+### II.1 Milieu continu (Volume)
+erg
+
+#### II.1.1 Emission
+La matière est constituée d’atomes autour desquels gravitent des électrons. Lorsqu’un électron reçoit de l’énergie, il entre dans un état instable en changeant d’orbite. Cela peut durer un certain temps, mais il doit forcément revenir à son état stable à un moment. Pour cela, il doit se décharger de cet excédent d’énergie. Lorsque cela se produit, cet excédent se matérialise sous forme de photon : on dit que le photon est émis.
+
+[Gif : atome emet photon]
+
+Tous les matériaux, sans exception, émettent des photons. Pas seulement votre écran ou votre souris RGB. Votre chaise, votre bureau, les murs, la tasse, le café qu’elle contient, la vapeur d’eau qui s’en échappe, l’air tout autour… tout ce qui est constitué d’atomes (donc tout sauf le vide).
+
+[Fred : Mais dis donc, Jamy ! Si ma chaise émet de la lumière, je devrais la voir dans le noir, non ?]
+
+[Jamy : Pas forcément ! Les cônes de notre œil ne sont sensibles qu’à certaines longueurs d’onde. Or, la plupart des matériaux émettent dans l’infrarouge. Il est donc tout à fait normal que tu ne voies ni ta chaise, ni la plupart des objets de la pièce. Mais si tu mets des lunettes infrarouges, tu les verras comme en plein jour ou presque.]
+
+#### II.1.2 Absorbtion
+
+#### II.1.3 Diffusion volumique
+
+### II.2 Interface entre milieux (Surface)
+
+### II.3 Sélection spectrale
+Explication générale puis consequences specifiques pour chaque phénomene
+
+## BIG ARTICLE
+
 ## I. Introduction
 Dans la serie de devlog du projet OpenRE, je me suis retrouvé à devoir expliquer ce qu'est le Physicaly Based Rendering (PBR). Ce faisant, je me suis rendu compte que :
 - le sujet est trop vaste pour tenir dans une simple section d’article
