@@ -35,24 +35,32 @@ Dans cette partie on va évidament s'intéresser principalement aux photons. Mai
 Les phénomènes relatifs au photons sont aussi très différents selon que l'on s'interesse à l'interieur du milieu ou à son interface avec un autre milieu. On va donc traiter ces aspects séparément.
 
 ### II.1 Milieu continu (Volume)
-Un milieu continu, c'est un volume de matière dont les différentes propriétés peuvent varier en fonction l'espace, mais dont l'evolution se fait de manière continue, sans saut brutal dans ses valeurs.
+Un milieu continu, c'est un volume de matière dont les différentes propriétés peuvent varier en fonction l'espace, mais dont l'evolution se fait de manière continue, sans saut brutal dans les valeurs.
 
 Dans cette section nous allons étudier les différents phénomenes liés aux photons, dans le contexte des milieux continus.
 
 #### II.1.1 Emission
-La matière est constituée d’atomes autour desquels gravitent des électrons. Lorsqu’un électron reçoit de l’énergie, il entre dans un état instable en changeant d’orbite. Cela peut durer un certain temps, mais il doit forcément revenir à son état stable à un moment. Pour cela, il doit se décharger de cet excédent d’énergie. Lorsque cela se produit, cet excédent se matérialise sous forme de photon : on dit que le photon est émis.
+La matière est constituée d’atomes autour desquels gravitent des électrons. Lorsqu’un électron reçoit de l’énergie, il change temporairement d’orbite. On dit que l'électron est excité. Il s'agit d'un état instable dans lequel il ne peut pas rester. Pour retourouver son orbite stable, il va devoir se décharger de cet excédent d’énergie. 
+
+Il y a plusieurs options, mais celle qui nous interesse, c'est la production d'un ou plusieurs photons. L'énergie déchargée est alors répartie dans ces derniers, déterminant au passage leur longueur d'onde respectives (il y a une equivalence entre energie et longueur d'onde). On dit que les photon sont émis.
 
 [Gif : atome emet photon]
 
-Tous les matériaux, sans exception, émettent des photons. Pas seulement votre écran ou votre souris RGB. Votre chaise, votre bureau, les murs, la tasse, le café qu’elle contient, la vapeur d’eau qui s’en échappe, l’air tout autour… tout ce qui est constitué d’atomes (donc tout sauf le vide).
+Tous les matériaux, émettent des photons. Pas seulement votre écran ou votre souris RGB. Votre chaise, votre bureau, les murs, la tasse, le café qu’elle contient, la vapeur d’eau qui s’en échappe... basiquement tout ce qui est constitué d’atomes.
 
 [Fred : Mais dis donc, Jamy ! Si ma chaise émet de la lumière, je devrais la voir dans le noir, non ?]
 
 [Jamy : Pas forcément ! Les cônes de notre œil ne sont sensibles qu’à certaines longueurs d’onde. Or, la plupart des matériaux émettent dans l’infrarouge. Il est donc tout à fait normal que tu ne voies ni ta chaise, ni la plupart des objets de la pièce. Mais si tu mets des lunettes infrarouges, tu les verras comme en plein jour ou presque.]
 
 #### II.1.2 Absorbtion
+Lorsqu'un photon passe dans le champs d'influance d'un atome, il peut être absorbé. Son énergie est alors transferée à un électron. C'est une des options possible pour exiter un électron (mais là encore ce n'est pas la seule).
+
+[Gif absorbtion]
+
+Pour que ce scénario ai une chance de se produire, l'energie du photon doit correspondre exactement à une transition d'orbite possible. On y reviendra mais c'est exactement pour ça qu'un materiau donné peut n'absorber que certaines longueur d'ondes et pas d'autres.
 
 #### II.1.3 Diffusion volumique
+Si le photon n'est pas absorbé
 
 ### II.2 Interface entre milieux (Surface)
 A l'interface entre 2 milieux continus, les propriétés ne sont plus continues. Elles changent brutalement. Cette caracteristique impose aux photons de se comporter différament. C'est ce que nous allons voire dans cette partie.
