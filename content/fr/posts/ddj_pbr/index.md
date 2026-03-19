@@ -35,32 +35,30 @@ Dans cette partie on va évidament s'intéresser principalement aux photons. Mai
 Les phénomènes relatifs au photons sont aussi très différents selon que l'on s'interesse à l'interieur du milieu ou à son interface avec un autre milieu. On va donc traiter ces aspects séparément.
 
 ### II.1 Milieu continu (Volume)
-Un milieu continu, c'est un volume de matière dont les différentes propriétés peuvent varier en fonction l'espace, mais dont l'evolution se fait de manière continue, sans saut brutal dans les valeurs.
+Un milieu continu, c'est un volume de matière dont les différentes propriétés peuvent varier en fonction de l'espace. Mais leur evolution se fait toujours de manière progressive : sans variation brutal des valeurs.
 
 Dans cette section nous allons étudier les différents phénomenes liés aux photons, dans le contexte des milieux continus.
 
 #### II.1.1 Emission
-La matière est constituée d’atomes autour desquels gravitent des électrons. Lorsqu’un électron reçoit de l’énergie, il change temporairement d’orbite. On dit que l'électron est excité. Il s'agit d'un état instable dans lequel il ne peut pas rester. Pour retourouver son orbite stable, il va devoir se décharger de cet excédent d’énergie. 
+La matière est constituée d’atomes autour desquels gravitent des électrons. Lorsqu’un électron reçoit suffisament d’énergie, il change temporairement d’orbite. On dit que l'électron est excité. Il s'agit d'un état instable dans lequel il ne peut pas rester bien longtemps. 
 
-Il y a plusieurs options, mais celle qui nous interesse, c'est la production d'un ou plusieurs photons. L'énergie déchargée est alors répartie dans ces derniers, déterminant au passage leur longueur d'onde respectives (il y a une equivalence entre energie et longueur d'onde). On dit que les photon sont émis.
+Afin de retourouver son orbite stable, il va devoir se décharger de cet excédent d’énergie. Pour cela il a plusieurs options, mais celle qui nous interesse ici, c'est l'émission d'un photon. L'énergie déchargée est alors transférée à ce dernier et c'est ainsi que les photons naissent.
 
-[Gif : atome emet photon]
-
-Tous les matériaux, émettent des photons. Pas seulement votre écran ou votre souris RGB. Votre chaise, votre bureau, les murs, la tasse, le café qu’elle contient, la vapeur d’eau qui s’en échappe... basiquement tout ce qui est constitué d’atomes.
-
-[Fred : Mais dis donc, Jamy ! Si ma chaise émet de la lumière, je devrais la voir dans le noir, non ?]
-
-[Jamy : Pas forcément ! Les cônes de notre œil ne sont sensibles qu’à certaines longueurs d’onde. Or, la plupart des matériaux émettent dans l’infrarouge. Il est donc tout à fait normal que tu ne voies ni ta chaise, ni la plupart des objets de la pièce. Mais si tu mets des lunettes infrarouges, tu les verras comme en plein jour ou presque.]
+Note : Tous les materiaux émetent des photons dès lors que leur température dépasse 0 kalvin (le zero absolu). Si le monde n'est pas une gigantesque empoule, c'est parce que la plupart emetent en infrarouges.
 
 #### II.1.2 Absorbtion
-Lorsqu'un photon passe dans le champs d'influance d'un atome, il peut être absorbé. Son énergie est alors transferée à un électron. C'est une des options possible pour exiter un électron (mais là encore ce n'est pas la seule).
+Lorsqu'un photon traverse la matière, il peut intéragire avec les electrons dont il croise la route. Une issue possible à cette interacrtion est l'absorbtion. Lorsque cela se produit, son énergie est intégralement transmise à l'électron et c'est ainsi que les photons meurent.
 
-[Gif absorbtion]
+Il y a d'autres façons pour un électron d'aquerir de l'energie. Mais l'absorption d'un photon en est une et elle va avoir l'effet évoqué dans la partie précedéente : l'électron va s'exiter, et eventuellement émetre un nouveau photon.
 
-Pour que ce scénario ai une chance de se produire, l'energie du photon doit correspondre exactement à une transition d'orbite possible. On y reviendra mais c'est exactement pour ça qu'un materiau donné peut n'absorber que certaines longueur d'ondes et pas d'autres.
+Note : L'émission d'un photon consecutive à l'absorption d'un autre photon est le cycle energetique le plus court que l'on puisse faire. C'est un phénomene qui porte un nom : la fluorecense <à verifier c'est peut être plus courrant que ça>. Il est en pratique relativement rare. Dans le cas nominale, avant de recréer un photon, l'énergie va passer par plusieurs électrons qui vont l'aquierir et la décharger en chaine selon d'autres modalités : chaleur, courant electrique, mouvement etc...
 
 #### II.1.3 Diffusion volumique
-Si le photon n'est pas absorbé
+Un photon peut tout à fait survivre à son intéraction avec un électron. Dans ce cas, il est simplement dévié de sa trajectoire. On dit alors que le photon est diffusé. Cette diffusion peut être :
+- Elastique : le photon conseve son énergie
+- Inelastique : Un petite quantité d'énergie est échangée entre les deux particules (cela peut se faire dans un sens comme dans l'autre) 
+
+Il se peut également que le photon ne soit pas altéré du tout par son intéraction et continue tranquilement sa route comme si de rien n'était.
 
 ### II.2 Interface entre milieux (Surface)
 A l'interface entre 2 milieux continus, les propriétés ne sont plus continues. Elles changent brutalement. Cette caracteristique impose aux photons de se comporter différament. C'est ce que nous allons voire dans cette partie.
