@@ -66,6 +66,9 @@ A l'interface entre 2 milieux continus, les propriétés ne sont plus continues.
 ### II.3 Sélection spectrale
 Explication générale puis consequences specifiques pour chaque phénomene
 
+## Refs
+https://phet.colorado.edu/
+
 ## BIG ARTICLE
 
 ## I. Introduction
