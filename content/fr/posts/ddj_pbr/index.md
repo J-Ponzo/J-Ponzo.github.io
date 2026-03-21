@@ -25,35 +25,35 @@ Dans cet article, on va partir d'un modèle pédagogique simplifié qu'on admét
 Mais pour cela, on va devoir traverser plusieurs cadres théoriques. Ce qui va nous confronté au problème de vocabulaire évoqué plus haut. Je vais essayer de lever la confusion en priorisant la non-ambiguité par rapport à l'usage dans le choix de mes mots. Ca veut dire que vous ne trouverez pas forcement les même termes ici que dans le litérature. J'espère qu'on y gagnera en clarté.
 
 ## II. Real Life Engine
-Dans la vrai vie, l'existance des photons est totalement déterminée par la matière. C'est elle qui les crée, c'est elle qui les détruit et c'est encore elle qui les fait changer de direction. Elle controle même leur vitesse de propagation et leur longueur d'onde.
+Dans la vrai vie, l'existance des photons est totalement controlée par la matière. C'est elle qui les crée, c'est elle qui les détruit et c'est encore elle qui les fait changer de direction. Elle détermine même leur longueur d'onde et la vitesse à laquelle ils sont autorisés à se propager.
 
 Ce que je veux dire par là, c'est qu'il n'y a pas d'un côté la matière et de l'autre la lumière qu'on injecte, qui intéragi, puis qui se volatilise. Il s'agit d'un système fermé dans lequel l’énergie se conserve, mais change continuellement de forme. 
 
 Ainsi ce qu'on appel la lumière, c'est de l'énergie en transit sous la forme d'un photon. Mais cette energie n'est ni crée ni détruite. Avant de se materialiser en photon elle faisait déjà partie du système sous une autre modalité : courant electrique, disipation thermique, mouvement etc...
-Dans cette partie on va évidament s'intéresser principalement aux photons. Mais retenez qu'ils ne sont qu'une partie du grand cycle de l'énergie dans lequel tout est lié. 
-
-Les phénomènes relatifs au photons sont aussi très différents selon que l'on s'interesse à l'interieur du milieu ou à son interface avec un autre milieu. On va donc traiter ces aspects séparément.
+Dans cette article on va évidament s'intéresser principalement aux photons. Mais retenez qu'ils ne sont qu'une partie du grand cycle de l'énergie dans lequel tout est lié. 
 
 #### 1 Emission
-La matière est constituée d’atomes autour desquels gravitent des électrons. Lorsqu’un électron reçoit suffisament d’énergie, il change temporairement d’orbite. On dit que l'électron est excité. Il s'agit d'un état instable dans lequel il ne peut pas rester bien longtemps. 
+La matière est constituée d’atomes autour desquels gravitent des électrons. L'énergie y est stoquée majoritairement sous forme de chaleur. Mais suivant le materiaux cela peut être autre chose comme par exemple un courant électrique ou une vibration moléculaire.
 
-Afin de retourouver son orbite stable, il va devoir se décharger de cet excédent d’énergie. Pour cela il a plusieurs options, mais celle qui nous interesse ici, c'est l'émission d'un photon. L'énergie déchargée est alors transférée à ce dernier et c'est ainsi que les photons naissent.
+Lorsqu'une fraction suffisante de cette énergie est transmise à un électron, il change d'orbite pour une plus élevée. On dit alors que l'électron est exité. Mais il s'agit là d'un état instable dans lequel il ne peut pas rester bien longtemps. 
 
-Note : Tous les materiaux émetent des photons dès lors que leur température dépasse 0 kalvin (le zero absolu). Si le monde n'est pas une gigantesque empoule, c'est parce que la plupart emetent en infrarouges.
+Afin de retourouver son orbite stable, il va devoir se décharger de cet excédent d’énergie. Pour cela il peut soit rendre l'énergie à la matière, soit émetre un photon. L'énergie déchargée est alors transférée à ce dernier et c'est ainsi que les photons naissent.
+
+Note : Tous les materiaux émetent des photons dès lors que leur température dépasse 0 kelvin (le zero absolu). Mais si le monde n'est pas une gigantesque empoule, c'est parce que la plupart emetent en infrarouges.
 
 #### 2 Absorbtion
-Lorsqu'un photon traverse la matière, il peut intéragire avec les electrons dont il croise la route. Une issue possible à cette interacrtion est l'absorbtion. Lorsque cela se produit, son énergie est intégralement transmise à l'électron et c'est ainsi que les photons meurent.
+Lorsqu’un photon traverse la matière, il peut entrer en interaction avec un électron dont il crois la route. Dans ce cas, son énergie est transférée à l’électron, qui passe à un état excité. À ce moment-là, le photon cesse d’exister en tant que tel : son énergie a été transmise au système.
 
-Il y a d'autres façons pour un électron d'aquerir de l'energie. Mais l'absorption d'un photon en est une et elle va avoir l'effet évoqué dans la partie précedéente : l'électron va s'exiter, et eventuellement émetre un nouveau photon.
-
-Note : L'émission d'un photon consecutive à l'absorption d'un autre photon est le cycle energetique le plus court que l'on puisse faire. C'est un phénomene qui porte un nom : la fluorecense <à verifier c'est peut être plus courrant que ça>. Il est en pratique relativement rare. Dans le cas nominale, avant de recréer un photon, l'énergie va passer par plusieurs électrons qui vont l'aquierir et la décharger en chaine selon d'autres modalités : chaleur, courant electrique, mouvement etc...
+Si cette énergie est ensuite entièrement transférée à la matière (chaleur, vibrations, etc.), le photon est définitivement perdu. On parle alors d’absorption, et c’est ainsi que les photons “meurent”.
 
 #### 3 Diffusion volumique
-Un photon peut tout à fait survivre à son intéraction avec un électron. Dans ce cas, il est simplement dévié de sa trajectoire. On dit alors que le photon est diffusé. Cette diffusion peut être :
-- Elastique : le photon conseve son énergie
-- Inelastique : Un petite quantité d'énergie est échangée entre les deux particules (cela peut se faire dans un sens comme dans l'autre) 
+Lorsqu’un photon interagit avec un électron, il peut aussi être réémis au lieu de transférer son énergie au matériau. Dans ce cas, le photon est renvoyé dans une direction aléatoire : c’est ce qu’on appelle la diffusion volumique.
 
-Il se peut également que le photon ne soit pas altéré du tout par son intéraction et continue tranquilement sa route comme si de rien n'était.
+On distingue deux types de diffusion volumique :
+- Élastique : le photon est réémis avec exactement la même énergie (c’est le cas le plus fréquent)
+- Inélastique : une partie de l’énergie est transférée à la matière, ou au contraire récupérée depuis celle-ci avant la réémission. Dans les deux cas, le photon a une énergie différente
+
+Il se peut également que le photon n’interagisse pas du tout avec la matière et continue tranquillement sa route comme si de rien n’était.
 
 #### 4 Reflection spéculaire et transmision
 Jusqu'ici nous avons décris les phénomenes qui interviennent au sein d'un même milieu, c'est à dire à l'interieur d'un volume de matière. Mais lorsqu'on considère la surface de contacte entre deux materiaux différent, on observe de nouveaux comportements.
@@ -74,12 +74,68 @@ L'onde se propage moins vite dans le verre que dans l'aire. Si le faiseau frappe
 
 [Schema Ondes]
 
-En consequence le front d'onde pivote. Et plus l'angle est grand au plus le temps de traversée augment. Ce qui a pour effet de produire un angle de réfraction encore plus prononcé. Pour la réflection spéculaire en revanche on reste dans le même milieu. La vitesse est donc stable et l'angle de reflection n'est pas altéré par rapport à l'angle d'incidence.
+En consequence le front d'onde pivote. Et plus l'angle est grand, plus le temps de traversée augment. Ce qui a pour effet de produire un angle de réfraction encore plus prononcé. Pour la réflection spéculaire en revanche on reste dans le même milieu. La vitesse est donc stable et l'angle de reflection n'est pas altéré par rapport à l'angle d'incidence.
 
 [Schema Ondes]
 
-### 5 Sélection spectrale
-Explication générale puis consequences specifiques pour chaque phénomene
+Note : La vitesse de propagation est rarement manipulée directement en physique. On utilise plutot l'IOR de l'anglais "indice of refraction" qui se défini comme `IOR = c / v` avec :
+- c : la vitesse maximale de la lumière aussi appelée célerité. Elle est de 300 000 km/s et correspond à la propagation dans le vide.
+- v : la vitesse effective de propagation dans le milieu considéré (apriori inferieure à c)
+
+Dans la suite j'utiliserai l'IOR. Mais ne soyez pas destabilisé, c'est une quantité equivalante à la vitesse de propagation (comme la frequence est equivalente à la longueur d'onde)
+
+#### 5 Fresnel
+On vient de voire qu'une discontinuité de milieux séparait la lumière en deux directions. Maintenant on va s'interesser au phénomène qui détermine de quel côté le photon va être dirigé lorsqu'il arrive à la frontière : le Fresnel
+
+La première chose à savoir sur le Fresnel, c'est que le 's' ne se prononce pas (oui c'est important). Ensuite, et comme toujours à l'échelle microscopique, c'est une question de probabilité. Le photon fait un jet de Fresnel, si il le réussi, les gardes le laissent entrer. Sinon, ils le renvoit d'où il vient.
+
+Le seuil de réussite de ce jet va dépendre de 2 choses :
+- L'angle d'incidance
+- La différence d'IOR entre les deux milieux
+
+[Schema Ondes]
+
+Plus ces valeurs sont grandes, plus le test de transmission est difficile à passer. Ainsi, la reflection spéculaire et beaucoup plus importante lorsque la lumière est rasante. Et au contraire la transmission domine si les milieux ont des IOR proches.
+
+### 5 Caractère spectrale
+En lisant ce titre, vous vous rappelez vaguement que les couleurs correspondent aux longueurs d’onde du spectre visible, qui s’étend de 400 nm à 700 nm. Je vais peut-être vous choquer en affirmant que c’est faux. Ce qu’on appelle la couleur, ce n’est pas une longueur d’onde. Mais on dissipera ce mensonge plus tard. Pour l’instant, il est suffisant.
+
+Nous sommes donc ici réunis pour parler de la couleur de la lumière. Mais au risque de vous choquer une seconde fois : nous n’avons fait que ça jusqu’ici. En effet, pour un photon, l’énergie, la fréquence et la longueur d’onde c'est plus ou moins la même chose.
+
+Maintenant que votre monde est détruit et que vous nagez dans un abîme de perplexité, prenons un instant pour parler de notre seigneur Max Planck et de la relation qui porte son nom.
+
+[portrait Max Plank]
+
+La relation de Planck s'écrit : 
+
+E = h * f
+
+avec :
+- E l'énergie du photon
+- f la frequence du photon
+- h la constante de Planck (décidément)
+
+Cette relation montre que l’énergie d’un photon est directement proportionnelle à sa fréquence.
+
+Par ailleurs, on sait que la longueur d’onde est liée à la fréquence via la relation :
+
+λ = c / f
+
+avec :
+- λ la longueur d'onde
+- c la célérité de la lumière (dont on a déjà parlé)
+- f la frequence
+
+On a donc bien une correspondance directe entre la longueur d’onde d’un photon et son énergie.
+
+### 6. Selection spectrale
+Maintenant que nous avons établis le lien entre énergie et couleur, il est temps de détailler un peu notre conception de ce qu'est la matière. Pour cela nous allons introduire une propriété de l'énergie, que l'on doit également à Planck : la quantification.
+
+Selon ce principe, l'énergie n'est pas continue, mais discrète. Ca veut dire que les transfarts ne se font pas selon des valeurs arbitraires, mais par paquets de tailles prédéfinies. Ainsi pour qu'un photon ai le potentiel pour exiter un électron, il doit posséder exactement la quantité d'énergie corespondant à une transition valide vers l'une orbites disponnibles.
+
+[Schema Ondes]
+
+Le nombre et les niveau d'énergie associées à chacune des orbite sont specifiques à chaque atome. Cette signature va lourdement conditionner la compatiblité des électrons avec telle ou telle longueur d'onde. Ainsi, seuls les photons de la bonne couleur pourront interagir avec. Dans le même ordre d'idée, les électrons d'un atome donné ne pouront émetre des photons que dans certaines couleurs. C'est ce qu'on appel la sélection spectrale.
 
 ## Refs
 https://phet.colorado.edu/
