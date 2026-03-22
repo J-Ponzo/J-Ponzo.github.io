@@ -43,7 +43,7 @@ Pour cela il peut soit :
 
 Note : Tous les materiaux émetent des photons dès lors que leur température dépasse 0 kelvin (le zero absolu). Mais si le monde n'est pas une gigantesque empoule, c'est parce que la plupart emetent en infrarouges.
 
-#### 2 Diffusion et Absorbtion
+#### 2 Absorbtion et Diffusion
 Lors de son voyage à travers la matière, le photon peut entrer en intéraction avec les électrons qu'il croise. Durant cette intéraction, le photon est en quelques sorte en surcis. Il n'existe plus en tant que tel : son énergie est transmise à l'électron provoquant son exitation.
 
 Mais le destin du photon n'est pas encore scellé et va dépendre de ce que l'électron choisi de faire de son énergie :
