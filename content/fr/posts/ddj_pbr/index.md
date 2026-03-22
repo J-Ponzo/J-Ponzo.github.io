@@ -35,30 +35,29 @@ Dans cette article on va évidament s'intéresser principalement aux photons. Ma
 #### 1 Emission
 La matière est constituée d’atomes autour desquels gravitent des électrons. L'énergie y est stoquée majoritairement sous forme de chaleur. Mais suivant le materiaux cela peut être autre chose comme par exemple un courant électrique ou une vibration moléculaire.
 
-Lorsqu'une fraction suffisante de cette énergie est transmise à un électron, il change d'orbite pour une plus élevée. On dit alors que l'électron est exité. Mais il s'agit là d'un état instable dans lequel il ne peut pas rester bien longtemps. 
+Lorsque un électron reçois de cette énergie, il entre dans un état qu'on appèle exité. Mais il s'agit là d'un état instable dans lequel il ne peut pas rester bien longtemps. Il va alors devoir se décharger de cet excédent d'énergie pour retrouver un état stable.
 
-Afin de retourouver son orbite stable, il va devoir se décharger de cet excédent d’énergie. Pour cela il peut soit rendre l'énergie à la matière, soit émetre un photon. L'énergie déchargée est alors transférée à ce dernier et c'est ainsi que les photons naissent.
+Pour cela il peut soit :
+- rendre l'énergie à la matière
+- utiliser l'énergie pour émetre un photon qui se propage à lors dans une direction aléatoire
 
 Note : Tous les materiaux émetent des photons dès lors que leur température dépasse 0 kelvin (le zero absolu). Mais si le monde n'est pas une gigantesque empoule, c'est parce que la plupart emetent en infrarouges.
 
-#### 2 Absorbtion
-Lorsqu’un photon traverse la matière, il peut entrer en interaction avec un électron dont il croise la route. Dans ce cas, son énergie est transférée à l’électron, qui passe à un état excité. À ce moment-là, le photon cesse d’exister en tant que tel : son énergie a été transmise au système.
+#### 2 Diffusion et Absorbtion
+Lors de son voyage à travers la matière, le photon peut entrer en intéraction avec les électrons qu'il croise. Durant cette intéraction, le photon est en quelques sorte en surcis. Il n'existe plus en tant que tel : son énergie est transmise à l'électron provoquant son exitation.
 
-Si cette énergie est ensuite entièrement transférée à la matière (chaleur, vibrations, etc.), le photon est définitivement perdu. On parle alors d’absorption, et c’est ainsi que les photons “meurent”.
+Mais le destin du photon n'est pas encore scellé et va dépendre de ce que l'électron choisi de faire de son énergie :
+- si il la rend à la matière, le photon est définitivement détruit : c'est l'absorbtion.
+- si il réemet le photon dans une direction aléatoire. Dans ce cas le photon est en quelques sortes résucité et redirigé dans une diréction aléatoire : c'est la diffusion.
 
-#### 3 Diffusion volumique
-Lorsqu’un photon interagit avec un électron, il peut aussi être réémis au lieu de transférer son énergie au matériau. Dans ce cas, le photon est renvoyé dans une direction aléatoire : c’est ce qu’on appelle la diffusion volumique.
-
-On distingue deux types de diffusion volumique :
-- Élastique : le photon est réémis avec exactement la même énergie (c’est le cas le plus fréquent)
-- Inélastique : une partie de l’énergie est transférée à la matière, ou au contraire récupérée depuis celle-ci avant la réémission. Dans les deux cas, le photon a une énergie différente
-
-Il se peut également que le photon n’interagisse pas du tout avec la matière et continue tranquillement sa route comme si de rien n’était.
+La diffusion existe en deux version :
+- Elastique : le photon réemis conserve son énergie (c'est le cas le plus frequent) 
+- Inelastique : une partie de l’énergie est transférée à la matière, ou au contraire récupérée depuis celle-ci avant la réémission. Dans les deux cas, le photon a une énergie différente
 
 #### 4 Reflection spéculaire et transmision
-Jusqu'ici nous avons décris les phénomenes qui interviennent au sein d'un même milieu, c'est à dire à l'interieur d'un volume de matière. Mais lorsqu'on considère la surface de contacte entre deux materiaux différent, on observe de nouveaux comportements.
+Jusqu'ici nous avons décris les phénomenes qui interviennent à l'interieur du milieu. Mais lorsqu'on considère la surface de contacte entre deux milieux différents, on observe de nouveaux comportements.
 
-En effet, lorsque les photons se présente à l'interface de deux milieux, il peut se passer 2 choses :
+En effet, lorsque les photons se présente à l'interface de deux materiaux, il peut se passer 2 choses :
 - Le photon rebondis et retourne dans son milieu d'origine : c'est la reflection speculaire
 - Le photon pénètre dans le nouveau milieu et y continu sa route : c'est la transmission
 
@@ -87,7 +86,7 @@ Dans la suite j'utiliserai l'IOR. Mais ne soyez pas destabilisé, c'est une quan
 #### 5 Fresnel
 On vient de voire qu'une discontinuité de milieux séparait la lumière en deux directions. Maintenant on va s'interesser au phénomène qui détermine de quel côté le photon va être dirigé lorsqu'il arrive à la frontière : le Fresnel
 
-La première chose à savoir sur le Fresnel, c'est que le 's' ne se prononce pas (oui c'est important). Ensuite, et comme toujours à l'échelle microscopique, c'est une question de probabilité. Le photon fait un jet de Fresnel, si il le réussi, les gardes le laissent entrer. Sinon, ils le renvoit d'où il vient.
+La première chose à savoir sur le Fresnel, c'est que le 's' ne se prononce pas (oui c'est important). Ensuite, et comme toujours à l'échelle microscopique, c'est une question de probabilité. Le photon fait un jet de Fresnel, si il le réussi, il peut entrer dans le nouveau milieu. Sinon, ils est renvoyé d'où il vient.
 
 Le seuil de réussite de ce jet va dépendre de 2 choses :
 - L'angle d'incidance
@@ -129,13 +128,19 @@ avec :
 On a donc bien une correspondance directe entre la longueur d’onde d’un photon et son énergie.
 
 ### 6. Selection spectrale
-Maintenant que nous avons établis le lien entre énergie et couleur, il est temps de détailler un peu notre conception de ce qu'est la matière. Pour cela nous allons introduire une propriété de l'énergie, que l'on doit également à Planck : la quantification.
+Les phénomènes que l’on vient de décrire peuvent être conditionnés par la “couleur” du photon. C’est ce que l’on appelle la sélection spectrale. Pour comprendre cela, il faut regarder un peu plus en détail le fonctionnement de l’atome.
 
-Selon ce principe, l'énergie n'est pas continue, mais discrète. Ca veut dire que les transfarts ne se font pas selon des valeurs arbitraires, mais par paquets de tailles prédéfinies. Ainsi pour qu'un photon ai le potentiel pour exiter un électron, il doit posséder exactement la quantité d'énergie corespondant à une transition valide vers l'une des orbites disponnibles.
+L’excitation des électrons n’est pas binaire comme on l’a suggéré jusqu’ici. En réalité, l’atome n’autorise que certains niveaux d’énergie bien précis à ses électrons. Le premier correspond à l’état le plus stable, mais il y en a une infinité au dessus de lui.
 
-[Schema Ondes]
+D’un atome à l’autre, les écarts entre ces niveaux varient. Cela correspond à sa signature énergétique.
 
-Le nombre et les niveau d'énergie associées à chacune des orbite sont specifiques à chaque atome. Cette signature va lourdement conditionner la compatiblité des électrons avec telle ou telle longueur d'onde. Ainsi, seuls les photons de la bonne couleur pourront interagir avec. Dans le même ordre d'idée, les électrons d'un atome donné ne pouront émetre des photons que dans certaines couleurs. C'est ce qu'on appel la sélection spectrale.
+[Schéma]
+
+Pour passer d’un niveau à un autre, l’électron doit acquérir (ou libérer) exactement la quantité d’énergie correspondante. Toutes les transitions ne sont donc pas possibles, et elles dépendent de la structure énergétique propre à chaque atome.
+
+Ainsi, les photons émis n’auront pas tous les mêmes énergies (et donc pas les mêmes couleurs), et inversement, un photon ne pourra exciter un électron que si son énergie correspond précisément à une transition autorisée.
+
+Note : Les niveau d'énergie autorisés expliquent la selection spectrale pour l'émisson, l'absorbtion et la diffusion. Mais pas pour la reflection spéculaire. Notez toutefois que le phénomene existe et qu'il concerne presque exclusivement les métaux.
 
 ## Refs
 https://phet.colorado.edu/
