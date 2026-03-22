@@ -42,7 +42,7 @@ Afin de retourouver son orbite stable, il va devoir se décharger de cet excéde
 Note : Tous les materiaux émetent des photons dès lors que leur température dépasse 0 kelvin (le zero absolu). Mais si le monde n'est pas une gigantesque empoule, c'est parce que la plupart emetent en infrarouges.
 
 #### 2 Absorbtion
-Lorsqu’un photon traverse la matière, il peut entrer en interaction avec un électron dont il crois la route. Dans ce cas, son énergie est transférée à l’électron, qui passe à un état excité. À ce moment-là, le photon cesse d’exister en tant que tel : son énergie a été transmise au système.
+Lorsqu’un photon traverse la matière, il peut entrer en interaction avec un électron dont il croise la route. Dans ce cas, son énergie est transférée à l’électron, qui passe à un état excité. À ce moment-là, le photon cesse d’exister en tant que tel : son énergie a été transmise au système.
 
 Si cette énergie est ensuite entièrement transférée à la matière (chaleur, vibrations, etc.), le photon est définitivement perdu. On parle alors d’absorption, et c’est ainsi que les photons “meurent”.
 
@@ -95,7 +95,7 @@ Le seuil de réussite de ce jet va dépendre de 2 choses :
 
 [Schema Ondes]
 
-Plus ces valeurs sont grandes, plus le test de transmission est difficile à passer. Ainsi, la reflection spéculaire et beaucoup plus importante lorsque la lumière est rasante. Et au contraire la transmission domine si les milieux ont des IOR proches.
+Plus ces valeurs sont grandes, plus le test de transmission est difficile à passer. Ainsi, la reflection spéculaire est beaucoup plus importante lorsque la lumière est rasante. Et au contraire la transmission domine si les milieux ont des IOR proches.
 
 ### 5 Caractère spectrale
 En lisant ce titre, vous vous rappelez vaguement que les couleurs correspondent aux longueurs d’onde du spectre visible, qui s’étend de 400 nm à 700 nm. Je vais peut-être vous choquer en affirmant que c’est faux. Ce qu’on appelle la couleur, ce n’est pas une longueur d’onde. Mais on dissipera ce mensonge plus tard. Pour l’instant, il est suffisant.
@@ -131,7 +131,7 @@ On a donc bien une correspondance directe entre la longueur d’onde d’un phot
 ### 6. Selection spectrale
 Maintenant que nous avons établis le lien entre énergie et couleur, il est temps de détailler un peu notre conception de ce qu'est la matière. Pour cela nous allons introduire une propriété de l'énergie, que l'on doit également à Planck : la quantification.
 
-Selon ce principe, l'énergie n'est pas continue, mais discrète. Ca veut dire que les transfarts ne se font pas selon des valeurs arbitraires, mais par paquets de tailles prédéfinies. Ainsi pour qu'un photon ai le potentiel pour exiter un électron, il doit posséder exactement la quantité d'énergie corespondant à une transition valide vers l'une orbites disponnibles.
+Selon ce principe, l'énergie n'est pas continue, mais discrète. Ca veut dire que les transfarts ne se font pas selon des valeurs arbitraires, mais par paquets de tailles prédéfinies. Ainsi pour qu'un photon ai le potentiel pour exiter un électron, il doit posséder exactement la quantité d'énergie corespondant à une transition valide vers l'une des orbites disponnibles.
 
 [Schema Ondes]
 
