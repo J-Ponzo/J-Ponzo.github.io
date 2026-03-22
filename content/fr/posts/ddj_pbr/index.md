@@ -8,33 +8,29 @@ hidden = false
 +++
 
 ## I. Introduction
-Contrairement à ce qu’on pourrait croire, la lumière ne se laisse pas facilement décrire comme un modèle simple et unique. Pendant longtemps, les physicien eux même ont débattu de sa nature. Pour Newton c'était un flux de particules tandis qu'Huygens défandait un modèle ondulatoire. En 1801, Young donne raison à Huygens en mettant en évidence les interférences lumineuses. Un siècle plus tard, Einstein relance le débat avec l’effet photoélectrique, qui redonne du crédit à la vision corpusculaire.
+Contrairement à ce qu’on pourrait croire, la lumière ne se laisse pas facilement décrire comme un modèle simple et unique. Pendant longtemps, les physicien eux même ont débattu de sa nature. Tantot une onde, tanto une particule, l'humanité à longtemps dû jongler entre les deux modèles, choisisant le plus adapté selon le phénomène.
 
-Aujourd’hui, la physique moderne propose un cadre unifié qui réconcilie ces deux visions : l'optique quantique. Mais en pratique c'est très overkill suivant le phénomène considéré. Les anciens modèles sont donc toujours d'actualité.
+Aujourd’hui, la physique moderne propose un cadre unifié qui réconcilie les deux visions. Mais l'optique quantique est une dicipline complexe et abstraite. Ce qui en fait un très mauvais allié pour ce que l'on cherche à faire : proposer un modèle pédagogique simple de ce qu'est la lumière dans la vrai vie.
 
-A cela s'ajoutent les hypothèse spécifiques de tel ou tel domaine d'étude (surfaces, volumes etc...), si bien qu'on se retrouve avec une multitude de modèles adaptés à différents contextes qui coexistent. Et c’est précisément là que les choses se compliquent...
+Cet article n'est pas un cours de physique ! Prenez le pour ce qu'il est : le schéma mental aproximatif et imparfait d'un passionné qui fait de la programmation graphique sur son temps libre. (Parce que oui je suis bien programmeur dans un studio de jeu vidéo mais au boulot je ne fais pas du tout ça).
 
-[Frise du temps]
+Ma seule ambition ici, c'est de partager gratuitement et en l'état mon framework intelectuel personnel. Il m'a beaucoup aidé à comprendre les techniques de rendu au dela du simple copié-collé de formules depuis un tutorial. J'éspère qu'il vous aidera aussi. Utilisez le ! Forkez le ! Ameliorez le ! Et si vous trouvez un bug, n'hesitez pas à me faire une PR sous la forme d'un commentaire.
 
-J'imagine que pour un vrai physicien, naviguer entre les différents cadre théoriques engeandré par cette Histoire rocambolesque, c'est relativement naturel. Mais pour un moldu comme moi qui cherche juste à se cultiver, c'est un sacré foutoire. 
+## II. Préembule
+Dans la vraie vie, l’existence des photons est intimement liée à la matière. C’est elle qui les crée, c’est elle qui les détruit, et c’est encore elle qui influence leur trajectoire. Elle détermine même leur couleur, ainsi que la vitesse à laquelle ils se propagent.
 
-Biensure, le niveau technique est une première barrière. Quand on lis du contenu scientifiques on comprends rarement tout et c'est parfaitement normal. J'ai donc fait avec les 60% à la portée de mon petit cerveau, comme d'habitude. Mais ce qui m'a vraiment mis en difficulté cette fois ci, c'est l'instabilité du jargon. Suivant le contexte, les mots ne veulent pas dire la même chose (allant parfois jusqu'au contre sens).
+Ce que je veux dire par là, c’est qu’il n’y a pas d’un côté la matière et de l’autre la lumière. À un niveau fondamental, la matière n’est rien d’autre que de l’énergie organisée, qui change continuellement de forme dans un système fermé que l’on appelle l’univers.
 
-Dans cet article, on va partir d'un modèle pédagogique simplifié qu'on admétra comme la réalité physique. A partir de ce modèle, on va chercher à définir par soustraction ce qu'est le PBR. D'abord dans sa version offline, puis dans sa version temps réèl. L'objectif est de comprendre comment les modèles PBR se positionnent par rapport à cette réalité physique.
+La lumière n’est finalement qu’une de ces formes : c’est de l’énergie en transit, matérialisée par des photons.
 
-Mais pour cela, on va devoir traverser plusieurs cadres théoriques. Ce qui va nous confronté au problème de vocabulaire évoqué plus haut. Je vais essayer de lever la confusion en priorisant la non-ambiguité par rapport à l'usage dans le choix de mes mots. Ca veut dire que vous ne trouverez pas forcement les même termes ici que dans le litérature. J'espère qu'on y gagnera en clarté.
+Pour décrire son comportement, nous allons partir de l'infiniment petit en étudiant ce que j'appel les phénomenes bas niveau. Nous utiliserons ensuite cette base pour expliquer les phénomènes lumineux visibles à notre échelle.
 
-## II. Real Life Engine
-Dans la vrai vie, l'existance des photons est totalement controlée par la matière. C'est elle qui les crée, c'est elle qui les détruit et c'est encore elle qui les fait changer de direction. Elle détermine même leur longueur d'onde et la vitesse à laquelle ils sont autorisés à se propager.
+## III. Phénomenes bas niveau
+Les phénomènes bas niveaux sont donc les phénomènes liés à lumière qui se jouent à l'échelle microscopique. A cette échelle, la matière est constituée d’atomes autour desquels gravitent des électrons et ces atomes sont organisés selon des paternes specifiques qu'on appelle des molécules. 
 
-Ce que je veux dire par là, c'est qu'il n'y a pas d'un côté la matière et de l'autre la lumière qu'on injecte, qui intéragi, puis qui se volatilise. Il s'agit d'un système fermé dans lequel l’énergie se conserve, mais change continuellement de forme. 
+Cette soupe de molécule n'est pas statique. Elle est brassées en permanance et ce mouvement est une façon pour la matière de stoquer l'énergie. Selon ce qui bouge et comment ça bouge, on va appelé ça : la température, le courrant électrique, la vibration moléculaire etc...
 
-Ainsi ce qu'on appel la lumière, c'est de l'énergie en transit sous la forme d'un photon. Mais cette energie n'est ni crée ni détruite. Avant de se materialiser en photon elle faisait déjà partie du système sous une autre modalité : courant electrique, disipation thermique, mouvement etc...
-Dans cette article on va évidament s'intéresser principalement aux photons. Mais retenez qu'ils ne sont qu'une partie du grand cycle de l'énergie dans lequel tout est lié. 
-
-#### 1 Emission
-La matière est constituée d’atomes autour desquels gravitent des électrons. L'énergie y est stoquée majoritairement sous forme de chaleur. Mais suivant le materiaux cela peut être autre chose comme par exemple un courant électrique ou une vibration moléculaire.
-
+### 1. Emission
 Lorsque un électron reçois de cette énergie, il entre dans un état qu'on appèle exité. Mais il s'agit là d'un état instable dans lequel il ne peut pas rester bien longtemps. Il va alors devoir se décharger de cet excédent d'énergie pour retrouver un état stable.
 
 Pour cela il peut soit :
@@ -43,18 +39,14 @@ Pour cela il peut soit :
 
 Note : Tous les materiaux émetent des photons dès lors que leur température dépasse 0 kelvin (le zero absolu). Mais si le monde n'est pas une gigantesque empoule, c'est parce que la plupart emetent en infrarouges.
 
-#### 2 Absorbtion et Diffusion
-Lors de son voyage à travers la matière, le photon peut entrer en intéraction avec les électrons qu'il croise. Durant cette intéraction, le photon est en quelques sorte en surcis. Il n'existe plus en tant que tel : son énergie est transmise à l'électron provoquant son exitation.
+### 2. Absorbtion et Diffusion Volumique
+Lors de son voyage à travers la matière, le photon peut entrer en intéraction avec les électrons qu'il croise. Durant cette intéraction, son énergie est transmise à l'électron provoquant l'exitation de ce dernier. Le photon n'existe alors plus en tant que tel, mais son destin n'est pas encore scellé pour autant. Il est en quelques sorte en surcis.
 
-Mais le destin du photon n'est pas encore scellé et va dépendre de ce que l'électron choisi de faire de son énergie :
+Ce qui va déterminer son sort, c'est la manière dont l'électron va décider de se décharger de son énergie :
 - si il la rend à la matière, le photon est définitivement détruit : c'est l'absorbtion.
-- si il réemet le photon dans une direction aléatoire. Dans ce cas le photon est en quelques sortes résucité et redirigé dans une diréction aléatoire : c'est la diffusion.
+- si il réemet le photon, il est en quelques sortes résucité et redirigé dans une diréction aléatoire : c'est la diffusion volumique.
 
-La diffusion existe en deux version :
-- Elastique : le photon réemis conserve son énergie (c'est le cas le plus frequent) 
-- Inelastique : une partie de l’énergie est transférée à la matière, ou au contraire récupérée depuis celle-ci avant la réémission. Dans les deux cas, le photon a une énergie différente
-
-#### 4 Reflection spéculaire et transmision
+### 3. Reflection Spéculaire et Transmision
 Jusqu'ici nous avons décris les phénomenes qui interviennent à l'interieur du milieu. Mais lorsqu'on considère la surface de contacte entre deux milieux différents, on observe de nouveaux comportements.
 
 En effet, lorsque les photons se présente à l'interface de deux materiaux, il peut se passer 2 choses :
@@ -83,7 +75,7 @@ Note : La vitesse de propagation est rarement manipulée directement en physique
 
 Dans la suite j'utiliserai l'IOR. Mais ne soyez pas destabilisé, c'est une quantité equivalante à la vitesse de propagation (comme la frequence est equivalente à la longueur d'onde)
 
-#### 5 Fresnel
+### 4. Fresnel
 On vient de voire qu'une discontinuité de milieux séparait la lumière en deux directions. Maintenant on va s'interesser au phénomène qui détermine de quel côté le photon va être dirigé lorsqu'il arrive à la frontière : le Fresnel
 
 La première chose à savoir sur le Fresnel, c'est que le 's' ne se prononce pas (oui c'est important). Ensuite, et comme toujours à l'échelle microscopique, c'est une question de probabilité. Le photon fait un jet de Fresnel, si il le réussi, il peut entrer dans le nouveau milieu. Sinon, ils est renvoyé d'où il vient.
@@ -96,7 +88,7 @@ Le seuil de réussite de ce jet va dépendre de 2 choses :
 
 Plus ces valeurs sont grandes, plus le test de transmission est difficile à passer. Ainsi, la reflection spéculaire est beaucoup plus importante lorsque la lumière est rasante. Et au contraire la transmission domine si les milieux ont des IOR proches.
 
-### 5 Caractère spectrale
+## IV. Caractère spectrale
 En lisant ce titre, vous vous rappelez vaguement que les couleurs correspondent aux longueurs d’onde du spectre visible, qui s’étend de 400 nm à 700 nm. Je vais peut-être vous choquer en affirmant que c’est faux. Ce qu’on appelle la couleur, ce n’est pas une longueur d’onde. Mais on dissipera ce mensonge plus tard. Pour l’instant, il est suffisant.
 
 Nous sommes donc ici réunis pour parler de la couleur de la lumière. Mais au risque de vous choquer une seconde fois : nous n’avons fait que ça jusqu’ici. En effet, pour un photon, l’énergie, la fréquence et la longueur d’onde c'est plus ou moins la même chose.
@@ -105,6 +97,7 @@ Maintenant que votre monde est détruit et que vous nagez dans un abîme de perp
 
 [portrait Max Plank]
 
+### 1. Relation de Planck
 La relation de Planck s'écrit : 
 
 E = h * f
@@ -127,7 +120,7 @@ avec :
 
 On a donc bien une correspondance directe entre la longueur d’onde d’un photon et son énergie.
 
-### 6. Selection spectrale
+### 2. Selection spectrale
 Les phénomènes que l’on vient de décrire peuvent être conditionnés par la “couleur” du photon. C’est ce que l’on appelle la sélection spectrale. Pour comprendre cela, il faut regarder un peu plus en détail le fonctionnement de l’atome.
 
 L’excitation des électrons n’est pas binaire comme on l’a suggéré jusqu’ici. En réalité, l’atome n’autorise que certains niveaux d’énergie bien précis à ses électrons. Le premier correspond à l’état le plus stable, mais il y en a une infinité au dessus de lui.
@@ -141,6 +134,13 @@ Pour passer d’un niveau à un autre, l’électron doit acquérir (ou libérer
 Ainsi, les photons émis n’auront pas tous les mêmes énergies (et donc pas les mêmes couleurs), et inversement, un photon ne pourra exciter un électron que si son énergie correspond précisément à une transition autorisée.
 
 Note : Les niveau d'énergie autorisés expliquent la selection spectrale pour l'émisson, l'absorbtion et la diffusion. Mais pas pour la reflection spéculaire. Notez toutefois que le phénomene existe et qu'il concerne presque exclusivement les métaux.
+
+### 3. Diffusion spectrale
+
+## V. Phénomenes haut niveau
+
+## VI. Conclusion
+
 
 ## Refs
 https://phet.colorado.edu/
