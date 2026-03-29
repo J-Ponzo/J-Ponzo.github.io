@@ -46,7 +46,7 @@ Ce qui va déterminer son sort, c'est la manière dont l'électron va décider d
 - si il la rend à la matière, le photon est définitivement détruit : c'est l'absorbtion.
 - si il réemet le photon, il est en quelques sortes résucité et redirigé dans une diréction aléatoire : c'est la diffusion volumique.
 
-### 3. Reflection Spéculaire et Transmision
+### 3. Comportements à la frontière
 Jusqu'ici nous avons décris les phénomenes qui interviennent à l'interieur du milieu. Mais lorsqu'on considère la surface de contacte entre deux milieux différents, on observe de nouveaux comportements.
 
 En effet, lorsque les photons se présente à l'interface de deux materiaux, il peut se passer 2 choses :
@@ -55,25 +55,32 @@ En effet, lorsque les photons se présente à l'interface de deux materiaux, il 
 
 [Schéma rayon]
 
-L'angle de reflection est identique à l'angle d'incidence. En revanche, la transmission se fait selon un angle assez inatendu plutôt que de manière rectiligne comme on pourait s'y attendre. On appel ça la réfraction.
+Pour édudier ces phénomènes, le modèle à base de particules montre ses limites. Mais si on considère la lumière comme une onde, cela devient assez intuitif.
 
-Pour édudier ces phénomènes, le modèle à base de particules montre ses limites. Mais si on considère la lumière comme une onde, cela devient assez intuitif. Considérons par exemple l'interface suivant :
+#### 3.1. Reflection Spéculaire
+La trajectoire de la partie reflechie est plutôt previsible. L'onde vient s'écraser sur la discontinuité et rebondis suivant un angle égale à l'angle d'incidance.
 
-[Schema Ondes]
+[Schéma rayon]
 
-L'onde se propage moins vite dans le verre que dans l'aire. Si le faiseau frappe la surface avec un angle de 0°, la totalité du front d'onde traverse l'interface au même instant. Il est donc ralenti mais conserve son orientation. En revanche si on donne un angle d'incidence, le front d'onde va traverser de manière progressive. Les points situés sur le bord droit seront donc ralentis légerement avant ceux du bord gauche.
+Le phénomène est similaire à ce qu'on peut observer en jetant une balle dans une piscine. Les ondes se propage à la surface de l'eau jusqu'à rebondir en arivant sur les bords.
 
-[Schema Ondes]
+[illustration onde]
 
-En consequence le front d'onde pivote. Et plus l'angle est grand, plus le temps de traversée augment. Ce qui a pour effet de produire un angle de réfraction encore plus prononcé. Pour la réflection spéculaire en revanche on reste dans le même milieu. La vitesse est donc stable et l'angle de reflection n'est pas altéré par rapport à l'angle d'incidence.
+#### 3.2. Transmition
+Pour la transmision c'est un peu plus déroutant. L'onde ne traverse pas la frontière en ligne droite (enfn pas toujours). Elle est déviée selon on angle, dit de réfraction.
 
-[Schema Ondes]
+L'explication tient au fait que l'onde se propage moins vite dans le verre que dans l'aire. Si le faiseau frappe la surface avec un angle de 0°, tout les points du front d'onde sont ralentis au même instant et le rayon n'est pas dévié.
 
-Note : La vitesse de propagation est rarement manipulée directement en physique. On utilise plutot l'IOR de l'anglais "indice of refraction" qui se défini comme `IOR = c / v` avec :
+[Schéma rayon]
+
+En revanche si on donne de l'angle, la traversée du front d'onde est maintenant progressive. Les points situés sur le bord droit (dans le sens du rayon) seront donc ralentis légerement avant ceux du bord gauche. Ce qui a pour effet de faire pivoter le front d'onde un peu à la manière d'un tank qui fait varier la vitesse de ses chenilles.
+
+#### 3.3. Indice de réfraction
+La vitesse de propagation est rarement manipulée directement en physique. On utilise plutot l'IOR de l'anglais "indice of refraction" qui se défini comme `IOR = c / v` avec :
 - c : la vitesse maximale de la lumière aussi appelée célerité. Elle est de 300 000 km/s et correspond à la propagation dans le vide.
 - v : la vitesse effective de propagation dans le milieu considéré (apriori inferieure à c)
 
-Dans la suite j'utiliserai l'IOR. Mais ne soyez pas destabilisé, c'est une quantité equivalante à la vitesse de propagation (comme la frequence est equivalente à la longueur d'onde)
+Dans la suite j'utiliserai l'IOR. Mais ne soyez pas destabilisé, c'est une quantité equivalante à la vitesse de propagation eque vous rencontrerez souvent dans les algorithmes et les logiciels de rendu.
 
 ### 4. Fresnel
 On vient de voire qu'une discontinuité de milieux séparait la lumière en deux directions. Maintenant on va s'interesser au phénomène qui détermine de quel côté le photon va être dirigé lorsqu'il arrive à la frontière : le Fresnel
@@ -135,7 +142,12 @@ Ainsi, les photons émis n’auront pas tous les mêmes énergies (et donc pas l
 
 Note : Les niveau d'énergie autorisés expliquent la selection spectrale pour l'émisson, l'absorbtion et la diffusion. Mais pas pour la reflection spéculaire. Notez toutefois que le phénomene existe et qu'il concerne presque exclusivement les métaux.
 
-### 3. Diffusion spectrale
+### 3. Dispersion spectrale
+Lorsque on a parlé de la transmission, on a vu que l’angle de réfraction dépend du rapport des IOR des deux matériaux. Mais ce que nous n’avons pas précisé, c’est que cet indice de réfraction dépend lui-même de la longueur d’onde.
+
+[Schéma]
+
+En conséquence, l’angle de réfraction varie selon la couleur, ce qui a pour effet de décomposer un rayon lumineux lorsqu’il rencontre une discontinuité de milieu. C’est ce phénomène qui donne naissance aux arcs-en-ciel et aux aberrations chromatiques.
 
 ## V. Phénomenes haut niveau
 
