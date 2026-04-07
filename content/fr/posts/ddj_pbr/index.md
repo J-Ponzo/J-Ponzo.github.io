@@ -8,11 +8,11 @@ hidden = false
 +++
 
 ## I. Introduction
-Contrairement à ce qu’on pourrait croire, la lumière ne se laisse pas facilement décrire comme un modèle simple et unique. Pendant longtemps, les physicien eux même ont débattu de sa nature. Tantot une onde, tanto une particule, l'humanité à longtemps dû jongler entre les deux modèles, choisisant le plus adapté selon le phénomène.
+Contrairement à ce qu’on pourrait croire, la lumière ne se laisse pas facilement apréhender. Pendant longtemps, les physicien eux même ont débattu de sa nature. Tantot une onde, tanto une particule, l'humanité à longtemps dû jongler entre les deux modèles, choisisant le plus adapté selon le phénomène.
 
-Aujourd’hui, la physique moderne propose un cadre unifié qui réconcilie les deux visions. Mais l'optique quantique est une dicipline complexe et abstraite. Ce qui en fait un très mauvais allié pour ce que l'on cherche à faire : proposer un modèle pédagogique simple de ce qu'est la lumière dans la vrai vie.
+Aujourd’hui, la physique moderne propose un cadre unifié qui réconcilie les deux visions. Mais l'optique quantique est une dicipline complexe et abstraite. Ce qui en fait un très mauvais candidat pour ce que l'on cherche à faire : proposer un modèle pédagogique simple de ce qu'est la lumière dans la vrai vie.
 
-Cet article n'est pas un cours de physique ! Prenez le pour ce qu'il est : le schéma mental aproximatif et imparfait d'un passionné qui fait de la programmation graphique sur son temps libre. (Parce que oui je suis bien programmeur dans un studio de jeu vidéo mais au boulot je ne fais pas du tout ça).
+Cet article n'est donc pas un cours de physique ! Prenez le pour ce qu'il est : le schéma mental aproximatif et imparfait d'un passionné qui fait de la programmation graphique sur son temps libre. (Parce que oui je suis bien programmeur dans un studio de jeu vidéo mais au boulot je ne fais pas du tout ça).
 
 Ma seule ambition ici, c'est de partager gratuitement et en l'état mon framework intelectuel personnel. Il m'a beaucoup aidé à comprendre les techniques de rendu au dela du simple copié-collé de formules depuis un tutorial. J'éspère qu'il vous aidera aussi. Utilisez le ! Forkez le ! Ameliorez le ! Et si vous trouvez un bug, n'hesitez pas à me faire une PR sous la forme d'un commentaire.
 
@@ -35,7 +35,7 @@ Lorsque un électron reçois de cette énergie, il entre dans un état qu'on app
 
 Pour cela il peut soit :
 - rendre l'énergie à la matière
-- utiliser l'énergie pour émetre un photon qui se propage à lors dans une direction aléatoire
+- utiliser l'énergie pour émetre un photon qui se propage alors dans une direction aléatoire
 
 Note : Tous les materiaux émetent des photons dès lors que leur température dépasse 0 kelvin (le zero absolu). Mais si le monde n'est pas une gigantesque empoule, c'est parce que la plupart emetent en infrarouges.
 
@@ -47,7 +47,7 @@ Ce qui va déterminer son sort, c'est la manière dont l'électron va décider d
 - si il réemet le photon, il est en quelques sortes résucité et redirigé dans une diréction aléatoire : c'est la diffusion volumique.
 
 ### 3. Comportements à la frontière
-Jusqu'ici nous avons décris les phénomenes qui interviennent à l'interieur du milieu. Mais lorsqu'on considère la surface de contacte entre deux milieux différents, on observe de nouveaux comportements.
+Jusqu'ici nous avons décris les phénomenes qui interviennent à l'interieur du milieu. Mais si considère la surface de contacte entre deux milieux différents, on observe de nouveaux comportements.
 
 En effet, lorsque les photons se présente à l'interface de deux materiaux, il peut se passer 2 choses :
 - Le photon rebondis et retourne dans son milieu d'origine : c'est la reflection speculaire
@@ -80,7 +80,7 @@ La vitesse de propagation est rarement manipulée directement en physique. On ut
 - c : la vitesse maximale de la lumière aussi appelée célerité. Elle est de 300 000 km/s et correspond à la propagation dans le vide.
 - v : la vitesse effective de propagation dans le milieu considéré (apriori inferieure à c)
 
-Dans la suite j'utiliserai l'IOR. Mais ne soyez pas destabilisé, c'est une quantité equivalante à la vitesse de propagation eque vous rencontrerez souvent dans les algorithmes et les logiciels de rendu.
+Dans la suite j'utiliserai l'IOR. Mais ne soyez pas destabilisé, c'est une quantité equivalante à la vitesse de propagation. On la rencontre souvent dans les algorithmes et les logiciels de rendu.
 
 ### 4. Fresnel
 On vient de voire qu'une discontinuité de milieux séparait la lumière en deux directions. Maintenant on va s'interesser au phénomène qui détermine de quel côté le photon va être dirigé lorsqu'il arrive à la frontière : le Fresnel
