@@ -132,13 +132,90 @@ Pour qu'un électron puisse transitionner entre 2 niveaux, il doit acquérir (ou
 Note : Les niveau d'énergie autorisés n'expliquent pas la selection spectrale pour la reflection spéculaire. Notez toutefois que le phénomene existe et qu'il concerne presque exclusivement les métaux.
 
 ### 3. Dispersion spectrale
-Lorsque on a parlé de la transmission, on a vu que l’angle de réfraction dépend du rapport des IOR des deux matériaux. Mais ce que nous n’avons pas précisé, c’est que cet indice de réfraction dépend lui-même de la longueur d’onde.
+Lorsque on a parlé de la transmission, on a vu que l’angle de réfraction dépend du rapport des IOR des deux matériaux. Mais ce que nous n’avons pas précisé, c’est que la vitess de propagation, et donc l'IOR lui même dépendent de la longueur d’onde.
 
 [Schéma]
 
 En conséquence, l’angle de réfraction varie selon la couleur, ce qui a pour effet de décomposer un rayon lumineux lorsqu’il rencontre une discontinuité de milieu. C’est ce phénomène qui donne naissance aux arcs-en-ciel et aux aberrations chromatiques.
 
-## V. Phénomenes haut niveau
+## V Phénomenes de haut-niveau :
+Quand un photon unique traverse la matière, il est donc soumis aux phénomènes de bas-niveau. On a vu que ces derniers sont probabilistes. Mais si on considère une très (très, très) grande population de photons, la magie des grands nombres va en quelques sortes "stabiliser" la nature aléatoire de la lumière. Et de cette stabilisation vont émerger de nouveaux phénomènes, plus globaux, que j'appelle : phénomènes de haut-niveau.
+
+Ces phénomènes vont se classer suivant deux grandes familles :
+- le régime conducteur (le métal)
+- le régime dielectrique (tout le reste)
+
+### 1 Les conducteurs
+La principale différence entre materiaux conducteur et dielectriques, c'est que 
+
+#### 1 Transparence
+La transparence, c'est quand un materiau transmet beaucoup, mais diffuse et absorbe peu. Les photons le traversent de part en part tout en conservant une certaine cohérence directionnelle. Ce qui fait que l'on distingue assez netement l'image qui se trouve derrière.
+
+[schema]
+
+Ce qui permet à notre oeuil de deceler un materiau totalement transparent, c'est la réfraction qui distord l'image et la reflection spéculaire plus prononcée sur les angles rasants.
+
+[Image réèle distordue]
+
+#### 2 Transulucidité
+Un materiau translucide possède lui aussi une transmission consequente et une faible absorbtion permetant aux photons de le traverser. Mais contrairement à un materiau transparent, la diffusion y est très forte, induisant un très grand cahos directionnel.
+
+[schema]
+
+En somme la lumière passe, mais elle est completement homogéneisée par la diffusion, ce qui ne permet pas distinguer les formes qui se trouvent derrière l'object.
+
+[Image réèle]
+
+#### 3 Opacité
+L'opacité dielectrique se caracterise par une absorbtion et une diffusion fortes. La lumière rentre mais est rapidement absorbée et ne parvient pas à pénetrer en profondeur (encore moins traverser). 
+
+Toutefois, avant d'être absorbées, certains photons parvienent à ressortir du côté où ils sont entrés par diffusions successives. C'est ce qu'on appelle la reflection diffuse.
+
+[schema]
+
+#### 4 Le Continum Diélectrique
+Ces 3 phénomenes décrivent les materiaux dielectriques. C'est à dire, tout ce qui n'est pas un metal. Il ne faut pas les voire comme des classes hermetiques entre elles. En réalité, on peut ranger les materiaux diélectriques sur un graphe qui aurait pour abssyce la diffusion et pour ordonnée l'absorbtion.
+
+[graph]
+
+Transparence, opacité et translucidité sont alors des zones de ce graphe, remarquable mais aux contours flous. Les materiaux diélectriques ne sont pas rangés dans l'une ou à l'autre de ces cathégories. Ils s'en rapprochent à différents degrés.
+
+#### 5 Selectivité spectrale
+On à vu que les phénomènes de bas-niveau pouvaient varier selon la longueur d'onde. Les phénomènes de haut-niveau qui n'en sont qu'une stabilisation statistique à grande echelle heritent naturellement de ce comportement.
+
+Ainsi, les materiaux diélectriques sont non seulement définis par une position dans un graph. Mais en plus cette position peut varier selon la longueur d'onde considérée. Voyons ensemble quelques cas concrets.
+
+##### 5.1 La menthe à l'eau
+Si vous prenez par exemple de la menthe à l'eau, on peut dire que c'est un materiau qui est peu diffusant sur la totalité du spectre visible. En revanche, il est peu absorbant pour les longueurs d'onde autour du vert, mais très absorbant pour les autres. 
+
+[Image]
+
+D'une certaine manière, on peut dire que la menthe à l'eau est tranparente pour le vert mais opaque pour le reste.
+
+##### 5.2 Le pastis
+Pour le pastis on observe le même phénomène d'absorbtion selective mais pour un matriau qui cette fois diffuse beaucoup sur tout le spectre. Les photons qui ne contribuent pas au jaune sont très vite absorbées tantis que les autres survivent mais voient leur cohérence directionnelle est détruite par la diffusion.
+
+[Image]
+
+On peut dire que le pastice est tranlucide pour le jaune, et opaque pour le reste.
+
+##### 5.3 Le ciel
+Pour l'atmosphère cette fois on est dans un cas différent. Ce n'est plus l'absorbtion qui est selective, mais la diffusion. Les longueur d'onde bleu de la lumière du soleil sont détournées dans toutes les directions tandis que le reste continue sa route en ligne droite. 
+
+Une partie de la composante bleu qui devrait nous passer au dessus de la tête nous parvient donc par diffusion. C'est pour ça que ciel est de cette couleur.
+
+[Image]
+
+L'atmosphère est donc translucide pour le bleu et transparente pour le reste.
+
+#### 6 Opacité Conductrice (le métal <diable>)
+Les conducteurs, c’est-à-dire les métaux, sont une espèce à part. Contrairement aux diélectriques, ils reflechissent la quasi totalité de la lumière qui se présentent à leur interface, et la faible part qui pénètre est absorbée quasi instantanement. 
+
+Il n'y a donc pas de vie photonique à l'interieur de la matière. En conséquence, les métaux ne présentent pas de lumière diffuse. Ce qui permet de les distinguer visuellement, ce sont les reflets.
+
+[schema]
+
+Ces reflets sont eux aussi soumis à une sélectivité spectrale, ce qui confère à chaque métal une teinte caractéristique.
 
 ## VI. Conclusion
 
