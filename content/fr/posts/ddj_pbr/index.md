@@ -14,7 +14,7 @@ Aujourd’hui, la physique moderne propose un cadre unifié qui réconcilie les 
 
 Cet article n'est donc pas un cours de physique ! Prenez le pour ce qu'il est : le schéma mental aproximatif et imparfait d'un passionné qui fait de la programmation graphique sur son temps libre. (Parce que oui je suis bien programmeur dans un studio de jeu vidéo mais au boulot je ne fais pas du tout ça).
 
-Ma seule ambition ici, c'est de partager gratuitement et en l'état mon framework intelectuel personnel. Il m'a beaucoup aidé à comprendre les techniques de rendu au dela du simple copié-collé de formules depuis un tutorial. J'éspère qu'il vous aidera aussi. Utilisez le ! Forkez le ! Ameliorez le ! Et si vous trouvez un bug, n'hesitez pas à me faire une PR sous la forme d'un commentaire.
+Ma seule ambition ici, c'est de partager gratuitement et en l'état mon framework mental personnel. Il n'est surement pas parfait m'a il m'a aidé à comprendre les techniques de rendu un petit cran au dessus du copié-collé depuis un tutorial. J'éspère qu'il vous aidera aussi. Utilisez le ! Forkez le ! Ameliorez le ! Et si vous trouvez un bug, n'hesitez pas à me faire une PR sous la forme d'un commentaire.
 
 ## II. Préembule
 Dans la vraie vie, l’existence des photons est intimement liée à la matière. C’est elle qui les crée, c’est elle qui les détruit, et c’est encore elle qui influence leur trajectoire. Elle détermine même leur couleur, ainsi que la vitesse à laquelle ils se propagent.
@@ -37,6 +37,8 @@ Pour cela il peut soit :
 - rendre l'énergie à la matière
 - utiliser l'énergie pour émetre un photon qui se propage alors dans une direction aléatoire
 
+[Schema double red blue background]
+
 Note : Tous les materiaux émetent des photons dès lors que leur température dépasse 0 kelvin (le zero absolu). Mais si le monde n'est pas une gigantesque empoule, c'est parce que la plupart emetent en infrarouges.
 
 ### 2. Absorbtion et Diffusion Volumique
@@ -46,8 +48,10 @@ Ce qui va déterminer son sort, c'est la manière dont l'électron va décider d
 - si il la rend à la matière, le photon est définitivement détruit : c'est l'absorbtion.
 - si il réemet le photon, il est en quelques sortes résucité et redirigé dans une diréction aléatoire : c'est la diffusion volumique.
 
+[Schema double red blue background]
+
 ### 3. Comportements à la frontière
-Jusqu'ici nous avons décris les phénomenes qui interviennent à l'interieur du milieu. Mais si considère la surface de contacte entre deux milieux différents, on observe de nouveaux comportements.
+Jusqu'ici nous avons décris les phénomenes qui interviennent à l'interieur du milieu. Mais si on considère la surface de contacte entre deux milieux différents, on observe de nouveaux comportements.
 
 En effet, lorsque les photons se présente à l'interface de deux materiaux, il peut se passer 2 choses :
 - Le photon rebondis et retourne dans son milieu d'origine : c'est la reflection speculaire
@@ -62,12 +66,12 @@ La trajectoire de la partie reflechie est plutôt previsible. L'onde vient s'éc
 
 [Schéma rayon]
 
-Le phénomène est similaire à ce qu'on peut observer en jetant une balle dans une piscine. Les ondes se propage à la surface de l'eau jusqu'à rebondir en arivant sur les bords.
+Le phénomène est similaire à ce qu'on peut observer en jetant une balle dans une piscine. Les ondes se propage à la surface de l'eau et rebondissent en atteignant les bords.
 
 [illustration onde]
 
 #### 3.2. Transmition
-Pour la transmision c'est un peu plus déroutant. L'onde ne traverse pas la frontière en ligne droite (enfn pas toujours). Elle est déviée selon on angle, dit de réfraction.
+Pour la transmision c'est un peu plus déroutant. L'onde ne traverse pas la frontière en ligne droite (enfn pas toujours). Elle est déviée selon un angle, dit de réfraction.
 
 L'explication tient au fait que l'onde se propage moins vite dans le verre que dans l'aire. Si le faiseau frappe la surface avec un angle de 0°, tout les points du front d'onde sont ralentis au même instant et le rayon n'est pas dévié.
 
@@ -96,7 +100,7 @@ Le seuil de réussite de ce jet va dépendre de 2 choses :
 Plus ces valeurs sont grandes, plus le test de transmission est difficile à passer. Ainsi, la reflection spéculaire est beaucoup plus importante lorsque la lumière est rasante. Et au contraire la transmission domine si les milieux ont des IOR proches.
 
 ## IV. Caractère spectrale
-En lisant ce titre, vous vous rappelez vaguement que les couleurs correspondent aux longueurs d’onde du spectre visible, qui s’étend de 400 nm à 700 nm. Je vais peut-être vous choquer en affirmant que c’est faux. Ce qu’on appelle la couleur, ce n’est pas une longueur d’onde. Mais on dissipera ce mensonge plus tard. Pour l’instant, il est suffisant.
+En lisant ce titre, vous vous rappelez vaguement que les couleurs correspondent aux longueurs d’onde du spectre visible, qui s’étend de 400 nm à 700 nm. Je vais peut-être vous choquer en affirmant que c’est faux. Ce qu’on appelle la couleur, ce n’est pas une longueur d’onde. Mais on dissipera ce mensonge une autre fois. Pour l’instant, il est suffisant.
 
 Nous sommes donc ici réunis pour parler de la couleur de la lumière. Mais au risque de vous choquer une seconde fois : nous n’avons fait que ça jusqu’ici. En effet, pour un photon, l’énergie, la fréquence et la longueur d’onde c'est plus ou moins la même chose.
 
@@ -114,33 +118,18 @@ avec :
 - f la frequence du photon
 - h la constante de Planck (décidément)
 
-Cette relation montre que l’énergie d’un photon est directement proportionnelle à sa fréquence.
-
-Par ailleurs, on sait que la longueur d’onde est liée à la fréquence via la relation :
-
-λ = c / f
-
-avec :
-- λ la longueur d'onde
-- c la célérité de la lumière (dont on a déjà parlé)
-- f la frequence
-
-On a donc bien une correspondance directe entre la longueur d’onde d’un photon et son énergie.
+Cette relation montre que l’énergie d’un photon est directement proportionnelle à sa fréquence. Et comme la frequence est à son tour directement liée à la longueur d'onde, on a bien une correspondance directe entre la couleur d’un photon et son niveau énergie.
 
 ### 2. Selection spectrale
-Les phénomènes que l’on vient de décrire peuvent être conditionnés par la “couleur” du photon. C’est ce que l’on appelle la sélection spectrale. Pour comprendre cela, il faut regarder un peu plus en détail le fonctionnement de l’atome.
+L’excitation des électrons n’est pas binaire comme on l’a suggéré jusqu’ici. En réalité, il existe une infinité de niveaux possibles au dessus de l'état stable. Chacun de ces niveau correspond à une valeur d'énergie bien précise qui varie d'un atome à l'autre. 
 
-L’excitation des électrons n’est pas binaire comme on l’a suggéré jusqu’ici. En réalité, l’atome n’autorise que certains niveaux d’énergie bien précis à ses électrons. Le premier correspond à l’état le plus stable, mais il y en a une infinité au dessus de lui.
-
-D’un atome à l’autre, les écarts entre ces niveaux varient. Cela correspond à sa signature énergétique.
+Par exemple, l'échelle de niveau d'énergie autorisés par un atome d'oxygène ne correpondra pas à celle d'un atome de carbone. Chacun à sa propre signature energetique. 
 
 [Schéma]
 
-Pour passer d’un niveau à un autre, l’électron doit acquérir (ou libérer) exactement la quantité d’énergie correspondante. Toutes les transitions ne sont donc pas possibles, et elles dépendent de la structure énergétique propre à chaque atome.
+Pour qu'un électron puisse transitionner entre 2 niveaux, il doit acquérir (ou libérer) exactement la quantité d’énergie correspondante. Toutes les transitions ne sont donc pas possibles. Cela va conditionner la possibilité d'émetre, absorber ou diffuser telle ou telle couleur. C'est ce qu'on appele : la sélection spectrale.
 
-Ainsi, les photons émis n’auront pas tous les mêmes énergies (et donc pas les mêmes couleurs), et inversement, un photon ne pourra exciter un électron que si son énergie correspond précisément à une transition autorisée.
-
-Note : Les niveau d'énergie autorisés expliquent la selection spectrale pour l'émisson, l'absorbtion et la diffusion. Mais pas pour la reflection spéculaire. Notez toutefois que le phénomene existe et qu'il concerne presque exclusivement les métaux.
+Note : Les niveau d'énergie autorisés n'expliquent pas la selection spectrale pour la reflection spéculaire. Notez toutefois que le phénomene existe et qu'il concerne presque exclusivement les métaux.
 
 ### 3. Dispersion spectrale
 Lorsque on a parlé de la transmission, on a vu que l’angle de réfraction dépend du rapport des IOR des deux matériaux. Mais ce que nous n’avons pas précisé, c’est que cet indice de réfraction dépend lui-même de la longueur d’onde.
