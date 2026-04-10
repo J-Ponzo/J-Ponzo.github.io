@@ -139,16 +139,15 @@ Lorsque on a parlé de la transmission, on a vu que l’angle de réfraction dé
 En conséquence, l’angle de réfraction varie selon la couleur, ce qui a pour effet de décomposer un rayon lumineux lorsqu’il rencontre une discontinuité de milieu. C’est ce phénomène qui donne naissance aux arcs-en-ciel et aux aberrations chromatiques.
 
 ## V Phénomenes de haut-niveau :
-Quand un photon unique traverse la matière, il est donc soumis aux phénomènes de bas-niveau. On a vu que ces derniers sont probabilistes. Mais si on considère une très (très, très) grande population de photons, la magie des grands nombres va en quelques sortes "stabiliser" la nature aléatoire de la lumière. Et de cette stabilisation vont émerger de nouveaux phénomènes, plus globaux, que j'appelle : phénomènes de haut-niveau.
+La vie d'un photon unique est donc soumise aux phénomènes de bas-niveau. On a vu que ces derniers sont probabilistes. Mais si on change d'échelle et qu'on considère non plus un mais des milliards de photons, la magie des grands nombres va en quelques sortes "stabiliser" la nature aléatoire de la lumière. 
 
-Ces phénomènes vont se classer suivant deux grandes familles :
-- le régime conducteur (le métal)
-- le régime dielectrique (tout le reste)
+De cette stabilisation vont émerger de nouveaux phénomènes, plus globaux, que j'appelle : phénomènes de haut-niveau. Ils se divient en 2 catégories :
+- le régime conducteur : le métal
+- le régime dielectrique : tout le reste
 
-### 1 Les conducteurs
-La principale différence entre materiaux conducteur et dielectriques, c'est que 
+<évacuer le cas du métal des le début en faisant une première partie Conducteur VS dielectrique>
 
-#### 1 Transparence
+### 1 Transparence
 La transparence, c'est quand un materiau transmet beaucoup, mais diffuse et absorbe peu. Les photons le traversent de part en part tout en conservant une certaine cohérence directionnelle. Ce qui fait que l'on distingue assez netement l'image qui se trouve derrière.
 
 [schema]
@@ -157,7 +156,7 @@ Ce qui permet à notre oeuil de deceler un materiau totalement transparent, c'es
 
 [Image réèle distordue]
 
-#### 2 Transulucidité
+### 2 Transulucidité
 Un materiau translucide possède lui aussi une transmission consequente et une faible absorbtion permetant aux photons de le traverser. Mais contrairement à un materiau transparent, la diffusion y est très forte, induisant un très grand cahos directionnel.
 
 [schema]
@@ -166,10 +165,22 @@ En somme la lumière passe, mais elle est completement homogéneisée par la dif
 
 [Image réèle]
 
-#### 3 Opacité
+### 3 Opacité
+L'opacité, c'est quand la lumière ne parvient pas à traverser le materiau. On en distingue 2 types.
+
+#### 3.1 Opacité Diélectrique
 L'opacité dielectrique se caracterise par une absorbtion et une diffusion fortes. La lumière rentre mais est rapidement absorbée et ne parvient pas à pénetrer en profondeur (encore moins traverser). 
 
 Toutefois, avant d'être absorbées, certains photons parvienent à ressortir du côté où ils sont entrés par diffusions successives. C'est ce qu'on appelle la reflection diffuse.
+
+[schema]
+
+Dans un matériau diélectrique, la réflexion diffuse est généralement dominante par rapport à la réflexion spéculaire. C’est elle qui donne à l’objet sa couleur.
+
+#### 3.2 Opacité Métalique
+Contrairement aux diélectriques, les conducteurs ne transmetent presque pas la lumière. La quasi totalité des photons sont directement renvoyés sous forme de reflection spéculaire, et la faible part qui pénètre est absorbée instantanement.
+
+Il n'y a donc pas de vie photonique à l'interieur de la matière. En conséquence, les métaux ne présentent pas de reflection diffuse comme leur cousin diélectriques. Ce qui permet de les distinguer visuellement, ce sont les reflets. Sans ça ils apparaissent completement noir.
 
 [schema]
 
