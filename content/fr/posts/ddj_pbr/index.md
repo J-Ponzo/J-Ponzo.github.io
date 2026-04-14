@@ -141,12 +141,6 @@ En conséquence, l’angle de réfraction varie selon la couleur, ce qui a pour 
 ## V Phénomenes de haut-niveau :
 La vie d'un photon unique est donc soumise aux phénomènes de bas-niveau. On a vu que ces derniers sont probabilistes. Mais si on change d'échelle et qu'on considère non plus un mais des milliards de photons, la magie des grands nombres va en quelques sortes "stabiliser" la nature aléatoire de la lumière. 
 
-De cette stabilisation vont émerger de nouveaux phénomènes, plus globaux, que j'appelle : phénomènes de haut-niveau. Ils se divient en 2 catégories :
-- le régime conducteur : le métal
-- le régime dielectrique : tout le reste
-
-<évacuer le cas du métal des le début en faisant une première partie Conducteur VS dielectrique>
-
 ### 1 Transparence
 La transparence, c'est quand un materiau transmet beaucoup, mais diffuse et absorbe peu. Les photons le traversent de part en part tout en conservant une certaine cohérence directionnelle. Ce qui fait que l'on distingue assez netement l'image qui se trouve derrière.
 
@@ -166,23 +160,49 @@ En somme la lumière passe, mais elle est completement homogéneisée par la dif
 [Image réèle]
 
 ### 3 Opacité
-L'opacité, c'est quand la lumière ne parvient pas à traverser le materiau. On en distingue 2 types.
+L'opacité, c'est quand les photons ne parvienent pas à traverser le materiau. La lumière rentre mais est rapidement absorbée et ne parvient pas à pénetrer en profondeur (encore moins traverser). 
 
-#### 3.1 Opacité Diélectrique
-L'opacité dielectrique se caracterise par une absorbtion et une diffusion fortes. La lumière rentre mais est rapidement absorbée et ne parvient pas à pénetrer en profondeur (encore moins traverser). 
+[schema double]
 
-Toutefois, avant d'être absorbées, certains photons parvienent à ressortir du côté où ils sont entrés par diffusions successives. C'est ce qu'on appelle la reflection diffuse.
+Si la diffusion est faible, cela va donner des materiaux completement noir comme la charbon. Mais la plupart du temps, elle est suffisament élevée pour qu'une partie des photons arrivent à ressortir du côté où ils sont entrés par diffusions successives. C’est ce qu’on appelle la reflection diffuse.
 
-[schema]
-
-Dans un matériau diélectrique, la réflexion diffuse est généralement dominante par rapport à la réflexion spéculaire. C’est elle qui donne à l’objet sa couleur.
-
-#### 3.2 Opacité Métalique
-Contrairement aux diélectriques, les conducteurs ne transmetent presque pas la lumière. La quasi totalité des photons sont directement renvoyés sous forme de reflection spéculaire, et la faible part qui pénètre est absorbée instantanement.
-
-Il n'y a donc pas de vie photonique à l'interieur de la matière. En conséquence, les métaux ne présentent pas de reflection diffuse comme leur cousin diélectriques. Ce qui permet de les distinguer visuellement, ce sont les reflets. Sans ça ils apparaissent completement noir.
+### 4 Continium
+Je ne vous apprends surement pas l'existance de ces 3 phénomènes mais on à tendance à les considérer comme des classes hermétiques. En réalité, on peut ranger les materiaux sur un graphe qui aurait pour abssyce l'absorbtion et pour ordonnée la diffusion.
 
 [schema]
+
+Mieux encore, à cause de la sélection spéctrale, un materiau se comporte différament selon la longueur d'onde des photons qui le traverse. On a en quelques sortes un 3eme axe qui représente la longueur d'onde, et la matière pourrait être décrite comme une ligne qui traverse cet espace.
+
+[shema 3 axes]
+
+## VI Cas concrets :
+Pour bien visualiser ce que cela veux dire, on va maintenant explorer quelques cas concrets.
+
+### 1 La menthe à l'eau
+Si vous prenez par exemple de la menthe à l'eau, on peut dire que c'est un materiau qui est peu diffusant sur la totalité du spectre visible. En revanche, il est peu absorbant pour les longueurs d'onde autour du vert, mais très absorbant pour les autres. 
+
+[Image]
+
+D'une certaine manière, on peut dire que la menthe à l'eau est tranparente pour le vert mais opaque pour le reste.
+
+### 2 Le pastis
+Pour le pastis on observe le même phénomène d'absorbtion selective mais pour un matriau qui cette fois diffuse beaucoup sur tout le spectre. Les photons qui ne contribuent pas au jaune sont très vite absorbées tantis que les autres survivent mais voient leur cohérence directionnelle est détruite par la diffusion.
+
+[Image]
+
+On peut dire que le pastice est tranlucide pour le jaune, et opaque pour le reste.
+
+### 3 Le ciel
+Pour l'atmosphère cette fois on est dans un cas différent. Ce n'est plus l'absorbtion qui est selective, mais la diffusion. Les longueur d'onde bleu de la lumière du soleil sont détournées dans toutes les directions tandis que le reste continue sa route en ligne droite. 
+
+Une partie de la composante bleu qui devrait nous passer au dessus de la tête nous parvient donc par diffusion. C'est pour ça que ciel est de cette couleur.
+
+[Image]
+
+L'atmosphère est donc translucide pour le bleu et transparente pour le reste.
+
+## VII Dielectriques VS Conducteur
+Les matieriaux qu'on à décrits jusqu'ici sont les diélectriques. Mais on a pas du tout parlé de comment fonctionnent les conducteurs (aka le métal).
 
 #### 4 Le Continum Diélectrique
 Ces 3 phénomenes décrivent les materiaux dielectriques. C'est à dire, tout ce qui n'est pas un metal. Il ne faut pas les voire comme des classes hermetiques entre elles. En réalité, on peut ranger les materiaux diélectriques sur un graphe qui aurait pour abssyce la diffusion et pour ordonnée l'absorbtion.
