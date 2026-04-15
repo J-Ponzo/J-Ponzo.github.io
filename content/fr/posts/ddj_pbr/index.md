@@ -129,8 +129,6 @@ Par exemple, l'échelle de niveau d'énergie autorisés par un atome d'oxygène 
 
 Pour qu'un électron puisse transitionner entre 2 niveaux, il doit acquérir (ou libérer) exactement la quantité d’énergie correspondante. Toutes les transitions ne sont donc pas possibles. Cela va conditionner la possibilité d'émetre, absorber ou diffuser telle ou telle couleur. C'est ce qu'on appele : la sélection spectrale.
 
-Note : Les niveau d'énergie autorisés n'expliquent pas la selection spectrale pour la reflection spéculaire. Notez toutefois que le phénomene existe et qu'il concerne presque exclusivement les métaux.
-
 ### 3. Dispersion spectrale
 Lorsque on a parlé de la transmission, on a vu que l’angle de réfraction dépend du rapport des IOR des deux matériaux. Mais ce que nous n’avons pas précisé, c’est que la vitess de propagation, et donc l'IOR lui même dépendent de la longueur d’onde.
 
@@ -201,8 +199,38 @@ Une partie de la composante bleu qui devrait nous passer au dessus de la tête n
 
 L'atmosphère est donc translucide pour le bleu et transparente pour le reste.
 
-## VII Dielectriques VS Conducteur
-Les matieriaux qu'on à décrits jusqu'ici sont les diélectriques. Mais on a pas du tout parlé de comment fonctionnent les conducteurs (aka le métal).
+### 4 La brique
+La brique est suffisament absorbante pour qu'aucun photon ne parvienne à traverser. Mais l'absorbtion est légèrement moins forte pour le rouge que pour les autres couleurs. Couplé à une diffusion forte et homogène sur le spectre, la matière donne plus de chances aux photons rouges de resortir.
+
+[Image]
+
+## VII Cas pathologique : le métal
+Les materiaux qu'on à décrits jusqu'ici sont les materiaux diélectriques. Mais les metaux sont des conducteurs et ils ne fonctionne pas du tout selon ce modèle. L'explication tiendrait à la façon dont les particules sont agencées au sein de la matière. Notament le fait que dans un conducteur, les électrons sont libres. 
+
+La vérité c'est que je ne comprends pas vraiment le lien entre la liberté des électrons et ce que je m'apperte à décrire. Mais si vous avez des resources à me recommender, ça m'interesse.
+
+### Desolation photonique
+Contrairement aux diélectriques, le métal ne laisse entrer aucun photon : la lumière qui se présente à l'interface est directement redirigée dans la reflection spéculaire. Il n'y a pas de transmission.
+
+[Schema]
+
+Il n'y a donc pas de vie photonique à l'interieur de la matière. En conséquence, les métaux ne présentent pas de réflection diffuse contrairement la plupart des diélectriques. Si on ignore la reflection spéculaire, ils sont totalement noir.
+
+### Objection de la teinte
+Fred : Mais qu'est ce que tu raconte Jamy, les métaux, ils sont pas noir ! L'or c'est jaune, le cuivre c'est orange, l'acier c'est gris... c'est bien des couleurs tout ça je suis pas fou !
+
+Tu as raison Fred. La reflection spéculaire du métal fait bien l'object d'une selection spectral. En absorbant les photons de certaines couleurs, et pas d'autres, il peut faire apparaitre des teinte qui lui sont caracteristique : jaune pour l'or, orange pour le cuivre... *et cetera*...
+
+C'est encore l'absorbtion qui produit la couleur ? Mais alors quelle différence avec la peinture rouge dans ce cas ? Et on vient pas de dire que la lumière entrait pas dans le métal ?
+
+Les photons ne pénetrent pas mais ce n'est pas incompatible avec l'absorbtion. Celle-ci peut avoir lieu directement à la surface. Ainsi, ce n'est pas la reflection diffuse qui est colorée comme pour un diélectrique, mais bien la reflection spéculaire, plus directionnel, qu'on appel communement "les reflets".
+
+[Schema]
+
+Dans le sens courant, quand on parle de la couleur d'un objet, on fait réference à sa reflection diffuse. De ce point de vue, les métaux sont noir. La seul chose qu'on en perçois c'est la reflection spéculaire et cette dernière peut avoir une certaine teinte. En résumé, les métaux sont des mirroirs colorés.
+
+## VIII Conclusion
+
 
 #### 4 Le Continum Diélectrique
 Ces 3 phénomenes décrivent les materiaux dielectriques. C'est à dire, tout ce qui n'est pas un metal. Il ne faut pas les voire comme des classes hermetiques entre elles. En réalité, on peut ranger les materiaux diélectriques sur un graphe qui aurait pour abssyce la diffusion et pour ordonnée l'absorbtion.
