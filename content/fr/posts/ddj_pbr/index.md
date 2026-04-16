@@ -8,22 +8,22 @@ hidden = false
 +++
 
 ## I. Introduction
-Contrairement à ce qu’on pourrait croire, la lumière ne se laisse pas facilement apréhender. Pendant longtemps, les physicien eux même ont débattu de sa nature. Tantot une onde, tanto une particule, l'humanité à longtemps dû jongler entre les deux modèles, choisisant le plus adapté selon le phénomène.
+Contrairement à ce que l’on pourrait croire, la lumière ne se laisse pas facilement appréhender. Pendant longtemps, les physiciens eux-mêmes ont débattu de sa nature. Tantôt onde, tantôt particule, l’humanité a dû jongler entre ces deux modèles, choisissant le plus adapté selon le phénomène observé.
 
-Aujourd’hui, la physique moderne propose un cadre unifié qui réconcilie les deux visions. Mais l'optique quantique est une dicipline complexe et abstraite. Ce qui en fait un très mauvais candidat pour ce que l'on cherche à faire : proposer un modèle pédagogique simple de ce qu'est la lumière dans la vrai vie.
+Aujourd’hui, la physique moderne propose un cadre unifié qui réconcilie ces deux visions. Mais l’optique quantique reste une discipline complexe et abstraite, ce qui en fait un très mauvais candidat pour ce que nous cherchons à faire ici : proposer un modèle pédagogique intuitif de ce qu’est la lumière dans la vrai vie.
 
-Cet article n'est donc pas un cours de physique ! Prenez le pour ce qu'il est : le schéma mental aproximatif et imparfait d'un passionné qui fait de la programmation graphique sur son temps libre. (Parce que oui je suis bien programmeur dans un studio de jeu vidéo mais au boulot je ne fais pas du tout ça).
+Cet article n’est donc pas un cours de physique. Prenez-le pour ce qu’il est : le schéma mental approximatif et imparfait d’un passionné qui fait de la programmation graphique sur son temps libre. (Parce que oui, je suis bien programmeur dans un studio de jeu vidéo, mais au travail, je ne fais pas du tout ça.)
 
-Ma seule ambition ici, c'est de partager gratuitement et en l'état mon framework mental personnel. Il n'est surement pas parfait m'a il m'a aidé à comprendre les techniques de rendu un petit cran au dessus du copié-collé depuis un tutorial. J'éspère qu'il vous aidera aussi. Utilisez le ! Forkez le ! Ameliorez le ! Et si vous trouvez un bug, n'hesitez pas à me faire une PR sous la forme d'un commentaire.
+Ma seule ambition ici est de partager, gratuitement et en l’état, mon framework mental personnel. Il n’est sûrement pas parfait, mais il m’a aidé à comprendre les techniques de rendu un cran au-dessus du simple copié-collé de tutoriels. J’espère qu’il vous aidera aussi. Utilisez-le, forkez-le, améliorez-le ! Et si vous trouvez un bug, n’hésitez pas à me faire une PR sous la forme d’un commentaire.
 
-## II. Préembule
+## II. Préambule
 Dans la vraie vie, l’existence des photons est intimement liée à la matière. C’est elle qui les crée, c’est elle qui les détruit, et c’est encore elle qui influence leur trajectoire. Elle détermine même leur couleur, ainsi que la vitesse à laquelle ils se propagent.
 
 Ce que je veux dire par là, c’est qu’il n’y a pas d’un côté la matière et de l’autre la lumière. À un niveau fondamental, la matière n’est rien d’autre que de l’énergie organisée, qui change continuellement de forme dans un système fermé que l’on appelle l’univers.
 
 La lumière n’est finalement qu’une de ces formes : c’est de l’énergie en transit, matérialisée par des photons.
 
-Pour décrire son comportement, nous allons partir de l'infiniment petit en étudiant ce que j'appel les phénomenes bas niveau. Nous utiliserons ensuite cette base pour expliquer les phénomènes lumineux visibles à notre échelle.
+Pour décrire son comportement, nous allons partir de l’infiniment petit, en étudiant ce que j’appelle les phénomènes de bas niveau, avant de remonter vers les phénomènes lumineux visibles à notre échelle.
 
 ## III. Phénomenes bas niveau
 Les phénomènes bas niveaux sont donc les phénomènes liés à lumière qui se jouent à l'échelle microscopique. A cette échelle, la matière est constituée d’atomes autour desquels gravitent des électrons et ces atomes sont organisés selon des paternes specifiques qu'on appelle des molécules. 
@@ -164,7 +164,7 @@ L'opacité, c'est quand les photons ne parvienent pas à traverser le materiau. 
 
 Si la diffusion est faible, cela va donner des materiaux completement noir comme la charbon. Mais la plupart du temps, elle est suffisament élevée pour qu'une partie des photons arrivent à ressortir du côté où ils sont entrés par diffusions successives. C’est ce qu’on appelle la reflection diffuse.
 
-### 4 Continium
+### 4 Continium diélectrique
 Je ne vous apprends surement pas l'existance de ces 3 phénomènes mais on à tendance à les considérer comme des classes hermétiques. En réalité, on peut ranger les materiaux sur un graphe qui aurait pour abssyce l'absorbtion et pour ordonnée la diffusion.
 
 [schema]
@@ -244,54 +244,7 @@ Mais qu’est-ce que tu racontes Jamy ? Les métaux, ils sont pas noirs ! L’or
 Dans le sens courant, quand on parle de la couleur d’un objet, on fait référence à sa réflexion diffuse. De ce point de vue, les métaux sont donc complètement noirs : rien ne peut en ressortir puisque rien n’y entre. La seule chose que l’on perçoit, c’est une forte réflexion spéculaire, qui peut présenter une certaine teinte grâce à une sélection spectrale de surface. En résumé, les métaux ne sont rien d’autre que des miroirs colorés.
 
 ## VIII Conclusion
-
-
-#### 4 Le Continum Diélectrique
-Ces 3 phénomenes décrivent les materiaux dielectriques. C'est à dire, tout ce qui n'est pas un metal. Il ne faut pas les voire comme des classes hermetiques entre elles. En réalité, on peut ranger les materiaux diélectriques sur un graphe qui aurait pour abssyce la diffusion et pour ordonnée l'absorbtion.
-
-[graph]
-
-Transparence, opacité et translucidité sont alors des zones de ce graphe, remarquable mais aux contours flous. Les materiaux diélectriques ne sont pas rangés dans l'une ou à l'autre de ces cathégories. Ils s'en rapprochent à différents degrés.
-
-#### 5 Selectivité spectrale
-On à vu que les phénomènes de bas-niveau pouvaient varier selon la longueur d'onde. Les phénomènes de haut-niveau qui n'en sont qu'une stabilisation statistique à grande echelle heritent naturellement de ce comportement.
-
-Ainsi, les materiaux diélectriques sont non seulement définis par une position dans un graph. Mais en plus cette position peut varier selon la longueur d'onde considérée. Voyons ensemble quelques cas concrets.
-
-##### 5.1 La menthe à l'eau
-Si vous prenez par exemple de la menthe à l'eau, on peut dire que c'est un materiau qui est peu diffusant sur la totalité du spectre visible. En revanche, il est peu absorbant pour les longueurs d'onde autour du vert, mais très absorbant pour les autres. 
-
-[Image]
-
-D'une certaine manière, on peut dire que la menthe à l'eau est tranparente pour le vert mais opaque pour le reste.
-
-##### 5.2 Le pastis
-Pour le pastis on observe le même phénomène d'absorbtion selective mais pour un matriau qui cette fois diffuse beaucoup sur tout le spectre. Les photons qui ne contribuent pas au jaune sont très vite absorbées tantis que les autres survivent mais voient leur cohérence directionnelle est détruite par la diffusion.
-
-[Image]
-
-On peut dire que le pastice est tranlucide pour le jaune, et opaque pour le reste.
-
-##### 5.3 Le ciel
-Pour l'atmosphère cette fois on est dans un cas différent. Ce n'est plus l'absorbtion qui est selective, mais la diffusion. Les longueur d'onde bleu de la lumière du soleil sont détournées dans toutes les directions tandis que le reste continue sa route en ligne droite. 
-
-Une partie de la composante bleu qui devrait nous passer au dessus de la tête nous parvient donc par diffusion. C'est pour ça que ciel est de cette couleur.
-
-[Image]
-
-L'atmosphère est donc translucide pour le bleu et transparente pour le reste.
-
-#### 6 Opacité Conductrice (le métal <diable>)
-Les conducteurs, c’est-à-dire les métaux, sont une espèce à part. Contrairement aux diélectriques, ils reflechissent la quasi totalité de la lumière qui se présentent à leur interface, et la faible part qui pénètre est absorbée quasi instantanement. 
-
-Il n'y a donc pas de vie photonique à l'interieur de la matière. En conséquence, les métaux ne présentent pas de lumière diffuse. Ce qui permet de les distinguer visuellement, ce sont les reflets.
-
-[schema]
-
-Ces reflets sont eux aussi soumis à une sélectivité spectrale, ce qui confère à chaque métal une teinte caractéristique.
-
-## VI. Conclusion
-
+<TODO>
 
 ## Refs
 https://phet.colorado.edu/
