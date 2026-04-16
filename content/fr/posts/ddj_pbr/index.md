@@ -209,25 +209,39 @@ Les materiaux qu'on à décrits jusqu'ici sont les materiaux diélectriques. Mai
 
 La vérité c'est que je ne comprends pas vraiment le lien entre la liberté des électrons et ce que je m'apperte à décrire. Mais si vous avez des resources à me recommender, ça m'interesse.
 
-### Desolation photonique
+### 1 Desolation photonique
 Contrairement aux diélectriques, le métal ne laisse entrer aucun photon : la lumière qui se présente à l'interface est directement redirigée dans la reflection spéculaire. Il n'y a pas de transmission.
 
 [Schema]
 
 Il n'y a donc pas de vie photonique à l'interieur de la matière. En conséquence, les métaux ne présentent pas de réflection diffuse contrairement la plupart des diélectriques. Si on ignore la reflection spéculaire, ils sont totalement noir.
 
-### Objection de la teinte
-Fred : Mais qu'est ce que tu raconte Jamy, les métaux, ils sont pas noir ! L'or c'est jaune, le cuivre c'est orange, l'acier c'est gris... c'est bien des couleurs tout ça je suis pas fou !
-
-Tu as raison Fred. La reflection spéculaire du métal fait bien l'object d'une selection spectral. En absorbant les photons de certaines couleurs, et pas d'autres, il peut faire apparaitre des teinte qui lui sont caracteristique : jaune pour l'or, orange pour le cuivre... *et cetera*...
-
-C'est encore l'absorbtion qui produit la couleur ? Mais alors quelle différence avec la peinture rouge dans ce cas ? Et on vient pas de dire que la lumière entrait pas dans le métal ?
-
-Les photons ne pénetrent pas mais ce n'est pas incompatible avec l'absorbtion. Celle-ci peut avoir lieu directement à la surface. Ainsi, ce n'est pas la reflection diffuse qui est colorée comme pour un diélectrique, mais bien la reflection spéculaire, plus directionnel, qu'on appel communement "les reflets".
+### 2 Objection de la teinte
+<br> 
+<img alt="Portrait de Fred de C'est pas sorcier" src="./images/Fred.opti.webp" style="float: right; margin-left: 20px; max-width: 128px;" /> 
+<p align = right style="text-align: right;"> 
+Mais qu’est-ce que tu racontes Jamy ? Les métaux, ils sont pas noirs ! L’or est jaune, le cuivre est orange, l’acier gris...
+<br>C’est bien des couleurs tout ça, je ne suis pas fou !
+</p> 
+<br> <br> 
+<img alt="Portrait de Jamy de C'est pas sorcier" src="./images/Jamy.opti.webp" style="float: left; margin-right: 20px; max-width: 128px; clear: both;" />
+<p align = left style="text-align: left;"> Tu as raison, Fred. La réflexion spéculaire du métal fait elle aussi l’objet d’une sélection spectrale. En absorbant certaines longueurs d’onde et en en réfléchissant d’autres, ces derniers acquièrent des teintes caractéristiques : jaune pour l’or, orange pour le cuivre... <i>et cetera</i>...
+</p> 
+<br> 
+<img alt="Portrait de Fred de C'est pas sorcier" src="./images/Fred.opti.webp" style="float: right; margin-left: 20px; max-width: 128px;" /> 
+<p align = right style="text-align: right;"> C'est encore une histoire d'absorbtion ? 
+<br> Mais alors, quelle différence avec la peinture rouge ?
+<br> Et on vient pas de dire que la lumière ne pénétrait pas dans le métal ?
+</p> 
+<br> 
+<img alt="Portrait de Jamy de C'est pas sorcier" src="./images/Jamy.opti.webp" style="float: left; margin-right: 20px; max-width: 128px; clear: both;" /> 
+<p align = left style="text-align: left;"> Les photons ne pénètrent effectivement pas le métal. Mais ce n’est pas incompatible avec l’absorption. En effet, celle-ci peut avoir lieu directement à la surface. Ainsi, ce n’est plus la réflexion diffuse qui est colorée, mais bien la réflexion spéculaire. Autrement dit : "le reflet".
+</p> 
+<br> 
 
 [Schema]
 
-Dans le sens courant, quand on parle de la couleur d'un objet, on fait réference à sa reflection diffuse. De ce point de vue, les métaux sont noir. La seul chose qu'on en perçois c'est la reflection spéculaire et cette dernière peut avoir une certaine teinte. En résumé, les métaux sont des mirroirs colorés.
+Dans le sens courant, quand on parle de la couleur d’un objet, on fait référence à sa réflexion diffuse. De ce point de vue, les métaux sont donc complètement noirs : rien ne peut en ressortir puisque rien n’y entre. La seule chose que l’on perçoit, c’est une forte réflexion spéculaire, qui peut présenter une certaine teinte grâce à une sélection spectrale de surface. En résumé, les métaux ne sont rien d’autre que des miroirs colorés.
 
 ## VIII Conclusion
 
