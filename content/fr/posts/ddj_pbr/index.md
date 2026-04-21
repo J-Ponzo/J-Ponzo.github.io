@@ -14,20 +14,19 @@ Et oui comme tous les ans, les fêtes de fin d'année m'ont un peu roulé dessus
 
 D'abord le jeu sur lequel je travail à Wanadev Studio est sorti en early access. Les review sont excellentes et on est super contant de comment ça se passe. Si ça vous interesse, le jeu s'appel Species:Unknown et la page steam est [ici](https://store.steampowered.com/app/2747330/Species_Unknown/).
 
-Malheureusement un early access, ça prend aussi un peu de place. Pas forcement dans mon emploi du temps, mais dans la tête. J'ai donc un peu réduit la voilure sur les projets perso histoire de gérer l'effort.
+Malheureusement un early access, ça prend aussi un peu de place. Pas forcement dans mon emploi du temps, mais dans la tête. J'ai donc un peu réduit la voilure sur les projets perso histoire de gérer l'effort et je me suis attelé à autre chose.
 
-Ralentir ok ! Mais arrêter completement c'est juste une impossibilité physiologique pour moi. Et paradoxalement, je n'ai jamais autant écrit que durant cette période. Si je n'ai rien sorti, c'est simplement parce que je n'ai rien terminé (et que j'en ai jeté les 2/3 dans le processus).
-
-## II. Une série sur le PBR
+## II. Un article dédié sur le PBR
 Dans la serie de devlog du projet OpenRE, je me suis retrouvé à devoir expliquer ce qu'est le Physicaly Based Rendering (PBR). Ce faisant, je me suis rendu compte que :
 - le sujet est trop vaste pour tenir dans une simple section d’article
 - il y avait quelques angles morts dans ma compréhension des choses
 
-Pour remédier à cela, j'ai chercher à comprendre comment fonctionne la lumière dans la vrai vie. L'idée était la suivante : si le PBR est une simplification de la réalité, on devrait pouvoir le definir facilement en partant du vrai modèle et en expliquant en quoi il s'en distingue.
+C'était l'occasion de remédier à cela. J'ai donc chercher à comprendre comment fonctionne la lumière dans la vrai vie. L'idée était la suivante : si le PBR est une simplification de la réalité, on devrait pouvoir le definir facilement en partant du vrai modèle et en expliquant en quoi il s'en distingue.
 
-Le plan était infaillible ! Seulement voila, la lumière dans la vrai vie, c'est plus compliqué qu'il n'y parait. Et ce qui devait être un petit article annexe à progressivement dégénéré en une serie entière.
+Le plan était infaillible ! Seulement voila, la physique, c'est plus compliqué qu'il n'y parait.
 
-
+## III. La "vrai" physique
+Sans parler du fait que c'est rapidement trop dur pour moi, 
 
 
 Le terrier de lapin s'est avéré beaucoup plus profond et labyrinthique que prévue. Ce que j'en retiens, au-dela du fait que c'est beaucoup trop dur pour moi, c'est qu'on a heureusement pas besoin de tout pour faire du rendu. 
