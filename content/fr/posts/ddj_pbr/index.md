@@ -26,19 +26,20 @@ C'était l'occasion de remédier à cela. J'ai donc chercher à comprendre comme
 Le plan était infaillible ! Seulement voila, la physique, c'est plus compliqué qu'il n'y parait.
 
 ## III. La "vrai" physique
-Sans parler du fait que c'est rapidement trop dur pour moi, je crois que j'ai courru après une chose qui n'existe pas vraiment. En effet, la science, ce n'est pas cette verité ultime qu'on se plais à fantasmer. C'est un enchevetrement de cardes théoriques rigoureux mais imparfait qui naissent de nos observtions empiriques du monde.
+Sans parler du fait que c'est vite trop dur pour moi, je crois que j'ai courru après une chose qui n'existe pas vraiment. En effet, la science, ce n'est pas cette verité ultime qu'on se plais à fantasmer. C'est un enchevetrement de cardes théoriques rigoureux mais imparfait qui naissent de nos observtions empiriques du monde.
 
-Il est tentant de les hierarchiser en les plassant sur un axe qui admétrait les deux extremes suivant :
-- d'un côté les modèles simples mais faux
-- de l'autre les modèles vrai mais complexes
+Il est tentant de les hierarchiser en les plassant sur un axe avec d'un côté les modèles simples mais faux eet de l'autre les modèles vrai mais complexes.
 
 [Schéma cinématique : Terre plate - ... - mecanique classique - relativiste - quantique - ???]
 
-C'est un peu comme ça que je voyais les choses jusqu'à maintenant. Mais je me suis rendu compte qu'on est...
+C'est un peu comme ça que je voyais les choses jusqu'à maintenant. Mais je me suis rendu compte de la naïveté de ce schéma mental. D'abord les différents cadres théoriques ne sont pas obligatoirement des généralisation les uns dés autres. Ils peuvent tout à fait vivre en paralelle. Mais plus important encore, la science est moins une question de degré de vérité que de niveau d'explication.
 
-Aussi lorsqu'on étudie un phénomène, il convient de se placer au bon niveau explicatif. Il est tentant de se placer directement au niveau le plus fondemental en se disant : "qui peut le plus, peut le moins". Mais faire ça 
+La mécanique quantique, c'est la théorie la plus fondamental dont on dispose aujourd'hui. C'est à dire en gros : plus "vrai". Si on prend par exemple une voiture, on peut dire que c'est une conjonction complexe d'ondes de probalités (si ça pique dite vous un "bopugiboulga d'atomes" ça change pas grand chose au raisonnement). 
 
-## VI. Et l'optique dans tout ça
+On peut facilement étandre cela à un groupe de voiture ainsi qu'à la route sur laquelle elles roulent. Mais ça n'a aucun interet si on cherche à étudier le trafic routier. Ce n'est pas faux : c'est juste le mauvais niveau d'explication.
+
+## VI. Et la lumière dans tout ça
+La difficulté avec ce qu'on appel "la lumière", c'est que ce n'est pas un phénomène local que l'on peut facilement raccrocher à un seul niveau d'explication. Il émerge de différents cadre théoriques.
 
 
 
