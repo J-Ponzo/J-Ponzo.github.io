@@ -26,7 +26,22 @@ C'était l'occasion de remédier à cela. J'ai donc chercher à comprendre comme
 Le plan était infaillible ! Seulement voila, la physique, c'est plus compliqué qu'il n'y parait.
 
 ## III. La "vrai" physique
-Sans parler du fait que c'est rapidement trop dur pour moi, 
+Sans parler du fait que c'est rapidement trop dur pour moi, je crois que j'ai courru après une chose qui n'existe pas vraiment. En effet, la science, ce n'est pas cette verité ultime qu'on se plais à fantasmer. C'est un enchevetrement de cardes théoriques rigoureux mais imparfait qui naissent de nos observtions empiriques du monde.
+
+Il est tentant de les hierarchiser en les plassant sur un axe qui admétrait les deux extremes suivant :
+- d'un côté les modèles simples mais faux
+- de l'autre les modèles vrai mais complexes
+
+[Schéma cinématique : Terre plate - ... - mecanique classique - relativiste - quantique - ???]
+
+C'est un peu comme ça que je voyais les choses jusqu'à maintenant. Mais je me suis rendu compte qu'on est...
+
+Aussi lorsqu'on étudie un phénomène, il convient de se placer au bon niveau explicatif. Il est tentant de se placer directement au niveau le plus fondemental en se disant : "qui peut le plus, peut le moins". Mais faire ça 
+
+## VI. Et l'optique dans tout ça
+
+
+
 
 
 Le terrier de lapin s'est avéré beaucoup plus profond et labyrinthique que prévue. Ce que j'en retiens, au-dela du fait que c'est beaucoup trop dur pour moi, c'est qu'on a heureusement pas besoin de tout pour faire du rendu. 
