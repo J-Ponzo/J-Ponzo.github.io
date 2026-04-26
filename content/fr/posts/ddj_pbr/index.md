@@ -34,12 +34,12 @@ Il est tentant de les hierarchiser en les plassant sur un axe avec d'un côté l
 
 C'est un peu comme ça que je voyais les choses jusqu'à maintenant. Mais je me suis rendu compte de la naïveté de ce schéma mental. D'abord les différents cadres théoriques ne sont pas obligatoirement des généralisation les uns dés autres. Ils peuvent tout à fait vivre en paralelle. Mais plus important encore, la science est moins une question de degré de vérité que de niveau d'explication.
 
-La mécanique quantique, c'est la théorie la plus fondamental dont on dispose aujourd'hui. C'est à dire en gros : plus "vrai". Si on prend par exemple une voiture, on peut dire que c'est une conjonction complexe d'ondes de probalités (si ça pique dite vous un "bopugiboulga d'atomes" ça change pas grand chose au raisonnement). 
+La mécanique quantique, c'est la théorie la plus fondamental dont on dispose aujourd'hui. C'est à dire en gros : la plus "vrai". Si on prend par exemple une voiture, on peut dire que c'est une conjonction complexe d'ondes de probalités (si ça pique dite vous un "bopugiboulga d'atomes" ça change pas grand chose au raisonnement). 
 
 On peut facilement étandre cela à un groupe de voiture ainsi qu'à la route sur laquelle elles roulent. Mais ça n'a aucun interet si on cherche à étudier le trafic routier. Ce n'est pas faux : c'est juste le mauvais niveau d'explication.
 
 ## VI. Et la lumière dans tout ça
-La difficulté avec ce qu'on appel "la lumière", c'est que ce n'est pas un phénomène local que l'on peut facilement raccrocher à un seul niveau d'explication. Il émerge de différents cadre théoriques.
+La difficulté avec ce qu'on appel "la lumière", c'est que ce n'est pas un phénomène, mais un ensemble de phénomènes qui émergent les uns des autres. On va donc les retrouver à des niveaux explicatifs différent.
 
 
 
