@@ -34,16 +34,16 @@ Il est tentant de les hierarchiser en les plassant sur un axe avec d'un côté l
 
 C'est un peu comme ça que je voyais les choses jusqu'à maintenant. Mais je me suis rendu compte de la naïveté de ce schéma mental. D'abord les différents cadres théoriques ne sont pas obligatoirement des généralisation les uns dés autres. Ils peuvent tout à fait vivre en paralelle. Mais plus important encore, la science est moins une question de degré de vérité que de niveau d'explication.
 
-La mécanique quantique, c'est la théorie la plus fondamental dont on dispose aujourd'hui. C'est à dire en gros : la plus "vrai". Si on prend par exemple une voiture, on peut dire que c'est une conjonction complexe d'ondes de probalités (si ça pique dite vous un "bopugiboulga d'atomes" ça change pas grand chose au raisonnement). 
+Si on prend par exemple une voiture qui roule, on peut dire que c'est un assemblage très complexe d'atomes qui inéragissent les uns avec les autres. Le carburant qu'on mélange à l'aire pour le faire exploser, les pieces mécaniques qui transmettent l'énergie des explosions au roues, les frotements entre les pneux et la route qui font avancer la carroserie, les frotements de l'aire sur la carrosserie, les frottement des plaquettes sur les disques lorsqu'elle freine etc... Tout cela permet de décrire finement le comportement du vehicule.
 
-On peut facilement étandre cela à un groupe de voiture ainsi qu'à la route sur laquelle elles roulent. Mais ça n'a aucun interet si on cherche à étudier le trafic routier. Ce n'est pas faux : c'est juste le mauvais niveau d'explication.
+Pour étudier la formation des bouchons au sein du trafic routier, on pourrait envisager de modéliser de cette manière un groupe entier de voitures. Mais ça n'aurait pas beaucoup d'interet. Ce ne serait pas faux, simplement le mauvais niveau d'explication. <à améliorer>
 
 ## VI. Et la lumière dans tout ça
-La difficulté avec ce qu'on appel "la lumière", c'est que ce n'est pas un phénomène, mais un ensemble de phénomènes qui émergent les uns des autres. On va donc les retrouver à des niveaux explicatifs différent.
+La difficulté avec ce qu'on appel "la lumière", c'est que ce n'est pas un phénomène, mais un ensemble de phénomènes qui émergent les uns des autres. Et le terrier de lapin est vraiment sans fin.
 
+Je ne m'en pleins pas, j'ai appris plein de choses et j'ai beaucoup apprécié faire ces recherches. Mais pour ce qui est de l'article, ça n'avancait pas. J'avais l'impression que pour être cohérent, je devais tout considérer au même niveau explicatif. Trouver en quelques sortes le dénominateur commun.
 
-
-
+Le problème c'est que ce dénominateur commun n'est rien de moins que la physique quantique. Et non seulement je n'ai pas les outils mathématiques pour m'attaquer à ce morceau, mais aussi et surtout, cela reviendrait à 
 
 Le terrier de lapin s'est avéré beaucoup plus profond et labyrinthique que prévue. Ce que j'en retiens, au-dela du fait que c'est beaucoup trop dur pour moi, c'est qu'on a heureusement pas besoin de tout pour faire du rendu. 
 
