@@ -36,20 +36,39 @@ C'est un peu comme ça que je voyais les choses jusqu'à maintenant. Mais je me 
 
 Si vous cherchez par exemple à comprendre comment se forment les bouchons sur le periph', ce n'est pas très interessant de savoir comment intéragissent les atomes qui constituent la route, les vehicules et leurs conducteurs. Votre modèle aura beau être d'une véracité scientifique et d'une précision infinie, vous ne comprendrez pas le trafique routier de cette façon : ce n'est pas le bon niveau d'explication.
 
-## VI. Et la lumière dans tout ça
-Ce qu'on appel "la lumière", c'est un sacré terrier de lapin. Je ne m'en pleins pas, j'ai appris plein de choses et j'ai beaucoup apprécié faire ces recherches. Mais pour ce qui est de l'article, ça n'avancait pas. J'avais l'impression que pour être cohérent, je devais tout considérer au même niveau explicatif. Trouver en quelques sortes le dénominateur commun.
+## IV. Et la lumière dans tout ça
+Ce qu'on appel "la lumière", c'est un sacré terrier de lapin. Je ne m'en pleins pas, j'ai beaucoup apprécié faire ces recherches et les 3% que j'ai réussi à éfleurer ont été très instructifs. Mais pour ce qui est de l'article, ça n'avancait pas. J'avais l'impression que pour être cohérent, je devais tout considérer au même niveau explicatif. Trouver en quelques sortes le dénominateur commun.
 
-Le problème c'est que ce dénominateur commun n'est rien de moins que la physique quantique. D'abord je n'ai pas les outils mathématiques pour m'attaquer à ce morceau mais aussi et surtout
+Cette première approche s'est soldée par un échec et ce pour deux raisons :
+- Ce dénominateur commun n'est rien de moins que la physique quantique. Et non seulement je n'ai pas une fraction du niveau en math pour m'y attaquer, mais surtout cela revient à regarder les atomes pour expliquer les bouchons.
+- La lumière n'est pas un phénomène. C'est un ensemble de phénomènes qui émèrgent les uns des autres et s'étalent par consequent sur plusieurs niveaux explicatifs différent. Se limité à un seul est donc une impasse.
 
-La difficulté avec ce qu'on appel "la lumière", c'est que ce n'est pas un phénomène, mais un ensemble de phénomènes qui émergent les uns des autres. Et le terrier de lapin est vraiment sans fin.
+Cette quete du cadre unique pour les gouvrner tous étant vaine, je devais me résoudre à considérer chaque chose au niveau approprié, quitte à ne pas toujours arriver à faire de ponts entre les différentes explications.
 
-Je ne m'en pleins pas, j'ai appris plein de choses et j'ai beaucoup apprécié faire ces recherches. Mais pour ce qui est de l'article, ça n'avancait pas. J'avais l'impression que pour être cohérent, je devais tout considérer au même niveau explicatif. Trouver en quelques sortes le dénominateur commun.
+## V. Tout cramé pour repartir sur des bases saines
+Quand j'ai compris cela, j'avais noirci tellement de pages que j'en étais déjà à me demander comment découper cette masse en plusieurs articles. Ca représentait des semaines de travail et j'ai d'abord eu du mal à accepter de tout jeter.
 
-Le problème c'est que ce dénominateur commun n'est rien de moins que la physique quantique. D'abord je n'ai pas les outils mathématiques pour m'attaquer à ce morceau.
+Le biais des coup irrécupérables à la peau dur ! Au travail on a rarement le choix, et à force d'y être soumis, on fini par ne plus savoir comment penser autrement qu'à travers lui. Mais la vérité c'est qu'en dehors des logiques productivistes, jeter n'a rien de difficile. C'est même un privilège ! Et à la base, c'est exactement pour ce genre de privilèges que je ressent ce besoin vicéral de m'investir dans des projets personels.
 
-J'avais déjà écrit des pages et des pages avant de comprendre ça
+Or donc => POUBELLE !!! Merci au-revoir ! (essayez, ça fait un bien fou).
 
-J'ai eu du mal à d'admètre que je ne m'en sortirai pas sans accepter que coexistent plusieurs cadres 
+## VI. Conclusion
+Cette série va finalement s'articuler autour de 2 parties. On commencera par vulgariser les différents phénomènes intéressants du point de vue du rendu à travers deux articles :
+- Real Life Engine : Qu'est ce que la lumière d'un point de vu physique ? Quel rapport avec la matière ?
+- La perception des couleurs chez l'humain : Qu'est ce que la lumière d'un point de vue biologique ? Que sont les couleurs et comment les percevons nous ?
+
+Dans un second temps, on s'interessera aux simplifications opérées par le PBR par rapport au modèle défini dans la première partie :
+- D'abord dans le cas général avec PBR offline
+- Puis dans les spécificités du temps réèl dans PBR temps réèl
+
+Si ma vie et mes hérances phylosophiques vous inthéressent, je vous conseille vivement de lire ce 1er article. En revanche, si vous venez de le faire et que vous trouvez que votre temps n'a pas été respecté, laissez moi vous donner un simple conseil qui va booster votre productivité de +73.26% !
+
+100% gratuit et utilsable dès maintenant. Les coatch le detestent ! Amélioration garantie dès la première application de cette astuce toute simple : 
+
+>"**toujours lire la conclusion en premier !**" 😘 </br>
+>(et l'abstract si il y en a un, mais ça c'est facile il est au début)
+
+Mais ce n'est en réalité que la deuxieme chose la plus importante que j'ai apprise en écrivant ce blog. La première et de très loin, c'est que je n'ai absolument aucune envie de booster ma productivité ! Et si vous prenez 2 secondes pour y réfléchir, je suis à peu près sûr que vous non plus.
 
 ## OLD
 
